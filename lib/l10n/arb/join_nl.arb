@@ -1,0 +1,116 @@
+{
+  "@@locale": "nl",
+  "joinWelcome": "Welkom bij {team}",
+  "@joinWelcome": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "joinRoleQuestion": "Wat doe jij bij dit team?",
+  "joinRolePlayer": "Ik speel mee",
+  "joinRoleSpectator": "Ik ben toeschouwer",
+  "joinRoleFootnote": "Toeschouwer ben je als ouder, familie of buurman: je ziet de agenda en de uitslagen, maar hoeft niets door te geven.",
+  "joinPickTitle": "Wie ben jij?",
+  "joinPickSubtitle": "Tik je eigen naam aan",
+  "joinPickNotListed": "Mijn naam staat er niet bij",
+  "joinBack": "Terug",
+  "joinClaimTitle": "Ben jij {name}?",
+  "@joinClaimTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinClaimShirt": "Rugnummer {number} in de selectie",
+  "@joinClaimShirt": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "joinClaimNoShirt": "Je neemt deze plek in de selectie over",
+  "joinClaimYes": "Ja, dat ben ik",
+  "joinClaimNo": "Nee, iemand anders",
+  "joinNameTitle": "Hoe heet je?",
+  "joinNameSubtitlePlayer": "Zoals je team je noemt",
+  "joinNameSubtitleSpectator": "Dan weet het team wie je bent",
+  "joinNameHint": "Je naam",
+  "joinNext": "Verder",
+  "joinEmailTitle": "Hoe kom je er straks weer in?",
+  "joinEmailSubtitle": "Vul je e-mailadres in. Dan sturen we je een inlogcode als je op een ander toestel wilt, of als je bent uitgelogd. Een wachtwoord heb je niet nodig.",
+  "joinEmailHint": "E-mailadres (mag je overslaan)",
+  "joinEmailInvalid": "Vul een geldig e-mailadres in.",
+  "joinSubmit": "Doe mee",
+  "joinSkip": "Sla over",
+  "joinEmailFootnote": "Overslaan mag. Je kunt je adres later bij je profiel zetten, maar zonder adres werkt alleen dit toestel.",
+  "joinSentTitle": "Je hebt al een account",
+  "joinSentSubtitle": "We hebben je een mail gestuurd. Tik op de knop daarin, dan sta je in {team}.",
+  "@joinSentSubtitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "joinSentFootnote": "Open de mail op dit toestel, dan opent de knop de app. Niets ontvangen? Kijk in je spam.",
+  "joinSentCodeLogin": "Inloggen met een code",
+  "joinInvalidTitle": "Deze teamlink werkt niet meer",
+  "joinInvalidFallback": "Vraag je trainer om een nieuwe link.",
+  "joinToApp": "Naar de app",
+  "joinRetry": "Opnieuw proberen",
+  "joinLoadError": "Laden lukte niet. Controleer je verbinding en probeer het opnieuw.",
+  "joinGenericError": "Er ging iets mis. Probeer het opnieuw.",
+  "joinThrottled": "Te veel pogingen. Probeer het later opnieuw.",
+  "joinConfirmInvalidTitle": "Deze link werkt niet meer",
+  "joinConfirmInvalidSubtitle": "Hij is verlopen of al gebruikt. Tik opnieuw op de teamlink uit de groepsapp, dan sturen we een nieuwe.",
+  "joinConfirmToTeamlink": "Naar de teamlink",
+  "joinConfirmHello": "Hoi {name}",
+  "@joinConfirmHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinConfirmSubtitle": "Je doet mee met {team}, {as}. Je andere teams blijven gewoon staan.",
+  "@joinConfirmSubtitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      },
+      "as": {
+        "type": "String"
+      }
+    }
+  },
+  "joinConfirmAsSpectator": "als toeschouwer",
+  "joinConfirmAsPlayerNamed": "als {name}",
+  "@joinConfirmAsPlayerNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "joinConfirmAsPlayer": "als speler",
+  "joinConfirmFootnote": "Was jij dit niet? Sluit dit scherm, dan gebeurt er niets.",
+  "joinClose": "Sluiten",
+  "inviteHello": "Hallo {name}",
+  "@inviteHello": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteHelloAnonymous": "Hallo",
+  "inviteSubtitle": "Je bent uitgenodigd voor je team. Tik op Doorgaan, dan log je meteen in.",
+  "inviteContinue": "Doorgaan",
+  "inviteInvalidTitle": "Uitnodiging verlopen",
+  "inviteInvalidFallback": "Deze uitnodiging is verlopen of ongeldig. Vraag een inlogcode aan met je e-mailadres.",
+  "inviteToLogin": "Inloggen met een code"
+}

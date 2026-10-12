@@ -1,0 +1,183 @@
+{
+  "@@locale": "nl",
+  "agendaTabUpcoming": "Aankomend",
+  "agendaTabPast": "Verleden",
+  "agendaTabTasks": "Mijn taken",
+  "rsvpPresent": "Aanwezig",
+  "@rsvpPresent": {
+    "description": "RSVP-knop"
+  },
+  "rsvpAbsent": "Afwezig",
+  "@rsvpAbsent": {
+    "description": "RSVP-knop"
+  },
+  "rsvpNonplay": "Kijken",
+  "@rsvpNonplay": {
+    "description": "RSVP-knop: wel komen, niet spelen"
+  },
+  "eventTypeMatch": "Wedstrijd",
+  "eventTypeTraining": "Training",
+  "eventTypeActivity": "Activiteit",
+  "competitionCup": "Beker",
+  "competitionFriendly": "Oefenwedstrijd",
+  "agendaMeetAt": "Verzamelen",
+  "agendaCancelled": "Afgelast",
+  "agendaLive": "Live · {clock}",
+  "@agendaLive": {
+    "description": "Live-badge met de wedstrijdklok (38' of 45+3')",
+    "placeholders": {
+      "clock": {
+        "type": "String"
+      }
+    }
+  },
+  "agendaResponded": "{responded} van {total} geregeld",
+  "@agendaResponded": {
+    "description": "Toegankelijkheidslabel van het reactieringetje",
+    "placeholders": {
+      "responded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaInjuredNotice": "Je staat als geblesseerd, dus je bent automatisch afgemeld.",
+  "agendaVacationNotice": "Valt in je vakantie, dus je bent automatisch afgemeld.",
+  "agendaSpectatorsComing": "{count, plural, =1{1 toeschouwer komt ook} other{{count} toeschouwers komen ook}}",
+  "@agendaSpectatorsComing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaSpectatorsCanRsvp": "Toeschouwers mogen zich aanmelden",
+  "agendaDutyFallback": "Dienst",
+  "agendaDutyYou": "Jij",
+  "@agendaDutyYou": {
+    "description": "Label bij een dienst die jij doet"
+  },
+  "agendaDutyStart": "Start: {time}",
+  "@agendaDutyStart": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "agendaDutyEnd": "Eind: {time}",
+  "@agendaDutyEnd": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "agendaDutyPeople": "{count} personen",
+  "@agendaDutyPeople": {
+    "description": "Dienst met meerdere mensen zonder groepsnaam",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaBirthday": "Jarig",
+  "agendaTurns": "wordt {age} jaar",
+  "@agendaTurns": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaTurnsToday": "wordt vandaag {age} jaar",
+  "@agendaTurnsToday": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaBirthdayToday": "is vandaag jarig",
+  "agendaEmptyTitle": "Nog niets gepland",
+  "agendaEmptyPlayer": "Zodra je trainer wedstrijden of trainingen inplant, staan ze hier.",
+  "agendaEmptyTrainer": "Zet je eerste wedstrijd of training erbij, of haal het hele programma in één keer binnen.",
+  "agendaNoEvents": "Geen events",
+  "agendaNoTasks": "Geen openstaande taken",
+  "agendaShowMore": "Nog {count} tonen",
+  "@agendaShowMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaRemaining": "{count} in totaal nog",
+  "@agendaRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "agendaLoadError": "De agenda kon niet geladen worden.",
+  "agendaSaveFailed": "Opslaan mislukt. Probeer opnieuw.",
+  "agendaOpenEvent": "Open {type} {date}",
+  "@agendaOpenEvent": {
+    "description": "Toegankelijkheidslabel van een agendakaart",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "reasonTitleAbsent": "Waarom ben je er niet?",
+  "reasonTitleNonplay": "Waarom speel je niet mee?",
+  "reasonQuickInjury": "Blessure",
+  "reasonQuickWork": "Werk",
+  "reasonQuickSick": "Ziek",
+  "reasonQuickVacation": "Vakantie",
+  "reasonOwnLabel": "Of typ het zelf",
+  "reasonOwnHint": "Bijvoorbeeld: bruiloft van m'n zus",
+  "reasonSubmit": "Afmelden",
+  "agendaCalendarButton": "Zet in agenda",
+  "agendaCalendarButtonLabel": "In je agenda zetten",
+  "agendaCalendarTitle": "Zet in agenda",
+  "agendaCalendarMatches": "Wedstrijden",
+  "agendaCalendarMatchesHint": "Het hele programma van je team",
+  "agendaCalendarTrainings": "Trainingen",
+  "agendaCalendarTrainingsHint": "Alle trainingen van je team",
+  "agendaCalendarDutyHint": "Alleen jouw {duty}-beurten",
+  "@agendaCalendarDutyHint": {
+    "description": "Uitleg bij een diensttype in de agenda-feed; duty is de naam in kleine letters",
+    "placeholders": {
+      "duty": {
+        "type": "String"
+      }
+    }
+  },
+  "agendaCalendarOnlyMine": "Alleen waar ik bij ben",
+  "agendaCalendarOnlyMineHint": "Afgemeld verdwijnt uit je agenda, nog niet gereageerd krijgt een ?",
+  "agendaCalendarSubscribe": "Zet in agenda",
+  "agendaCalendarCopy": "Of kopieer de link (Google Agenda)",
+  "agendaCalendarCopied": "Link gekopieerd",
+  "agendaCalendarOpenFailed": "Agenda-app niet geopend — de link staat op je klembord",
+  "agendaCalendarFootnote": "Je agenda werkt vanzelf bij als er iets verandert.",
+  "agendaSignpostEyebrow": "Hier ben je",
+  "agendaSignpostTitle": "Je trainingen staan er, de wedstrijden nog niet",
+  "agendaSignpostBody": "Zet het wedstrijdprogramma erbij, dan zie je bij elke wedstrijd wie er komt en wie afzegt.",
+  "agendaSignpostBodyFeed": "Plak de agendalink van je team, dan staat het programma erin en schuiven verzette wedstrijden vanzelf mee.",
+  "agendaSignpostFeedFailedTitle": "Je agendalink gaf geen wedstrijden",
+  "agendaSignpostFeedFailedBody": "Controleer of het de agendalink (iCal) van jullie team is, of plak een andere.",
+  "agendaSignpostCheckLink": "Link controleren",
+  "agendaSignpostPasteLink": "Agendalink plakken",
+  "agendaScheduleAdd": "Programma erbij",
+  "agendaPlanSelf": "Zelf inplannen",
+  "agendaScheduleButtonLabel": "Wedstrijdprogramma"
+}

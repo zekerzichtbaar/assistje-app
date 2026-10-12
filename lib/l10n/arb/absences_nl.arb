@@ -1,0 +1,60 @@
+{
+  "@@locale": "nl",
+  "absencesLoadError": "Laden mislukt",
+  "absencesSaveFailed": "Opslaan mislukt",
+  "absencesRemoveFailed": "Verwijderen mislukt",
+  "absencesSave": "Opslaan",
+  "absencesCancel": "Annuleren",
+  "absencesDelete": "Verwijderen",
+  "absencesNoPlayerTitle": "Geen speler-profiel",
+  "absencesNoPlayerBody": "Activeer je speler-profiel op de Mij-tab om afwezigheid door te geven.",
+  "absencesVacationsIntro": "Datums waarop je weg bent. Toekomstige wedstrijden en trainingen in deze periode staan automatisch op afwezig.",
+  "absencesVacationsEmpty": "Geen vakanties gepland.",
+  "absencesVacationsFeatureOff": "Vakantiemodus staat uit voor dit team.",
+  "absencesVacationsFeatureOffBody": "Nieuwe vakanties toevoegen kan niet; bestaande kun je nog wel weghalen.",
+  "absencesVacationAdd": "Vakantie toevoegen",
+  "absencesVacationFrom": "Van",
+  "absencesVacationTo": "Tot en met",
+  "absencesVacationNote": "Notitie (optioneel)",
+  "absencesVacationNoteHint": "Bijv. wintersport",
+  "absencesVacationPickDate": "Kies een datum",
+  "absencesVacationDatesRequired": "Kies een begin- en einddatum.",
+  "absencesVacationEndBeforeStart": "De einddatum moet op of na de begindatum liggen.",
+  "absencesVacationAdded": "Vakantie toegevoegd",
+  "absencesVacationRemoved": "Vakantie verwijderd",
+  "absencesVacationRemoveConfirm": "Deze vakantie verwijderen? Wedstrijden en trainingen in deze periode gaan terug naar hoe ze stonden.",
+  "absencesVacationRemoveLabel": "Vakantie verwijderen",
+  "absencesVacationRange": "{from} – {to}",
+  "@absencesVacationRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "absencesStandingIntro": "Tik de dagen aan waarop je nooit kunt. Trainingen op die dagen staan automatisch op afwezig; kun je een keer wél, tik dat dan aan bij die training.",
+  "absencesStandingFeatureOff": "Vaste afwezigheid staat uit voor dit team.",
+  "absencesStandingNoChoicesTitle": "Geen trainingsdagen",
+  "absencesStandingNoChoicesBody": "Dit team heeft (nog) geen vaste trainingsdagen.",
+  "absencesStandingOn": "Afwezig",
+  "absencesStandingOff": "Kan wel",
+  "absencesStandingAdded": "Op {day} sta je voortaan afwezig",
+  "@absencesStandingAdded": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "absencesStandingRemoved": "Op {day} kun je weer",
+  "@absencesStandingRemoved": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  }
+}

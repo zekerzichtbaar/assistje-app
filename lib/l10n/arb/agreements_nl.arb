@@ -1,0 +1,36 @@
+{
+  "@@locale": "nl",
+  "agreementsLoadError": "Afspraken laden mislukt",
+  "agreementsAdd": "Afspraak toevoegen",
+  "agreementsAddFirst": "Eerste afspraak toevoegen",
+  "agreementsEmptyTitle": "Nog geen afspraken",
+  "agreementsEmptyManage": "Zet hier de regels voor dit seizoen neer, zodat iedereen ze kan nalezen.",
+  "agreementsEmptyMember": "De trainer heeft nog geen afspraken vastgelegd.",
+  "agreementsIntroAdd": "Introtekst toevoegen",
+  "agreementsIntroEdit": "Introtekst wijzigen",
+  "agreementsIntroTitle": "Introtekst",
+  "agreementsIntroHint": "Bijv. Dit zijn onze afspraken voor dit seizoen. Niets ingewikkelds, gewoon zodat we het allemaal hetzelfde doen.",
+  "agreementsFormTitleNew": "Afspraak toevoegen",
+  "agreementsFormTitleEdit": "Afspraak wijzigen",
+  "agreementsFormCategory": "Waar gaat het over",
+  "agreementsFormTitle": "De afspraak",
+  "agreementsFormTitleHint": "Bijv. Een kwartier voor aanvang aanwezig",
+  "agreementsFormTitleRequired": "Vul de afspraak in.",
+  "agreementsFormBody": "Toelichting (optioneel)",
+  "agreementsFormBodyHint": "Waarom, of hoe het precies zit.",
+  "agreementsSave": "Opslaan",
+  "agreementsCreate": "Toevoegen",
+  "agreementsCancel": "Annuleer",
+  "agreementsDelete": "Verwijderen",
+  "agreementsDeleteConfirm": "Afspraak '{title}' verwijderen?",
+  "@agreementsDeleteConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "agreementsSaved": "Opgeslagen",
+  "agreementsCreated": "Afspraak toegevoegd",
+  "agreementsDeleted": "Afspraak verwijderd"
+}

@@ -1,0 +1,91 @@
+{
+  "@@locale": "nl",
+  "wheelLoadError": "Rad laden mislukt",
+  "wheelSpin": "Draai!",
+  "wheelSpinning": "Draaien…",
+  "wheelMinPlayers": "Selecteer minimaal 2 spelers hieronder.",
+  "wheelSemantics": "Rad met {count} deelnemers",
+  "@wheelSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wheelWinnerLabel": "Onfortuinlijke winnaar",
+  "wheelStaffBadge": "staf",
+  "wheelGuestBadge": "gast",
+  "wheelAssignTo": "+ Voeg toe aan {label} ({date})",
+  "@wheelAssignTo": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "wheelAssignedOn": "Toegevoegd als vlagger op {date}",
+  "@wheelAssignedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "wheelNoMatch": "Geen aankomende wedstrijd binnen 7 dagen, dus niet aan een wedstrijd te koppelen.",
+  "wheelUndo": "Foutje? Verwijder deze draai",
+  "wheelUndoConfirm": "Laatste draai verwijderen?",
+  "wheelDeleteConfirm": "Deze draai verwijderen?",
+  "wheelDelete": "Verwijderen",
+  "wheelCancel": "Annuleer",
+  "wheelDeleteSpin": "Verwijder draai",
+  "wheelParticipantsTitle": "Wie doet er mee?",
+  "wheelFillTeam": "Team",
+  "wheelFillPresent": "Aanwezig {count}",
+  "@wheelFillPresent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wheelFillBench": "Bank {count}",
+  "@wheelFillBench": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wheelFillClear": "Wis",
+  "wheelGuests": "Gasten",
+  "wheelStaff": "Staf",
+  "wheelNoPlayers": "Nog niemand om op het rad te zetten.",
+  "wheelRecentTitle": "Laatste 10 draaien",
+  "wheelDrawnBy": "door {name}",
+  "@wheelDrawnBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "wheelFlaggerOn": "Vlagger {date}",
+  "@wheelFlaggerOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "wheelAssignedElsewhere": "Toegewezen",
+  "wheelAssignShort": "+ Aan wedstrijd toevoegen",
+  "wheelUnassignHint": "Koppeling verwijderen",
+  "wheelRecordFailed": "Draai vastleggen mislukt",
+  "wheelActionFailed": "Dat lukte niet",
+  "wheelAssigned": "Toegevoegd als vlagger",
+  "wheelUnassigned": "Koppeling verwijderd",
+  "wheelDeleted": "Draai verwijderd"
+}

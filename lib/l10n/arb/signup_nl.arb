@@ -1,0 +1,191 @@
+{
+  "@@locale": "nl",
+  "signupEntryLogin": "Nieuw team aanmelden",
+  "@signupEntryLogin": {
+    "description": "Link onder het loginscherm naar /aanmelden"
+  },
+  "signupEntryNoTeam": "Team aanmelden",
+  "@signupEntryNoTeam": {
+    "description": "Knop op het geen-teamscherm naar /aanmelden"
+  },
+  "signupClose": "Sluiten",
+  "signupBack": "Terug",
+  "signupNext": "Verder",
+  "signupRetry": "Opnieuw",
+  "signupToApp": "Naar de app",
+  "signupProgress": "Stap {step} van {total}",
+  "@signupProgress": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "signupLoadTitle": "Aanmelden lukt nu niet",
+  "signupNetworkError": "Geen verbinding. Controleer je internet en probeer het opnieuw.",
+  "signupThrottled": "Je hebt het al een paar keer geprobeerd. Wacht even en probeer het dan opnieuw.",
+  "signupGenericError": "Er ging iets mis. Probeer het opnieuw.",
+  "signupFootnoteSport": "Dit bepaalt hoe je omgeving werkt, en dat ligt daarna vast.",
+  "signupFootnoteAddress": "Hiervan maken we het webadres van je omgeving, en dat ligt daarna vast.",
+  "signupFootnoteProgramme": "Laat je dit leeg, dan staat je omgeving er ook.",
+  "signupFootnoteLater": "Dit pas je later zelf aan.",
+  "signupSportTitle": "Welke sport?",
+  "signupSportSubtitle": "Dan richten we de app in voor jouw sport: opstelling, posities en uitslagen.",
+  "signupOtherSportLink": "Wij doen een andere sport",
+  "signupClubTitle": "Welke club?",
+  "signupClubSubtitle": "Typ de naam van je vereniging",
+  "signupClubSearchHint": "Clubnaam of plaats",
+  "signupClubNone": "Geen club gevonden voor “{term}”. Typ de naam hieronder zelf, dan maken we hem aan.",
+  "@signupClubNone": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "signupClubMore": "{count, plural, =1{Nog 1 club. Typ verder om je club te vinden.} other{Nog {count} clubs. Typ verder om je club te vinden.}}",
+  "@signupClubMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "signupClubNotListed": "Mijn club staat er niet tussen",
+  "signupClubChosenTitle": "Je club",
+  "signupClubOther": "Andere club kiezen",
+  "signupClubManualTitle": "Hoe heet je club?",
+  "signupClubManualSubtitle": "Voluit, zoals de vereniging heet",
+  "signupClubNameHint": "Clubnaam",
+  "signupClubSearchList": "Toch in de lijst zoeken",
+  "signupLogoAdd": "Clublogo toevoegen",
+  "signupLogoLater": "Mag ook later",
+  "signupLogoChosen": "Clublogo",
+  "signupLogoChange": "Tik om een ander te kiezen",
+  "signupLogoRemove": "Logo weghalen",
+  "signupLogoInvalid": "Kies een PNG of JPG van hoogstens {mb} MB.",
+  "@signupLogoInvalid": {
+    "placeholders": {
+      "mb": {
+        "type": "int"
+      }
+    }
+  },
+  "signupTeamFallbackTitle": "Welk team?",
+  "signupTakenTitle": "{team} staat er al",
+  "@signupTakenTitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "signupTakenFallbackTitle": "Dit team staat er al",
+  "signupTakenSubtitle": "Heb je hem zelf aangemaakt? Log hieronder in met je e-mailadres, dan mailen we je een code. Anders: vraag de trainer om de teamlink uit de groepsapp, dan doe je mee in dezelfde agenda.",
+  "signupTakenLogin": "Inloggen op {team}",
+  "@signupTakenLogin": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "signupTakenCreate": "Toch een nieuwe omgeving maken",
+  "signupTakenOther": "Ander team kiezen",
+  "signupYouTitle": "Wie ben jij?",
+  "signupYouSubtitle": "Je naam staat straks bij je team. Met je e-mailadres kom je in je omgeving. Een wachtwoord heb je niet nodig.",
+  "signupNameHint": "Je naam",
+  "signupEmailHint": "E-mailadres",
+  "signupEmailInvalid": "Vul een geldig e-mailadres in.",
+  "signupTrainingsTitle": "Wanneer trainen jullie?",
+  "signupTrainingsSubtitle": "We zetten het hele seizoen alvast in de agenda",
+  "signupVenueHint": "Veld (optioneel)",
+  "signupTrainingBackwards": "Op {day} eindigt de training vóór hij begint.",
+  "@signupTrainingBackwards": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "signupStartLabel": "Begintijd {day}",
+  "@signupStartLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "signupEndLabel": "Eindtijd {day}",
+  "@signupEndLabel": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "signupDayShortMon": "ma",
+  "signupDayShortTue": "di",
+  "signupDayShortWed": "wo",
+  "signupDayShortThu": "do",
+  "signupDayShortFri": "vr",
+  "signupDayShortSat": "za",
+  "signupDayShortSun": "zo",
+  "signupDayMon": "maandag",
+  "signupDayTue": "dinsdag",
+  "signupDayWed": "woensdag",
+  "signupDayThu": "donderdag",
+  "signupDayFri": "vrijdag",
+  "signupDaySat": "zaterdag",
+  "signupDaySun": "zondag",
+  "signupSubmit": "Maak mijn omgeving",
+  "signupProgrammeTitle": "Waar staat jullie programma?",
+  "signupOtherTitle": "Welke sport doen jullie?",
+  "signupOtherSubtitle": "Assistje doet {sports}. Laat weten wat jullie spelen, dan weten wij waar de vraag zit.",
+  "@signupOtherSubtitle": {
+    "placeholders": {
+      "sports": {
+        "type": "String"
+      }
+    }
+  },
+  "signupOtherSubtitleGeneric": "Laat weten wat jullie spelen, dan weten wij waar de vraag zit.",
+  "signupOtherSportHint": "Je sport",
+  "signupOtherSubmit": "Laat het ons weten",
+  "signupOtherFootnote": "Er komt nu geen omgeving. We nemen contact op zodra jouw sport erbij komt.",
+  "signupAnd": "en",
+  "signupSentTitle": "{team} staat klaar",
+  "@signupSentTitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "signupSentAlreadyTitle": "Je hebt {team} al",
+  "@signupSentAlreadyTitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "signupSentSubtitle": "De link om in te loggen ligt in je mailbox. Open hem, dan ben je binnen.",
+  "signupSentAlreadySubtitle": "Met dit adres heb je hem eerder aangemaakt, dus we maken er geen tweede. De link om weer binnen te komen ligt in je mailbox.",
+  "signupSentCodeLogin": "Inloggen met een code",
+  "signupSentAddressLabel": "Het webadres van je omgeving",
+  "signupSentFootnote": "Bewaar dat webadres, want het blijft gelden. De inloglink in je mail verloopt. Niets ontvangen? Kijk in je spam.",
+  "signupRequestedTitle": "We hebben het",
+  "signupRequestedSubtitle": "{sport} zit nog niet in Assistje. Je aanvraag staat bij ons, en hoe vaker een sport gevraagd wordt hoe eerder hij erbij komt.",
+  "@signupRequestedSubtitle": {
+    "placeholders": {
+      "sport": {
+        "type": "String"
+      }
+    }
+  },
+  "signupRequestedFootnote": "Op dit adres laten we weten wanneer jouw sport erbij komt. Er is nu nog geen omgeving voor je gemaakt."
+}

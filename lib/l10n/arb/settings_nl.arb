@@ -1,0 +1,307 @@
+{
+  "@@locale": "nl",
+  "settingsTabTeam": "Team",
+  "settingsTabSeason": "Seizoen",
+  "settingsTabRsvp": "Deadlines",
+  "settingsTabFeatures": "Functies",
+  "settingsTabDuties": "Diensten",
+  "settingsLoadError": "Instellingen konden niet geladen worden",
+  "settingsForbiddenTitle": "Alleen voor de trainer",
+  "settingsForbidden": "De instellingen van dit team zijn alleen voor de trainer.",
+  "settingsReadOnlyDemo": "Dit is een demoteam: je kunt rondkijken, maar niets wijzigen.",
+  "settingsReadOnlyForbidden": "Je kunt hier niets (meer) wijzigen. Alleen de trainer beheert de instellingen.",
+  "settingsSaveFailed": "Opslaan mislukt",
+  "settingsSaved": "Opgeslagen",
+  "settingsSave": "Opslaan",
+  "settingsCancel": "Annuleer",
+  "settingsRemove": "Verwijderen",
+  "settingsOr": "of",
+  "settingsHourUnit": "uur",
+  "settingsHours": "{hours} uur",
+  "@settingsHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLogo": "Logo",
+  "settingsLogoNone": "Geen logo",
+  "settingsLogoUpload": "Upload",
+  "settingsLogoHint": "PNG of JPG, max 2 MB. Vierkant (1024 × 1024) staat het mooist als app-icoon.",
+  "settingsLogoRemoveConfirm": "Logo verwijderen?",
+  "settingsLogoFills": "Logo tot de rand",
+  "settingsLogoFillsHint": "Aan voor een logo met eigen achtergrondkleur; uit voor een clubbadge, die houdt witruimte eromheen.",
+  "settingsTeamName": "Teamnaam",
+  "settingsTeamNameRequired": "Vul een teamnaam in.",
+  "settingsColor": "Clubkleur",
+  "settingsColorPreview": "Voorbeeld",
+  "settingsColorInvalid": "Gebruik een kleurcode als #006837.",
+  "settingsColorHint": "Upload je een logo, dan halen we deze kleur eruit. Hier zet je hem zelf goed.",
+  "settingsFormation": "Vaste opstelling",
+  "settingsFormationHint": "Bepaalt welke posities op het veld in de Opstelling-pagina staan.",
+  "settingsIcalTitle": "Agenda-abonnement",
+  "settingsIcalIntro": "Zet de wedstrijden en trainingen in je eigen agenda (iPhone, Google, Outlook). Wie de link heeft, ziet de events.",
+  "settingsIcalNone": "Er is nog geen agenda-link voor dit team.",
+  "settingsIcalMatches": "Wedstrijden",
+  "settingsIcalTrainings": "Trainingen",
+  "settingsIcalCopy": "Kopieer link",
+  "settingsIcalShare": "Deel link",
+  "settingsIcalCopied": "Link gekopieerd",
+  "settingsIcalShareSubject": "Agenda van {team}",
+  "@settingsIcalShareSubject": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsIcalRotate": "Nieuwe link maken",
+  "settingsIcalRotateTitle": "Nieuwe agenda-link?",
+  "settingsIcalRotateConfirm": "De oude links werken meteen niet meer. Iedereen die de agenda al heeft toegevoegd, moet de nieuwe link opnieuw toevoegen.",
+  "settingsIcalRotateHint": "Gebruik dit als de link bij de verkeerde mensen terecht is gekomen.",
+  "settingsIcalRotated": "Nieuwe agenda-link gemaakt",
+  "settingsSeasonCurrent": "Lopend seizoen",
+  "settingsSeasonNone": "Geen actief seizoen",
+  "settingsSeasonRange": "{start} – {end} · {count, plural, =1{1 wedstrijd} other{{count} wedstrijden}}",
+  "@settingsSeasonRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsSeasonExpiredTitle": "Dit seizoen is voorbij",
+  "settingsSeasonExpired": "De einddatum ligt in het verleden terwijl het seizoen nog loopt. Nieuwe wedstrijden en boetes komen daardoor onder {season} terecht.",
+  "@settingsSeasonExpired": {
+    "placeholders": {
+      "season": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSeasonClosed": "Vorig seizoen: {season} (afgesloten).",
+  "@settingsSeasonClosed": {
+    "placeholders": {
+      "season": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPeriodsTitle": "Periodes",
+  "settingsPeriodModeOff": "Geen periodes: prijzen gaan over het hele seizoen.",
+  "settingsPeriodModeDates": "Periodes op datum.",
+  "settingsPeriodModeMatches": "Periodes op aantal wedstrijden.",
+  "settingsPeriodFrom": "vanaf {start}",
+  "@settingsPeriodFrom": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPeriodPlayed": "{count, plural, =1{1 gespeeld} other{{count} gespeeld}}",
+  "@settingsPeriodPlayed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPeriodPlayedOf": "{played} van {target} gespeeld",
+  "@settingsPeriodPlayedOf": {
+    "placeholders": {
+      "played": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPeriodClosed": "afgesloten",
+  "settingsSeasonsManage": "Seizoenen en periodes",
+  "settingsSeasonsManageHint": "Seizoen bewerken, afsluiten en periodes indelen.",
+  "settingsRsvpModeTitle": "Soort deadline",
+  "settingsRsvpModeIntro": "Een vast moment in de week voor alle events, of een aantal uur vóór elk event apart.",
+  "settingsRsvpRelative": "Per event",
+  "settingsRsvpRelativeHint": "X uur vóór elk event",
+  "settingsRsvpWeekly": "Wekelijks",
+  "settingsRsvpWeeklyHint": "Vast moment per week",
+  "settingsRsvpConsequenceFines": "krijgt automatisch een boete én een pushmelding",
+  "settingsRsvpConsequenceNoFines": "blijft zonder boete, want de deadline bepaalt alleen wanneer een afmelding laat heet",
+  "settingsRsvpMatches": "Wedstrijden",
+  "settingsRsvpMatchesIntro": "Hoe lang vóór een wedstrijd moet de beschikbaarheid ingevuld zijn? Wie nog op ‘niet gereageerd’ staat {consequence}.",
+  "@settingsRsvpMatchesIntro": {
+    "placeholders": {
+      "consequence": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRsvpTrainings": "Trainingen",
+  "settingsRsvpTrainingsIntro": "Idem voor trainingen. Stel apart in want teams trainen vaak korter van tevoren dan dat ze hun wedstrijdselectie willen weten.",
+  "settingsRsvpSameDay": "de dag zelf",
+  "settingsRsvpDayBefore": "de dag ervoor",
+  "settingsRsvpDaysBefore": "{days} dagen ervoor",
+  "@settingsRsvpDaysBefore": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsRsvpDescribeMatch": "{hours} uur vooraf. Begint de wedstrijd om {start}, dan is dat {day} om {time}.",
+  "@settingsRsvpDescribeMatch": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "start": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRsvpDescribeTraining": "{hours} uur vooraf. Begint de training om {start}, dan is dat {day} om {time}.",
+  "@settingsRsvpDescribeTraining": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "start": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRsvpWeeklyTitle": "Wekelijkse deadline",
+  "settingsRsvpWeeklyIntro": "Iedereen vult zijn beschikbaarheid in vóór dit moment, voor alle events die daarna komen. Wie nog op ‘niet gereageerd’ staat {consequence}.",
+  "@settingsRsvpWeeklyIntro": {
+    "placeholders": {
+      "consequence": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRsvpDay": "Dag",
+  "settingsRsvpTime": "Tijd",
+  "settingsRsvpWeeklySummary": "Elke {day} om {time}.",
+  "@settingsRsvpWeeklySummary": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsRsvpAfterTitle": "Na de deadline",
+  "settingsRsvpAfterBody": "Afmelden kan daarna nog gewoon, maar wie al ‘aanwezig’ stond en zich alsnog terugtrekt, daar krijgen jij en de penningmeester meteen bericht van. Of daar een boete op volgt, beslis je zelf: de app deelt die niet automatisch uit, want ziek zijn is geen overtreding.",
+  "settingsRsvpAfterHint": "Uit te zetten bij Berichten → automatische meldingen.",
+  "settingsDayMonday": "maandag",
+  "settingsDayTuesday": "dinsdag",
+  "settingsDayWednesday": "woensdag",
+  "settingsDayThursday": "donderdag",
+  "settingsDayFriday": "vrijdag",
+  "settingsDaySaturday": "zaterdag",
+  "settingsDaySunday": "zondag",
+  "settingsCategoryOther": "Overig",
+  "settingsAttendancePoint": "Punt voor aanwezigheid",
+  "settingsAttendancePointHint": "Wie er is krijgt één punt, los van de uitslag. Uit? Dan telt alleen wat de partijvorm oplevert.",
+  "settingsStaffInFines": "Staf krijgt boetes",
+  "settingsStaffInFinesHint": "Trainers en leiders staan in de boetepot en krijgen ook de boete voor niet reageren.",
+  "settingsCarpoolTitle": "Carpool-reminder",
+  "settingsCarpoolIntro": "Hoe lang vóór een uitwedstrijd moet de push komen?",
+  "settingsGuestsTitle": "Gastspelers",
+  "settingsGuestsIntro": "Waar doen gastspelers aan mee? Ze staan altijd apart van de selectie en tellen niet mee in de opkomst.",
+  "settingsGuestsNone": "Niets",
+  "settingsGuestsTraining": "Trainingen",
+  "settingsGuestsAll": "Trainingen + wedstrijden",
+  "settingsGuestsNoneHint": "Gasten zijn alleen een naam voor de opstelling, precies zoals nu.",
+  "settingsGuestsTrainingHint": "Gasten staan bij trainingen in de lijst en geven hun aanwezigheid door.",
+  "settingsGuestsAllHint": "Gasten doen ook bij wedstrijden mee. Activiteiten blijven voor de selectie.",
+  "settingsGuestInFines": "Tellen mee in de boetepot",
+  "settingsGuestInFinesHint": "Gasten krijgen dezelfde automatische boetes als de selectie.",
+  "settingsGuestInStats": "Tellen mee in de statistieken",
+  "settingsGuestInStatsHint": "Gasten verschijnen in de Hall of Fame, bij de topscorers en in de titels.",
+  "settingsDutyNew": "Nieuw diensttype",
+  "settingsDutyNewShort": "Nieuw",
+  "settingsDutyEdit": "Diensttype wijzigen",
+  "settingsDutyAdd": "Toevoegen",
+  "settingsDutyAdded": "Diensttype toegevoegd",
+  "settingsDutyDeleted": "Diensttype verwijderd",
+  "settingsDutyDeleteConfirm": "Diensttype ‘{name}’ verwijderen? Eventuele groepen en toewijzingen verdwijnen ook.",
+  "@settingsDutyDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDutyEmptyTitle": "Nog geen diensttypes",
+  "settingsDutyEmptyDescription": "Kantine, wassen, rijden: maak een type aan en plan daarna de beurten bij Diensten.",
+  "settingsDutyName": "Naam",
+  "settingsDutyNameHint": "Bijv. Kantine, Wassen, Bier mee...",
+  "settingsDutyNameRequired": "Vul een naam in.",
+  "settingsDutyIcon": "Icoon",
+  "settingsDutyMode": "Type",
+  "settingsDutyModeGroup": "Groepen",
+  "settingsDutyModeGroupHint": "Maak groepen en plan ze op datums (bv. kantine).",
+  "settingsDutyModeIndividual": "Individueel",
+  "settingsDutyModeIndividualHint": "Eén speler per beurt (bv. bier mee, fruit).",
+  "settingsDutyModeMulti": "Eén of meer personen",
+  "settingsDutyModeMultiHint": "Je vinkt per keer aan wie er staat: één iemand op een rustige dag, meer als het druk is. Geen groepen nodig.",
+  "settingsDutyScope": "Wanneer",
+  "settingsDutyScopeFree": "Losse datums",
+  "settingsDutyScopeFreeHint": "Je plant de dienst op een datum die je zelf kiest.",
+  "settingsDutyScopeMatch": "Bij een wedstrijd",
+  "settingsDutyScopeMatchHint": "Je kiest een wedstrijd; de datum volgt die wedstrijd (bv. rijden).",
+  "settingsDutyTurn": "Wie is er aan de beurt",
+  "settingsDutyAutoRotate": "Automatisch toewijzen",
+  "settingsDutyAutoRotateHint": "Bij elke wedstrijd kiest het systeem de speler die het langst geleden aan de beurt was. Uit = trainer wijst handmatig toe.",
+  "settingsDutyOnUnavailable": "Als de ingedeelde zich afmeldt",
+  "settingsDutyReassign": "Zelf iemand anders aanwijzen",
+  "settingsDutyReassignHint": "De beurt schuift door naar wie het langst niet geweest is.",
+  "settingsDutyNotify": "Trainers een melding sturen",
+  "settingsDutyNotifyHint": "De naam blijft staan; jullie zoeken zelf een vervanger.",
+  "settingsDutyPool": "Wie kan deze dienst doen",
+  "settingsDutyPoolPlayers": "Spelers",
+  "settingsDutyPoolStaff": "+ Staf",
+  "settingsDutyPoolSpectators": "+ Toeschouwers",
+  "settingsDutyPoolCustom": "Zelf kiezen",
+  "settingsDutyPoolPlayersHint": "Alleen de selectie. Nieuwe spelers doen automatisch mee.",
+  "settingsDutyPoolStaffHint": "De selectie en de staf. Nieuwe spelers en staf doen automatisch mee.",
+  "settingsDutyPoolSpectatorsHint": "De selectie, de staf en de toeschouwers. Nieuwe teamleden doen automatisch mee.",
+  "settingsDutyPoolCustomEmpty": "Kies wie deze dienst kan doen. Zolang er niemand staat, kun je de dienst aan niemand toewijzen.",
+  "settingsDutyPoolCustomHint": "Alleen wie je hier aanzet. Nieuwe teamleden komen er niet vanzelf bij.",
+  "settingsDutyPoolFooter": "Geldt voor wie je kunt aanwijzen, wie je in een groep kunt zetten én wie er automatisch aan de beurt komt.",
+  "settingsDutyPeopleStaff": "Staf",
+  "settingsDutyPeopleSpectators": "Toeschouwers",
+  "settingsDutyGuests": "Ook gasten",
+  "settingsDutyGuestsHint": "Gastspelers kun je dan ook aanwijzen. De automatische verdeling slaat ze over: een gast zet je er zelf op.",
+  "settingsDutyBadgeIndividual": "Individueel",
+  "settingsDutyBadgeMulti": "Eén of meer",
+  "settingsDutyBadgeGroup": "Groepen",
+  "settingsDutyBadgeMatch": "Bij wedstrijd",
+  "settingsDutyBadgeFree": "Losse datums",
+  "settingsDutyBadgeAuto": "Auto",
+  "settingsDutyBadgeNotify": "Melden"
+}

@@ -1,0 +1,158 @@
+{
+  "@@locale": "nl",
+  "scheduleNewTitle": "Nieuw event",
+  "scheduleEditTitle": "Event bewerken",
+  "scheduleLoadError": "Het formulier kon niet geladen worden",
+  "scheduleEventNotFound": "Dit event bestaat niet (meer) of hoort bij een ander team.",
+  "scheduleTypeLabel": "Type",
+  "scheduleDateLabel": "Datum",
+  "schedulePickDate": "Kies een datum",
+  "schedulePickTime": "Kies",
+  "scheduleStartLabel": "Starttijd",
+  "scheduleEndLabel": "Eindtijd (optioneel)",
+  "scheduleMeetLabel": "Verzamelen",
+  "scheduleClearTime": "Tijd wissen",
+  "scheduleVenueLabel": "Locatie",
+  "scheduleVenueHint": "Bijv. sportpark of adres",
+  "scheduleOurTeam": "Onze ploeg",
+  "scheduleWePlay": "Wij spelen",
+  "scheduleHome": "Thuis",
+  "scheduleAway": "Uit",
+  "scheduleCompetitionLabel": "Soort",
+  "scheduleOpponentLabel": "Tegenstander",
+  "scheduleOpponentHint": "Naam tegenstander",
+  "scheduleTitleLabel": "Titel",
+  "scheduleNameLabel": "Naam",
+  "scheduleActivityHint": "Bijv. Eindfeest of Borrel",
+  "scheduleNotesLabel": "Opmerking (optioneel)",
+  "scheduleNotesHint": "Bijv. neem je bidon mee",
+  "scheduleRecurTitle": "Wekelijks herhalen",
+  "scheduleRecurBody": "Maak elke week op dezelfde dag een training aan, tot en met een gekozen datum.",
+  "scheduleRecurUntil": "Tot en met",
+  "scheduleSpectatorsTitle": "Toeschouwers mogen zich aanmelden",
+  "scheduleSpectatorsBody": "Handig bij een borrel of eindfeest: ook teamleden zonder spelersprofiel kunnen dan aangeven of ze komen. Ze tellen niet mee in de opkomst.",
+  "scheduleAppliesTo": "Wijziging geldt voor",
+  "scheduleOnlyThis": "Alleen deze",
+  "scheduleAlsoFollowing": "Ook alle volgende",
+  "scheduleFollowingHint": "De trainingen hierna op {slot} krijgen dezelfde tijd, locatie, titel en opmerking. Ze houden hun eigen datum.",
+  "@scheduleFollowingHint": {
+    "placeholders": {
+      "slot": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleSlot": "{weekday} om {time}",
+  "@scheduleSlot": {
+    "placeholders": {
+      "weekday": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleCreate": "Aanmaken",
+  "scheduleSave": "Opslaan",
+  "scheduleStartRequired": "Kies een datum en starttijd.",
+  "scheduleRecurUntilRequired": "Kies tot wanneer de training herhaalt.",
+  "scheduleSaveFailed": "Opslaan lukte niet",
+  "scheduleCreated": "Event aangemaakt",
+  "scheduleSeriesCreated": "{count} trainingen in de agenda gezet",
+  "@scheduleSeriesCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleSaved": "Wijziging opgeslagen",
+  "scheduleSavedFollowing": "Opgeslagen, ook op {count} volgende trainingen",
+  "@scheduleSavedFollowing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleAddEvent": "Nieuw",
+  "scheduleAddEventLabel": "Event toevoegen",
+  "scheduleActionEdit": "Bewerken",
+  "scheduleActionCancel": "Afgelasten",
+  "scheduleActionUncancel": "Gaat toch door",
+  "scheduleActionDelete": "Verwijderen",
+  "scheduleCancelConfirmTitle": "Afgelasten?",
+  "scheduleCancelConfirmBody": "Wie zich aanmeldde krijgt een melding. Het event blijft in de agenda staan, maar telt niet mee voor de aanwezigheid.",
+  "scheduleUncancelConfirmTitle": "Afgelasting intrekken?",
+  "scheduleUncancelConfirmBody": "Het team krijgt een melding dat het toch doorgaat.",
+  "scheduleUncancelConfirm": "Intrekken",
+  "scheduleDeleteConfirmTitle": "Event verwijderen?",
+  "scheduleDeleteConfirmBody": "Weet je zeker dat je dit event wilt verwijderen? Aanwezigheid, opstelling en verslag worden ook gewist.",
+  "scheduleConfirmBack": "Terug",
+  "scheduleCancelled": "Afgelast",
+  "scheduleUncancelled": "Gaat toch door",
+  "scheduleDeleted": "Event verwijderd",
+  "scheduleCancelFailed": "Afgelasten lukte niet",
+  "scheduleUncancelFailed": "Intrekken lukte niet",
+  "scheduleDeleteFailed": "Verwijderen lukte niet",
+  "scheduleImportTitle": "Wedstrijdprogramma",
+  "scheduleImportBusy": "Bezig…",
+  "scheduleImportFetchTitle": "Wij halen het op",
+  "scheduleImportFetchBody": "We zetten het programma in de agenda. Verzette en nieuwe wedstrijden schuiven mee; je opstellingen en uitslagen blijven staan.",
+  "scheduleImportFetchBodySource": "We zetten het programma van {source} in de agenda. Verzette en nieuwe wedstrijden schuiven mee; je opstellingen en uitslagen blijven staan.",
+  "@scheduleImportFetchBodySource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleImportFetchButton": "Programma bijwerken",
+  "scheduleImportFeedTitleSet": "Je agendalink",
+  "scheduleImportFeedTitleEmpty": "Plak de agendalink",
+  "scheduleImportFeedBody": "Eén link en het programma staat erin. Verzette wedstrijden schuiven daarna vanzelf mee.",
+  "scheduleImportFeedFailed": "Uit deze link kwamen geen wedstrijden. Controleer of het de agendalink (iCal) van jullie team is.",
+  "scheduleImportFeedPlaceholder": "https://",
+  "scheduleImportFeedBusy": "Ophalen…",
+  "scheduleImportFeedButton": "Programma ophalen",
+  "scheduleImportLoginNote": "Het programma van de bond staat achter een inlog, dus automatisch ophalen lukt niet. Zo komt het er wél in:",
+  "scheduleImportLoginNoteSource": "Het programma van {source} staat achter een inlog, dus automatisch ophalen lukt niet. Zo komt het er wél in:",
+  "@scheduleImportLoginNoteSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleImportPlanTitle": "Zet ze zelf in de agenda",
+  "scheduleImportPlanBody": "Op je telefoon het snelst: datum, tegenstander, uit of thuis. Eén wedstrijd per keer, en je kunt beginnen met alleen de eerstvolgende.",
+  "scheduleImportPlanButton": "Wedstrijd inplannen",
+  "scheduleRequestTitle": "Wij zetten het programma erin",
+  "scheduleRequestBody": "Je hoeft niets op te zoeken: we weten bij welke club en welk elftal je zit. Je krijgt een bericht zodra alle wedstrijden in de agenda staan.",
+  "scheduleRequestPending": "We zijn ermee bezig. Je krijgt bericht zodra het erin staat.",
+  "scheduleRequestButton": "Doe dat voor mij",
+  "scheduleSendBody": "Geef ons de link naar jullie programma, of een schermafbeelding, dan zetten wij alle wedstrijden in de agenda en krijg je bericht zodra ze erin staan.",
+  "scheduleSendBodyFeed": "Vind je de agendalink niet? Geef ons de link naar jullie programmapagina, of een schermafbeelding, dan zetten wij alle wedstrijden in de agenda en krijg je bericht zodra ze erin staan.",
+  "scheduleSendLink": "Programma doorgeven",
+  "scheduleFileTitle": "Achter je computer: een bestand",
+  "scheduleFileIntro": "Het hele seizoen in één keer, als je het programma kunt downloaden. Drie formaten werken:",
+  "scheduleFileIntroSource": "Het hele seizoen in één keer, als je het programma bij {source} kunt downloaden. Drie formaten werken:",
+  "@scheduleFileIntroSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "scheduleFileIcs": "agenda-bestand",
+  "scheduleFileXlsx": "de Excel-export, met kolommen Datum, Team thuis en Team uit",
+  "scheduleFileCsv": "kolommen datum, tijd, wedstrijd (optioneel locatie)",
+  "scheduleFileHomeAway": "Uit/thuis wordt automatisch bepaald op basis van je teamnaam.",
+  "scheduleFileLabel": "Bestand",
+  "scheduleFilePick": "Kies een bestand",
+  "scheduleFileChange": "Ander bestand",
+  "scheduleFileDryRun": "Eerst alleen tonen wat zou worden geïmporteerd (dry-run)",
+  "scheduleFileSubmit": "Importeer",
+  "scheduleFileDryRunResult": "Proefimport: er is nog niets opgeslagen"
+}

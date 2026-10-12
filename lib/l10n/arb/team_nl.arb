@@ -1,0 +1,110 @@
+{
+  "@@locale": "nl",
+  "rosterLoadError": "Selectie laden mislukt",
+  "rosterRefreshFailed": "Verversen mislukt",
+  "rosterEmpty": "Nog geen spelers in het team.",
+  "rosterEmptyHint": "Zodra er spelers zijn, staan ze hier.",
+  "rosterCoachesTitle": "{count, plural, =1{Coach} other{Coaches}}",
+  "@rosterCoachesTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rosterCoachRole": "Trainer",
+  "rosterOther": "Overig",
+  "rosterGuests": "Gasten",
+  "rosterGuestBadge": "gast",
+  "rosterInjuredBadge": "geblesseerd",
+  "rosterVacationBadge": "vakantie",
+  "rosterAgreementsSubtitle": "Hoe we het dit seizoen doen",
+  "playerDetailLoadError": "Speler laden mislukt",
+  "playerDetailNotFound": "Deze speler bestaat niet (meer) in dit team.",
+  "playerDetailCaptainBadge": "aanvoerder",
+  "playerDetailTrainerBadge": "beheerder",
+  "playerDetailSelfBadge": "jij",
+  "playerDetailFromTeam": "Van {team}",
+  "@playerDetailFromTeam": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDetailSeason": "Seizoen",
+  "playerDetailCareer": "Carrière",
+  "playerDetailMatchesPlayed": "Wedstrijden",
+  "playerDetailWins": "Gewonnen",
+  "playerDetailDraws": "Gelijk",
+  "playerDetailLosses": "Verloren",
+  "playerDetailWinPct": "{pct}% gewonnen",
+  "@playerDetailWinPct": {
+    "placeholders": {
+      "pct": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDetailGoals": "Goals",
+  "playerDetailAssists": "Assists",
+  "playerDetailCleanSheets": "Clean sheets",
+  "playerDetailMotm": "Speler v.d. wedstrijd",
+  "playerDetailTrainingPoints": "Trainingspunten",
+  "playerDetailPoints": "Punten",
+  "playerDetailAces": "Aces",
+  "playerDetailBlocks": "Blocks",
+  "playerDetailGreenCards": "Groene kaarten",
+  "playerDetailYellowCards": "Gele kaarten",
+  "playerDetailRedCards": "Rode kaarten",
+  "playerDetailAttendanceTitle": "Aanwezigheid",
+  "playerDetailAttendanceMatches": "Wedstrijden",
+  "playerDetailAttendanceTraining": "Training",
+  "playerDetailDutiesTitle": "Diensten",
+  "playerDetailAchievementsTitle": "Prestaties",
+  "playerDetailTimes": "{count}×",
+  "@playerDetailTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "playerDetailManageTitle": "Beheer",
+  "playerDetailEmail": "E-mail",
+  "playerDetailNoEmail": "Geen e-mailadres",
+  "playerDetailInvite": "Account",
+  "playerDetailInviteAccepted": "Actief",
+  "playerDetailInvitePending": "Uitgenodigd op {date}",
+  "@playerDetailInvitePending": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDetailNotInvited": "Nog niet uitgenodigd",
+  "playerDetailVacationsTitle": "Vakanties",
+  "playerDetailNoVacations": "Geen vakanties gepland.",
+  "playerDetailVacationRange": "{from} t/m {to}",
+  "@playerDetailVacationRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDetailStandingAbsencesTitle": "Vaste dagen niet",
+  "playerDetailStandingAbsencesHint": "Trainingen op deze dagen staan voor {name} automatisch op afwezig.",
+  "@playerDetailStandingAbsencesHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playerDetailReadOnlyHint": "Bewerken kan voorlopig in de webapp."
+}

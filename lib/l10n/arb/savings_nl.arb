@@ -1,0 +1,323 @@
+{
+  "@@locale": "nl",
+  "savingsLoadError": "Spaarpot laden mislukt",
+  "savingsPotLoadError": "Pot laden mislukt",
+  "savingsNotFound": "Deze pot bestaat niet (meer).",
+  "savingsForbidden": "Je hebt geen toegang tot de spaarpot.",
+  "savingsNewPot": "Nieuwe pot",
+  "savingsEmptyTitle": "Nog geen spaarpot",
+  "savingsEmptyManage": "Maak een pot aan om samen te sparen, bijvoorbeeld voor een trainingskamp.",
+  "savingsEmptyRead": "Er is nog geen spaarpot aangemaakt.",
+  "savingsListMonthly": "{amount}/mnd · {months} mnd",
+  "@savingsListMonthly": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "months": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsListOneOff": "{amount} p.p. · eenmalig",
+  "@savingsListOneOff": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsListOfGoal": "van {goal} · {percent}%",
+  "@savingsListOfGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsListSaved": "gespaard",
+  "savingsMemberCount": "{count} deelnemers",
+  "@savingsMemberCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCardPerPerson": "{amount} p.p.",
+  "@savingsCardPerPerson": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCardPerMonth": "{amount} p/m",
+  "@savingsCardPerMonth": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCardPaidOf": "{paid} van {total} betaald",
+  "@savingsCardPaidOf": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsRingGoal": "doel",
+  "savingsRingPaid": "betaald",
+  "savingsCardActivity": "Activiteit",
+  "savingsCardMonth": "Maand",
+  "savingsCardDuration": "Looptijd",
+  "savingsCardGoal": "Doel",
+  "savingsCardFull": "Bij volle pot",
+  "savingsCancelledSuffix": "afgelast",
+  "savingsCancelledTitle": "Afgelast",
+  "savingsCancelledRefundsOpen": "Betaal de inleg terug en tik \"Terugbetaald\" aan. Nog {open} van {total} te gaan.",
+  "@savingsCancelledRefundsOpen": {
+    "placeholders": {
+      "open": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCancelledAllRefunded": "Alle inleg is terugbetaald.",
+  "savingsNoParticipantsEventCancelled": "Afgelast, en niemand had al betaald.",
+  "savingsNoParticipantsEvent": "Nog niemand heeft zich aangemeld.",
+  "savingsNoParticipants": "Nog geen deelnemers.",
+  "savingsNoParticipantsManage": "Nog geen deelnemers. Voeg ze toe via het potlood-icoon.",
+  "savingsStaffBadge": "staf",
+  "savingsRefundAbsent": "Afgemeld — krijgt terug",
+  "savingsRefundLeft": "Niet meer aangemeld — krijgt terug",
+  "savingsRefundCancelled": "Afgelast — krijgt terug",
+  "savingsRefundOther": "Krijgt terug",
+  "savingsRefunded": "Terugbetaald",
+  "savingsMarkRefunded": "Terugbetaald",
+  "savingsRefundUndo": "Ongedaan maken",
+  "savingsOneOffFooter": "{paid} van {total} betaald · {open} open",
+  "@savingsOneOffFooter": {
+    "placeholders": {
+      "paid": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "open": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsGridParticipant": "Deelnemer",
+  "savingsGridTotal": "Totaal",
+  "savingsGridPerMonth": "Per maand",
+  "savingsCellPaid": "{name} {month} betaald",
+  "@savingsCellPaid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCellUnpaid": "{name} {month} niet betaald",
+  "@savingsCellUnpaid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsTapHint": "Tik een vakje om {amount} als betaald te markeren.",
+  "@savingsTapHint": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsRemind": "Stuur herinnering",
+  "savingsRemindHintOneOff": "Pushmelding via de app naar iedereen die meedoet en nog niet betaalde.",
+  "savingsRemindHintMonthly": "Pushmelding via de app naar iedereen die nog moet betalen (t/m deze maand).",
+  "savingsRemindConfirmTitle": "Herinnering sturen",
+  "savingsRemindConfirmOneOff": "Een pushmelding sturen via de app naar iedereen die meedoet en nog niet betaalde?",
+  "savingsRemindConfirmMonthly": "Een pushmelding sturen via de app naar iedereen die nog moet betalen (t/m deze maand)?",
+  "savingsRemindSend": "Versturen",
+  "savingsRemindFailed": "Herinnering sturen mislukt",
+  "savingsSaveFailed": "Opslaan mislukt",
+  "savingsEdit": "Pot bewerken",
+  "savingsArchive": "Pot archiveren",
+  "savingsArchiveConfirm": "\"{name}\" archiveren? De betaalhistorie blijft bewaard.",
+  "@savingsArchiveConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsArchiveAction": "Archiveren",
+  "savingsArchived": "Pot gearchiveerd",
+  "savingsArchiveFailed": "Archiveren mislukt",
+  "savingsCancel": "Annuleren",
+  "savingsSettleTitle": "Afrekenen",
+  "savingsSettleCost": "Kosten {cost}",
+  "@savingsSettleCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleShortage": "tekort {amount}",
+  "@savingsSettleShortage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleSurplus": "overschot {amount}",
+  "@savingsSettleSurplus": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleFromPot": "uit de teampot",
+  "savingsSettleToPot": "naar de teampot",
+  "savingsSettleCancelledFines": "Kosten die je niet terugkrijgt, zoals een aanbetaling? Vul ze in; ze gaan uit de teampot.",
+  "savingsSettleCancelledNoFines": "Kosten die je niet terugkrijgt, zoals een aanbetaling? Vul ze in; dan zie je het tekort.",
+  "savingsSettleHintFines": "Vul na afloop de werkelijke kosten in; het verschil gaat naar de teampot.",
+  "savingsSettleHintNoFines": "Vul na afloop de werkelijke kosten in; dan zie je het verschil.",
+  "savingsSettleEnter": "Kosten invullen",
+  "savingsSettleChange": "Kosten wijzigen",
+  "savingsSettleUndo": "Ongedaan maken",
+  "savingsSettleUndoTitle": "Afrekening ongedaan maken",
+  "savingsSettleUndoMessage": "De regel verdwijnt weer uit de teampot.",
+  "savingsSettlePaid": "Betaald: {amount}",
+  "@savingsSettlePaid": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleCostLabel": "Werkelijke kosten (€)",
+  "savingsSettleCostInvalid": "Vul een geldig bedrag in.",
+  "savingsSettleDiffShortage": "Tekort: {amount}",
+  "@savingsSettleDiffShortage": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleDiffSurplus": "Overschot: {amount}",
+  "@savingsSettleDiffSurplus": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleDiffFromPot": "Gaat uit de teampot.",
+  "savingsSettleDiffToPot": "Gaat naar de teampot.",
+  "savingsSettleSubmit": "Afrekenen",
+  "savingsSettled": "Afgerekend",
+  "savingsUnsettled": "Afrekening ongedaan gemaakt",
+  "savingsRefundSaved": "Opgeslagen",
+  "savingsFormNewTitle": "Nieuwe spaarpot",
+  "savingsFormEditTitle": "Pot bewerken",
+  "savingsFormName": "Naam",
+  "savingsFormNameHint": "Trainingskamp",
+  "savingsFormNameRequired": "Vul een naam in.",
+  "savingsFormMonthly": "Per maand",
+  "savingsFormOneOff": "Eenmalig",
+  "savingsFormActivity": "Activiteit (optioneel)",
+  "savingsFormNoActivity": "Geen activiteit",
+  "savingsFormActivityLabel": "{title} · {date}",
+  "@savingsFormActivityLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsFormActivityCancelled": "{title} · {date} (afgelast)",
+  "@savingsFormActivityCancelled": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsFormAmountMonthly": "Bedrag per maand",
+  "savingsFormAmountOneOff": "Bedrag per persoon",
+  "savingsFormAmountHint": "40,00",
+  "savingsFormAmountInvalid": "Vul een bedrag in.",
+  "savingsFormMonths": "Aantal maanden",
+  "savingsFormMonthsInvalid": "Kies 1 tot 60 maanden.",
+  "savingsFormStartMonth": "Startmaand",
+  "savingsFormMonth": "Maand",
+  "savingsFormPrevMonth": "Vorige maand",
+  "savingsFormNextMonth": "Volgende maand",
+  "savingsFormGoal": "Doelbedrag (optioneel)",
+  "savingsFormGoalInvalid": "Vul een geldig bedrag in.",
+  "savingsFormParticipants": "Deelnemers",
+  "savingsScopeAll": "Hele selectie",
+  "savingsScopeAllStaff": "Incl. staf",
+  "savingsScopeCustom": "Zelf kiezen",
+  "savingsScopeEvent": "Aangemeld",
+  "savingsFormStaff": "Staf",
+  "savingsFormEventInfo": "Iedereen die bij {title} \"Ik ben er\" zegt doet mee. Afmelden haalt iemand eraf; wie al betaalde blijft staan met \"krijgt terug\".",
+  "@savingsFormEventInfo": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsFormEventFallback": "de activiteit",
+  "savingsFormAllInfo": "Alle spelers doen mee. Nieuwe spelers komen er automatisch bij.",
+  "savingsFormAllStaffInfo": "Alle spelers én staf doen mee. Nieuwe spelers/staf komen er automatisch bij.",
+  "savingsFormGuests": "Ook gasten",
+  "savingsFormGuestsInfo": "Gastspelers doen dan ook mee. Een gast die al betaalde blijft altijd staan.",
+  "savingsFormCreate": "Pot aanmaken",
+  "savingsFormSave": "Opslaan",
+  "savingsFormLoadError": "Formulier laden mislukt",
+  "savingsCreated": "Pot aangemaakt",
+  "savingsUpdated": "Pot opgeslagen",
+  "savingsRemindSent": "{count, plural, =0{Niemand hoefde een herinnering} =1{Herinnering verstuurd naar 1 persoon} other{Herinnering verstuurd naar {count} personen}}",
+  "@savingsRemindSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

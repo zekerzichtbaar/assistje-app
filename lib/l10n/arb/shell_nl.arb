@@ -1,0 +1,61 @@
+{
+  "@@locale": "nl",
+  "navOnboarding": "Aan de slag",
+  "@navOnboarding": {
+    "description": "Menu-item: onboarding-checklist van de trainer"
+  },
+  "navAgenda": "Agenda",
+  "navPlayers": "Spelers",
+  "navTeam": "Team",
+  "navDuties": "Diensten",
+  "navStats": "Statistieken",
+  "@navStats": {
+    "description": "Menu-item statistieken (in de tabbalk heet het tabStats)"
+  },
+  "navHallOfFame": "Ranking",
+  "navPoule": "Poule",
+  "navFines": "Boetepot",
+  "navSavings": "Spaarpot",
+  "navWheel": "Radje",
+  "navMessages": "Berichten",
+  "navAgreements": "Afspraken",
+  "navSettings": "Instellingen",
+  "navFeedback": "Feedback",
+  "navProfile": "Mij",
+  "@navProfile": {
+    "description": "Tab met je eigen profiel"
+  },
+  "tabStats": "Stats",
+  "@tabStats": {
+    "description": "Korte tablabel voor statistieken (vijf tabs op 375 pt)"
+  },
+  "screenNotifications": "Meldingen",
+  "screenProfile": "Profiel",
+  "screenEvent": "Activiteit",
+  "screenEventAttendance": "Aanwezigheid",
+  "screenEventLineup": "Opstelling",
+  "screenEventLive": "Live",
+  "screenEventReport": "Wedstrijdverslag",
+  "screenEventTrainingTeams": "Trainingsteams",
+  "screenNotificationPreferences": "Pushmeldingen",
+  "screenPlayer": "Speler",
+  "screenSchedule": "Programma beheren",
+  "screenSeasons": "Seizoenen",
+  "screenVacations": "Vakanties",
+  "screenStandingAbsences": "Vaste afwezigheid",
+  "screenTeamlink": "Teamlink",
+  "shellMenu": "Menu",
+  "shellBack": "Terug",
+  "shellHome": "Naar de agenda",
+  "shellTabBar": "Hoofdmenu",
+  "shellNotificationsUnread": "{count, plural, =0{Meldingen} =1{Meldingen, 1 ongelezen} other{Meldingen, {count} ongelezen}}",
+  "@shellNotificationsUnread": {
+    "description": "Toegankelijkheidslabel van de bel",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shellCloseMenu": "Menu sluiten"
+}

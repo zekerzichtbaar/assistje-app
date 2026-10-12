@@ -1,0 +1,199 @@
+{
+  "@@locale": "nl",
+  "seasonsLoadError": "Seizoenen konden niet geladen worden",
+  "seasonsForbiddenTitle": "Alleen voor de trainer",
+  "seasonsForbidden": "Seizoenen en periodes zijn alleen voor de trainer.",
+  "seasonsReadOnlyDemo": "Dit is een demoteam: je kunt rondkijken, maar niets wijzigen.",
+  "seasonsReadOnlyForbidden": "Je kunt hier niets (meer) wijzigen. Alleen de trainer beheert seizoenen en periodes.",
+  "seasonsSaveFailed": "Opslaan mislukt",
+  "seasonsSaved": "Opgeslagen",
+  "seasonsSave": "Opslaan",
+  "seasonsAdd": "Toevoegen",
+  "seasonsCancel": "Annuleer",
+  "seasonsCurrentTitle": "Lopend seizoen",
+  "seasonsNone": "Geen actief seizoen",
+  "seasonsNoneHint": "Dit team heeft nog geen seizoen. Dat ontstaat vanzelf zodra er een speelschema is.",
+  "seasonsRange": "{from} – {to} · {count, plural, =1{1 wedstrijd} other{{count} wedstrijden}}",
+  "@seasonsRange": {
+    "placeholders": {
+      "from": {"type": "String"},
+      "to": {"type": "String"},
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsEdit": "Bewerken",
+  "seasonsActive": "Actief",
+  "seasonsExpiredPill": "Verlopen",
+  "seasonsExpiredTitle": "Dit seizoen is voorbij",
+  "seasonsExpiredText": "De einddatum ligt in het verleden terwijl het seizoen nog loopt. Nieuwe wedstrijden en boetes komen daardoor onder {label} terecht en periodegrenzen vallen in het verleden.",
+  "@seasonsExpiredText": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsExpiredHint": "Ben je gewoon een nieuw seizoen begonnen? Kies dan Bewerken en zet de datums goed. Je houdt al je wedstrijden en boetes. Afsluiten hieronder zet die juist in het archief.",
+  "seasonsModeTitle": "Badges per periode",
+  "seasonsModeIntro": "Standaard lopen badges en titels over het hele seizoen. Zet je periodes aan, dan resetten ze per blok en leggen we bij elke afsluiting de winnaars vast. De seizoenswinnaar blijft daarnaast gewoon bestaan.",
+  "seasonsModeOff": "Uit",
+  "seasonsModeOffHint": "Alles over het seizoen",
+  "seasonsModeMatches": "Op wedstrijden",
+  "seasonsModeMatchesHint": "Vast aantal per blok",
+  "seasonsModeDates": "Op datum",
+  "seasonsModeDatesHint": "Zelf van–tot bepalen",
+  "seasonsModeMatchesNote": "Bij afgelastingen schuift de grens vanzelf op: een periode is pas vol als het afgesproken aantal wedstrijden ook echt gespeeld is.",
+  "seasonsSplitTitle": "Verdeling",
+  "seasonsSplitText": "{label} telt {matches} wedstrijden. Bij {count} periodes zijn dat er ongeveer {perPeriod} per blok.",
+  "@seasonsSplitText": {
+    "placeholders": {
+      "label": {"type": "String"},
+      "matches": {"type": "int"},
+      "count": {"type": "int"},
+      "perPeriod": {"type": "int"}
+    }
+  },
+  "seasonsSplitEmpty": "Er staan nog geen wedstrijden in de agenda. Importeer eerst het speelschema.",
+  "seasonsSplitCount": "{count} periodes",
+  "@seasonsSplitCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsGenerate": "Voorstel genereren",
+  "seasonsGenerateHint": "Afgesloten periodes blijven staan: alleen lopende en toekomstige blokken worden opnieuw verdeeld.",
+  "seasonsGenerateConfirm": "De lopende en toekomstige periodes worden vervangen door een nieuw voorstel. Doorgaan?",
+  "seasonsGenerated": "Nieuw voorstel staat klaar",
+  "seasonsPeriodsTitle": "Periodes",
+  "seasonsPeriodsEmptyMatches": "Nog geen periodes. Genereer hierboven een voorstel.",
+  "seasonsPeriodsEmptyDates": "Nog geen periodes. Voeg er hieronder een toe.",
+  "seasonsPeriodAdd": "Periode toevoegen",
+  "seasonsPeriodEditTitle": "Periode bewerken",
+  "seasonsPeriodClosedPill": "afgesloten",
+  "seasonsPeriodOpenEnd": "nog open",
+  "seasonsPeriodTarget": "{count, plural, =1{1 wedstrijd} other{{count} wedstrijden}}",
+  "@seasonsPeriodTarget": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsPeriodAwards": "{count, plural, =1{1 titel} other{{count} titels}}",
+  "@seasonsPeriodAwards": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsPeriodPlayed": "{count} gespeeld",
+  "@seasonsPeriodPlayed": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsPeriodActions": "Acties voor {name}",
+  "@seasonsPeriodActions": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodEdit": "Bewerken",
+  "seasonsPeriodClose": "Afsluiten",
+  "seasonsPeriodReopen": "Heropenen",
+  "seasonsPeriodDelete": "Verwijderen",
+  "seasonsPeriodCloseConfirm": "{name} nu afsluiten? De titels worden vastgelegd. Onder drie gespeelde wedstrijden sluit hij zonder titels.",
+  "@seasonsPeriodCloseConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodReopenConfirm": "{name} heropenen? De uitgereikte titels worden ingetrokken.",
+  "@seasonsPeriodReopenConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodDeleteConfirm": "{name} verwijderen?",
+  "@seasonsPeriodDeleteConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodClosed": "{name} afgesloten",
+  "@seasonsPeriodClosed": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodClosedAwards": "{count, plural, =0{Geen titels uitgereikt.} =1{1 titel uitgereikt.} other{{count} titels uitgereikt.}}",
+  "@seasonsPeriodClosedAwards": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsPeriodReopened": "{name} heropend",
+  "@seasonsPeriodReopened": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "seasonsPeriodDeleted": "Periode verwijderd",
+  "seasonsPeriodAdded": "Periode toegevoegd",
+  "seasonsAdminTitle": "Seizoen afsluiten",
+  "seasonsAdminText": "Sluit het lopende seizoen af en start een nieuw. Bestaande stats en boetes blijven bewaard onder het oude seizoen. Alle nieuwe registraties tellen onder het nieuwe. Gebeurt het niet met de hand, dan sluit het seizoen twee weken na de einddatum vanzelf.",
+  "seasonsCloseButton": "Sluit seizoen af",
+  "seasonsCloseConfirm": "Huidig seizoen afsluiten? Stats en boetes komen in archief, alles start weer op 0.",
+  "seasonsClosed": "Seizoen afgesloten",
+  "seasonsClosedNext": "Seizoen {label} is gestart.",
+  "@seasonsClosedNext": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsLastClosed": "Laatst afgesloten: {label}. Te vroeg gesloten? Je kunt het terugdraaien, en alles wat sindsdien is geboekt gaat mee terug.",
+  "@seasonsLastClosed": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsReopenButton": "Heropen {label}",
+  "@seasonsReopenButton": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsReopenConfirm": "Seizoen {label} weer openen? Alles wat sinds het afsluiten is geboekt verhuist terug naar dit seizoen, en het nieuwe seizoen vervalt.",
+  "@seasonsReopenConfirm": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsReopened": "Seizoen {label} heropend",
+  "@seasonsReopened": {
+    "placeholders": {
+      "label": {"type": "String"}
+    }
+  },
+  "seasonsReopenedMoved": "{count, plural, =0{Er hoefde niets terug te verhuizen.} =1{1 registratie is teruggezet.} other{{count} registraties zijn teruggezet.}}",
+  "@seasonsReopenedMoved": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seasonsSeasonFormTitle": "Seizoen bewerken",
+  "seasonsLabel": "Naam",
+  "seasonsLabelHint": "26/27",
+  "seasonsLabelRequired": "Vul een naam in.",
+  "seasonsStartsOn": "Begint op",
+  "seasonsEndsOn": "Loopt t/m",
+  "seasonsSeasonFormNote": "Wedstrijden, boetes en stats die er al staan blijven aan dit seizoen hangen. Die verhuizen niet mee met de datums.",
+  "seasonsPickDate": "Kies een datum",
+  "seasonsDatesRequired": "Kies beide datums.",
+  "seasonsEndBeforeStart": "De einddatum moet na de begindatum liggen.",
+  "seasonsPeriodName": "Naam",
+  "seasonsPeriodNameHint": "Bijv. Najaar",
+  "seasonsPeriodNameRequired": "Vul een naam in.",
+  "seasonsPeriodFrom": "Van",
+  "seasonsPeriodTo": "Tot en met",
+  "seasonsPeriodToOpen": "Loopt door tot de periode vol is",
+  "seasonsPeriodClearEnd": "Einddatum leegmaken",
+  "seasonsPeriodTargetLabel": "Aantal wedstrijden",
+  "seasonsPeriodTargetHint": "1 tot 50; leeg laat het aantal vrij.",
+  "seasonsPeriodTargetInvalid": "Kies 1 tot 50 wedstrijden."
+}

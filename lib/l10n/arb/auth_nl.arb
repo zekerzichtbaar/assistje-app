@@ -1,0 +1,40 @@
+{
+  "@@locale": "nl",
+  "loginHeadline": "Log in bij je team",
+  "@loginHeadline": {
+    "description": "Kop op het inlogscherm (e-mailstap)"
+  },
+  "loginIntro": "Vul je e-mailadres in. We mailen je een inlogcode.",
+  "loginEmailLabel": "E-mailadres",
+  "loginEmailHint": "naam@voorbeeld.nl",
+  "loginEmailInvalid": "Vul een geldig e-mailadres in.",
+  "loginSendCode": "Stuur mij een code",
+  "loginRequestThrottled": "Je hebt al een paar keer een code aangevraagd. Probeer het over een minuut opnieuw.",
+  "@loginRequestThrottled": {
+    "description": "429 bij het aanvragen van een inlogmail"
+  },
+  "loginCodeHeadline": "Vul je code in",
+  "loginCodeIntro": "We hebben een mail met een code van zes cijfers gestuurd naar {email}.",
+  "@loginCodeIntro": {
+    "description": "Uitleg op het codescherm",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "sam@example.com"
+      }
+    }
+  },
+  "loginCodeLabel": "Inlogcode",
+  "loginCodeSubmit": "Inloggen",
+  "loginCodeInvalid": "Deze code klopt niet of is verlopen.",
+  "@loginCodeInvalid": {
+    "description": "422 bij het inwisselen van de code"
+  },
+  "loginCodeLocked": "Te veel pogingen. Vraag een nieuwe code aan.",
+  "@loginCodeLocked": {
+    "description": "429 bij het inwisselen van de code (op slot)"
+  },
+  "loginCodeResend": "Stuur een nieuwe code",
+  "loginCodeResent": "Nieuwe code verstuurd. Kijk in je mail.",
+  "loginCodeOtherEmail": "Ander e-mailadres"
+}

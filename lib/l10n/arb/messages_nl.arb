@@ -1,0 +1,86 @@
+{
+  "@@locale": "nl",
+  "messagesLoadError": "Berichten laden mislukt",
+  "messagesForbiddenTitle": "Alleen voor de trainer",
+  "messagesForbiddenBody": "Berichten aan het team versturen kan alleen de trainer.",
+  "messagesNotFoundTitle": "Berichten staan uit",
+  "messagesNotFoundBody": "Berichten staat niet aan voor dit team.",
+  "messagesComposeCardTitle": "Bericht aan het team",
+  "messagesComposeIntro": "Stuur een push-bericht naar alle teamgenoten, bijvoorbeeld bij afgelasting of een mededeling. Iedereen die push aan heeft staan ontvangt het direct.",
+  "messagesComposeOpen": "Nieuw bericht",
+  "messagesComposeSheetTitle": "Nieuw bericht",
+  "messagesFieldTitle": "Titel",
+  "messagesFieldTitleHint": "Bijv. Training afgelast",
+  "messagesFieldTitleRequired": "Vul een titel in.",
+  "messagesFieldBody": "Bericht",
+  "messagesFieldBodyHint": "Bijv. Door de regen gaat de training van vanavond niet door.",
+  "messagesFieldBodyRequired": "Vul een bericht in.",
+  "messagesBodyCounter": "{count}/1000",
+  "@messagesBodyCounter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messagesFieldLink": "Linkt naar (optioneel)",
+  "messagesLinkNone": "Geen link",
+  "messagesLinkOwn": "Eigen link…",
+  "messagesLinkOwnHint": "Bijv. /events/123 of https://…",
+  "messagesSend": "Verstuur naar iedereen",
+  "messagesSendConfirm": "Verstuur dit bericht als push naar alle teamgenoten?",
+  "messagesSendConfirmOk": "Versturen",
+  "messagesCancel": "Annuleer",
+  "messagesSent": "Bericht verstuurd",
+  "messagesSentTo": "{count, plural, =0{Nog geen ontvangers} =1{Naar 1 teamgenoot} other{Naar {count} teamgenoten}}",
+  "@messagesSentTo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messagesSendError": "Versturen mislukt",
+  "messagesAutoTitle": "Automatische berichten",
+  "messagesAutoIntro": "Zet aan of uit en pas de tekst aan met placeholders. Leeg laten = standaardtekst.",
+  "messagesAutoEmpty": "Geen automatische berichten.",
+  "messagesAutoCustom": "Eigen tekst",
+  "messagesAutoEdit": "Tekst aanpassen",
+  "messagesToggleError": "Wijzigen mislukt",
+  "messagesTemplateTitle": "Titel",
+  "messagesTemplateBody": "Bericht",
+  "messagesTemplateDefault": "(standaardtekst)",
+  "messagesTemplatePlaceholders": "Placeholders — tik om in te voegen:",
+  "messagesTemplateSave": "Bewaren",
+  "messagesTemplateReset": "Wijzigingen terugdraaien",
+  "messagesTemplateSaved": "Tekst bewaard",
+  "messagesHistoryTitle": "Handmatig verstuurd",
+  "messagesHistoryEmpty": "Nog geen berichten verstuurd.",
+  "messagesSending": "verzendt…",
+  "messagesBy": "door {name}",
+  "@messagesBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "messagesRecipients": "{count, plural, =1{1 ontvanger} other{{count} ontvangers}}",
+  "@messagesRecipients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messagesAutoHistoryTitle": "Recente automatische pushes",
+  "messagesAutoHistoryEmpty": "Nog geen automatische berichten verzonden.",
+  "messagesAutoHistoryCount": "{count}×",
+  "@messagesAutoHistoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

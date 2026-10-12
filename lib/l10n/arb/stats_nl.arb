@@ -1,0 +1,170 @@
+{
+  "@@locale": "nl",
+  "statsLoadError": "Statistieken laden mislukt",
+  "statsSwitchFailed": "Wisselen mislukt",
+  "statsDisabled": "Statistieken staan uit voor dit team.",
+  "statsWindowSeason": "Seizoen",
+  "statsWindowLast10": "Laatste 10",
+  "statsWindowLast5": "Laatste 5",
+  "statsSeasonPickerTitle": "Kies seizoen",
+  "statsSeasonClosed": "{label} (afgesloten)",
+  "@statsSeasonClosed": {
+    "description": "Seizoenskiezer: een seizoen dat niet meer loopt",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "statsSeasonButton": "Seizoen {label}",
+  "@statsSeasonButton": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "statsSortOverview": "Overzicht",
+  "statsSortAttendanceMatch": "Aanwez. wedstr.",
+  "statsSortAttendanceTraining": "Aanwez. training",
+  "statsSortMatches": "Wedstrijden",
+  "statsSortMinutes": "Speelminuten",
+  "statsSortGoals": "Goals",
+  "statsSortAssists": "Assists",
+  "statsSortFlagMinutes": "Vlag-minuten",
+  "statsSortFlagShifts": "Vlag-beurten",
+  "statsSortTrainingPoints": "Trainingspunten",
+  "statsSortName": "Naam",
+  "statsAttendanceMatch": "Wedstr.",
+  "statsAttendanceTraining": "Training",
+  "statsTileMinutes": "min · {matches} w.",
+  "@statsTileMinutes": {
+    "description": "Tegel speelminuten: onder het aantal minuten, met het aantal wedstrijden",
+    "placeholders": {
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "statsTileMatches": "wedstrijden",
+  "statsTileFlag": "vlag",
+  "statsTileFlagShifts": "vlag · {count}×",
+  "@statsTileFlagShifts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsValueMinutes": "{value} min",
+  "@statsValueMinutes": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "statsValuePercent": "{value}%",
+  "@statsValuePercent": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "statsMe": "Jij",
+  "statsYellowCards": "Gele kaarten: {count}",
+  "@statsYellowCards": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsRedCards": "Rode kaarten: {count}",
+  "@statsRedCards": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsExport": "Exporteer",
+  "statsExportFailed": "Exporteren mislukt",
+  "statsEmptyTitle": "Nog geen statistieken",
+  "statsEmptyDescription": "Zodra er wedstrijden en trainingen zijn geweest, staan hier de cijfers per speler.",
+  "hallOfFameLoadError": "Ranking laden mislukt",
+  "hallOfFameTabRanking": "Ranglijst",
+  "hallOfFameTabMilestones": "Mijlpalen",
+  "hallOfFameTabTraining": "Trainen",
+  "hallOfFameWholeSeason": "Heel seizoen",
+  "hallOfFamePeriodClosed": "{name} (afgesloten)",
+  "@hallOfFamePeriodClosed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFameTitles": "Titels",
+  "hallOfFameTitlesPeriod": "Titels · {name}",
+  "@hallOfFameTitlesPeriod": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFameTitlesNow": "Op dit moment",
+  "hallOfFameNoHolder": "Nog niemand",
+  "hallOfFameShared": "{count, plural, =1{1 speler} other{{count} spelers}} gelijk",
+  "@hallOfFameShared": {
+    "description": "Een titel die meerdere spelers delen",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hallOfFameAwards": "Erelijst per periode",
+  "hallOfFameBadges": "Behaalde prestaties",
+  "hallOfFameBadgesEmptySeason": "Nog niemand heeft dit seizoen een prestatie ontgrendeld.",
+  "hallOfFameBadgesEmptyPeriod": "Nog niemand heeft in {name} een prestatie ontgrendeld.",
+  "@hallOfFameBadgesEmptyPeriod": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFameTopScorers": "Topscorers",
+  "hallOfFameTopOf": "Top {term}",
+  "@hallOfFameTopOf": {
+    "description": "Ranglijstkop, bv. 'Top assists'",
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFamePoints": "Puntenmakers",
+  "hallOfFamePointsUnit": "punten",
+  "hallOfFameAces": "Meeste aces",
+  "hallOfFameAcesUnit": "aces",
+  "hallOfFameBlocks": "Meeste blocks",
+  "hallOfFameBlocksUnit": "blocks",
+  "hallOfFameFlaggers": "Top vlaggers",
+  "hallOfFameFlagMinutes": "· {minutes} min",
+  "@hallOfFameFlagMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hallOfFameMotm": "Speler van de wedstrijd",
+  "hallOfFameTimesUnit": "keer",
+  "hallOfFameTrainingPoints": "Trainingspunten",
+  "hallOfFameTrainingPointsUnit": "pt",
+  "hallOfFameLeaderboardEmpty": "Nog niemand op dit podium."
+}

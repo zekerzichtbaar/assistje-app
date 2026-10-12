@@ -1,0 +1,297 @@
+{
+  "@@locale": "nl",
+  "liveLoadError": "Live-stand laden mislukt",
+  "liveNotFoundTitle": "Geen live-stand",
+  "liveNotFoundBody": "Live volgen staat uit voor dit team, of deze wedstrijd hoort er niet bij.",
+  "liveForbiddenTitle": "Geen toegang",
+  "liveForbiddenBody": "Deze wedstrijd kun je niet live volgen. Ben je lid van dit team?",
+  "liveBadge": "Live",
+  "liveStatusReport": "Wedstrijdverslag",
+  "liveStatusNotStarted": "Nog niet begonnen",
+  "liveViewers": "{count} kijken mee",
+  "@liveViewers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "liveFollowOn": "Aan",
+  "liveFollowOff": "Meldingen aan",
+  "liveFollowError": "Meldingen aanpassen mislukt",
+  "liveHome": "Thuis",
+  "liveAway": "Uit",
+  "livePeriodOrdinal": "{number}e {part}",
+  "@livePeriodOrdinal": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveBreak": "Rust",
+  "livePause": "Pauze",
+  "liveEnded": "Afgelopen",
+  "liveTimelineEmpty": "Nog geen gebeurtenissen.",
+  "liveOwnGoalBadge": "e.d.",
+  "livePenalty": "Strafschop",
+  "liveAssistBy": "Voorzet: {name}",
+  "@liveAssistBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "liveOpponentGoal": "Tegendoelpunt",
+  "liveReact": "Reageren",
+  "liveReactError": "Reageren mislukt",
+  "liveDeleteItem": "Gebeurtenis verwijderen",
+  "liveDeleteConfirm": "Deze gebeurtenis verwijderen?",
+  "liveDeleteConfirmLabel": "Verwijderen",
+  "liveDeleteError": "Verwijderen mislukt",
+  "liveAddEvent": "Gebeurtenis",
+  "liveAddTitle": "Gebeurtenis toevoegen",
+  "liveTabGoal": "Goal",
+  "liveTabOpponent": "Tegengoal",
+  "liveTabSub": "Wissel",
+  "liveTabOther": "Overige",
+  "liveMinute": "Minuut",
+  "liveScorer": "Scorer",
+  "liveAssistLabel": "Voorzet (optioneel)",
+  "liveChoosePlayer": "Kies speler",
+  "liveNone": "Geen",
+  "livePenaltyToggle": "Uit een strafschop",
+  "liveOwnGoalHint": "Eigen doelpunt? Die leg je vast onder Tegengoal.",
+  "liveOwnGoalOf": "Eigen doelpunt van (optioneel)",
+  "liveOwnGoalNone": "Niemand, gewoon tegendoelpunt",
+  "liveOwnGoalExplain": "Telt als eigen doelpunt. Het punt gaat naar de tegenstander en staat aan hun kant van de tijdlijn, met de naam erbij.",
+  "liveOpponentExplain": "Voegt een doelpunt voor de tegenstander toe (stand +1).",
+  "liveSubOff": "Eruit",
+  "liveSubOn": "Erin",
+  "liveCard": "Kaart",
+  "liveCardColor": "Kleur",
+  "livePlayer": "Speler",
+  "livePlayerOptional": "Speler (optioneel)",
+  "liveNoName": "Geen naam erbij",
+  "liveMomentExplain": "Gaat als melding naar wie de wedstrijd volgt. Telt niet mee in de stand en in geen enkele statistiek.",
+  "liveAddSubmit": "Toevoegen",
+  "liveAddError": "Toevoegen mislukt. Check de gegevens.",
+  "liveOnField": "Op het veld",
+  "liveBench": "Bank",
+  "livePlayers": "Spelers",
+  "liveCancel": "Annuleren",
+  "liveStartFirst": "Start 1e {part}",
+  "@liveStartFirst": {
+    "placeholders": {
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStartMatch": "Aftrap",
+  "liveLateStart": "Klok stond te laat aan",
+  "liveFromMinute": "Vanaf minuut",
+  "liveKickoffPassed": "De aftrap was om {time}, maar de klok loopt nog niet.",
+  "@liveKickoffPassed": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "liveConfirmStartTitle": "Aftrap?",
+  "liveConfirmStartBody": "De klok begint te lopen en het team krijgt bericht dat de wedstrijd is begonnen.",
+  "liveConfirmStartFrom": "De klok begint te lopen vanaf {minute} minuten.",
+  "@liveConfirmStartFrom": {
+    "placeholders": {
+      "minute": {
+        "type": "int"
+      }
+    }
+  },
+  "liveConfirmStartLabel": "Starten",
+  "liveConfirmBreakTitle": "{label}?",
+  "@liveConfirmBreakTitle": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "liveConfirmBreakBody": "De klok staat stil op {clock}. De volgers krijgen de tussenstand.",
+  "@liveConfirmBreakBody": {
+    "placeholders": {
+      "clock": {
+        "type": "String"
+      }
+    }
+  },
+  "liveResume": "Hervat",
+  "liveNextFrom": "{number}e {part} vanaf minuut",
+  "@liveNextFrom": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStartNext": "Start {number}e {part}",
+  "@liveStartNext": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveConfirmNextBody": "De klok gaat verder vanaf {minute} minuten.",
+  "@liveConfirmNextBody": {
+    "placeholders": {
+      "minute": {
+        "type": "int"
+      }
+    }
+  },
+  "liveOvertime": "De klok loopt al {minute} minuten. Was de wedstrijd hiervoor al afgelopen?",
+  "@liveOvertime": {
+    "placeholders": {
+      "minute": {
+        "type": "int"
+      }
+    }
+  },
+  "liveOverdue": "De klok staat op {clock} en loopt nog. Is de {part} al voorbij? Tik hier om de klok recht te zetten.",
+  "@liveOverdue": {
+    "placeholders": {
+      "clock": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStop": "Wedstrijd beëindigen",
+  "liveConfirmStopTitle": "Wedstrijd beëindigen?",
+  "liveConfirmStopBody": "De eindstand gaat naar de volgers en de stemming voor speler van de wedstrijd opent.",
+  "liveConfirmStopLabel": "Beëindigen",
+  "liveMisfire": "Per ongeluk gestart? Wedstrijd herstellen",
+  "liveRestoreTitle": "Wedstrijd herstellen",
+  "liveRestoreBody": "De klok gaat terug alsof de wedstrijd nog moet beginnen. Er is niets vastgelegd, dus je raakt niets kwijt.",
+  "liveRestoreLabel": "Herstellen",
+  "liveEndedDuration": "Afgelopen · {time}",
+  "@liveEndedDuration": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "liveReopen": "Heropenen",
+  "liveResetLabel": "Verslag verwijderen",
+  "liveResetTitle": "Verslag wissen",
+  "liveResetBody": "Hele verslag wissen? Doelpunten, wissels, kaarten en de stand gaan weg, en de gedeelde live-link werkt niet meer. Dit kan niet ongedaan worden.",
+  "liveResetConfirm": "Wissen",
+  "liveDurationTitle": "Speelduur aanpassen",
+  "liveDurationBody": "De klok telt door tot er afgefloten wordt. Is hij blijven lopen, dan zet je de gespeelde tijd hier recht.",
+  "liveDurationMinutes": "Minuten",
+  "liveDurationSuggest": "Zet op {minutes} minuten",
+  "@liveDurationSuggest": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "liveSave": "Opslaan",
+  "liveOverrunTitle": "Klok rechtzetten",
+  "liveOverrunBody": "De klok staat op {clock} en loopt nog, terwijl deze {part} op {boundary} minuten afgelopen hoort te zijn. Wat is er aan de hand?",
+  "@liveOverrunBody": {
+    "placeholders": {
+      "clock": {
+        "type": "String"
+      },
+      "part": {
+        "type": "String"
+      },
+      "boundary": {
+        "type": "int"
+      }
+    }
+  },
+  "liveOverrunBreakTitle": "De rust begint nu",
+  "liveOverrunBreakBody": "De klok gaat stil op {boundary} minuten en de volgers krijgen de ruststand. De volgende {part} begint straks weer op {boundary}.",
+  "@liveOverrunBreakBody": {
+    "placeholders": {
+      "boundary": {
+        "type": "int"
+      },
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveOverrunBreakButton": "{label} op {boundary} minuten",
+  "@liveOverrunBreakButton": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "boundary": {
+        "type": "int"
+      }
+    }
+  },
+  "liveOverrunNextTitle": "De rust is al geweest",
+  "liveOverrunNextBody": "We spelen al door. De klok loopt verder vanaf de minuut die je hier zet. De tijd dat er gerust werd telt niet als speeltijd.",
+  "liveOverrunTrim": "{count, plural, =1{Eén moment staat} other{{count} momenten staan}} voorbij de {boundary}e minuut. Meeschuiven naar {boundary}, want die minuut komt uit dezelfde doorgelopen klok.",
+  "@liveOverrunTrim": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "boundary": {
+        "type": "int"
+      }
+    }
+  },
+  "liveClockError": "Klok-actie mislukt",
+  "liveShareLivePrompt": "Laat het team live meekijken",
+  "liveShareEndedPrompt": "Deel de uitslag met het team",
+  "liveShareButton": "Deel",
+  "liveShareError": "Delen mislukt",
+  "liveShareLiveMessage": "Volg {who} live!\n\nBekijk de stand en het verloop realtime (geen app nodig):\n{url}",
+  "@liveShareLiveMessage": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "liveShareEndedMessage": "{who}\n{score}\n\nBekijk het wedstrijdverslag (geen app nodig):\n{url}",
+  "@liveShareEndedMessage": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "score": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  }
+}

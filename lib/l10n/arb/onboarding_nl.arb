@@ -1,0 +1,42 @@
+{
+  "@@locale": "nl",
+  "onboardingWelcome": "Welkom bij",
+  "onboardingAllDone": "Alles staat. Jullie team draait.",
+  "onboardingStepsLeft": "{count, plural, =1{Nog 1 stap tot jullie eerste wedstrijd met de opkomst erbij.} other{Nog {count} stappen tot jullie eerste wedstrijd met de opkomst erbij.}}",
+  "@onboardingStepsLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingStepsCaption": "Eerste stappen · {done} van {total}",
+  "@onboardingStepsCaption": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingFirstMatch": "Eerste wedstrijd",
+  "onboardingResponded": "{responded} van {roster} reageerden",
+  "@onboardingResponded": {
+    "placeholders": {
+      "responded": {
+        "type": "int"
+      },
+      "roster": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingSchedulePending": "Aangevraagd. Je krijgt bericht zodra het erin staat.",
+  "onboardingAttendanceWaiting": "Zodra er een komende wedstrijd in de agenda staat, zie je hier wie er komen.",
+  "onboardingFinish": "Naar de app",
+  "onboardingSkip": "Overslaan, naar de app",
+  "onboardingLoadError": "Checklist laden mislukt",
+  "onboardingCompleteFailed": "Afronden mislukt"
+}

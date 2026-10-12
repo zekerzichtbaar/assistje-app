@@ -1,0 +1,157 @@
+{
+  "@@locale": "nl",
+  "reportLoadError": "Verslag laden mislukt",
+  "reportForbiddenTitle": "Geen toegang",
+  "reportForbiddenBody": "Alleen wie de opstelling mag maken vult het wedstrijdverslag in.",
+  "reportNotFoundTitle": "Verslag niet gevonden",
+  "reportNotFoundBody": "Deze wedstrijd hoort niet bij dit team.",
+  "reportHome": "Thuis",
+  "reportAway": "Uit",
+  "reportScoreTitle": "Uitslag",
+  "reportNoScore": "Nog geen uitslag ingevuld.",
+  "reportEditScore": "Stand aanpassen",
+  "reportEditSets": "Setstanden",
+  "reportSetLabel": "Set {number}",
+  "@reportSetLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "reportSetScore": "{home}-{away}",
+  "@reportSetScore": {
+    "placeholders": {
+      "home": {
+        "type": "int"
+      },
+      "away": {
+        "type": "int"
+      }
+    }
+  },
+  "reportSetsFilled": "{count, plural, =0{Vul alleen de sets in die gespeeld zijn.} =1{1 set ingevuld.} other{{count} sets ingevuld.}}",
+  "@reportSetsFilled": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportSave": "Opslaan",
+  "reportSaved": "Opgeslagen",
+  "reportSaveError": "Opslaan mislukt",
+  "reportTimelineNote": "Doelpunten, kaarten en wissels vul je in bij de wedstrijd zelf.",
+  "reportStatsTitle": "Statistieken",
+  "reportStatsIntro": "Per speler, na afloop",
+  "reportStatsImport": "Importeren",
+  "reportStatsPlayer": "Speler",
+  "reportStatsEmpty": "Nog niemand aanwezig gemeld. Vul eerst de aanwezigheid in.",
+  "reportStatsNoLineup": "Geen opstelling ingevuld. Je vult de statistieken van de aanwezigen in.",
+  "reportStatsFootnote": "Optioneel. Vul je niets in, dan mist alleen de Hall of Fame de prestatietitels. Aanwezigheid, boetes en de stemming lopen gewoon door.",
+  "reportStatsEditHint": "Tik op een speler om de cijfers in te vullen.",
+  "reportStatPoints": "Ptn",
+  "reportStatAces": "Aces",
+  "reportStatBlocks": "Blk",
+  "reportStatPlayed": "Gespeeld",
+  "reportStatAttempts": "Totaal",
+  "reportStatErrors": "Fout",
+  "reportStatPositive": "Positief",
+  "reportStatBlocked": "Geblokt",
+  "reportStatKills": "Kills",
+  "reportStatGroupMain": "Totaal",
+  "reportStatGroupSets": "Sets",
+  "reportStatGroupServe": "Service",
+  "reportStatGroupReception": "Pass",
+  "reportStatGroupAttack": "Aanval",
+  "reportScoutTitle": "Rapport importeren",
+  "reportScoutIntro": "Kies de PDF van het camerarapport, of plak de tabel eruit. Je ziet eerst wat erin staat, pas daarna wordt er iets opgeslagen.",
+  "reportScoutPdf": "PDF",
+  "reportScoutPickPdf": "PDF kiezen",
+  "reportScoutRemovePdf": "PDF weghalen",
+  "reportScoutPdfTooBig": "Deze PDF is groter dan 10 MB.",
+  "reportScoutPdfError": "De PDF kon niet geopend worden.",
+  "reportScoutPaste": "Of plak de tabel",
+  "reportScoutPasteHint": "Selecteer de spelerstabel in het webrapport, kopieer, en plak hier.",
+  "reportScoutRead": "Lezen",
+  "reportScoutReadError": "Het rapport kon niet gelezen worden.",
+  "reportScoutWhichTeam": "Welke ploeg zijn wij?",
+  "reportScoutTeamFallback": "Ploeg {number}",
+  "@reportScoutTeamFallback": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "reportScoutTakeSets": "Setstanden overnemen ({sets})",
+  "@reportScoutTakeSets": {
+    "placeholders": {
+      "sets": {
+        "type": "String"
+      }
+    }
+  },
+  "reportScoutSkip": "Overslaan",
+  "reportScoutUnmatched": "Niet herkend in de selectie en wordt dus overgeslagen. Kies zelf een speler als dit er wel een is.",
+  "reportScoutLinked": "{linked} van de {total} regels gekoppeld. Wat op “Overslaan” staat wordt niet overgenomen.",
+  "@reportScoutLinked": {
+    "placeholders": {
+      "linked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reportScoutApply": "Overnemen in het blad",
+  "reportScoutApplied": "Overgenomen in het blad",
+  "reportFlagTitle": "Vlaggen",
+  "reportFlagAssign": "Vlaggen toewijzen",
+  "reportFlagNone": "Nog niemand ingedeeld. Voeg een vlagger toe.",
+  "reportFlagLoadError": "Vlaggersdienst laden mislukt",
+  "reportFlagFromKickoff": "Vanaf de aftrap",
+  "reportFlagSwitch": "Wissel {number}",
+  "@reportFlagSwitch": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "reportFlagFromMinute": "Vanaf minuut",
+  "reportFlagPerson": "Vlagger",
+  "reportFlagBy": "Door",
+  "reportFlagChoose": "Kies vlagger",
+  "reportFlagGuest": "{name} (gast)",
+  "@reportFlagGuest": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reportFlagStaff": "{name} (staf)",
+  "@reportFlagStaff": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reportFlagAdd": "Vlagger toevoegen",
+  "reportFlagAddSwitch": "Nog een wissel",
+  "reportFlagRemove": "Wissel weghalen",
+  "reportFlagShift": "{name} vanaf {minute}′",
+  "@reportFlagShift": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minute": {
+        "type": "int"
+      }
+    }
+  }
+}

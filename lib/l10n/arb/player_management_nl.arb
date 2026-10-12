@@ -1,0 +1,306 @@
+{
+  "@@locale": "nl",
+  "pmAdd": "Toevoegen",
+  "pmLoadError": "Spelers konden niet geladen worden",
+  "pmForbiddenTitle": "Alleen voor de trainer",
+  "pmForbidden": "Spelersbeheer is alleen voor de trainer van dit team.",
+  "pmReadOnlyDemo": "Dit is een demoteam: je kunt rondkijken, maar niets wijzigen.",
+  "pmReadOnlyForbidden": "Je kunt hier niets (meer) wijzigen. Alleen de trainer beheert de spelers.",
+  "pmEmptyTitle": "Nog geen spelers",
+  "pmEmptyDescription": "Deel één link in de groepsapp en je team meldt zich zelf aan. Of voeg ze zelf toe, één voor één.",
+  "pmEmptyAction": "Nodig je team uit",
+  "pmTeamlinkCardTitle": "Teamlink",
+  "pmTeamlinkCardActive": "Deel de link in de groepsapp: je team meldt zich zelf aan.",
+  "pmTeamlinkCardExpired": "De teamlink is verlopen. Maak een nieuwe om te delen.",
+  "pmTeamlinkCardRevoked": "De teamlink is ingetrokken. Maak een nieuwe om te delen.",
+  "pmSectionTrainers": "Trainers",
+  "pmSectionOther": "Overig",
+  "pmSectionGuests": "Gasten",
+  "pmSectionSpectators": "Toeschouwers",
+  "pmBadgeAdmin": "admin",
+  "pmBadgeGuest": "gast",
+  "pmBadgeSelf": "jij",
+  "pmBadgeCaptain": "aanvoerder",
+  "pmBadgeInjured": "geblesseerd",
+  "pmBadgeVacation": "vakantie",
+  "pmInviteNone": "Geen account",
+  "pmInvitePending": "Uitgenodigd",
+  "pmInviteAccepted": "Actief",
+  "pmPushOn": "Meldingen aan",
+  "pmPushInstalled": "App geïnstalleerd, geen meldingen",
+  "pmPushNone": "Nog geen app",
+  "pmAddTitle": "Teamleden toevoegen",
+  "pmAddTabPlayer": "Speler",
+  "pmAddTabTrainer": "Trainer",
+  "pmAddTabSpectator": "Toeschouwer",
+  "pmAddTeamlinkHint": "Sneller: deel de teamlink in de groepsapp, dan meldt je team zich zelf aan.",
+  "pmOpenTeamlink": "Teamlink openen",
+  "pmFieldName": "Naam",
+  "pmFieldShirt": "Rugnummer",
+  "pmFieldPosition": "Positie",
+  "pmPositionNone": "Geen",
+  "pmFieldEmail": "E-mail",
+  "pmFieldBirthdate": "Geboortedatum",
+  "pmFieldStrength": "Sterkte",
+  "pmFieldGuest": "Gastspeler",
+  "pmOptional": "Optioneel",
+  "pmBirthdatePick": "Kies een datum",
+  "pmClear": "Wissen",
+  "pmSendInvite": "Stuur uitnodigingsmail",
+  "pmSendInviteHint": "Hij krijgt een mail met een link waarmee hij meteen binnen is. Een wachtwoord is er niet.",
+  "pmTrainerHint": "Krijgt een inloglink per mail en kan daarna het team mee beheren.",
+  "pmSpectatorHint": "Kijkt mee zonder spelersprofiel: ziet de agenda, maar meldt zich niet aan of af.",
+  "pmAddPlayerSubmit": "Speler toevoegen",
+  "pmAddTrainerSubmit": "Trainer toevoegen",
+  "pmAddSpectatorSubmit": "Toeschouwer uitnodigen",
+  "pmPlayerAdded": "Speler toegevoegd",
+  "pmTrainerAdded": "Trainer toegevoegd",
+  "pmSpectatorAdded": "Toeschouwer uitgenodigd",
+  "pmNameRequired": "Vul een naam in.",
+  "pmEmailRequired": "Vul een e-mailadres in.",
+  "pmEmailInvalid": "Dit is geen geldig e-mailadres.",
+  "pmViewProfile": "Spelerpagina",
+  "pmEdit": "Bewerken",
+  "pmDelete": "Verwijder",
+  "pmDeleteTitle": "{name} verwijderen?",
+  "@pmDeleteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmDeleteMessage": "Dit kan niet ongedaan worden gemaakt. Statistieken blijven bewaard.",
+  "pmPlayerDeleted": "Speler verwijderd",
+  "pmCaptain": "Vaste aanvoerder",
+  "pmCaptainHint": "Krijgt de C in de opstelling, tenzij je bij een wedstrijd iemand anders kiest.",
+  "pmTrainerRole": "Beheerders-rechten",
+  "pmTrainerRoleHint": "Geeft toegang tot planning, spelers, statistieken en diensten.",
+  "pmTrainerRoleNoAccount": "Deze speler heeft nog geen account. Stuur eerst een uitnodiging om beheerders-rechten te kunnen toekennen.",
+  "pmTrainerGrantConfirm": "{name} beheerders-rechten geven?",
+  "@pmTrainerGrantConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTrainerRevokeConfirm": "Beheerders-rechten van {name} intrekken?",
+  "@pmTrainerRevokeConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmAbilitiesHeader": "Mag ook",
+  "pmAbilityLineup": "Opstelling maken",
+  "pmAbilityLineupHint": "Opstelling, wissels en het wedstrijdverslag bijhouden.",
+  "pmAbilityTrainingPoints": "Trainingspunten geven",
+  "pmAbilityTrainingPointsHint": "Uitslagen van partijvormen invoeren.",
+  "pmAbilityFines": "Boetepot beheren",
+  "pmAbilityFinesHint": "Boetes uitschrijven en afvinken wie betaald heeft.",
+  "pmAbilityGrantConfirm": "{name} de bevoegdheid \"{ability}\" geven?",
+  "@pmAbilityGrantConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "ability": {
+        "type": "String"
+      }
+    }
+  },
+  "pmAbilityRevokeConfirm": "\"{ability}\" van {name} intrekken?",
+  "@pmAbilityRevokeConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "ability": {
+        "type": "String"
+      }
+    }
+  },
+  "pmInviteTitle": "Speler uitnodigen",
+  "pmInviteHint": "Stuur een uitnodigingsmail om {name} toegang te geven tot de app.",
+  "@pmInviteHint": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmInviteSend": "Verstuur",
+  "pmInviteSent": "Uitnodiging verstuurd",
+  "pmInvitePendingTitle": "Uitnodiging nog niet geaccepteerd",
+  "pmInvitePendingTo": "Verstuurd naar {email}",
+  "@pmInvitePendingTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "pmInviteResend": "Opnieuw",
+  "pmInviteResent": "Uitnodiging opnieuw verstuurd",
+  "pmResendSpectatorLabel": "Uitnodiging opnieuw sturen naar {name}",
+  "@pmResendSpectatorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmEditTitle": "Speler bewerken",
+  "pmSave": "Opslaan",
+  "pmSaved": "Opgeslagen",
+  "pmSaveFailed": "Opslaan lukte niet",
+  "pmActionFailed": "Dat lukte niet",
+  "pmCancel": "Annuleren",
+  "pmConfirm": "Bevestigen",
+  "pmRemove": "Verwijderen",
+  "pmRemoveTrainerConfirm": "Weet je zeker dat je beheerder {name} wilt verwijderen?",
+  "@pmRemoveTrainerConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmRemoveTrainerLabel": "Beheerder {name} verwijderen",
+  "@pmRemoveTrainerLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTrainerRemoved": "Trainer verwijderd",
+  "pmRemoveSpectatorConfirm": "Weet je zeker dat je toeschouwer {name} wilt verwijderen?",
+  "@pmRemoveSpectatorConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmRemoveSpectatorLabel": "Toeschouwer {name} verwijderen",
+  "@pmRemoveSpectatorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pmSpectatorRemoved": "Toeschouwer verwijderd",
+  "pmTlIntro": "Plak deze link in de groepsapp. Wie hem opent kiest zelf of hij meespeelt of meekijkt, en speelt hij mee dan tikt hij zijn eigen naam aan uit de selectie.",
+  "pmTlCopy": "Kopieer",
+  "pmTlCopied": "Gekopieerd",
+  "pmTlCopiedMessage": "Plak het bericht in de groepsapp.",
+  "pmTlShare": "Delen",
+  "pmTlShowQr": "Toon QR-code",
+  "pmTlQrTitle": "QR-code",
+  "pmTlQrHint": "Laat dit scherm zien in de kleedkamer. Iedereen scant hem met zijn camera.",
+  "pmTlQrLabel": "QR-code naar de teamlink van {team}",
+  "@pmTlQrLabel": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTlExpires": "Deze link werkt tot {date}. Een teamlink blijft {days} dagen geldig, want hij blijft in de groepsapp staan en wordt doorgestuurd.",
+  "@pmTlExpires": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTlRotate": "Nieuwe link maken",
+  "pmTlRotateTitle": "Nieuwe link maken?",
+  "pmTlRotateMessage": "De huidige link werkt daarna niet meer. Wie hem al gebruikt heeft blijft gewoon lid.",
+  "pmTlRotateConfirm": "Nieuwe link",
+  "pmTlRevoke": "Link intrekken",
+  "pmTlRevokeTitle": "Teamlink intrekken?",
+  "pmTlRevokeMessage": "Niemand kan zich daarna nog aanmelden met de link die in de groepsapp staat. Wie al binnen is blijft gewoon lid, en je kunt later een nieuwe link maken.",
+  "pmTlRevokeConfirm": "Intrekken",
+  "pmTlRevokedTitle": "De teamlink is ingetrokken",
+  "pmTlRevokedBody": "Niemand kan zich nog aanmelden met de link die in de groepsapp staat. Wie al binnen is blijft gewoon lid.",
+  "pmTlExpiredTitle": "De teamlink is verlopen",
+  "pmTlExpiredBody": "Een teamlink werkt {days} dagen; deze is over de datum. Maak een nieuwe en plak die in de groepsapp. Wie al binnen is blijft gewoon lid.",
+  "@pmTlExpiredBody": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTlCreate": "Nieuwe teamlink maken",
+  "pmTlCreated": "Nieuwe teamlink gemaakt",
+  "pmTlRevoked": "Teamlink ingetrokken",
+  "pmTlJoinedTitle": "Via de link binnengekomen",
+  "pmTlJoinedEmpty": "Nog niemand. Zodra iemand zich aanmeldt staat hij hier.",
+  "pmTlJoinedHint": "Spelers die je zelf al hebt toegevoegd claimen hun eigen naam; wie er nog niet staat voegt zichzelf toe.",
+  "pmTlRolePlayer": "Speler",
+  "pmTlRoleSpectator": "Toeschouwer",
+  "pmTlLoadError": "Teamlink kon niet geladen worden",
+  "pmTlInviteMessage": "Hoi! Wij gebruiken vanaf nu een app voor {team}: trainingen, wedstrijden en wie er komt.\n\n👉 Open deze link en meld je aan:\n{url}",
+  "@pmTlInviteMessage": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "pmTlInviteSubject": "Doe mee met {team}",
+  "@pmTlInviteSubject": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "pmAddTabCsv": "CSV",
+  "pmCsvIntro": "Upload een CSV met kolommen: naam, email, positie, rugnummer, geboortedatum.",
+  "pmCsvPick": "Kies CSV-bestand",
+  "pmCsvSendInvites": "Stuur uitnodigingsmail naar e-mailadressen",
+  "pmCsvHelpToggle": "Hoe maak ik een geldige CSV?",
+  "pmCsvHelpColumnsTitle": "Vereiste kolommen",
+  "pmCsvHelpColumns": "naam en positie zijn verplicht.\nemail, rugnummer en geboortedatum zijn optioneel.",
+  "pmCsvHelpPositionsTitle": "Toegestane posities",
+  "pmCsvHelpDateTitle": "Datumformaat",
+  "pmCsvHelpDate": "JJJJ-MM-DD of DD-MM-JJJJ (bv. 1995-06-15 of 15-06-1995)",
+  "pmCsvHelpSeparatorTitle": "Scheidingsteken",
+  "pmCsvHelpSeparator": "Komma of puntkomma: wordt automatisch gedetecteerd.",
+  "pmCsvHelpExampleTitle": "Voorbeeld",
+  "pmCsvHelpTip": "Tip: maak het in Excel/Google Sheets en kies \"Opslaan als CSV\".",
+  "pmCsvSubmit": "Importeren",
+  "pmCsvResultTitle": "Import klaar",
+  "pmCsvResultCreated": "{count} speler(s) geïmporteerd",
+  "@pmCsvResultCreated": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pmCsvResultSkipped": "{count} overgeslagen",
+  "@pmCsvResultSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pmCsvResultErrorsTitle": "Overgeslagen rijen",
+  "pmCsvAnother": "Nog een bestand",
+  "pmCsvDone": "Klaar"
+}

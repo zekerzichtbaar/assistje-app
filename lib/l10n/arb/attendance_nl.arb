@@ -1,0 +1,56 @@
+{
+  "@@locale": "nl",
+  "attendanceLoadError": "Aanwezigheid kon niet geladen worden",
+  "attendanceForbiddenTitle": "Alleen voor de trainer",
+  "attendanceForbidden": "De aanwezigheid van dit event wordt door de trainer bijgehouden.",
+  "attendanceNotFoundTitle": "Event niet gevonden",
+  "attendanceNotFound": "Dit event bestaat niet (meer) of hoort bij een ander team.",
+  "attendanceCancelledNotice": "Afgelast. Aanwezigheid staat vast.",
+  "attendanceLockedNotice": "Aanwezigheid kan hier niet meer gewijzigd worden.",
+  "attendanceTapHint": "Tik op iemand om zijn aanwezigheid door te geven.",
+  "attendancePlayers": "Spelers",
+  "attendanceStaff": "Staf",
+  "attendanceGuests": "Gasten",
+  "attendanceNoGuests": "Nog geen gasten bij dit event.",
+  "attendanceNoRows": "Er staat nog niemand op de lijst.",
+  "attendanceStaffBadge": "staf",
+  "attendanceGuestBadge": "gast",
+  "attendanceStandingBadge": "vaste dag",
+  "attendanceSetTitle": "Aanwezigheid van {name}",
+  "@attendanceSetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attendanceSetHint": "Je geeft dit door namens deze persoon.",
+  "attendanceStatusPending": "Openstaand",
+  "attendanceSaved": "Aanwezigheid opgeslagen",
+  "attendanceSaveFailed": "Opslaan lukte niet",
+  "attendanceAddGuest": "Gast toevoegen",
+  "attendanceRemoveGuest": "Gast verwijderen",
+  "attendanceRemoveGuestConfirm": "{name} verwijderen uit dit event?",
+  "@attendanceRemoveGuestConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "attendanceRemove": "Verwijderen",
+  "attendanceCancel": "Annuleren",
+  "attendanceGuestAdded": "Gast toegevoegd",
+  "attendanceGuestRemoved": "Gast verwijderd",
+  "attendanceGuestFailed": "Dat lukte niet",
+  "attendanceExistingGuests": "Bestaande gast",
+  "attendanceExistingGuestsEmpty": "Geen andere gasten van dit team.",
+  "attendanceOptionsError": "Gasten konden niet geladen worden",
+  "attendanceNewGuest": "Nieuwe gast",
+  "attendanceGuestName": "Naam",
+  "attendanceGuestShirt": "Rugnummer",
+  "attendanceGuestPosition": "Positie",
+  "attendanceGuestPositionNone": "Geen positie",
+  "attendanceOptional": "Optioneel",
+  "attendanceAdd": "Toevoegen"
+}

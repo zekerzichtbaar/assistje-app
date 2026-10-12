@@ -1,0 +1,88 @@
+{
+  "@@locale": "nl",
+  "lineupLoadError": "Opstelling laden mislukt",
+  "lineupNotSharedTitle": "Nog niet gedeeld",
+  "lineupNotSharedBody": "De opstelling is nog niet gedeeld. Je krijgt een melding zodra hij klaarstaat.",
+  "lineupNotFoundTitle": "Opstelling niet gevonden",
+  "lineupNotFoundBody": "Deze wedstrijd hoort niet bij dit team.",
+  "lineupFilled": "{filled}/{total}",
+  "@lineupFilled": {
+    "placeholders": {
+      "filled": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lineupSaving": "opslaan…",
+  "lineupSaved": "opgeslagen",
+  "lineupFormations": "Formatie",
+  "lineupBench": "Bank ({count})",
+  "@lineupBench": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lineupSubstitutes": "Wisselspelers ({count})",
+  "@lineupSubstitutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lineupHintPick": "tik of sleep om op te stellen",
+  "lineupHintPlace": "tik op een positie",
+  "lineupHintCaptain": "tik op C voor aanvoerder",
+  "lineupBenchEmpty": "Alle aanwezige spelers staan op het veld.",
+  "lineupPoolEmpty": "Nog niemand staat op aanwezig voor deze wedstrijd.",
+  "lineupGuest": "Gast",
+  "lineupGuestFrom": "Gast · {team}",
+  "@lineupGuestFrom": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "lineupCaptain": "Aanvoerder",
+  "lineupMakeCaptain": "Maak aanvoerder",
+  "lineupRemoveCaptain": "Geen aanvoerder meer",
+  "lineupRemoveFromField": "Verwijder uit opstelling",
+  "lineupEmptySlot": "Lege positie {label}",
+  "@lineupEmptySlot": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "lineupShare": "Deel met het team",
+  "lineupShareAgain": "Opnieuw delen",
+  "lineupSharedState": "Gedeeld met het team",
+  "lineupSharing": "Delen…",
+  "lineupSharedAt": "Gedeeld op {when}",
+  "@lineupSharedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "lineupChangedSinceShare": "Aangepast na het delen. Het team ziet nog de oude opstelling.",
+  "lineupShareConfirmTitle": "Opstelling delen?",
+  "lineupShareConfirmBody": "Iedereen in het team krijgt een melding en kan de opstelling bekijken. Bewerken kan alleen jij.",
+  "lineupShareConfirmYes": "Ja, delen",
+  "lineupShareAgainConfirmTitle": "Opnieuw delen?",
+  "lineupShareAgainConfirmBody": "Iedereen in het team krijgt opnieuw een melding dat de opstelling is aangepast.",
+  "lineupShareAgainConfirmYes": "Ja, opnieuw delen",
+  "lineupShareConfirmNo": "Nee",
+  "lineupSharedToast": "Opstelling gedeeld",
+  "lineupShareError": "Delen mislukt",
+  "lineupSaveError": "Opslaan mislukt",
+  "lineupFormationError": "Formatie wisselen mislukt"
+}

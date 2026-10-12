@@ -1,0 +1,24 @@
+{
+  "@@locale": "nl",
+  "appTitle": "Assistje",
+  "@appTitle": {
+    "description": "Naam van de app"
+  },
+  "themeModeLabel": "Weergave",
+  "@themeModeLabel": {
+    "description": "Label boven de keuze licht/donker/systeem"
+  },
+  "themeModeSystem": "Systeem",
+  "themeModeLight": "Licht",
+  "themeModeDark": "Donker",
+  "errorNetwork": "Geen verbinding. Controleer je internet en probeer het opnieuw.",
+  "errorGeneric": "Er ging iets mis. Probeer het opnieuw.",
+  "splashLoadError": "We konden je gegevens niet laden.",
+  "retry": "Opnieuw proberen",
+  "logout": "Uitloggen",
+  "placeholderBody": "Dit scherm komt in een volgende versie van de app.",
+  "@placeholderBody": {
+    "description": "Tekst op een scherm dat nog niet gebouwd is"
+  },
+  "close": "Sluiten"
+}

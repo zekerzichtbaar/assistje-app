@@ -1,0 +1,11 @@
+{
+  "@@locale": "nl",
+  "pushChannelName": "Teammeldingen",
+  "@pushChannelName": {
+    "description": "Naam van het Android-meldingskanaal voor push (zichtbaar in de systeeminstellingen)"
+  },
+  "pushChannelDescription": "Nieuwe wedstrijden, wijzigingen en berichten van je team.",
+  "@pushChannelDescription": {
+    "description": "Omschrijving van het Android-meldingskanaal voor push"
+  }
+}

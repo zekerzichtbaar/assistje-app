@@ -1,0 +1,155 @@
+{
+  "@@locale": "nl",
+  "trainingTeamsLoadError": "Teams konden niet geladen worden",
+  "trainingTeamsForbiddenTitle": "Alleen voor de trainer",
+  "trainingTeamsForbidden": "De partijvorm wordt bijgehouden door de trainer of wie trainingspunten mag geven.",
+  "trainingTeamsNotFoundTitle": "Geen partijvorm",
+  "trainingTeamsNotFound": "Deze training bestaat niet (meer), hoort bij een ander team, of ploegen en trainingspunten staan uit.",
+  "trainingTeamsSaveFailed": "Opslaan lukte niet",
+  "trainingTeamsSideLabel": "Team {number}",
+  "@trainingTeamsSideLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTeamsTooFew": "Nog te weinig aanwezigen om in te delen. Zodra er twee mensen op aanwezig staan kun je hier ploegen trekken.",
+  "trainingTeamsReadyToDraw": "{count} aanwezig. Trek de ploegen, en schuif daarna wat je anders wilt.",
+  "@trainingTeamsReadyToDraw": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTeamsNotDrawnYet": "De ploegen zijn nog niet ingedeeld.",
+  "trainingTeamsDraw": "Teams indelen",
+  "trainingTeamsStrengths": "Sterktes",
+  "trainingTeamsLineup": "Indeling",
+  "trainingTeamsPickHint": "Tik een speler aan, en daarna degene met wie hij ruilt.",
+  "trainingTeamsPickedHint": "Tik nu degene aan met wie hij ruilt, of een kop om hem daar neer te zetten.",
+  "trainingTeamsBench": "Niet ingedeeld",
+  "trainingTeamsBenchEmpty": "Iedereen staat in een ploeg.",
+  "trainingTeamsBenchTarget": "Tik hier om deze speler uit zijn ploeg te halen.",
+  "trainingTeamsRedraw": "Opnieuw",
+  "trainingTeamsSetup": "Instellen",
+  "trainingTeamsCopy": "Kopieer",
+  "trainingTeamsCopied": "Indeling gekopieerd",
+  "trainingTeamsCopyHeader": "Teams voor {event}",
+  "@trainingTeamsCopyHeader": {
+    "placeholders": {
+      "event": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsClear": "Wissen",
+  "trainingTeamsClearConfirm": "Indeling wissen?",
+  "trainingTeamsCancel": "Annuleren",
+  "trainingTeamsDrawn": "Teams ingedeeld",
+  "trainingTeamsResult": "Uitslag",
+  "trainingTeamsResultSaved": "vastgelegd",
+  "trainingTeamsWon": "{team} won",
+  "@trainingTeamsWon": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsDrawResult": "Gelijkspel",
+  "trainingTeamsPointDown": "Punt eraf bij {name}",
+  "@trainingTeamsPointDown": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsPointUp": "Punt erbij voor {name}",
+  "@trainingTeamsPointUp": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsResultHint": "Punten komen bovenop wat het team voor aanwezigheid rekent. Elke training mag anders: bij een toernooitje deel je bijvoorbeeld 3-2-1-0 uit.",
+  "trainingTeamsPoints": "Punten",
+  "trainingTeamsEveryoneDraw": "Iedereen gelijk",
+  "trainingTeamsNobodyPresent": "Nog niemand op aanwezig.",
+  "trainingTeamsNoResultYet": "Nog geen uitslag",
+  "trainingTeamsScored": "{points} uit de partij",
+  "@trainingTeamsScored": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTeamsPointsShort": "{points} pt",
+  "@trainingTeamsPointsShort": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTeamsExclude": "{name} uit de punten halen",
+  "@trainingTeamsExclude": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsNotCounted": "Telt niet mee",
+  "trainingTeamsNotCountedHint": "Uit de punten gehaald of niet op aanwezig. Tik om terug te zetten.",
+  "trainingTeamsSetupTitle": "Teams indelen",
+  "trainingTeamsTeamCount": "Aantal teams",
+  "trainingTeamsPerTeam": "{count} aanwezig, dat wordt {min} à {max} per ploeg.",
+  "@trainingTeamsPerTeam": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "trainingTeamsBasis": "Verdelen op",
+  "trainingTeamsBasisStrength": "Speelsterkte",
+  "trainingTeamsBasisStrengthHint": "Jouw cijfer, en anders hoe vaak iemand wint bij de partijvorm. Levert de meest gelijkwaardige ploegen op.",
+  "trainingTeamsBasisPoints": "Klassement",
+  "trainingTeamsBasisPointsHint": "De koploper komt tegenover nummer twee te staan, elke week opnieuw, dan trekt de stand naar elkaar toe. Punten krijg je ook voor aanwezigheid, dus dit verdeelt deels op trouw komen.",
+  "trainingTeamsBasisRandom": "Willekeurig",
+  "trainingTeamsBasisRandomHint": "Loten. Schudden en uitdelen, zonder naar sterkte, linies of de vorige indeling te kijken. Voor als de app niet mee moet denken.",
+  "trainingTeamsDoDraw": "Indelen",
+  "trainingTeamsStrengthsTitle": "Sterktes",
+  "trainingTeamsStrengthsHintPoints": "Alleen jij ziet dit. Laat je een speler leeg, dan rekent de indeling met zijn resultaten van de afgelopen trainingen. Dat cijfer staat er grijs naast.",
+  "trainingTeamsStrengthsHint": "Alleen jij ziet dit. Zonder cijfer telt een speler als gemiddeld; de indeling let dan verder op keepers, linies en wie vorige week met wie speelde.",
+  "trainingTeamsDerived": "uit de historie: {value}",
+  "@trainingTeamsDerived": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "trainingTeamsStrengthValue": "Sterkte {value} voor {name}",
+  "@trainingTeamsStrengthValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

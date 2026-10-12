@@ -1,0 +1,13 @@
+{
+  "_note": "written by context-diet on 2026-10-09; edit freely, an existing file is never regenerated except by /diet init",
+  "mcp": [
+    "simplicate"
+  ],
+  "skills": [
+    "figma:figma-swiftui"
+  ],
+  "agents": [
+    "sage-wordpress-builder:swift-simplifier",
+    "sage-wordpress-builder:flutter-simplifier"
+  ]
+}

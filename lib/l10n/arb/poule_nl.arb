@@ -1,0 +1,44 @@
+{
+  "@@locale": "nl",
+  "pouleLoadError": "Poule laden mislukt",
+  "pouleTabStanding": "Stand",
+  "pouleTabResults": "Uitslagen",
+  "pouleTabFixtures": "Programma",
+  "pouleNoPouleTitle": "Geen poule gekoppeld",
+  "pouleNoPouleBody": "Dit team heeft geen poulecode. Een trainer kan de poule koppelen in de teaminstellingen.",
+  "pouleNotSyncedTitle": "Nog geen stand",
+  "pouleNotSyncedBody": "De poule is nog niet opgehaald. Kijk later nog eens.",
+  "pouleUpdatedAt": "Bijgewerkt {when}",
+  "@pouleUpdatedAt": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "pouleNoStanding": "Nog geen stand.",
+  "pouleNoResults": "Nog geen uitslagen.",
+  "pouleNoFixtures": "Geen wedstrijden gepland.",
+  "pouleDateUnknown": "Datum onbekend",
+  "pouleColTeam": "Team",
+  "pouleColPlayed": "G",
+  "pouleColGoalDiff": "+/-",
+  "pouleColPoints": "P",
+  "pouleStandingRow": "{position}. {team}: {points} punten uit {played} wedstrijden",
+  "@pouleStandingRow": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "team": {
+        "type": "String"
+      },
+      "points": {
+        "type": "int"
+      },
+      "played": {
+        "type": "int"
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "@@locale": "nl",
+  "feedbackIntro": "Werkt er iets niet, loop je tegen problemen aan of mis je iets? Laat het hier weten! Wij proberen er zo snel mogelijk naar te kijken.",
+  "feedbackCreate": "Melding maken",
+  "feedbackLoadError": "Meldingen laden mislukt",
+  "feedbackMine": "Mijn meldingen",
+  "feedbackEmpty": "Je hebt nog geen meldingen gemaakt.",
+  "feedbackStatusNew": "Verstuurd",
+  "feedbackStatusInProgress": "Opgepakt",
+  "feedbackStatusResolved": "Opgelost",
+  "feedbackResolvedOn": "opgelost {date}",
+  "@feedbackResolvedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackAnswer": "Antwoord",
+  "feedbackYourReply": "Jouw reactie",
+  "feedbackReply": "Reageren",
+  "feedbackReplyHint": "Waar loop je nog tegenaan?",
+  "feedbackReplySend": "Versturen",
+  "feedbackReplySent": "Je reactie is verstuurd.",
+  "feedbackReplyError": "Reageren mislukt",
+  "feedbackCancel": "Annuleren",
+  "feedbackImageAlt": "Meegestuurde schermafbeelding",
+  "feedbackImageUnavailable": "Afbeelding niet beschikbaar",
+  "feedbackSheetTitle": "Wat is er?",
+  "feedbackKindIssue": "Er gaat iets mis",
+  "feedbackKindIdea": "Ik heb een idee",
+  "feedbackBodyHint": "Wat gebeurde er, of wat mis je?",
+  "feedbackContextNote": "We sturen automatisch mee vanaf welk team je het meldt en welke rol je daarin hebt. Dat scheelt jou uitleg.",
+  "feedbackAddImage": "Schermafbeelding toevoegen",
+  "feedbackRemoveImage": "Afbeelding verwijderen",
+  "feedbackImageTooLarge": "Deze afbeelding is groter dan 5 MB. Kies een kleinere.",
+  "feedbackImageWrongType": "Kies een PNG, JPEG of WebP.",
+  "feedbackImagePickError": "Afbeelding kiezen mislukt.",
+  "feedbackSend": "Versturen",
+  "feedbackSent": "Bedankt! Je melding staat erin.",
+  "feedbackThrottled": "Je hebt net al een paar meldingen verstuurd. Wacht een minuutje en probeer het dan opnieuw."
+}

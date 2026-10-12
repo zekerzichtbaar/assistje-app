@@ -1,0 +1,132 @@
+{
+  "@@locale": "nl",
+  "profileLoadError": "Profiel laden mislukt",
+  "profileSaveFailed": "Opslaan mislukt",
+  "profileSaved": "Opgeslagen",
+  "profileSave": "Opslaan",
+  "profileCancel": "Annuleren",
+  "profileDelete": "Verwijderen",
+  "profileFieldName": "Naam",
+  "profileFieldEmail": "E-mail",
+  "profileFieldBirthdate": "Geboortedatum",
+  "profileEmailPlaceholder": "Nog niet ingevuld",
+  "profileBirthdatePlaceholder": "Kies een datum",
+  "profileBirthdateClear": "Geboortedatum wissen",
+  "profileNameRequired": "Vul je naam in.",
+  "profileEmailPending": "We hebben een link naar {email} gestuurd. Open hem om dit adres te bevestigen. Daarna log je er altijd mee in.",
+  "@profileEmailPending": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEmailMissing": "Zonder e-mailadres kom je alleen op dit apparaat binnen. Vul het in en je kunt altijd een inloglink aanvragen.",
+  "profileEmailResend": "Stuur opnieuw",
+  "profileEmailResent": "Link opnieuw verstuurd",
+  "profileEmailClaimTitle": "Bevestig je nieuwe e-mailadres",
+  "profileEmailClaimBody": "We hebben een link naar {email} gestuurd.",
+  "@profileEmailClaimBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "profileAvatarNew": "Nieuwe foto",
+  "profileAvatarUpload": "Profielfoto uploaden",
+  "profileAvatarCamera": "Maak een foto",
+  "profileAvatarGallery": "Kies uit je foto's",
+  "profileAvatarSaved": "Profielfoto opgeslagen",
+  "profileAvatarRemoved": "Profielfoto verwijderd",
+  "profileAvatarFailed": "Uploaden mislukt",
+  "profileAvatarRemoveFailed": "Profielfoto kon niet worden verwijderd",
+  "profileAvatarRemoveConfirm": "Profielfoto verwijderen?",
+  "profileInjuryQuestion": "Ben je geblesseerd?",
+  "profileInjuryActive": "Je staat als geblesseerd",
+  "profileInjuryBody": "Je wordt automatisch afgemeld voor komende wedstrijden en trainingen, en telt niet mee voor de boetepot. Activiteiten niet: daar geef je je zelf op.",
+  "profileInjuryLabel": "Geblesseerd",
+  "profileInjuryFailed": "Blessure doorgeven mislukt",
+  "profileVacationsTitle": "Vakantiemodus",
+  "profileVacationsBody": "Datums waarop je weg bent. Toekomstige wedstrijden en trainingen in deze periode staan automatisch op afwezig.",
+  "profileVacationsEmpty": "Geen vakanties gepland.",
+  "profileVacationRange": "{from} – {to}",
+  "@profileVacationRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "profileStandingTitle": "Vaste dagen dat je niet kunt",
+  "profileStandingBody": "Trainingen op deze dagen staan automatisch op afwezig. Kun je een keer wél, tik dat dan gewoon aan bij die training.",
+  "profileEditAbsences": "Aanpassen",
+  "profileThemeTitle": "Weergave",
+  "profileThemeLightHint": "Altijd licht",
+  "profileThemeDarkHint": "Altijd donker",
+  "profileThemeSystemHint": "Volgt je toestel",
+  "profileNotificationsTitle": "Notificaties",
+  "profileNotificationsBody": "Kies per categorie of je een push-melding wilt.",
+  "profilePlayerActive": "Speler-profiel actief",
+  "profilePlayerActiveBody": "Je staat als speler in dit team. Je kunt aanwezigheid doorgeven en verschijnt in opstelling, statistieken en diensten.",
+  "profilePlayerRemove": "Verwijder",
+  "profilePlayerRemoveConfirm": "Weet je zeker dat je je speler-profiel wilt verwijderen? Aanwezigheid en statistieken blijven bewaard.",
+  "profilePlayerRemoved": "Speler-profiel verwijderd",
+  "profilePlayerJoinTitle": "Speel je mee in dit team?",
+  "profilePlayerJoinBody": "Maak een speler-profiel aan om aanwezigheid te kunnen doorgeven en mee te tellen in opstelling en statistieken.",
+  "profilePlayerActivate": "Activeer",
+  "profilePlayerCreateTitle": "Speler-profiel aanmaken",
+  "profilePlayerPosition": "Positie",
+  "profilePlayerPositionHint": "Positiecode (bv. CM)",
+  "profilePlayerPositionRequired": "Kies een positie.",
+  "profilePlayerShirt": "Rugnummer (optioneel)",
+  "profilePlayerShirtInvalid": "Kies een nummer van 1 tot 99.",
+  "profilePlayerCreated": "Speler-profiel aangemaakt",
+  "profilePlayerShirtNumber": "#{number}",
+  "@profilePlayerShirtNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "profileTeamTitle": "Team",
+  "profileTeamSwitch": "Wissel",
+  "profileDeleteTitle": "Verwijder profiel",
+  "profileDeleteBody": "Verwijder je account permanent. Aanwezigheid en statistieken blijven onder een geanonimiseerd profiel bewaard.",
+  "profileDeleteButton": "Verwijder",
+  "profileDeleteConfirmBody": "Weet je het zeker? Dit verwijdert je account permanent. Typ {word} ter bevestiging.",
+  "@profileDeleteConfirmBody": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "profileDeleteFailed": "Verwijderen mislukt",
+  "profileTeamsTitle": "Mijn teams",
+  "profileTeamsBody": "Wisselen tussen teams doe je bij Team hierboven. Zit je ergens in waar je niet (meer) bij hoort? Dan stap je er hier uit.",
+  "profileTeamsCurrent": "nu open",
+  "profileTeamLeave": "Verlaten",
+  "profileTeamLeaveTitle": "{team} verlaten?",
+  "@profileTeamLeaveTitle": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTeamLeaveBody": "Je ziet dit team daarna niet meer in de app en krijgt er geen meldingen meer van. Je gegevens blijven bij het team staan.",
+  "profileTeamLeft": "Je hebt {team} verlaten.",
+  "@profileTeamLeft": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTeamLeaveFailed": "Verlaten mislukt"
+}

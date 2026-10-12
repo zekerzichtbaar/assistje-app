@@ -1,0 +1,127 @@
+{
+  "@@locale": "nl",
+  "dutiesLoadError": "Diensten konden niet geladen worden",
+  "dutiesForbiddenTitle": "Alleen voor de trainer",
+  "dutiesForbidden": "De diensten worden door de trainer beheerd.",
+  "dutiesNotFoundTitle": "Nog geen diensten",
+  "dutiesNotFound": "Dit team heeft nog geen diensttypes. Maak ze aan bij de instellingen.",
+  "dutiesActionFailed": "Dat lukte niet",
+  "dutiesSaved": "Opgeslagen",
+  "dutiesDeleted": "Verwijderd",
+  "dutiesPlanned": "Ingepland",
+  "dutiesSave": "Opslaan",
+  "dutiesCancel": "Annuleren",
+  "dutiesDelete": "Verwijderen",
+  "dutiesEdit": "Wijzigen",
+  "dutiesDone": "gedaan",
+  "@dutiesDone": {
+    "description": "Achter een afgevinkte beurt"
+  },
+  "dutiesMarkDone": "Afvinken als gedaan",
+  "dutiesMarkUndone": "Toch niet gedaan",
+  "dutiesGroupsTitle": "Groepen",
+  "dutiesGroupsEmpty": "Nog geen groepen.",
+  "dutiesGroupAdd": "Nieuwe groep",
+  "dutiesGroupNoMembers": "Geen leden",
+  "dutiesGroupMoveUp": "Omhoog",
+  "dutiesGroupMoveDown": "Omlaag",
+  "dutiesGroupFormTitleNew": "Nieuwe groep",
+  "dutiesGroupFormTitleEdit": "Groep bewerken",
+  "dutiesGroupFormName": "Naam",
+  "dutiesGroupFormNameHint": "Groep 1",
+  "dutiesGroupFormNameRequired": "Geef de groep een naam.",
+  "dutiesGroupFormMembers": "Leden",
+  "dutiesGroupDeleteConfirm": "Verwijder groep {name}?",
+  "@dutiesGroupDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dutiesNoPeople": "Niemand in de pool van deze dienst.",
+  "dutiesPlannedMatches": "Geplande wedstrijden",
+  "dutiesPlannedDates": "Geplande datums",
+  "dutiesPlannedTurns": "Geplande beurten",
+  "dutiesAddMatches": "Nieuwe wedstrijden",
+  "dutiesAddDates": "Nieuwe datums",
+  "dutiesAddTurn": "Nieuwe beurt",
+  "dutiesAutoAssign": "Automatisch verdelen over de komende wedstrijden",
+  "dutiesAutoAssignConfirm": "Verdelen",
+  "dutiesAutoAssignConfirmIndividual": "Alle komende wedstrijden opnieuw verdelen? Beurten waarvoor de herinnering al verstuurd is blijven staan.",
+  "dutiesAutoAssignConfirmGroups": "De groepen om de beurt indelen op de komende wedstrijden die nog geen dienst hebben?",
+  "dutiesAssignmentsEmptyGroups": "Nog geen diensten ingepland.",
+  "dutiesAssignmentsEmptyIndividual": "Nog niets ingepland.",
+  "dutiesIndividualHint": "Individueel: één persoon per beurt.",
+  "dutiesIndividualHintMatch": "Individueel: één persoon per beurt, gekoppeld aan een wedstrijd.",
+  "dutiesNoMatchLinked": "Geen wedstrijd gekoppeld",
+  "dutiesNoPerson": "(niemand)",
+  "dutiesSeasonCounts": "Beurten dit seizoen",
+  "dutiesAssignmentDeleteConfirm": "Verwijder de beurt van {date}?",
+  "@dutiesAssignmentDeleteConfirm": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dutiesAssignmentFormTitleNew": "Beurt toewijzen",
+  "dutiesAssignmentFormTitleEdit": "Beurt wijzigen",
+  "dutiesPlanFormTitleMatches": "Wedstrijden inplannen",
+  "dutiesPlanFormTitleDates": "Datums inplannen",
+  "dutiesFormWho": "Wie",
+  "dutiesFormWhoHint": "Kies wie…",
+  "dutiesFormWhoSorted": "Gesorteerd op aantal beurten (minste eerst).",
+  "dutiesFormWhoRequired": "Kies wie de dienst doet.",
+  "dutiesFormGroup": "Groep",
+  "dutiesFormGroupHint": "Kies een groep…",
+  "dutiesFormGroupRequired": "Kies een groep.",
+  "dutiesFormMode": "Verdeling",
+  "dutiesFormModeRotate": "Rotatie (auto)",
+  "dutiesFormModeSingle": "Vaste groep",
+  "dutiesFormMatch": "Wedstrijd",
+  "dutiesFormMatchHint": "Kies een wedstrijd…",
+  "dutiesFormMatchRequired": "Kies een wedstrijd.",
+  "dutiesFormDate": "Datum",
+  "dutiesFormDateHint": "Kies een datum",
+  "dutiesFormDateRequired": "Kies een datum.",
+  "dutiesFormFrom": "Van (optioneel)",
+  "dutiesFormTo": "Tot (optioneel)",
+  "dutiesFormClear": "Wissen",
+  "dutiesFormNotes": "Notitie (optioneel)",
+  "dutiesFormAddDateRow": "Nog een datum",
+  "dutiesFormAddMatchRow": "Nog een wedstrijd",
+  "dutiesFormRemoveRow": "Weghalen",
+  "dutiesKindStaff": "staf",
+  "dutiesKindSpectator": "toeschouwer",
+  "dutiesKindGuest": "gast",
+  "dutiesEventTitle": "Diensten",
+  "dutiesEventMine": "Jij",
+  "dutiesEventDone": "gedaan",
+  "dutiesEventNobody": "Nog niemand",
+  "dutiesEventAbsent": "afgemeld",
+  "@dutiesEventAbsent": {
+    "description": "Achter de naam als de ingedeelde zich heeft afgemeld"
+  },
+  "dutiesEventAssignTitle": "{name} toewijzen",
+  "@dutiesEventAssignTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dutiesEventNone": "Niemand",
+  "dutiesEventNoGroups": "Nog geen groepen voor deze dienst. Maak ze aan bij Diensten.",
+  "dutiesEventNoPeople": "Geen spelers gevonden.",
+  "dutiesEventAssignFailed": "Toewijzen mislukt",
+  "dutiesEventFlag": "Vlaggen",
+  "dutiesEventFlagSwitch": "wissel vanaf {minutes}",
+  "@dutiesEventFlagSwitch": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
+}

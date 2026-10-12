@@ -1,0 +1,111 @@
+{
+  "@@locale": "nl",
+  "notificationsMarkAllRead": "Alles gelezen",
+  "@notificationsMarkAllRead": {
+    "description": "Knop: markeer alle meldingen van dit team als gelezen"
+  },
+  "notificationsAllReadDone": "Alle meldingen gelezen",
+  "@notificationsAllReadDone": {
+    "description": "Toast na alles als gelezen markeren"
+  },
+  "notificationsMarkAllReadFailed": "Alles als gelezen markeren lukte niet.",
+  "@notificationsMarkAllReadFailed": {
+    "description": "Toast als read-all mislukt"
+  },
+  "notificationsMarkReadFailed": "Als gelezen markeren lukte niet.",
+  "@notificationsMarkReadFailed": {
+    "description": "Toast als een melding niet als gelezen gemarkeerd kon worden"
+  },
+  "notificationsDeleted": "Melding verwijderd",
+  "@notificationsDeleted": {
+    "description": "Toast na het wegvegen van een melding"
+  },
+  "notificationsDeleteFailed": "Verwijderen lukte niet.",
+  "@notificationsDeleteFailed": {
+    "description": "Toast als weghalen mislukt (bv. demo-team)"
+  },
+  "notificationsDeleteAction": "Verwijderen",
+  "@notificationsDeleteAction": {
+    "description": "Label onder de veeg-achtergrond / schermlezer-actie"
+  },
+  "notificationsEmptyTitle": "Geen meldingen",
+  "@notificationsEmptyTitle": {
+    "description": "Lege inbox: titel"
+  },
+  "notificationsEmptyDescription": "Opstellingen, herinneringen en ander teamnieuws verschijnen hier.",
+  "@notificationsEmptyDescription": {
+    "description": "Lege inbox: uitleg"
+  },
+  "notificationsLoadError": "De meldingen konden niet geladen worden.",
+  "@notificationsLoadError": {
+    "description": "Foutmelding bij laden van de inbox"
+  },
+  "notificationsLoadMoreError": "Oudere meldingen laden lukte niet.",
+  "@notificationsLoadMoreError": {
+    "description": "Foutmelding bij bijladen van de volgende pagina"
+  },
+  "notificationsUnreadLabel": "Ongelezen",
+  "@notificationsUnreadLabel": {
+    "description": "Schermlezer: deze melding is ongelezen"
+  },
+  "notificationsTimeJustNow": "zojuist",
+  "@notificationsTimeJustNow": {
+    "description": "Relatieve tijd < 1 minuut"
+  },
+  "notificationsTimeYesterday": "gisteren",
+  "@notificationsTimeYesterday": {
+    "description": "Relatieve tijd: gisteren"
+  },
+  "notificationsPreferencesIntro": "Kies waarvoor je een pushmelding krijgt. Dit geldt voor al je teams; in de app zie je alles altijd in je meldingen.",
+  "@notificationsPreferencesIntro": {
+    "description": "Uitleg boven de pushvoorkeuren"
+  },
+  "notificationsPreferencesLoadError": "De pushvoorkeuren konden niet geladen worden.",
+  "@notificationsPreferencesLoadError": {
+    "description": "Foutmelding bij laden van de pushvoorkeuren"
+  },
+  "notificationsPreferencesSaveFailed": "Opslaan lukte niet. Probeer opnieuw.",
+  "@notificationsPreferencesSaveFailed": {
+    "description": "Toast als een voorkeur niet opgeslagen kon worden"
+  },
+  "notificationsTimeMinutes": "{count} min geleden",
+  "@notificationsTimeMinutes": {
+    "description": "Relatieve tijd in minuten",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeHours": "{count} uur geleden",
+  "@notificationsTimeHours": {
+    "description": "Relatieve tijd in uren",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTimeDays": "{count} dagen geleden",
+  "@notificationsTimeDays": {
+    "description": "Relatieve tijd in dagen (2–6)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsUnreadCount": "{count, plural, =1{1 ongelezen} other{{count} ongelezen}}",
+  "@notificationsUnreadCount": {
+    "description": "Aantal ongelezen meldingen onder de titel",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsLoadMore": "Oudere meldingen laden",
+  "@notificationsLoadMore": {
+    "description": "Knop onderaan de inbox om de volgende pagina te laden"
+  }
+}

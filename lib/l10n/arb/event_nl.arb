@@ -1,0 +1,127 @@
+{
+  "@@locale": "nl",
+  "eventDetailLoadError": "Dit event kon niet geladen worden",
+  "eventDetailNotFound": "Dit event bestaat niet (meer) of hoort bij een ander team.",
+  "eventDetailStartsAt": "Start",
+  "eventDetailEndsAt": "Eind",
+  "eventDetailMeetAt": "Verzamelen",
+  "eventDetailHome": "Thuis",
+  "@eventDetailHome": {
+    "description": "Thuiswedstrijd"
+  },
+  "eventDetailAway": "Uit",
+  "@eventDetailAway": {
+    "description": "Uitwedstrijd"
+  },
+  "eventDetailCompetitionLeague": "Competitie",
+  "eventDetailCancelled": "Afgelast",
+  "eventDetailCancelledNotice": "Afgelast. Hieronder staat wie er zou zijn geweest. Dit telt niet mee voor de aanwezigheid.",
+  "eventDetailSportlinkField": "Veld",
+  "eventDetailSportlinkDressingRoom": "Kleedkamer",
+  "eventDetailSportlinkReferee": "Scheids",
+  "eventDetailRsvpTitle": "Jouw aanwezigheid",
+  "eventDetailRsvpLocked": "De aanvang is geweest. Je aanwezigheid staat vast.",
+  "@eventDetailRsvpLocked": {
+    "description": "Onder de RSVP-knoppen als wijzigen niet meer kan"
+  },
+  "eventDetailMyReason": "Reden: {reason}",
+  "@eventDetailMyReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "eventDetailResponsesTitle": "Reacties",
+  "eventDetailResponded": "{responded} van {total} gereageerd",
+  "@eventDetailResponded": {
+    "placeholders": {
+      "responded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDetailGuestsPresent": "{count, plural, =1{+1 gast aanwezig} other{+{count} gasten aanwezig}}",
+  "@eventDetailGuestsPresent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDetailStatusPresent": "Aanwezig",
+  "eventDetailStatusAbsent": "Afwezig",
+  "eventDetailStatusNonplay": "Kijken",
+  "eventDetailStatusPending": "Open",
+  "eventDetailStaff": "Staf",
+  "eventDetailGuests": "Gasten",
+  "eventDetailSpectators": "Toeschouwers",
+  "eventDetailYou": "Jij",
+  "eventDetailCaptain": "Aanvoerder",
+  "eventDetailKeeperBadge": "keeper",
+  "eventDetailGuestBadge": "gast",
+  "eventDetailSpectatorBadge": "toeschouwer",
+  "eventDetailInjuredBadge": "geblesseerd",
+  "eventDetailVacationBadge": "vakantie",
+  "eventDetailNoPlayers": "Er staat nog niemand in de lijst.",
+  "eventDetailActionAttendance": "Aanwezigheid",
+  "eventDetailActionLineup": "Opstelling",
+  "eventDetailActionViewLineup": "Bekijk de opstelling",
+  "eventDetailActionReport": "Statistieken",
+  "eventDetailActionLive": "Live volgen",
+  "eventDetailActionTeams": "Teams",
+  "eventDetailMotmTitle": "Speler van de wedstrijd",
+  "eventDetailMotmOpensAfter": "Stemmen opent na de wedstrijd.",
+  "eventDetailMotmPrompt": "Stem op je uitblinker (niet jezelf):",
+  "eventDetailMotmPromptNoSelf": "Stem op de uitblinker:",
+  "eventDetailMotmHidden": "De uitslag is zichtbaar zodra de stemming sluit.",
+  "eventDetailMotmCloses": "sluit {date}",
+  "@eventDetailMotmCloses": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "eventDetailMotmNoVotes": "Geen stemmen uitgebracht.",
+  "eventDetailMotmVotes": "{count, plural, =1{1 stem} other{{count} stemmen}}",
+  "@eventDetailMotmVotes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDetailMotmFailed": "Stemmen lukte niet",
+  "eventDetailCarpoolTitle": "Rijden",
+  "eventDetailCarpoolEmpty": "Nog niemand aangemeld.",
+  "eventDetailCarpoolFromClub": "Vanaf de club",
+  "eventDetailCarpoolDirect": "Rijdt rechtstreeks",
+  "eventDetailCarpoolSeats": "{count, plural, =1{rijdt alleen} other{{count} plekken}}",
+  "@eventDetailCarpoolSeats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDetailCarpoolOffer": "+ Ik rijd",
+  "eventDetailCarpoolEdit": "Mijn aanmelding wijzigen",
+  "eventDetailCarpoolRemove": "Verwijder",
+  "eventDetailCarpoolRemoveConfirm": "Je rit-aanmelding verwijderen?",
+  "eventDetailCarpoolRemoveYes": "Verwijderen",
+  "eventDetailCancel": "Annuleren",
+  "eventDetailCarpoolSheetTitle": "Hoe ga je naar de wedstrijd?",
+  "eventDetailCarpoolModeFromClub": "Vanaf de club",
+  "eventDetailCarpoolModeDirect": "Rechtstreeks",
+  "eventDetailCarpoolModeDirectHint": "geen carpool nodig",
+  "eventDetailCarpoolSeatsLabel": "Aantal plekken (incl. jezelf)",
+  "eventDetailCarpoolSeatsLess": "Minder plekken",
+  "eventDetailCarpoolSeatsMore": "Meer plekken",
+  "eventDetailCarpoolConfirm": "Bevestigen",
+  "eventDetailCarpoolFailed": "Aanmelden lukte niet",
+  "eventDetailCarpoolRemoveFailed": "Verwijderen lukte niet"
+}

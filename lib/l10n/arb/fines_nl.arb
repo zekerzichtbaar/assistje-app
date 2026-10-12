@@ -1,0 +1,206 @@
+{
+  "@@locale": "nl",
+  "finesLoadError": "Boetepot laden mislukt",
+  "finesPeriodClosed": "{name} (afgesloten)",
+  "@finesPeriodClosed": {
+    "description": "Periodekiezer: een afgesloten periode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "finesPotBalance": "In de pot",
+  "finesPotOpen": "Nog te innen",
+  "finesPeriodTotal": "Deze periode",
+  "finesPeriodTotalValue": "{all} totaal · {open} open",
+  "@finesPeriodTotalValue": {
+    "placeholders": {
+      "all": {
+        "type": "String"
+      },
+      "open": {
+        "type": "String"
+      }
+    }
+  },
+  "finesGiveFine": "Boete uitdelen",
+  "finesAddPotEntry": "Potboeking",
+  "finesPeopleTitle": "Per persoon",
+  "finesPotTitle": "Pot",
+  "finesEmptyTitle": "Nog niemand in de boetepot",
+  "finesEmptyDescription": "Zodra er boetes zijn uitgedeeld, zie je ze hier.",
+  "finesCount": "{count, plural, =0{Geen boetes} =1{1 boete} other{{count} boetes}}",
+  "@finesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "finesOpenAmount": "{amount} open",
+  "@finesOpenAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "finesNotCounting": "Telt niet mee",
+  "finesStaff": "Staf",
+  "finesPotEmpty": "Nog geen boekingen.",
+  "finesPotBy": "door {name}",
+  "@finesPotBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "finesStatusOpen": "Open",
+  "finesStatusPaid": "Betaald",
+  "finesStatusWaived": "Kwijtgescholden",
+  "finesStatusUnknown": "Onbekend",
+  "finesPersonEmpty": "Geen boetes in deze periode.",
+  "finesPersonLoadError": "Boetes laden mislukt",
+  "finesFormTitle": "Boete uitdelen",
+  "finesFormWho": "Wie",
+  "finesFormEveryone": "Hele team",
+  "finesFormType": "Soort",
+  "finesFormAmount": "Bedrag (€)",
+  "finesFormAmountHint": "0,00",
+  "finesFormDescription": "Omschrijving (optioneel)",
+  "finesFormSubmit": "Uitdelen",
+  "finesFormNoPerson": "Kies wie de boete krijgt.",
+  "finesFormNoType": "Kies een soort boete.",
+  "finesFormAmountInvalid": "Vul een bedrag in tussen € 0 en € 1.000.",
+  "finesFormCurrentPeriodNote": "Nieuwe boetes komen altijd in de lopende periode.",
+  "finesNoTypes": "Er zijn nog geen boetesoorten. Maak ze aan via Beheer → Boetes beheren.",
+  "finesEditTitle": "Boete bewerken",
+  "finesEditStatus": "Status",
+  "finesSave": "Opslaan",
+  "finesDelete": "Verwijderen",
+  "finesCancel": "Annuleren",
+  "finesDeleteFineConfirm": "Deze boete verwijderen?",
+  "finesDeleteEntryConfirm": "Deze boeking verwijderen?",
+  "finesSaved": "Opgeslagen",
+  "finesDeleted": "Verwijderd",
+  "finesRecorded": "{count, plural, =1{Boete uitgedeeld} other{{count} boetes uitgedeeld}}",
+  "@finesRecorded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "finesSaveFailed": "Opslaan mislukt",
+  "finesPotFormTitleNew": "Potboeking",
+  "finesPotFormTitleEdit": "Boeking bewerken",
+  "finesPotIn": "Erin",
+  "finesPotOut": "Eruit",
+  "finesPotAmountInvalid": "Vul een bedrag in (niet 0, max. € 100.000).",
+  "finesPotDescription": "Omschrijving",
+  "finesPotDescriptionRequired": "Vul een omschrijving in.",
+  "finesPotDate": "Datum",
+  "finesPeriodSwitchFailed": "Periode laden mislukt",
+  "finesManage": "Beheer",
+  "finesManageTypes": "Boetes beheren",
+  "finesRenamePeriod": "Periode hernoemen",
+  "finesNewPeriod": "Nieuwe periode",
+  "finesClosePeriod": "Afsluiten",
+  "finesPeriodClosedBadge": "Afgesloten",
+  "finesPeriodRunningSince": "loopt sinds {date}",
+  "@finesPeriodRunningSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "finesPeriodRange": "{start} t/m {end}",
+  "@finesPeriodRange": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "finesClosePeriodConfirm": "Periode \"{name}\" afsluiten? Daarna begint iedereen weer bij nul. Wat nog open staat blijft in deze periode staan. Vul eerst de uitslagen en afmeldingen in die er nog bij horen: een boete komt in de periode die open is op het moment dat hij wordt uitgeschreven.",
+  "@finesClosePeriodConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "finesPeriodClosedToast": "Periode afgesloten",
+  "finesPeriodCreated": "Nieuwe periode gestart",
+  "finesPeriodNameLabel": "Naam van deze periode",
+  "finesPeriodNameHint": "bijv. Voorjaar 2026",
+  "finesRenameNote": "De boetes blijven staan waar ze staan; alleen de naam verandert.",
+  "finesNewPeriodLabel": "Naam nieuwe periode",
+  "finesNewPeriodNote": "De lopende periode wordt afgesloten; de nieuwe begint vandaag.",
+  "finesNewPeriodSubmit": "Aanmaken (sluit huidige af)",
+  "finesNameRequired": "Vul een naam in.",
+  "finesTypesTitle": "Boetes",
+  "finesTypesAutomatic": "Automatisch",
+  "finesTypesNoteInjured": "Geblesseerde spelers krijgen deze boetes nooit.",
+  "finesTypesNoteGuestsOn": "Gasten doen mee, want die staan in je boetepot.",
+  "finesTypesNoteGuestsOff": "Gasten doen niet mee; dat zet je aan bij Instellingen.",
+  "finesTypesNoteStaffOn": "Staf doet mee; een trainer zonder spelersprofiel krijgt alleen de boete voor niet reageren.",
+  "finesTypesNoteStaffOff": "Staf krijgt geen boetes; dat zet je aan bij Instellingen.",
+  "finesTypesManual": "Zelf uitdelen",
+  "finesTypesManualEmpty": "Nog geen eigen boetes.",
+  "finesTypesAdd": "Boete toevoegen",
+  "finesTypesAmountsInvalid": "Controleer de bedragen: tussen € 0 en € 1.000.",
+  "finesTypeNameLabel": "Naam",
+  "finesTypeNameHint": "bijv. Douchen overgeslagen",
+  "finesTypeAddSubmit": "Toevoegen",
+  "finesTypeAdded": "Boete toegevoegd",
+  "finesTypeEditTitle": "Boetesoort bewerken",
+  "finesTypeEditLabel": "{label} bewerken",
+  "@finesTypeEditLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "finesTypeDeleteLabel": "{label} verwijderen",
+  "@finesTypeDeleteLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "finesTypeToggleOn": "{label} aanzetten",
+  "@finesTypeToggleOn": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "finesTypeToggleOff": "{label} uitzetten",
+  "@finesTypeToggleOff": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "finesTypeDeleteConfirm": "\"{label}\" verwijderen? Eerder uitgedeelde boetes van dit soort blijven staan.",
+  "@finesTypeDeleteConfirm": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "finesTypeArchived": "Uit de lijst gehaald",
+  "finesManageForbidden": "Alleen de penningmeester kan dit aanpassen."
+}

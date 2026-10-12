@@ -1,0 +1,13 @@
+{
+  "@@locale": "nl",
+  "noTeamTitle": "Nog geen team",
+  "noTeamBody": "Je bent nog geen lid van een team. Vraag je trainer om de teamlink.",
+  "homeSwitchTeam": "Wissel van team",
+  "@homeSwitchTeam": {
+    "description": "Kop boven de teamwisselaar in het menu"
+  },
+  "roleTrainer": "Trainer",
+  "rolePlayer": "Speler",
+  "roleSpectator": "Toeschouwer",
+  "roleUnknown": "Lid"
+}
