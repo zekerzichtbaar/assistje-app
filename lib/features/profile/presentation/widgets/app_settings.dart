@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../../../../core/app_icon/app_icon_service.dart';
 import '../../../../core/auth/auth_controller.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/session/session_providers.dart';
@@ -250,6 +251,68 @@ class LogoutButton extends ConsumerWidget {
         unawaited(Haptics.light());
         unawaited(ref.read(authControllerProvider.notifier).logout());
       },
+    );
+  }
+}
+
+/// Het clublogo als app-icoon (alleen iOS, en alleen als het wapen van deze
+/// club in de build zit — zie `tool/app_icons.dart`). iOS toont na de wissel
+/// zelf een melding.
+class AppIconCard extends ConsumerWidget {
+  const AppIconCard({super.key});
+
+  Future<void> _toggle(
+    BuildContext context,
+    WidgetRef ref,
+    ClubIconState icon, {
+    required bool on,
+  }) async {
+    unawaited(Haptics.selection());
+    try {
+      await ref.read(appIconServiceProvider).setIcon(on ? icon.name : null);
+    } on Object catch (error) {
+      if (context.mounted) {
+        showProfileError(
+          context,
+          AppLocalizations.of(context).profileAppIconFailed,
+          error,
+        );
+      }
+    }
+    ref.invalidate(clubIconProvider);
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final icon = ref.watch(clubIconProvider).value;
+    final team = ref.watch(currentMembershipProvider)?.team;
+    if (icon == null || team == null) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context);
+
+    return AppCard(
+      key: const ValueKey('profile-app-icon'),
+      child: MergeSemantics(
+        child: Row(
+          children: [
+            Expanded(
+              child: ProfileCardHeader(
+                icon: PhosphorIconsDuotone.squaresFour,
+                title: l10n.profileAppIconTitle,
+                body: l10n.profileAppIconBody(team.name),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Semantics(
+              label: l10n.profileAppIconLabel,
+              child: Switch.adaptive(
+                key: const ValueKey('profile-app-icon-switch'),
+                value: icon.active,
+                onChanged: (on) => _toggle(context, ref, icon, on: on),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

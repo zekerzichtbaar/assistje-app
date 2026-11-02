@@ -18,6 +18,10 @@ abstract class Team with _$Team {
     String? primaryColor,
     String? url,
     @Default(false) bool isDemo,
+
+    /// De club achter het team: bepaalt welk clubwapen als app-icoon kan
+    /// (`tool/app_icons.dart`); `null` zonder club.
+    int? clubId,
   }) = _Team;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);

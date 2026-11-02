@@ -44,6 +44,26 @@ class PlayerDetailController extends AsyncNotifier<PlayerDetail> {
       return error;
     }
   }
+
+  /// Blessure namens de speler aan/uit (trainer). Optimistisch: de schakelaar
+  /// springt meteen om en gaat terug bij een fout; de fout komt terug.
+  Future<Object?> setInjured({required bool injured}) async {
+    final detail = state.value;
+    if (detail == null) return null;
+    PlayerDetail withInjury(bool value) =>
+        detail.copyWith(player: detail.player.copyWith(isInjured: value));
+    state = AsyncData(withInjury(injured));
+    try {
+      final result = await ref
+          .read(playerDetailRepositoryProvider)
+          .setInjury(key.teamId, key.playerId, injured: injured);
+      state = AsyncData(withInjury(result));
+      return null;
+    } on Object catch (error) {
+      state = AsyncData(withInjury(!injured));
+      return error;
+    }
+  }
 }
 
 /// Het speler-detail per `(teamId, playerId)`; weg zodra het scherm dicht

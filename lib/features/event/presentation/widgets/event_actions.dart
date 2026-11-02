@@ -138,22 +138,26 @@ class _ActionPill extends StatelessWidget {
         child: InkWell(
           key: ValueKey('event-action-${action.id}'),
           onTap: () => context.push(action.path),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                PhosphorIcon(action.icon, size: 16, color: fg),
-                const SizedBox(width: 6),
-                Text(
-                  action.label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: fg,
+          child: ConstrainedBox(
+            // Tikvlak minstens 44 pt hoog.
+            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  PhosphorIcon(action.icon, size: 16, color: fg),
+                  const SizedBox(width: 6),
+                  Text(
+                    action.label,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: fg,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

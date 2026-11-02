@@ -23,7 +23,7 @@ import '../../helpers/shell.dart';
 /// 1. de routematrix: elk pad onder de ingelogde shell heeft een ingang
 ///    (en een nieuwe route zonder rij in de matrix laat deze test falen);
 /// 2. menu en tabbalk per rol × flags, tabel-gedreven, met doorklikken;
-/// 3. de tweede laag: Mij-tab (pushvoorkeuren, vakanties, vaste dagen),
+/// 3. de tweede laag: Profiel (pushvoorkeuren, vakanties, vaste dagen),
 ///    agenda ("+ Nieuw", event openen) en de knoppen op het event-detail.
 
 // ── Rollen ─────────────────────────────────────────────────────────────────
@@ -100,8 +100,9 @@ const _routeMatrix = <String, String>{
   AppRoutes.stats: 'tab (altijd) + menu [stats], iedereen',
   AppRoutes.hallOfFame: 'tab (altijd) + menu [stats], iedereen',
   AppRoutes.poule: 'tab + menu, alleen met poulekoppeling',
-  AppRoutes.profile: 'tab + menu-onderkant (Profiel), iedereen',
-  AppRoutes.notificationPreferences: 'Mij-tab → kaart pushvoorkeuren',
+  AppRoutes.more: 'tab, iedereen',
+  AppRoutes.profile: 'Meer-tab → profielrij bovenaan, iedereen',
+  AppRoutes.notificationPreferences: 'Profiel → kaart pushvoorkeuren',
   AppRoutes.notifications: 'bel in de shell, iedereen',
   AppRoutes.onboarding: 'menu, trainer zolang de checklist openstaat',
   AppRoutes.team: 'menu, speler/toeschouwer (niet penningmeester/trainer)',
@@ -124,8 +125,8 @@ const _routeMatrix = <String, String>{
   // test/features/settings/settings_screen_test.dart ('seizoen: alleen-lezen
   // en door naar /seasons'); Instellingen zelf is trainer-only (hieronder).
   AppRoutes.seasons: 'menu Instellingen → Seizoen, trainer',
-  AppRoutes.vacations: 'Mij-tab → kaart vakanties [vacations]',
-  AppRoutes.standingAbsences: 'Mij-tab → kaart vaste dagen [standing_absences]',
+  AppRoutes.vacations: 'Profiel → kaart vakanties [vacations]',
+  AppRoutes.standingAbsences: 'Profiel → kaart vaste dagen [standing_absences]',
   // Teamlink: Spelers → kaart teamlink — bewezen in
   // test/features/player_management/players_screen_test.dart ('de
   // teamlink-kaart opent /teamlink'); Spelers is trainer-only (hieronder).
@@ -248,9 +249,10 @@ const _scenarios = [
   _Scenario('alles uit', features: {}),
 ];
 
+/// De Meer-tab toont wat géén eigen tab heeft.
 List<String> _expectedMenu(_Role role, _Scenario s) => [
   for (final row in _menuTable)
-    if (row.visibleFor(role, s)) 'menu-${row.item.name}',
+    if (row.visibleFor(role, s) && !row.item.isTab) 'menu-${row.item.name}',
 ];
 
 /// De tabbalk is voor elke rol gelijk; alleen Poule hangt aan de koppeling,
@@ -260,7 +262,7 @@ List<String> _expectedTabs(_Scenario s) => [
   'tab-stats',
   'tab-hallOfFame',
   if (s.hasPoule) 'tab-poule',
-  'tab-profile',
+  'tab-more',
 ];
 
 // ── Kleine helpers ─────────────────────────────────────────────────────────
@@ -301,10 +303,13 @@ void main() {
       );
     });
 
-    test('de menutabel dekt elk NavItem (Profiel zit onderin het menu)', () {
-      expect({
-        for (final row in _menuTable) row.item,
-      }, NavItem.values.toSet()..remove(NavItem.profile));
+    test('de menutabel dekt elk NavItem (behalve Profiel en Meer zelf)', () {
+      expect(
+        {for (final row in _menuTable) row.item},
+        NavItem.values.toSet()
+          ..remove(NavItem.profile)
+          ..remove(NavItem.more),
+      );
     });
   });
 
@@ -426,7 +431,7 @@ void main() {
           expect(_path(container), item.path, reason: key);
         }
 
-        // Profiel onderin het menu.
+        // Profiel bovenaan de Meer-tab.
         await openMenu(tester);
         await tester.tap(find.byKey(const ValueKey('menu-profile')));
         await tester.pumpAndSettle();
@@ -440,7 +445,7 @@ void main() {
     }
   });
 
-  group('Mij-tab: pushvoorkeuren, vakanties, vaste dagen', () {
+  group('Profiel: pushvoorkeuren, vakanties, vaste dagen', () {
     Future<ProviderContainer> openProfile(
       WidgetTester tester,
       _Role role, {
@@ -460,7 +465,8 @@ void main() {
           ),
         ),
       );
-      await tester.tap(find.byKey(const ValueKey('tab-profile')));
+      await openMenu(tester);
+      await tester.tap(find.byKey(const ValueKey('menu-profile')));
       await pumpUntilFound(
         tester,
         find.byKey(const ValueKey('profile-notifications')),
@@ -469,7 +475,7 @@ void main() {
     }
 
     for (final role in _Role.values) {
-      testWidgets('${role.name}: pushvoorkeuren openen vanaf de Mij-tab', (
+      testWidgets('${role.name}: pushvoorkeuren openen vanaf Profiel', (
         tester,
       ) async {
         final container = await openProfile(

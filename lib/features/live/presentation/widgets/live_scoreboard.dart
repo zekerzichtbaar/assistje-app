@@ -74,52 +74,61 @@ class LiveScoreboard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
-            child: Row(
+            // Bij grote tekst zakt de meldingenknop onder de status.
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
               children: [
-                if (inPlay)
-                  _LiveBadge(label: status)
-                else
-                  Text(
-                    status.toUpperCase(),
-                    key: const ValueKey('live-status'),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
-                      color: t.muted,
-                    ),
-                  ),
-                const SizedBox(width: 8),
-                // Pas vanaf twee: "1 kijkt mee" tegen de enige kijker is
-                // geen gezelschap.
-                if (inPlay && match.liveViewers >= 2)
-                  Flexible(
-                    child: Row(
-                      key: const ValueKey('live-viewers'),
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          PhosphorIconsDuotone.eye,
-                          size: 14,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (inPlay)
+                      _LiveBadge(label: status)
+                    else
+                      Text(
+                        status.toUpperCase(),
+                        key: const ValueKey('live-status'),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.8,
                           color: t.muted,
                         ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            l10n.liveViewers(match.liveViewers),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
+                      ),
+                    const SizedBox(width: 8),
+                    // Pas vanaf twee: "1 kijkt mee" tegen de enige kijker is
+                    // geen gezelschap.
+                    if (inPlay && match.liveViewers >= 2)
+                      Flexible(
+                        child: Row(
+                          key: const ValueKey('live-viewers'),
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              PhosphorIconsDuotone.eye,
+                              size: 14,
                               color: t.muted,
                             ),
-                          ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                l10n.liveViewers(match.liveViewers),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: t.muted,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                const Spacer(),
+                      ),
+                  ],
+                ),
                 if (inPlay)
                   _FollowButton(
                     following: match.followingLive,
@@ -255,7 +264,8 @@ class _LiveBadge extends StatelessWidget {
     key: const ValueKey('live-badge'),
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
-      color: StatusColors.emerald500,
+      // emerald-700: witte tekst haalt 4.5:1.
+      color: StatusColors.emerald700,
       borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
     ),
     child: Row(
@@ -302,38 +312,46 @@ class _FollowButton extends StatelessWidget {
         key: const ValueKey('live-follow'),
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: following ? t.primary : t.surface,
-            border: following ? null : Border.all(color: t.line),
-            borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                following
-                    ? PhosphorIconsFill.bellRinging
-                    : PhosphorIconsDuotone.bell,
-                size: 15,
-                color: fg,
+        // Tikvlak 44 pt hoog; de knop zelf blijft compact.
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Center(
+            widthFactor: 1,
+            heightFactor: 1,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: following ? t.primary : t.surface,
+                border: following ? null : Border.all(color: t.line),
+                borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
               ),
-              const SizedBox(width: 6),
-              Text(
-                following ? l10n.liveFollowOn : l10n.liveFollowOff,
-                key: const ValueKey('live-follow-label'),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: fg,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    following
+                        ? PhosphorIconsFill.bellRinging
+                        : PhosphorIconsDuotone.bell,
+                    size: 15,
+                    color: fg,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    following ? l10n.liveFollowOn : l10n.liveFollowOff,
+                    key: const ValueKey('live-follow-label'),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: fg,
+                    ),
+                  ),
+                  if (following) ...[
+                    const SizedBox(width: 4),
+                    Icon(PhosphorIconsBold.check, size: 13, color: fg),
+                  ],
+                ],
               ),
-              if (following) ...[
-                const SizedBox(width: 4),
-                Icon(PhosphorIconsBold.check, size: 13, color: fg),
-              ],
-            ],
+            ),
           ),
         ),
       ),

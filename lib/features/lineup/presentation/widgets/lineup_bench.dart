@@ -96,34 +96,37 @@ class LineupBench extends StatelessWidget {
         ),
       );
     } else {
+      // Vaste tegels (zelfde tokens als op het veld): geen tekstschaling.
       list = SizedBox(
         height: 96,
-        child: ListView.separated(
-          key: const ValueKey('lineup-bench-list'),
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          itemCount: bench.length,
-          separatorBuilder: (_, _) => const SizedBox(width: 12),
-          itemBuilder: (context, index) {
-            final player = bench[index];
-            final card = _BenchCard(
-              player: player,
-              subtitle: lineupPlayerSubtitle(l10n, sport, player),
-              picked: pickedId == player.id,
-            );
-            if (!canEdit) return card;
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => onPick(player),
-              child: LongPressDraggable<LineupPlayer>(
-                data: player,
-                delay: lineupDragDelay,
-                feedback: lineupDragPreview(player),
-                childWhenDragging: Opacity(opacity: 0.3, child: card),
-                child: card,
-              ),
-            );
-          },
+        child: MediaQuery.withNoTextScaling(
+          child: ListView.separated(
+            key: const ValueKey('lineup-bench-list'),
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            itemCount: bench.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
+            itemBuilder: (context, index) {
+              final player = bench[index];
+              final card = _BenchCard(
+                player: player,
+                subtitle: lineupPlayerSubtitle(l10n, sport, player),
+                picked: pickedId == player.id,
+              );
+              if (!canEdit) return card;
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => onPick(player),
+                child: LongPressDraggable<LineupPlayer>(
+                  data: player,
+                  delay: lineupDragDelay,
+                  feedback: lineupDragPreview(player),
+                  childWhenDragging: Opacity(opacity: 0.3, child: card),
+                  child: card,
+                ),
+              );
+            },
+          ),
         ),
       );
     }
@@ -211,7 +214,7 @@ class _BenchCard extends StatelessWidget {
               subtitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 10, color: t.muted, height: 1.2),
+              style: TextStyle(fontSize: 11, color: t.muted, height: 1.2),
             ),
         ],
       ),

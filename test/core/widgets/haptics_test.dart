@@ -27,8 +27,8 @@ void main() {
     expect(calls, [
       'HapticFeedbackType.lightImpact',
       'HapticFeedbackType.selectionClick',
-      'HapticFeedbackType.mediumImpact',
-      'HapticFeedbackType.heavyImpact',
+      'HapticFeedbackType.successNotification',
+      'HapticFeedbackType.errorNotification',
     ]);
   });
 }

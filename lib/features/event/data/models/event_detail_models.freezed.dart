@@ -284,7 +284,8 @@ as String?,
 /// @nodoc
 mixin _$EventPlayer {
 
- int get id;@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind get kind; String? get rowKey; String get name; String? get avatarUrl; int? get shirtNumber; bool get isGuest; bool get isInjured; bool get isOnVacation;@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus get status; String? get reason; bool get isMe; bool get isCaptain; bool get isKeeper;
+ int get id;@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind get kind; String? get rowKey; String get name; String? get avatarUrl; int? get shirtNumber; bool get isGuest; bool get isInjured; bool get isOnVacation;@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus get status; String? get reason;/// Wanneer het antwoord voor het laatst wijzigde, en door wie.
+ DateTime? get respondedAt; EventChangedBy? get changedBy; bool get isMe; bool get isCaptain; bool get isKeeper;
 /// Create a copy of EventPlayer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -297,16 +298,16 @@ $EventPlayerCopyWith<EventPlayer> get copyWith => _$EventPlayerCopyWithImpl<Even
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventPlayer&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.rowKey, rowKey) || other.rowKey == rowKey)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.isGuest, isGuest) || other.isGuest == isGuest)&&(identical(other.isInjured, isInjured) || other.isInjured == isInjured)&&(identical(other.isOnVacation, isOnVacation) || other.isOnVacation == isOnVacation)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.isMe, isMe) || other.isMe == isMe)&&(identical(other.isCaptain, isCaptain) || other.isCaptain == isCaptain)&&(identical(other.isKeeper, isKeeper) || other.isKeeper == isKeeper));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventPlayer&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.rowKey, rowKey) || other.rowKey == rowKey)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.isGuest, isGuest) || other.isGuest == isGuest)&&(identical(other.isInjured, isInjured) || other.isInjured == isInjured)&&(identical(other.isOnVacation, isOnVacation) || other.isOnVacation == isOnVacation)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.respondedAt, respondedAt) || other.respondedAt == respondedAt)&&(identical(other.changedBy, changedBy) || other.changedBy == changedBy)&&(identical(other.isMe, isMe) || other.isMe == isMe)&&(identical(other.isCaptain, isCaptain) || other.isCaptain == isCaptain)&&(identical(other.isKeeper, isKeeper) || other.isKeeper == isKeeper));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,rowKey,name,avatarUrl,shirtNumber,isGuest,isInjured,isOnVacation,status,reason,isMe,isCaptain,isKeeper);
+int get hashCode => Object.hash(runtimeType,id,kind,rowKey,name,avatarUrl,shirtNumber,isGuest,isInjured,isOnVacation,status,reason,respondedAt,changedBy,isMe,isCaptain,isKeeper);
 
 @override
 String toString() {
-  return 'EventPlayer(id: $id, kind: $kind, rowKey: $rowKey, name: $name, avatarUrl: $avatarUrl, shirtNumber: $shirtNumber, isGuest: $isGuest, isInjured: $isInjured, isOnVacation: $isOnVacation, status: $status, reason: $reason, isMe: $isMe, isCaptain: $isCaptain, isKeeper: $isKeeper)';
+  return 'EventPlayer(id: $id, kind: $kind, rowKey: $rowKey, name: $name, avatarUrl: $avatarUrl, shirtNumber: $shirtNumber, isGuest: $isGuest, isInjured: $isInjured, isOnVacation: $isOnVacation, status: $status, reason: $reason, respondedAt: $respondedAt, changedBy: $changedBy, isMe: $isMe, isCaptain: $isCaptain, isKeeper: $isKeeper)';
 }
 
 
@@ -317,11 +318,11 @@ abstract mixin class $EventPlayerCopyWith<$Res>  {
   factory $EventPlayerCopyWith(EventPlayer value, $Res Function(EventPlayer) _then) = _$EventPlayerCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind kind, String? rowKey, String name, String? avatarUrl, int? shirtNumber, bool isGuest, bool isInjured, bool isOnVacation,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus status, String? reason, bool isMe, bool isCaptain, bool isKeeper
+ int id,@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind kind, String? rowKey, String name, String? avatarUrl, int? shirtNumber, bool isGuest, bool isInjured, bool isOnVacation,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus status, String? reason, DateTime? respondedAt, EventChangedBy? changedBy, bool isMe, bool isCaptain, bool isKeeper
 });
 
 
-
+$EventChangedByCopyWith<$Res>? get changedBy;
 
 }
 /// @nodoc
@@ -334,7 +335,7 @@ class _$EventPlayerCopyWithImpl<$Res>
 
 /// Create a copy of EventPlayer
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? kind = null,Object? rowKey = freezed,Object? name = null,Object? avatarUrl = freezed,Object? shirtNumber = freezed,Object? isGuest = null,Object? isInjured = null,Object? isOnVacation = null,Object? status = null,Object? reason = freezed,Object? isMe = null,Object? isCaptain = null,Object? isKeeper = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? kind = null,Object? rowKey = freezed,Object? name = null,Object? avatarUrl = freezed,Object? shirtNumber = freezed,Object? isGuest = null,Object? isInjured = null,Object? isOnVacation = null,Object? status = null,Object? reason = freezed,Object? respondedAt = freezed,Object? changedBy = freezed,Object? isMe = null,Object? isCaptain = null,Object? isKeeper = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
@@ -347,13 +348,27 @@ as bool,isInjured: null == isInjured ? _self.isInjured : isInjured // ignore: ca
 as bool,isOnVacation: null == isOnVacation ? _self.isOnVacation : isOnVacation // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AttendanceStatus,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
-as String?,isMe: null == isMe ? _self.isMe : isMe // ignore: cast_nullable_to_non_nullable
+as String?,respondedAt: freezed == respondedAt ? _self.respondedAt : respondedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,changedBy: freezed == changedBy ? _self.changedBy : changedBy // ignore: cast_nullable_to_non_nullable
+as EventChangedBy?,isMe: null == isMe ? _self.isMe : isMe // ignore: cast_nullable_to_non_nullable
 as bool,isCaptain: null == isCaptain ? _self.isCaptain : isCaptain // ignore: cast_nullable_to_non_nullable
 as bool,isKeeper: null == isKeeper ? _self.isKeeper : isKeeper // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
+/// Create a copy of EventPlayer
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventChangedByCopyWith<$Res>? get changedBy {
+    if (_self.changedBy == null) {
+    return null;
+  }
 
+  return $EventChangedByCopyWith<$Res>(_self.changedBy!, (value) {
+    return _then(_self.copyWith(changedBy: value));
+  });
+}
 }
 
 
@@ -435,10 +450,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  bool isMe,  bool isCaptain,  bool isKeeper)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  DateTime? respondedAt,  EventChangedBy? changedBy,  bool isMe,  bool isCaptain,  bool isKeeper)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventPlayer() when $default != null:
-return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
+return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.respondedAt,_that.changedBy,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
   return orElse();
 
 }
@@ -456,10 +471,10 @@ return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  bool isMe,  bool isCaptain,  bool isKeeper)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  DateTime? respondedAt,  EventChangedBy? changedBy,  bool isMe,  bool isCaptain,  bool isKeeper)  $default,) {final _that = this;
 switch (_that) {
 case _EventPlayer():
-return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
+return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.respondedAt,_that.changedBy,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -476,10 +491,10 @@ return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  bool isMe,  bool isCaptain,  bool isKeeper)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown)  EventPlayerKind kind,  String? rowKey,  String name,  String? avatarUrl,  int? shirtNumber,  bool isGuest,  bool isInjured,  bool isOnVacation, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus status,  String? reason,  DateTime? respondedAt,  EventChangedBy? changedBy,  bool isMe,  bool isCaptain,  bool isKeeper)?  $default,) {final _that = this;
 switch (_that) {
 case _EventPlayer() when $default != null:
-return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
+return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_that.shirtNumber,_that.isGuest,_that.isInjured,_that.isOnVacation,_that.status,_that.reason,_that.respondedAt,_that.changedBy,_that.isMe,_that.isCaptain,_that.isKeeper);case _:
   return null;
 
 }
@@ -491,7 +506,7 @@ return $default(_that.id,_that.kind,_that.rowKey,_that.name,_that.avatarUrl,_tha
 @JsonSerializable()
 
 class _EventPlayer implements EventPlayer {
-  const _EventPlayer({required this.id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown) this.kind = EventPlayerKind.player, this.rowKey, this.name = '', this.avatarUrl, this.shirtNumber, this.isGuest = false, this.isInjured = false, this.isOnVacation = false, @JsonKey(unknownEnumValue: AttendanceStatus.pending) this.status = AttendanceStatus.pending, this.reason, this.isMe = false, this.isCaptain = false, this.isKeeper = false});
+  const _EventPlayer({required this.id, @JsonKey(unknownEnumValue: EventPlayerKind.unknown) this.kind = EventPlayerKind.player, this.rowKey, this.name = '', this.avatarUrl, this.shirtNumber, this.isGuest = false, this.isInjured = false, this.isOnVacation = false, @JsonKey(unknownEnumValue: AttendanceStatus.pending) this.status = AttendanceStatus.pending, this.reason, this.respondedAt, this.changedBy, this.isMe = false, this.isCaptain = false, this.isKeeper = false});
   factory _EventPlayer.fromJson(Map<String, dynamic> json) => _$EventPlayerFromJson(json);
 
 @override final  int id;
@@ -505,6 +520,9 @@ class _EventPlayer implements EventPlayer {
 @override@JsonKey() final  bool isOnVacation;
 @override@JsonKey(unknownEnumValue: AttendanceStatus.pending) final  AttendanceStatus status;
 @override final  String? reason;
+/// Wanneer het antwoord voor het laatst wijzigde, en door wie.
+@override final  DateTime? respondedAt;
+@override final  EventChangedBy? changedBy;
 @override@JsonKey() final  bool isMe;
 @override@JsonKey() final  bool isCaptain;
 @override@JsonKey() final  bool isKeeper;
@@ -522,16 +540,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventPlayer&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.rowKey, rowKey) || other.rowKey == rowKey)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.isGuest, isGuest) || other.isGuest == isGuest)&&(identical(other.isInjured, isInjured) || other.isInjured == isInjured)&&(identical(other.isOnVacation, isOnVacation) || other.isOnVacation == isOnVacation)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.isMe, isMe) || other.isMe == isMe)&&(identical(other.isCaptain, isCaptain) || other.isCaptain == isCaptain)&&(identical(other.isKeeper, isKeeper) || other.isKeeper == isKeeper));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventPlayer&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.rowKey, rowKey) || other.rowKey == rowKey)&&(identical(other.name, name) || other.name == name)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.isGuest, isGuest) || other.isGuest == isGuest)&&(identical(other.isInjured, isInjured) || other.isInjured == isInjured)&&(identical(other.isOnVacation, isOnVacation) || other.isOnVacation == isOnVacation)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.respondedAt, respondedAt) || other.respondedAt == respondedAt)&&(identical(other.changedBy, changedBy) || other.changedBy == changedBy)&&(identical(other.isMe, isMe) || other.isMe == isMe)&&(identical(other.isCaptain, isCaptain) || other.isCaptain == isCaptain)&&(identical(other.isKeeper, isKeeper) || other.isKeeper == isKeeper));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,rowKey,name,avatarUrl,shirtNumber,isGuest,isInjured,isOnVacation,status,reason,isMe,isCaptain,isKeeper);
+int get hashCode => Object.hash(runtimeType,id,kind,rowKey,name,avatarUrl,shirtNumber,isGuest,isInjured,isOnVacation,status,reason,respondedAt,changedBy,isMe,isCaptain,isKeeper);
 
 @override
 String toString() {
-  return 'EventPlayer(id: $id, kind: $kind, rowKey: $rowKey, name: $name, avatarUrl: $avatarUrl, shirtNumber: $shirtNumber, isGuest: $isGuest, isInjured: $isInjured, isOnVacation: $isOnVacation, status: $status, reason: $reason, isMe: $isMe, isCaptain: $isCaptain, isKeeper: $isKeeper)';
+  return 'EventPlayer(id: $id, kind: $kind, rowKey: $rowKey, name: $name, avatarUrl: $avatarUrl, shirtNumber: $shirtNumber, isGuest: $isGuest, isInjured: $isInjured, isOnVacation: $isOnVacation, status: $status, reason: $reason, respondedAt: $respondedAt, changedBy: $changedBy, isMe: $isMe, isCaptain: $isCaptain, isKeeper: $isKeeper)';
 }
 
 
@@ -542,11 +560,11 @@ abstract mixin class _$EventPlayerCopyWith<$Res> implements $EventPlayerCopyWith
   factory _$EventPlayerCopyWith(_EventPlayer value, $Res Function(_EventPlayer) _then) = __$EventPlayerCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind kind, String? rowKey, String name, String? avatarUrl, int? shirtNumber, bool isGuest, bool isInjured, bool isOnVacation,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus status, String? reason, bool isMe, bool isCaptain, bool isKeeper
+ int id,@JsonKey(unknownEnumValue: EventPlayerKind.unknown) EventPlayerKind kind, String? rowKey, String name, String? avatarUrl, int? shirtNumber, bool isGuest, bool isInjured, bool isOnVacation,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus status, String? reason, DateTime? respondedAt, EventChangedBy? changedBy, bool isMe, bool isCaptain, bool isKeeper
 });
 
 
-
+@override $EventChangedByCopyWith<$Res>? get changedBy;
 
 }
 /// @nodoc
@@ -559,7 +577,7 @@ class __$EventPlayerCopyWithImpl<$Res>
 
 /// Create a copy of EventPlayer
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? kind = null,Object? rowKey = freezed,Object? name = null,Object? avatarUrl = freezed,Object? shirtNumber = freezed,Object? isGuest = null,Object? isInjured = null,Object? isOnVacation = null,Object? status = null,Object? reason = freezed,Object? isMe = null,Object? isCaptain = null,Object? isKeeper = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? kind = null,Object? rowKey = freezed,Object? name = null,Object? avatarUrl = freezed,Object? shirtNumber = freezed,Object? isGuest = null,Object? isInjured = null,Object? isOnVacation = null,Object? status = null,Object? reason = freezed,Object? respondedAt = freezed,Object? changedBy = freezed,Object? isMe = null,Object? isCaptain = null,Object? isKeeper = null,}) {
   return _then(_EventPlayer(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
@@ -572,9 +590,581 @@ as bool,isInjured: null == isInjured ? _self.isInjured : isInjured // ignore: ca
 as bool,isOnVacation: null == isOnVacation ? _self.isOnVacation : isOnVacation // ignore: cast_nullable_to_non_nullable
 as bool,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AttendanceStatus,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
-as String?,isMe: null == isMe ? _self.isMe : isMe // ignore: cast_nullable_to_non_nullable
+as String?,respondedAt: freezed == respondedAt ? _self.respondedAt : respondedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,changedBy: freezed == changedBy ? _self.changedBy : changedBy // ignore: cast_nullable_to_non_nullable
+as EventChangedBy?,isMe: null == isMe ? _self.isMe : isMe // ignore: cast_nullable_to_non_nullable
 as bool,isCaptain: null == isCaptain ? _self.isCaptain : isCaptain // ignore: cast_nullable_to_non_nullable
 as bool,isKeeper: null == isKeeper ? _self.isKeeper : isKeeper // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+/// Create a copy of EventPlayer
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventChangedByCopyWith<$Res>? get changedBy {
+    if (_self.changedBy == null) {
+    return null;
+  }
+
+  return $EventChangedByCopyWith<$Res>(_self.changedBy!, (value) {
+    return _then(_self.copyWith(changedBy: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$EventChangedBy {
+
+ String get name; bool get self;
+/// Create a copy of EventChangedBy
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventChangedByCopyWith<EventChangedBy> get copyWith => _$EventChangedByCopyWithImpl<EventChangedBy>(this as EventChangedBy, _$identity);
+
+  /// Serializes this EventChangedBy to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventChangedBy&&(identical(other.name, name) || other.name == name)&&(identical(other.self, self) || other.self == self));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,self);
+
+@override
+String toString() {
+  return 'EventChangedBy(name: $name, self: $self)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventChangedByCopyWith<$Res>  {
+  factory $EventChangedByCopyWith(EventChangedBy value, $Res Function(EventChangedBy) _then) = _$EventChangedByCopyWithImpl;
+@useResult
+$Res call({
+ String name, bool self
+});
+
+
+
+
+}
+/// @nodoc
+class _$EventChangedByCopyWithImpl<$Res>
+    implements $EventChangedByCopyWith<$Res> {
+  _$EventChangedByCopyWithImpl(this._self, this._then);
+
+  final EventChangedBy _self;
+  final $Res Function(EventChangedBy) _then;
+
+/// Create a copy of EventChangedBy
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? self = null,}) {
+  return _then(_self.copyWith(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,self: null == self ? _self.self : self // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EventChangedBy].
+extension EventChangedByPatterns on EventChangedBy {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EventChangedBy value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EventChangedBy() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EventChangedBy value)  $default,){
+final _that = this;
+switch (_that) {
+case _EventChangedBy():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EventChangedBy value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EventChangedBy() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  bool self)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EventChangedBy() when $default != null:
+return $default(_that.name,_that.self);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  bool self)  $default,) {final _that = this;
+switch (_that) {
+case _EventChangedBy():
+return $default(_that.name,_that.self);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  bool self)?  $default,) {final _that = this;
+switch (_that) {
+case _EventChangedBy() when $default != null:
+return $default(_that.name,_that.self);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EventChangedBy implements EventChangedBy {
+  const _EventChangedBy({this.name = '', this.self = false});
+  factory _EventChangedBy.fromJson(Map<String, dynamic> json) => _$EventChangedByFromJson(json);
+
+@override@JsonKey() final  String name;
+@override@JsonKey() final  bool self;
+
+/// Create a copy of EventChangedBy
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EventChangedByCopyWith<_EventChangedBy> get copyWith => __$EventChangedByCopyWithImpl<_EventChangedBy>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EventChangedByToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventChangedBy&&(identical(other.name, name) || other.name == name)&&(identical(other.self, self) || other.self == self));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,self);
+
+@override
+String toString() {
+  return 'EventChangedBy(name: $name, self: $self)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EventChangedByCopyWith<$Res> implements $EventChangedByCopyWith<$Res> {
+  factory _$EventChangedByCopyWith(_EventChangedBy value, $Res Function(_EventChangedBy) _then) = __$EventChangedByCopyWithImpl;
+@override @useResult
+$Res call({
+ String name, bool self
+});
+
+
+
+
+}
+/// @nodoc
+class __$EventChangedByCopyWithImpl<$Res>
+    implements _$EventChangedByCopyWith<$Res> {
+  __$EventChangedByCopyWithImpl(this._self, this._then);
+
+  final _EventChangedBy _self;
+  final $Res Function(_EventChangedBy) _then;
+
+/// Create a copy of EventChangedBy
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? self = null,}) {
+  return _then(_EventChangedBy(
+name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,self: null == self ? _self.self : self // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$EventSavingsPot {
+
+ int get id; String get name; int get amountCents; bool get oneOff; int get paidCount; int get participantCount; int get openCents;/// `null`: de kijker doet niet mee.
+ bool? get iPaid; bool get iRefund; bool get iRefunded;
+/// Create a copy of EventSavingsPot
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventSavingsPotCopyWith<EventSavingsPot> get copyWith => _$EventSavingsPotCopyWithImpl<EventSavingsPot>(this as EventSavingsPot, _$identity);
+
+  /// Serializes this EventSavingsPot to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
+
+@override
+String toString() {
+  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventSavingsPotCopyWith<$Res>  {
+  factory $EventSavingsPotCopyWith(EventSavingsPot value, $Res Function(EventSavingsPot) _then) = _$EventSavingsPotCopyWithImpl;
+@useResult
+$Res call({
+ int id, String name, int amountCents, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
+});
+
+
+
+
+}
+/// @nodoc
+class _$EventSavingsPotCopyWithImpl<$Res>
+    implements $EventSavingsPotCopyWith<$Res> {
+  _$EventSavingsPotCopyWithImpl(this._self, this._then);
+
+  final EventSavingsPot _self;
+  final $Res Function(EventSavingsPot) _then;
+
+/// Create a copy of EventSavingsPot
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
+as int,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
+as bool,paidCount: null == paidCount ? _self.paidCount : paidCount // ignore: cast_nullable_to_non_nullable
+as int,participantCount: null == participantCount ? _self.participantCount : participantCount // ignore: cast_nullable_to_non_nullable
+as int,openCents: null == openCents ? _self.openCents : openCents // ignore: cast_nullable_to_non_nullable
+as int,iPaid: freezed == iPaid ? _self.iPaid : iPaid // ignore: cast_nullable_to_non_nullable
+as bool?,iRefund: null == iRefund ? _self.iRefund : iRefund // ignore: cast_nullable_to_non_nullable
+as bool,iRefunded: null == iRefunded ? _self.iRefunded : iRefunded // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EventSavingsPot].
+extension EventSavingsPotPatterns on EventSavingsPot {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EventSavingsPot value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EventSavingsPot() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EventSavingsPot value)  $default,){
+final _that = this;
+switch (_that) {
+case _EventSavingsPot():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EventSavingsPot value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EventSavingsPot() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EventSavingsPot() when $default != null:
+return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)  $default,) {final _that = this;
+switch (_that) {
+case _EventSavingsPot():
+return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,) {final _that = this;
+switch (_that) {
+case _EventSavingsPot() when $default != null:
+return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EventSavingsPot implements EventSavingsPot {
+  const _EventSavingsPot({required this.id, this.name = '', this.amountCents = 0, this.oneOff = true, this.paidCount = 0, this.participantCount = 0, this.openCents = 0, this.iPaid, this.iRefund = false, this.iRefunded = false});
+  factory _EventSavingsPot.fromJson(Map<String, dynamic> json) => _$EventSavingsPotFromJson(json);
+
+@override final  int id;
+@override@JsonKey() final  String name;
+@override@JsonKey() final  int amountCents;
+@override@JsonKey() final  bool oneOff;
+@override@JsonKey() final  int paidCount;
+@override@JsonKey() final  int participantCount;
+@override@JsonKey() final  int openCents;
+/// `null`: de kijker doet niet mee.
+@override final  bool? iPaid;
+@override@JsonKey() final  bool iRefund;
+@override@JsonKey() final  bool iRefunded;
+
+/// Create a copy of EventSavingsPot
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EventSavingsPotCopyWith<_EventSavingsPot> get copyWith => __$EventSavingsPotCopyWithImpl<_EventSavingsPot>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EventSavingsPotToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
+
+@override
+String toString() {
+  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EventSavingsPotCopyWith<$Res> implements $EventSavingsPotCopyWith<$Res> {
+  factory _$EventSavingsPotCopyWith(_EventSavingsPot value, $Res Function(_EventSavingsPot) _then) = __$EventSavingsPotCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String name, int amountCents, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
+});
+
+
+
+
+}
+/// @nodoc
+class __$EventSavingsPotCopyWithImpl<$Res>
+    implements _$EventSavingsPotCopyWith<$Res> {
+  __$EventSavingsPotCopyWithImpl(this._self, this._then);
+
+  final _EventSavingsPot _self;
+  final $Res Function(_EventSavingsPot) _then;
+
+/// Create a copy of EventSavingsPot
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
+  return _then(_EventSavingsPot(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
+as int,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
+as bool,paidCount: null == paidCount ? _self.paidCount : paidCount // ignore: cast_nullable_to_non_nullable
+as int,participantCount: null == participantCount ? _self.participantCount : participantCount // ignore: cast_nullable_to_non_nullable
+as int,openCents: null == openCents ? _self.openCents : openCents // ignore: cast_nullable_to_non_nullable
+as int,iPaid: freezed == iPaid ? _self.iPaid : iPaid // ignore: cast_nullable_to_non_nullable
+as bool?,iRefund: null == iRefund ? _self.iRefund : iRefund // ignore: cast_nullable_to_non_nullable
+as bool,iRefunded: null == iRefunded ? _self.iRefunded : iRefunded // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -3136,7 +3726,9 @@ as int?,
 mixin _$EventDetail {
 
  int get id;@JsonKey(unknownEnumValue: EventType.unknown) EventType get type; String get title; DateTime get startsAt; DateTime? get endsAt; DateTime? get meetAt; String? get venue; String? get notes; bool? get isHome;/// `league`, `cup`, `friendly` of `null`.
- String? get competition; String? get homeTeam; String? get awayTeam; int? get homeScore; int? get awayScore; DateTime? get cancelledAt; LiveState? get live;@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> get rsvpStatuses; SportlinkInfo? get sportlink;@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? get myStatus; String? get myReason; bool get canRsvp; bool get canChange; AttendanceCounts get counts; AttendanceCounts get playerCounts; List<EventPlayer> get players; bool get hasLineup; bool get lineupShared; MotmState? get motm; List<CarpoolOffer>? get carpoolOffers; bool get isTrainer; bool get canAssignTeams; List<EventDuty> get duties; FlagDuty? get flag;
+ String? get competition; String? get homeTeam; String? get awayTeam; int? get homeScore; int? get awayScore; DateTime? get cancelledAt; LiveState? get live;@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> get rsvpStatuses; SportlinkInfo? get sportlink;@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? get myStatus; String? get myReason; bool get canRsvp; bool get canChange; AttendanceCounts get counts; AttendanceCounts get playerCounts; List<EventPlayer> get players; bool get hasLineup; bool get lineupShared; MotmState? get motm; List<CarpoolOffer>? get carpoolOffers; bool get isTrainer; bool get canAssignTeams; List<EventDuty> get duties; FlagDuty? get flag;/// Inleg bij een activiteit (niet voor toeschouwers), of `null`.
+ EventSavingsPot? get savingsPot;/// Penningmeester, nog geen pot: de ingang "Inleg vragen".
+ bool get canStartSavings;
 /// Create a copy of EventDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3149,16 +3741,16 @@ $EventDetailCopyWith<EventDetail> get copyWith => _$EventDetailCopyWithImpl<Even
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.live, live) || other.live == live)&&const DeepCollectionEquality().equals(other.rsvpStatuses, rsvpStatuses)&&(identical(other.sportlink, sportlink) || other.sportlink == sportlink)&&(identical(other.myStatus, myStatus) || other.myStatus == myStatus)&&(identical(other.myReason, myReason) || other.myReason == myReason)&&(identical(other.canRsvp, canRsvp) || other.canRsvp == canRsvp)&&(identical(other.canChange, canChange) || other.canChange == canChange)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.playerCounts, playerCounts) || other.playerCounts == playerCounts)&&const DeepCollectionEquality().equals(other.players, players)&&(identical(other.hasLineup, hasLineup) || other.hasLineup == hasLineup)&&(identical(other.lineupShared, lineupShared) || other.lineupShared == lineupShared)&&(identical(other.motm, motm) || other.motm == motm)&&const DeepCollectionEquality().equals(other.carpoolOffers, carpoolOffers)&&(identical(other.isTrainer, isTrainer) || other.isTrainer == isTrainer)&&(identical(other.canAssignTeams, canAssignTeams) || other.canAssignTeams == canAssignTeams)&&const DeepCollectionEquality().equals(other.duties, duties)&&(identical(other.flag, flag) || other.flag == flag));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.live, live) || other.live == live)&&const DeepCollectionEquality().equals(other.rsvpStatuses, rsvpStatuses)&&(identical(other.sportlink, sportlink) || other.sportlink == sportlink)&&(identical(other.myStatus, myStatus) || other.myStatus == myStatus)&&(identical(other.myReason, myReason) || other.myReason == myReason)&&(identical(other.canRsvp, canRsvp) || other.canRsvp == canRsvp)&&(identical(other.canChange, canChange) || other.canChange == canChange)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.playerCounts, playerCounts) || other.playerCounts == playerCounts)&&const DeepCollectionEquality().equals(other.players, players)&&(identical(other.hasLineup, hasLineup) || other.hasLineup == hasLineup)&&(identical(other.lineupShared, lineupShared) || other.lineupShared == lineupShared)&&(identical(other.motm, motm) || other.motm == motm)&&const DeepCollectionEquality().equals(other.carpoolOffers, carpoolOffers)&&(identical(other.isTrainer, isTrainer) || other.isTrainer == isTrainer)&&(identical(other.canAssignTeams, canAssignTeams) || other.canAssignTeams == canAssignTeams)&&const DeepCollectionEquality().equals(other.duties, duties)&&(identical(other.flag, flag) || other.flag == flag)&&(identical(other.savingsPot, savingsPot) || other.savingsPot == savingsPot)&&(identical(other.canStartSavings, canStartSavings) || other.canStartSavings == canStartSavings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,homeScore,awayScore,cancelledAt,live,const DeepCollectionEquality().hash(rsvpStatuses),sportlink,myStatus,myReason,canRsvp,canChange,counts,playerCounts,const DeepCollectionEquality().hash(players),hasLineup,lineupShared,motm,const DeepCollectionEquality().hash(carpoolOffers),isTrainer,canAssignTeams,const DeepCollectionEquality().hash(duties),flag]);
+int get hashCode => Object.hashAll([runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,homeScore,awayScore,cancelledAt,live,const DeepCollectionEquality().hash(rsvpStatuses),sportlink,myStatus,myReason,canRsvp,canChange,counts,playerCounts,const DeepCollectionEquality().hash(players),hasLineup,lineupShared,motm,const DeepCollectionEquality().hash(carpoolOffers),isTrainer,canAssignTeams,const DeepCollectionEquality().hash(duties),flag,savingsPot,canStartSavings]);
 
 @override
 String toString() {
-  return 'EventDetail(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, homeScore: $homeScore, awayScore: $awayScore, cancelledAt: $cancelledAt, live: $live, rsvpStatuses: $rsvpStatuses, sportlink: $sportlink, myStatus: $myStatus, myReason: $myReason, canRsvp: $canRsvp, canChange: $canChange, counts: $counts, playerCounts: $playerCounts, players: $players, hasLineup: $hasLineup, lineupShared: $lineupShared, motm: $motm, carpoolOffers: $carpoolOffers, isTrainer: $isTrainer, canAssignTeams: $canAssignTeams, duties: $duties, flag: $flag)';
+  return 'EventDetail(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, homeScore: $homeScore, awayScore: $awayScore, cancelledAt: $cancelledAt, live: $live, rsvpStatuses: $rsvpStatuses, sportlink: $sportlink, myStatus: $myStatus, myReason: $myReason, canRsvp: $canRsvp, canChange: $canChange, counts: $counts, playerCounts: $playerCounts, players: $players, hasLineup: $hasLineup, lineupShared: $lineupShared, motm: $motm, carpoolOffers: $carpoolOffers, isTrainer: $isTrainer, canAssignTeams: $canAssignTeams, duties: $duties, flag: $flag, savingsPot: $savingsPot, canStartSavings: $canStartSavings)';
 }
 
 
@@ -3169,11 +3761,11 @@ abstract mixin class $EventDetailCopyWith<$Res>  {
   factory $EventDetailCopyWith(EventDetail value, $Res Function(EventDetail) _then) = _$EventDetailCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: EventType.unknown) EventType type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, int? homeScore, int? awayScore, DateTime? cancelledAt, LiveState? live,@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> rsvpStatuses, SportlinkInfo? sportlink,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? myStatus, String? myReason, bool canRsvp, bool canChange, AttendanceCounts counts, AttendanceCounts playerCounts, List<EventPlayer> players, bool hasLineup, bool lineupShared, MotmState? motm, List<CarpoolOffer>? carpoolOffers, bool isTrainer, bool canAssignTeams, List<EventDuty> duties, FlagDuty? flag
+ int id,@JsonKey(unknownEnumValue: EventType.unknown) EventType type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, int? homeScore, int? awayScore, DateTime? cancelledAt, LiveState? live,@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> rsvpStatuses, SportlinkInfo? sportlink,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? myStatus, String? myReason, bool canRsvp, bool canChange, AttendanceCounts counts, AttendanceCounts playerCounts, List<EventPlayer> players, bool hasLineup, bool lineupShared, MotmState? motm, List<CarpoolOffer>? carpoolOffers, bool isTrainer, bool canAssignTeams, List<EventDuty> duties, FlagDuty? flag, EventSavingsPot? savingsPot, bool canStartSavings
 });
 
 
-$LiveStateCopyWith<$Res>? get live;$SportlinkInfoCopyWith<$Res>? get sportlink;$AttendanceCountsCopyWith<$Res> get counts;$AttendanceCountsCopyWith<$Res> get playerCounts;$MotmStateCopyWith<$Res>? get motm;$FlagDutyCopyWith<$Res>? get flag;
+$LiveStateCopyWith<$Res>? get live;$SportlinkInfoCopyWith<$Res>? get sportlink;$AttendanceCountsCopyWith<$Res> get counts;$AttendanceCountsCopyWith<$Res> get playerCounts;$MotmStateCopyWith<$Res>? get motm;$FlagDutyCopyWith<$Res>? get flag;$EventSavingsPotCopyWith<$Res>? get savingsPot;
 
 }
 /// @nodoc
@@ -3186,7 +3778,7 @@ class _$EventDetailCopyWithImpl<$Res>
 
 /// Create a copy of EventDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? cancelledAt = freezed,Object? live = freezed,Object? rsvpStatuses = null,Object? sportlink = freezed,Object? myStatus = freezed,Object? myReason = freezed,Object? canRsvp = null,Object? canChange = null,Object? counts = null,Object? playerCounts = null,Object? players = null,Object? hasLineup = null,Object? lineupShared = null,Object? motm = freezed,Object? carpoolOffers = freezed,Object? isTrainer = null,Object? canAssignTeams = null,Object? duties = null,Object? flag = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? cancelledAt = freezed,Object? live = freezed,Object? rsvpStatuses = null,Object? sportlink = freezed,Object? myStatus = freezed,Object? myReason = freezed,Object? canRsvp = null,Object? canChange = null,Object? counts = null,Object? playerCounts = null,Object? players = null,Object? hasLineup = null,Object? lineupShared = null,Object? motm = freezed,Object? carpoolOffers = freezed,Object? isTrainer = null,Object? canAssignTeams = null,Object? duties = null,Object? flag = freezed,Object? savingsPot = freezed,Object? canStartSavings = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -3221,7 +3813,9 @@ as List<CarpoolOffer>?,isTrainer: null == isTrainer ? _self.isTrainer : isTraine
 as bool,canAssignTeams: null == canAssignTeams ? _self.canAssignTeams : canAssignTeams // ignore: cast_nullable_to_non_nullable
 as bool,duties: null == duties ? _self.duties : duties // ignore: cast_nullable_to_non_nullable
 as List<EventDuty>,flag: freezed == flag ? _self.flag : flag // ignore: cast_nullable_to_non_nullable
-as FlagDuty?,
+as FlagDuty?,savingsPot: freezed == savingsPot ? _self.savingsPot : savingsPot // ignore: cast_nullable_to_non_nullable
+as EventSavingsPot?,canStartSavings: null == canStartSavings ? _self.canStartSavings : canStartSavings // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of EventDetail
@@ -3289,6 +3883,18 @@ $FlagDutyCopyWith<$Res>? get flag {
 
   return $FlagDutyCopyWith<$Res>(_self.flag!, (value) {
     return _then(_self.copyWith(flag: value));
+  });
+}/// Create a copy of EventDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventSavingsPotCopyWith<$Res>? get savingsPot {
+    if (_self.savingsPot == null) {
+    return null;
+  }
+
+  return $EventSavingsPotCopyWith<$Res>(_self.savingsPot!, (value) {
+    return _then(_self.copyWith(savingsPot: value));
   });
 }
 }
@@ -3372,10 +3978,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag,  EventSavingsPot? savingsPot,  bool canStartSavings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventDetail() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag,_that.savingsPot,_that.canStartSavings);case _:
   return orElse();
 
 }
@@ -3393,10 +3999,10 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag,  EventSavingsPot? savingsPot,  bool canStartSavings)  $default,) {final _that = this;
 switch (_that) {
 case _EventDetail():
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag,_that.savingsPot,_that.canStartSavings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -3413,10 +4019,10 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: EventType.unknown)  EventType type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  int? homeScore,  int? awayScore,  DateTime? cancelledAt,  LiveState? live, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  List<AttendanceStatus> rsvpStatuses,  SportlinkInfo? sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending)  AttendanceStatus? myStatus,  String? myReason,  bool canRsvp,  bool canChange,  AttendanceCounts counts,  AttendanceCounts playerCounts,  List<EventPlayer> players,  bool hasLineup,  bool lineupShared,  MotmState? motm,  List<CarpoolOffer>? carpoolOffers,  bool isTrainer,  bool canAssignTeams,  List<EventDuty> duties,  FlagDuty? flag,  EventSavingsPot? savingsPot,  bool canStartSavings)?  $default,) {final _that = this;
 switch (_that) {
 case _EventDetail() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.cancelledAt,_that.live,_that.rsvpStatuses,_that.sportlink,_that.myStatus,_that.myReason,_that.canRsvp,_that.canChange,_that.counts,_that.playerCounts,_that.players,_that.hasLineup,_that.lineupShared,_that.motm,_that.carpoolOffers,_that.isTrainer,_that.canAssignTeams,_that.duties,_that.flag,_that.savingsPot,_that.canStartSavings);case _:
   return null;
 
 }
@@ -3428,7 +4034,7 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 @JsonSerializable()
 
 class _EventDetail extends EventDetail {
-  const _EventDetail({required this.id, @JsonKey(unknownEnumValue: EventType.unknown) this.type = EventType.unknown, this.title = '', required this.startsAt, this.endsAt, this.meetAt, this.venue, this.notes, this.isHome, this.competition, this.homeTeam, this.awayTeam, this.homeScore, this.awayScore, this.cancelledAt, this.live, @JsonKey(unknownEnumValue: AttendanceStatus.pending) final  List<AttendanceStatus> rsvpStatuses = const <AttendanceStatus>[AttendanceStatus.present, AttendanceStatus.nonplay, AttendanceStatus.absent], this.sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending) this.myStatus, this.myReason, this.canRsvp = false, this.canChange = false, this.counts = const AttendanceCounts(), this.playerCounts = const AttendanceCounts(), final  List<EventPlayer> players = const <EventPlayer>[], this.hasLineup = false, this.lineupShared = false, this.motm, final  List<CarpoolOffer>? carpoolOffers, this.isTrainer = false, this.canAssignTeams = false, final  List<EventDuty> duties = const <EventDuty>[], this.flag}): _rsvpStatuses = rsvpStatuses,_players = players,_carpoolOffers = carpoolOffers,_duties = duties,super._();
+  const _EventDetail({required this.id, @JsonKey(unknownEnumValue: EventType.unknown) this.type = EventType.unknown, this.title = '', required this.startsAt, this.endsAt, this.meetAt, this.venue, this.notes, this.isHome, this.competition, this.homeTeam, this.awayTeam, this.homeScore, this.awayScore, this.cancelledAt, this.live, @JsonKey(unknownEnumValue: AttendanceStatus.pending) final  List<AttendanceStatus> rsvpStatuses = const <AttendanceStatus>[AttendanceStatus.present, AttendanceStatus.nonplay, AttendanceStatus.absent], this.sportlink, @JsonKey(unknownEnumValue: AttendanceStatus.pending) this.myStatus, this.myReason, this.canRsvp = false, this.canChange = false, this.counts = const AttendanceCounts(), this.playerCounts = const AttendanceCounts(), final  List<EventPlayer> players = const <EventPlayer>[], this.hasLineup = false, this.lineupShared = false, this.motm, final  List<CarpoolOffer>? carpoolOffers, this.isTrainer = false, this.canAssignTeams = false, final  List<EventDuty> duties = const <EventDuty>[], this.flag, this.savingsPot, this.canStartSavings = false}): _rsvpStatuses = rsvpStatuses,_players = players,_carpoolOffers = carpoolOffers,_duties = duties,super._();
   factory _EventDetail.fromJson(Map<String, dynamic> json) => _$EventDetailFromJson(json);
 
 @override final  int id;
@@ -3491,6 +4097,10 @@ class _EventDetail extends EventDetail {
 }
 
 @override final  FlagDuty? flag;
+/// Inleg bij een activiteit (niet voor toeschouwers), of `null`.
+@override final  EventSavingsPot? savingsPot;
+/// Penningmeester, nog geen pot: de ingang "Inleg vragen".
+@override@JsonKey() final  bool canStartSavings;
 
 /// Create a copy of EventDetail
 /// with the given fields replaced by the non-null parameter values.
@@ -3505,16 +4115,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.live, live) || other.live == live)&&const DeepCollectionEquality().equals(other._rsvpStatuses, _rsvpStatuses)&&(identical(other.sportlink, sportlink) || other.sportlink == sportlink)&&(identical(other.myStatus, myStatus) || other.myStatus == myStatus)&&(identical(other.myReason, myReason) || other.myReason == myReason)&&(identical(other.canRsvp, canRsvp) || other.canRsvp == canRsvp)&&(identical(other.canChange, canChange) || other.canChange == canChange)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.playerCounts, playerCounts) || other.playerCounts == playerCounts)&&const DeepCollectionEquality().equals(other._players, _players)&&(identical(other.hasLineup, hasLineup) || other.hasLineup == hasLineup)&&(identical(other.lineupShared, lineupShared) || other.lineupShared == lineupShared)&&(identical(other.motm, motm) || other.motm == motm)&&const DeepCollectionEquality().equals(other._carpoolOffers, _carpoolOffers)&&(identical(other.isTrainer, isTrainer) || other.isTrainer == isTrainer)&&(identical(other.canAssignTeams, canAssignTeams) || other.canAssignTeams == canAssignTeams)&&const DeepCollectionEquality().equals(other._duties, _duties)&&(identical(other.flag, flag) || other.flag == flag));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.homeScore, homeScore) || other.homeScore == homeScore)&&(identical(other.awayScore, awayScore) || other.awayScore == awayScore)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.live, live) || other.live == live)&&const DeepCollectionEquality().equals(other._rsvpStatuses, _rsvpStatuses)&&(identical(other.sportlink, sportlink) || other.sportlink == sportlink)&&(identical(other.myStatus, myStatus) || other.myStatus == myStatus)&&(identical(other.myReason, myReason) || other.myReason == myReason)&&(identical(other.canRsvp, canRsvp) || other.canRsvp == canRsvp)&&(identical(other.canChange, canChange) || other.canChange == canChange)&&(identical(other.counts, counts) || other.counts == counts)&&(identical(other.playerCounts, playerCounts) || other.playerCounts == playerCounts)&&const DeepCollectionEquality().equals(other._players, _players)&&(identical(other.hasLineup, hasLineup) || other.hasLineup == hasLineup)&&(identical(other.lineupShared, lineupShared) || other.lineupShared == lineupShared)&&(identical(other.motm, motm) || other.motm == motm)&&const DeepCollectionEquality().equals(other._carpoolOffers, _carpoolOffers)&&(identical(other.isTrainer, isTrainer) || other.isTrainer == isTrainer)&&(identical(other.canAssignTeams, canAssignTeams) || other.canAssignTeams == canAssignTeams)&&const DeepCollectionEquality().equals(other._duties, _duties)&&(identical(other.flag, flag) || other.flag == flag)&&(identical(other.savingsPot, savingsPot) || other.savingsPot == savingsPot)&&(identical(other.canStartSavings, canStartSavings) || other.canStartSavings == canStartSavings));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,homeScore,awayScore,cancelledAt,live,const DeepCollectionEquality().hash(_rsvpStatuses),sportlink,myStatus,myReason,canRsvp,canChange,counts,playerCounts,const DeepCollectionEquality().hash(_players),hasLineup,lineupShared,motm,const DeepCollectionEquality().hash(_carpoolOffers),isTrainer,canAssignTeams,const DeepCollectionEquality().hash(_duties),flag]);
+int get hashCode => Object.hashAll([runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,homeScore,awayScore,cancelledAt,live,const DeepCollectionEquality().hash(_rsvpStatuses),sportlink,myStatus,myReason,canRsvp,canChange,counts,playerCounts,const DeepCollectionEquality().hash(_players),hasLineup,lineupShared,motm,const DeepCollectionEquality().hash(_carpoolOffers),isTrainer,canAssignTeams,const DeepCollectionEquality().hash(_duties),flag,savingsPot,canStartSavings]);
 
 @override
 String toString() {
-  return 'EventDetail(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, homeScore: $homeScore, awayScore: $awayScore, cancelledAt: $cancelledAt, live: $live, rsvpStatuses: $rsvpStatuses, sportlink: $sportlink, myStatus: $myStatus, myReason: $myReason, canRsvp: $canRsvp, canChange: $canChange, counts: $counts, playerCounts: $playerCounts, players: $players, hasLineup: $hasLineup, lineupShared: $lineupShared, motm: $motm, carpoolOffers: $carpoolOffers, isTrainer: $isTrainer, canAssignTeams: $canAssignTeams, duties: $duties, flag: $flag)';
+  return 'EventDetail(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, homeScore: $homeScore, awayScore: $awayScore, cancelledAt: $cancelledAt, live: $live, rsvpStatuses: $rsvpStatuses, sportlink: $sportlink, myStatus: $myStatus, myReason: $myReason, canRsvp: $canRsvp, canChange: $canChange, counts: $counts, playerCounts: $playerCounts, players: $players, hasLineup: $hasLineup, lineupShared: $lineupShared, motm: $motm, carpoolOffers: $carpoolOffers, isTrainer: $isTrainer, canAssignTeams: $canAssignTeams, duties: $duties, flag: $flag, savingsPot: $savingsPot, canStartSavings: $canStartSavings)';
 }
 
 
@@ -3525,11 +4135,11 @@ abstract mixin class _$EventDetailCopyWith<$Res> implements $EventDetailCopyWith
   factory _$EventDetailCopyWith(_EventDetail value, $Res Function(_EventDetail) _then) = __$EventDetailCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(unknownEnumValue: EventType.unknown) EventType type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, int? homeScore, int? awayScore, DateTime? cancelledAt, LiveState? live,@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> rsvpStatuses, SportlinkInfo? sportlink,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? myStatus, String? myReason, bool canRsvp, bool canChange, AttendanceCounts counts, AttendanceCounts playerCounts, List<EventPlayer> players, bool hasLineup, bool lineupShared, MotmState? motm, List<CarpoolOffer>? carpoolOffers, bool isTrainer, bool canAssignTeams, List<EventDuty> duties, FlagDuty? flag
+ int id,@JsonKey(unknownEnumValue: EventType.unknown) EventType type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, int? homeScore, int? awayScore, DateTime? cancelledAt, LiveState? live,@JsonKey(unknownEnumValue: AttendanceStatus.pending) List<AttendanceStatus> rsvpStatuses, SportlinkInfo? sportlink,@JsonKey(unknownEnumValue: AttendanceStatus.pending) AttendanceStatus? myStatus, String? myReason, bool canRsvp, bool canChange, AttendanceCounts counts, AttendanceCounts playerCounts, List<EventPlayer> players, bool hasLineup, bool lineupShared, MotmState? motm, List<CarpoolOffer>? carpoolOffers, bool isTrainer, bool canAssignTeams, List<EventDuty> duties, FlagDuty? flag, EventSavingsPot? savingsPot, bool canStartSavings
 });
 
 
-@override $LiveStateCopyWith<$Res>? get live;@override $SportlinkInfoCopyWith<$Res>? get sportlink;@override $AttendanceCountsCopyWith<$Res> get counts;@override $AttendanceCountsCopyWith<$Res> get playerCounts;@override $MotmStateCopyWith<$Res>? get motm;@override $FlagDutyCopyWith<$Res>? get flag;
+@override $LiveStateCopyWith<$Res>? get live;@override $SportlinkInfoCopyWith<$Res>? get sportlink;@override $AttendanceCountsCopyWith<$Res> get counts;@override $AttendanceCountsCopyWith<$Res> get playerCounts;@override $MotmStateCopyWith<$Res>? get motm;@override $FlagDutyCopyWith<$Res>? get flag;@override $EventSavingsPotCopyWith<$Res>? get savingsPot;
 
 }
 /// @nodoc
@@ -3542,7 +4152,7 @@ class __$EventDetailCopyWithImpl<$Res>
 
 /// Create a copy of EventDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? cancelledAt = freezed,Object? live = freezed,Object? rsvpStatuses = null,Object? sportlink = freezed,Object? myStatus = freezed,Object? myReason = freezed,Object? canRsvp = null,Object? canChange = null,Object? counts = null,Object? playerCounts = null,Object? players = null,Object? hasLineup = null,Object? lineupShared = null,Object? motm = freezed,Object? carpoolOffers = freezed,Object? isTrainer = null,Object? canAssignTeams = null,Object? duties = null,Object? flag = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? cancelledAt = freezed,Object? live = freezed,Object? rsvpStatuses = null,Object? sportlink = freezed,Object? myStatus = freezed,Object? myReason = freezed,Object? canRsvp = null,Object? canChange = null,Object? counts = null,Object? playerCounts = null,Object? players = null,Object? hasLineup = null,Object? lineupShared = null,Object? motm = freezed,Object? carpoolOffers = freezed,Object? isTrainer = null,Object? canAssignTeams = null,Object? duties = null,Object? flag = freezed,Object? savingsPot = freezed,Object? canStartSavings = null,}) {
   return _then(_EventDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -3577,7 +4187,9 @@ as List<CarpoolOffer>?,isTrainer: null == isTrainer ? _self.isTrainer : isTraine
 as bool,canAssignTeams: null == canAssignTeams ? _self.canAssignTeams : canAssignTeams // ignore: cast_nullable_to_non_nullable
 as bool,duties: null == duties ? _self._duties : duties // ignore: cast_nullable_to_non_nullable
 as List<EventDuty>,flag: freezed == flag ? _self.flag : flag // ignore: cast_nullable_to_non_nullable
-as FlagDuty?,
+as FlagDuty?,savingsPot: freezed == savingsPot ? _self.savingsPot : savingsPot // ignore: cast_nullable_to_non_nullable
+as EventSavingsPot?,canStartSavings: null == canStartSavings ? _self.canStartSavings : canStartSavings // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -3646,6 +4258,18 @@ $FlagDutyCopyWith<$Res>? get flag {
 
   return $FlagDutyCopyWith<$Res>(_self.flag!, (value) {
     return _then(_self.copyWith(flag: value));
+  });
+}/// Create a copy of EventDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventSavingsPotCopyWith<$Res>? get savingsPot {
+    if (_self.savingsPot == null) {
+    return null;
+  }
+
+  return $EventSavingsPotCopyWith<$Res>(_self.savingsPot!, (value) {
+    return _then(_self.copyWith(savingsPot: value));
   });
 }
 }

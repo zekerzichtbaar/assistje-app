@@ -32,6 +32,51 @@ Teamkleur-logica (`lib/core/theme/team_color.dart`) is een 1-op-1 port van
 `vogels3/resources/js/Components/ThemeApplier.tsx`; de tests in
 `test/core/theme/team_color_test.dart` zijn tegen het origineel doorgerekend.
 
+## Platformconventies (iOS HIG / Material)
+
+- **Navigatie:** tabbalk met max. 5 tabs; de laatste is *Meer* (profiel,
+  teamwissel, alle overige schermen). Geen hamburger-/schuifmenu.
+- **Bevestigen:** `showConfirmDialog` (Cupertino op iOS, Material op Android;
+  `destructive: true` voor onomkeerbare acties). Nooit losse `AlertDialog`s.
+- **Datum/tijd:** `showAppDatePicker` / `showAppTimePicker` (wieltjes op iOS,
+  kalender op Android, altijd 24-uurs). Nooit direct `showDatePicker`.
+- **Schakelaars/vinkjes:** `Switch.adaptive`, `Checkbox.adaptive`,
+  `CheckboxListTile.adaptive`.
+- **Tikvlakken ≥ 44 pt:** geen `VisualDensity.compact` op knoppen.
+- **Tekst ≥ 11 pt** (uitzondering: vaste markers op het veld). Tekst schaalt
+  mee met de systeemtekstgrootte via `AppTextScaler` (koppen groeien minder,
+  als iOS; begrensd op ≈ AX2); vaste chrome (tabbalk, badges) schaalt niet.
+- **Schermtitel met acties:** `ScreenHeader` (acties zakken onder de titel
+  bij grote tekst).
+- **Contrast ≥ 4.5:1:** wit op een statuskleur alleen op -700-tinten.
+- **Audit:** `flutter test test/a11y/` controleert elk hoofdscherm
+  (`hig_audit_test.dart`) en elke sheet/dialoog (`hig_sheets_{a,b}_test.dart`)
+  op iPhone SE en Pro Max, standaard en AX5: geen overloop, tikvlakken
+  ≥ 44 pt, VoiceOver-labels, contrast. Een nieuw scherm of nieuwe sheet krijgt
+  daar een regel. Bewezen meetfouten van de contrastcontrole gaan via
+  `contrastFalsePositives`, altijd met reden. Met
+  `HIG_SHOTS_DIR=<map>` ervoor krijg je schermafbeeldingen met de echte fonts.
+- **Haptics:** via `Haptics` (`success`/`error` = systeem-notificatiehaptiek).
+
+## App-iconen (standaard + clubwapens)
+
+- Standaardicoon: het Assistje-mascotje (bron: vogels3 `public/img/assistje-logo.svg`).
+- Clubwapens: iOS kan alleen wisselen naar iconen die in de build zitten. Draai
+  daarom **vóór elke iOS-release**:
+
+  ```sh
+  dart run tool/app_icons.dart          # haalt GET /api/v1/app-icons op (env/prod.json)
+  ```
+
+  Dat schrijft per club `ios/Runner/Assets.xcassets/ClubIcon-<clubId>.appiconset`
+  (gitignored; alleen beginschermformaten als palet-PNG, ± 3 KB per stuk).
+  Ongewijzigde logo's worden overgeslagen; een onleesbaar logo is een
+  waarschuwing, geen fout. `--clean` haalt ze weer weg, `--api <url>` kiest
+  een andere bron.
+- In de app: Profiel → kaart *App-icoon* (alleen iOS, alleen als het wapen van
+  de club van je team in de build zit). Native kant: `AppIconChannel` in
+  `ios/Runner/AppDelegate.swift`.
+
 ## Copy (l10n)
 
 `flutter gen-l10n` accepteert maar één template-ARB, maar één gedeeld bestand

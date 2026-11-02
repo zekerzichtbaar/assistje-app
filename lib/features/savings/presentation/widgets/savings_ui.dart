@@ -105,29 +105,16 @@ Future<bool> confirmSavings(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('savings-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.savingsCancel),
-        ),
-        TextButton(
-          key: const ValueKey('savings-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.savingsCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('savings-confirm-cancel'),
+    confirmKey: const ValueKey('savings-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Een foutmelding bovenin een formulier.
@@ -163,7 +150,7 @@ class SavingsStaffBadge extends StatelessWidget {
     ),
     child: Text(
       AppLocalizations.of(context).savingsStaffBadge,
-      style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: color),
+      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
     ),
   );
 }

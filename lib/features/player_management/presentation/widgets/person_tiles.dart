@@ -30,7 +30,7 @@ class PmBadge extends StatelessWidget {
     child: Text(
       label,
       style: TextStyle(
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: FontWeight.w600,
         color: foreground,
       ),

@@ -73,7 +73,7 @@ class _PlayerEditFormState extends State<_PlayerEditForm> {
 
   Future<void> _pickBirthdate() async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
+    final picked = await showAppDatePicker(
       context: context,
       initialDate: _birthdate ?? DateTime(now.year - 25),
       firstDate: DateTime(1920),
@@ -282,7 +282,7 @@ class _PlayerEditFormState extends State<_PlayerEditForm> {
             ),
           ),
         const SizedBox(height: 4),
-        CheckboxListTile(
+        CheckboxListTile.adaptive(
           key: const ValueKey('pm-edit-guest'),
           contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading,

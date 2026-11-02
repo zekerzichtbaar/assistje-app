@@ -37,10 +37,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(currentTitle(tester), 'Ranking');
 
-    await tester.tap(find.byKey(const Key('tab-profile')));
+    await tester.tap(find.byKey(const Key('tab-more')));
+    await tester.pumpAndSettle();
+    expect(router.state.uri.path, '/more');
+
+    // Profiel duwt binnen de Meer-tab: de tabbalk blijft staan.
+    await tester.tap(find.byKey(const ValueKey('menu-profile')));
     await tester.pumpAndSettle();
     expect(router.state.uri.path, '/profile');
     expect(find.byKey(const Key('profile-team-name')), findsOneWidget);
+    expect(find.byKey(const Key('tab-more')).hitTestable(), findsOneWidget);
+    await tester.tap(find.byKey(const Key('shell-back')));
+    await tester.pumpAndSettle();
+    expect(router.state.uri.path, '/more');
 
     await tester.tap(find.byKey(const Key('tab-agenda')));
     await tester.pumpAndSettle();
@@ -73,39 +82,30 @@ void main() {
     expect(find.byKey(const Key('shell-home')), findsOneWidget);
   });
 
-  testWidgets('menu opent, navigeert en sluit', (tester) async {
+  testWidgets('Meer-tab toont alleen wat geen tab heeft en duwt het scherm', (
+    tester,
+  ) async {
     final (container, _) = await pumpSignedIn(tester, teams: [player]);
     final router = container.read(routerProvider);
 
-    expect(find.byKey(const Key('menu-wheel')), findsNothing);
     await openMenu(tester);
-    expect(find.byKey(const Key('menu-wheel')), findsOneWidget);
     expect(find.text('Sam de Vries'), findsOneWidget);
+    expect(find.byKey(const ValueKey('menu-wheel')), findsOneWidget);
+    // Agenda, Stats en Ranking zitten al in de tabbalk.
+    expect(find.byKey(const ValueKey('menu-agenda')), findsNothing);
+    expect(find.byKey(const ValueKey('menu-stats')), findsNothing);
 
-    await tester.tap(find.byKey(const Key('menu-wheel')));
+    await tester.tap(find.byKey(const ValueKey('menu-wheel')));
     await tester.pumpAndSettle();
     expect(router.state.uri.path, '/wheel');
     expect(currentTitle(tester), 'Radje');
-    expect(find.byKey(const Key('menu-wheel')), findsNothing);
 
-    // Vanaf een gepusht scherm vervangt het menu dat scherm.
-    await openMenu(tester);
-    await tester.tap(find.byKey(const Key('menu-fines')));
-    await tester.pumpAndSettle();
-    expect(currentTitle(tester), 'Boetepot');
     await tester.tap(find.byKey(const Key('shell-back')));
     await tester.pumpAndSettle();
-    expect(router.state.uri.path, '/agenda');
-
-    // Een tik op de weggeschoven app sluit het menu.
-    await openMenu(tester);
-    // De app ligt dan links in beeld (het menu neemt 80% rechts).
-    await tester.tapAt(const Offset(20, 300));
-    await tester.pumpAndSettle();
-    expect(find.byKey(const Key('menu-wheel')), findsNothing);
+    expect(router.state.uri.path, '/more');
   });
 
-  testWidgets('teamwissel in het menu wisselt team, kleur en tabs', (
+  testWidgets('teamwissel op de Meer-tab wisselt team, kleur en tabs', (
     tester,
   ) async {
     final (container, backend) = await pumpSignedIn(
@@ -161,7 +161,7 @@ void main() {
     },
   );
 
-  testWidgets('uitloggen via het menu', (tester) async {
+  testWidgets('uitloggen via de Meer-tab', (tester) async {
     final (_, backend) = await pumpSignedIn(tester, teams: [player]);
     backend.http.on('POST /auth/logout', 204);
 

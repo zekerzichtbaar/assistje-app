@@ -121,6 +121,67 @@ void main() {
     expect(find.text('donderdag'), findsOneWidget);
   });
 
+  testWidgets('trainer: blessure namens de speler aanzetten', (tester) async {
+    final (_, http) = await _open(
+      tester,
+      membership: RosterFixtures.membership(
+        role: 'trainer',
+        features: {'injuries': true},
+      ),
+      setup: (http) => http
+        ..on(_detail, 200, RosterFixtures.managedPlayerDetail())
+        ..on('PATCH /teams/3/players/14/injury', 200, {
+          'data': {'player_id': 14, 'is_injured': true},
+        }),
+    );
+
+    expect(find.byKey(const ValueKey('player-injury')), findsOneWidget);
+    expect(find.text('Geblesseerd'), findsOneWidget);
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('player-injury-switch')),
+    );
+    await tester.tap(find.byKey(const ValueKey('player-injury-switch')));
+    await tester.pumpAndSettle();
+
+    final patch = http.requestsTo('PATCH /teams/3/players/14/injury').single;
+    expect(patch.body, {'is_injured': true});
+    expect(find.textContaining('staat als geblesseerd'), findsOneWidget);
+  });
+
+  testWidgets('trainer: blessure mislukt → schakelaar springt terug', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      membership: RosterFixtures.membership(
+        role: 'trainer',
+        features: {'injuries': true},
+      ),
+      setup: (http) => http
+        ..on(_detail, 200, RosterFixtures.managedPlayerDetail())
+        ..on('PATCH /teams/3/players/14/injury', 500, {'message': 'Kapot.'}),
+    );
+
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('player-injury-switch')),
+    );
+    await tester.tap(find.byKey(const ValueKey('player-injury-switch')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Geblesseerd'), findsOneWidget);
+    expect(find.text('Blessure aanpassen mislukt'), findsOneWidget);
+  });
+
+  testWidgets('zonder feature injuries geen blessurekaart', (tester) async {
+    await _open(
+      tester,
+      membership: RosterFixtures.membership(role: 'trainer'),
+      setup: (http) =>
+          http.on(_detail, 200, RosterFixtures.managedPlayerDetail()),
+    );
+    expect(find.byKey(const ValueKey('player-injury')), findsNothing);
+  });
+
   testWidgets('sport zonder scorers en met groene kaarten', (tester) async {
     await _open(
       tester,

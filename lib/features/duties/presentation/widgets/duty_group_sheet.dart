@@ -167,7 +167,7 @@ class _DutyGroupFormState extends State<DutyGroupForm> {
             child: Column(
               children: [
                 for (final person in widget.people)
-                  CheckboxListTile(
+                  CheckboxListTile.adaptive(
                     key: ValueKey('duty-group-form-member-${person.key}'),
                     dense: true,
                     controlAffinity: ListTileControlAffinity.leading,

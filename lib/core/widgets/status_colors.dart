@@ -135,10 +135,12 @@ class AttendanceStatusStyle {
   }) {
     final dark = brightness == Brightness.dark;
     const white = Color(0xFFFFFFFF);
+    // Elke `solid` draagt witte tekst en haalt daarmee ≥ 4.5:1 (WCAG AA);
+    // de PWA-tinten (-500/-600) haalden dat niet.
     switch (tone) {
       case AttendanceTone.present:
         return AttendanceStatusStyle(
-          solid: StatusColors.emerald600,
+          solid: StatusColors.emerald700,
           onSolid: white,
           softBackground: dark
               ? StatusColors.emerald500.withValues(alpha: 0.2)
@@ -160,7 +162,7 @@ class AttendanceStatusStyle {
         );
       case AttendanceTone.watch:
         return AttendanceStatusStyle(
-          solid: StatusColors.orange500,
+          solid: StatusColors.orange700,
           onSolid: white,
           softBackground: dark
               ? StatusColors.orange500.withValues(alpha: 0.2)
@@ -172,7 +174,7 @@ class AttendanceStatusStyle {
         );
       case AttendanceTone.injury:
         return AttendanceStatusStyle(
-          solid: StatusColors.red500,
+          solid: StatusColors.red600,
           onSolid: white,
           softBackground: dark
               ? StatusColors.red500.withValues(alpha: 0.15)
@@ -182,7 +184,7 @@ class AttendanceStatusStyle {
         );
       case AttendanceTone.vacation:
         return AttendanceStatusStyle(
-          solid: StatusColors.sky500,
+          solid: StatusColors.sky700,
           onSolid: white,
           softBackground: dark
               ? StatusColors.sky500.withValues(alpha: 0.15)

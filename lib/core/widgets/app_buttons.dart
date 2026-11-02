@@ -92,7 +92,7 @@ class AppButtonBase extends StatefulWidget {
     this.border,
     this.fontWeight = FontWeight.w600,
     this.horizontalPadding = 20,
-    this.height = 40,
+    this.height = 44,
   });
 
   final String label;
@@ -105,6 +105,9 @@ class AppButtonBase extends StatefulWidget {
   final Color? border;
   final FontWeight fontWeight;
   final double horizontalPadding;
+
+  /// Minimale hoogte (44 pt = de iOS-tikvlaknorm); groeit mee met grote
+  /// tekst.
   final double height;
 
   @override
@@ -174,10 +177,11 @@ class _AppButtonBaseState extends State<AppButtonBase> {
             opacity: widget.onPressed == null ? 0.5 : 1,
             duration: const Duration(milliseconds: 150),
             child: Container(
-              height: widget.height,
+              constraints: BoxConstraints(minHeight: widget.height),
               width: widget.expand ? double.infinity : null,
               padding: EdgeInsets.symmetric(
                 horizontal: widget.horizontalPadding,
+                vertical: 6,
               ),
               decoration: BoxDecoration(
                 color: widget.background,

@@ -43,6 +43,7 @@ import '../../features/wheel/presentation/wheel_screen.dart';
 import '../auth/auth_controller.dart';
 import '../session/session_providers.dart';
 import '../shell/app_shell.dart';
+import '../shell/more_screen.dart';
 import '../shell/nav_items.dart';
 import '../shell/tab_shell.dart';
 import 'app_routes.dart';
@@ -66,7 +67,7 @@ String? _requireIntParam(GoRouterState state, String name) =>
 /// opnieuw redirecten.
 ///
 /// Opbouw: deur-routes op de root-navigator; daaronder één [ShellRoute]
-/// ([AppShell]: pills + push-menu) met daarin de [StatefulShellRoute] voor de
+/// ([AppShell]: zwevende pills) met daarin de [StatefulShellRoute] voor de
 /// tabs ([TabShell]) en alle schermen die over de tabs heen worden gepusht.
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
@@ -225,6 +226,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
               StatefulShellBranch(
                 routes: [
+                  GoRoute(
+                    path: AppRoutes.more,
+                    builder: (context, state) => const MoreScreen(),
+                  ),
                   GoRoute(
                     path: AppRoutes.profile,
                     builder: (context, state) => const ProfileTabScreen(),

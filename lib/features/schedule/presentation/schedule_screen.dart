@@ -115,6 +115,8 @@ class _ScheduleBody extends ConsumerWidget {
       backgroundColor: t.sunken,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
+        // Alleen het toetsenbord wegtikken; geen knop voor VoiceOver.
+        excludeFromSemantics: true,
         onTap: () => FocusScope.of(context).unfocus(),
         child: ListView(
           padding: EdgeInsets.fromLTRB(

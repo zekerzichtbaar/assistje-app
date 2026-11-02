@@ -37,29 +37,40 @@ class AppPill extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 16, color: fg),
-                const SizedBox(width: 6),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: fg,
+        // Het tikvlak is 44 pt hoog; de pil zelf blijft compact.
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: onTap == null ? 0 : 6),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: 16, color: fg),
+                  const SizedBox(width: 6),
+                ],
+                // Lange labels breken af in plaats van over te lopen (grote
+                // tekst), ook binnen een horizontaal scrollende rij.
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.sizeOf(context).width - 96,
+                  ),
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: fg,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -105,38 +116,48 @@ class AppTabPills<T> extends StatelessWidget {
     Widget item(AppTabPill<T> tab) {
       final active = tab.value == selected;
       final fg = active ? t.primary : t.inkSoft;
+      final label = Text(
+        tab.label,
+        maxLines: 1,
+        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: fg),
+      );
       final pill = Semantics(
         button: true,
         selected: active,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => onChanged(tab.value),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: active ? t.control : const Color(0x00000000),
-              borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-              boxShadow: active ? AssistjeTokens.shadowSm : null,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (tab.icon != null) ...[
-                  Icon(tab.icon, size: 16, color: fg),
-                  const SizedBox(width: 6),
+          // De baan-marge (4 pt) hoort bij het tikvlak: samen 44 pt hoog.
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              constraints: const BoxConstraints(minHeight: 36),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: active ? t.control : const Color(0x00000000),
+                borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
+                boxShadow: active ? AssistjeTokens.shadowSm : null,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (tab.icon != null) ...[
+                    Icon(tab.icon, size: 16, color: fg),
+                    const SizedBox(width: 6),
+                  ],
+                  if (fullWidth)
+                    // Vaste breedte: bij grote tekst verkleint het label
+                    // binnen zijn segment, zoals een iOS-segmented control.
+                    Flexible(
+                      child: FittedBox(fit: BoxFit.scaleDown, child: label),
+                    )
+                  else
+                    label,
                 ],
-                Text(
-                  tab.label,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: fg,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -156,7 +177,7 @@ class AppTabPills<T> extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: darkTrack ? t.track : t.track.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),

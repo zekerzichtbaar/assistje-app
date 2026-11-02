@@ -53,8 +53,8 @@ Future<(ProviderContainer, TestBackend)> pumpSignedIn(
 List<String> visibleTabs(WidgetTester tester) =>
     _keysWithPrefix('tab-').where((k) => k != 'tab-pill').toList();
 
-/// De menu-items van de rol, in volgorde (`menu-<NavItem.name>`), zonder de
-/// vaste onderkant (Profiel/Uitloggen).
+/// De rijen van de Meer-tab, in volgorde (`menu-<NavItem.name>`), zonder de
+/// vaste rijen (Profiel/Uitloggen).
 List<String> visibleMenuItems(WidgetTester tester) => _keysWithPrefix('menu-')
     .where((k) => k != 'menu-profile' && k != 'menu-logout' && k != 'menu-list')
     .toList();
@@ -71,9 +71,22 @@ List<String> _keysWithPrefix(String prefix) {
   return keys;
 }
 
-/// Opent het hamburgermenu en laat de animatie uitlopen.
+/// Opent de Meer-tab (de opvolger van het hamburgermenu). Staat er een
+/// scherm over de tabs heen, dan eerst terug tot de tabbalk weer zichtbaar is.
 Future<void> openMenu(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key('shell-menu')));
+  final more = find.byKey(const Key('tab-more')).hitTestable();
+  while (more.evaluate().isEmpty) {
+    await tester.tap(find.byKey(const Key('shell-back')));
+    await tester.pumpAndSettle();
+  }
+  await tester.tap(more);
+  await tester.pumpAndSettle();
+}
+
+/// Opent je profiel via de Meer-tab.
+Future<void> openProfile(WidgetTester tester) async {
+  await openMenu(tester);
+  await tester.tap(find.byKey(const ValueKey('menu-profile')));
   await tester.pumpAndSettle();
 }
 

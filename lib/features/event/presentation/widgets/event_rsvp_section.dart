@@ -105,9 +105,10 @@ class _RsvpChoice extends StatelessWidget {
           opacity: onTap == null ? 0.6 : 1,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
-            height: 40,
+            // 44 pt: de iOS-tikvlaknorm; groeit mee met grote tekst.
+            constraints: const BoxConstraints(minHeight: 44),
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),

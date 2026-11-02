@@ -128,5 +128,16 @@
       }
     }
   },
-  "profileTeamLeaveFailed": "Verlaten mislukt"
+  "profileTeamLeaveFailed": "Verlaten mislukt",
+  "profileAppIconTitle": "App-icoon",
+  "profileAppIconBody": "Gebruik het clublogo van {team} als icoon op je beginscherm.",
+  "@profileAppIconBody": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "profileAppIconLabel": "Clublogo als app-icoon",
+  "profileAppIconFailed": "App-icoon wisselen mislukt"
 }

@@ -117,11 +117,21 @@ class EventCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  if (!(e.isMatch && e.isLive))
-                    EventTypeBadge(event: e)
-                  else if (live != null)
-                    LiveBadge(live: live),
-                  const Spacer(),
+                  // Bij grote tekst verkleint de badge in plaats van de
+                  // teller rechts weg te duwen.
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: !(e.isMatch && e.isLive)
+                            ? EventTypeBadge(event: e)
+                            : live != null
+                            ? LiveBadge(live: live)
+                            : const SizedBox.shrink(),
+                      ),
+                    ),
+                  ),
                   if (!e.isCancelled && counts.total > 0)
                     RespondedRing(
                       responded: counts.responded,
@@ -248,14 +258,7 @@ class EventCard extends StatelessWidget {
     final body = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          button: true,
-          label: l10n.agendaOpenEvent(
-            eventTypeLabel(l10n, e).toLowerCase(),
-            '${DateTile.weekdayLabel(start)} ${start.day} ${DateTile.monthLabel(start)}',
-          ),
-          child: header,
-        ),
+        header,
         if (showNotice)
           Container(
             margin: const EdgeInsets.only(top: 12),
@@ -341,7 +344,20 @@ class EventCard extends StatelessWidget {
 
     return Opacity(
       opacity: e.isCancelled ? 0.5 : 1,
-      child: AppCard(key: ValueKey('event-${e.id}'), onTap: onTap, child: body),
+      // Het label hoort op het tikbare vlak zelf (de kaart), zodat
+      // VoiceOver "Open wedstrijd …" bij de tikactie voorleest.
+      child: Semantics(
+        button: true,
+        label: l10n.agendaOpenEvent(
+          eventTypeLabel(l10n, e).toLowerCase(),
+          '${DateTile.weekdayLabel(start)} ${start.day} ${DateTile.monthLabel(start)}',
+        ),
+        child: AppCard(
+          key: ValueKey('event-${e.id}'),
+          onTap: onTap,
+          child: body,
+        ),
+      ),
     );
   }
 }
@@ -381,51 +397,56 @@ class RsvpButton extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          height: 34,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: fg,
+        // Tikvlak 44 pt hoog; de knop zelf blijft 34 pt (en groeit mee met
+        // grote tekst).
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            constraints: const BoxConstraints(minHeight: 34),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: fg,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                decoration: BoxDecoration(
-                  color: selected
-                      ? t.surface.withValues(alpha: 0.25)
-                      : t.surface,
-                  borderRadius: BorderRadius.circular(
-                    AssistjeTokens.radiusFull,
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? t.surface.withValues(alpha: 0.25)
+                        : t.surface,
+                    borderRadius: BorderRadius.circular(
+                      AssistjeTokens.radiusFull,
+                    ),
+                  ),
+                  child: Text(
+                    '$count',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: selected ? style.onSolid : t.inkSoft,
+                      fontFeatures: const [FontFeature.tabularFigures()],
+                    ),
                   ),
                 ),
-                child: Text(
-                  '$count',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: selected ? style.onSolid : t.inkSoft,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -553,7 +574,8 @@ class _LiveBadgeState extends State<LiveBadge> {
       key: const ValueKey('live-badge'),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: StatusColors.emerald500,
+        // emerald-700: witte tekst haalt 4.5:1.
+        color: StatusColors.emerald700,
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
       ),
       child: Row(

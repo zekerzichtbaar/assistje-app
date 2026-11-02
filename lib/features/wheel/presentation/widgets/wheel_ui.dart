@@ -53,26 +53,15 @@ void showWheelSuccess(BuildContext context, String title) {
 /// Vraagt bevestiging voor verwijderen — `true` als bevestigd.
 Future<bool> confirmWheelDelete(BuildContext context, String question) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('wheel-delete-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.wheelCancel),
-        ),
-        TextButton(
-          key: const ValueKey('wheel-delete-confirm'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(l10n.wheelDelete),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: l10n.wheelDelete,
+    cancelLabel: l10n.wheelCancel,
+    destructive: true,
+    cancelKey: const ValueKey('wheel-delete-cancel'),
+    confirmKey: const ValueKey('wheel-delete-confirm'),
   );
-  return ok ?? false;
 }
 
 /// Een kop boven een kaartblok.

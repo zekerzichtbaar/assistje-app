@@ -54,29 +54,16 @@ Future<bool> confirmPm(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: title == null ? null : Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('pm-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.pmCancel),
-        ),
-        TextButton(
-          key: const ValueKey('pm-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel ?? l10n.pmConfirm),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel ?? l10n.pmConfirm,
+    cancelLabel: l10n.pmCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('pm-confirm-cancel'),
+    confirmKey: const ValueKey('pm-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Naam van een bevoegdheid.
@@ -144,30 +131,33 @@ class PmToggleRow extends StatelessWidget {
         color: t.raised,
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: t.ink,
-                  ),
-                ),
-                if (subtitle != null && subtitle!.isNotEmpty)
+      // Eén VoiceOver-element: titel + uitleg zijn het label van de schakelaar.
+      child: MergeSemantics(
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    subtitle!,
-                    style: TextStyle(fontSize: 12, color: t.muted),
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: t.ink,
+                    ),
                   ),
-              ],
+                  if (subtitle != null && subtitle!.isNotEmpty)
+                    Text(
+                      subtitle!,
+                      style: TextStyle(fontSize: 12, color: t.muted),
+                    ),
+                ],
+              ),
             ),
-          ),
-          Switch.adaptive(value: value, onChanged: onChanged),
-        ],
+            Switch.adaptive(value: value, onChanged: onChanged),
+          ],
+        ),
       ),
     );
   }

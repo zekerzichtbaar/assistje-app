@@ -44,25 +44,15 @@ class EventCarpoolSection extends StatelessWidget {
 
   Future<void> _confirmRemove(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text(l10n.eventDetailCarpoolRemoveConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.eventDetailCancel),
-          ),
-          TextButton(
-            key: const ValueKey('carpool-remove-confirm'),
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-            child: Text(l10n.eventDetailCarpoolRemoveYes),
-          ),
-        ],
-      ),
+    final ok = await showConfirmDialog(
+      context,
+      message: l10n.eventDetailCarpoolRemoveConfirm,
+      confirmLabel: l10n.eventDetailCarpoolRemoveYes,
+      cancelLabel: l10n.eventDetailCancel,
+      destructive: true,
+      confirmKey: const ValueKey('carpool-remove-confirm'),
     );
-    if (ok ?? false) onRemove();
+    if (ok) onRemove();
   }
 
   @override

@@ -60,12 +60,16 @@ class AgendaScheduleButton extends StatelessWidget {
             unawaited(Haptics.light());
             unawaited(openScheduleImport(context, membership));
           },
-          child: Padding(
-            padding: const EdgeInsets.all(9),
-            child: PhosphorIcon(
-              PhosphorIconsDuotone.trophy,
-              size: 20,
-              color: t.ink,
+          child: ConstrainedBox(
+            // Tikvlak minstens 44×44 pt.
+            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+            child: Padding(
+              padding: const EdgeInsets.all(9),
+              child: PhosphorIcon(
+                PhosphorIconsDuotone.trophy,
+                size: 20,
+                color: t.ink,
+              ),
             ),
           ),
         ),

@@ -44,6 +44,12 @@ _EventPlayer _$EventPlayerFromJson(Map<String, dynamic> json) => _EventPlayer(
       ) ??
       AttendanceStatus.pending,
   reason: json['reason'] as String?,
+  respondedAt: json['responded_at'] == null
+      ? null
+      : DateTime.parse(json['responded_at'] as String),
+  changedBy: json['changed_by'] == null
+      ? null
+      : EventChangedBy.fromJson(json['changed_by'] as Map<String, dynamic>),
   isMe: json['is_me'] as bool? ?? false,
   isCaptain: json['is_captain'] as bool? ?? false,
   isKeeper: json['is_keeper'] as bool? ?? false,
@@ -62,6 +68,8 @@ Map<String, dynamic> _$EventPlayerToJson(_EventPlayer instance) =>
       'is_on_vacation': instance.isOnVacation,
       'status': _$AttendanceStatusEnumMap[instance.status]!,
       'reason': instance.reason,
+      'responded_at': instance.respondedAt?.toIso8601String(),
+      'changed_by': instance.changedBy?.toJson(),
       'is_me': instance.isMe,
       'is_captain': instance.isCaptain,
       'is_keeper': instance.isKeeper,
@@ -81,6 +89,43 @@ const _$AttendanceStatusEnumMap = {
   AttendanceStatus.nonplay: 'nonplay',
   AttendanceStatus.pending: 'pending',
 };
+
+_EventChangedBy _$EventChangedByFromJson(Map<String, dynamic> json) =>
+    _EventChangedBy(
+      name: json['name'] as String? ?? '',
+      self: json['self'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$EventChangedByToJson(_EventChangedBy instance) =>
+    <String, dynamic>{'name': instance.name, 'self': instance.self};
+
+_EventSavingsPot _$EventSavingsPotFromJson(Map<String, dynamic> json) =>
+    _EventSavingsPot(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String? ?? '',
+      amountCents: (json['amount_cents'] as num?)?.toInt() ?? 0,
+      oneOff: json['one_off'] as bool? ?? true,
+      paidCount: (json['paid_count'] as num?)?.toInt() ?? 0,
+      participantCount: (json['participant_count'] as num?)?.toInt() ?? 0,
+      openCents: (json['open_cents'] as num?)?.toInt() ?? 0,
+      iPaid: json['i_paid'] as bool?,
+      iRefund: json['i_refund'] as bool? ?? false,
+      iRefunded: json['i_refunded'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$EventSavingsPotToJson(_EventSavingsPot instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'amount_cents': instance.amountCents,
+      'one_off': instance.oneOff,
+      'paid_count': instance.paidCount,
+      'participant_count': instance.participantCount,
+      'open_cents': instance.openCents,
+      'i_paid': instance.iPaid,
+      'i_refund': instance.iRefund,
+      'i_refunded': instance.iRefunded,
+    };
 
 _MotmCandidate _$MotmCandidateFromJson(Map<String, dynamic> json) =>
     _MotmCandidate(
@@ -384,6 +429,10 @@ _EventDetail _$EventDetailFromJson(Map<String, dynamic> json) => _EventDetail(
   flag: json['flag'] == null
       ? null
       : FlagDuty.fromJson(json['flag'] as Map<String, dynamic>),
+  savingsPot: json['savings_pot'] == null
+      ? null
+      : EventSavingsPot.fromJson(json['savings_pot'] as Map<String, dynamic>),
+  canStartSavings: json['can_start_savings'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$EventDetailToJson(_EventDetail instance) =>
@@ -423,6 +472,8 @@ Map<String, dynamic> _$EventDetailToJson(_EventDetail instance) =>
       'can_assign_teams': instance.canAssignTeams,
       'duties': instance.duties.map((e) => e.toJson()).toList(),
       'flag': instance.flag?.toJson(),
+      'savings_pot': instance.savingsPot?.toJson(),
+      'can_start_savings': instance.canStartSavings,
     };
 
 const _$EventTypeEnumMap = {

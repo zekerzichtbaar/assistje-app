@@ -20,5 +20,10 @@
   "@placeholderBody": {
     "description": "Tekst op een scherm dat nog niet gebouwd is"
   },
-  "close": "Sluiten"
+  "close": "Sluiten",
+  "cancel": "Annuleren",
+  "done": "Gereed",
+  "@done": {
+    "description": "Knop die een iOS-kiezer (datum/tijd) bevestigt en sluit"
+  }
 }

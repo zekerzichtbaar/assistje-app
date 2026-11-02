@@ -23,6 +23,7 @@ String navLabel(AppLocalizations l10n, NavItem item) => switch (item) {
   NavItem.settings => l10n.navSettings,
   NavItem.feedback => l10n.navFeedback,
   NavItem.profile => l10n.navProfile,
+  NavItem.more => l10n.navMore,
 };
 
 /// Het (kortere) label van [item] in de tabbalk.
@@ -47,6 +48,7 @@ IconData navIcon(NavItem item, {required bool active}) => active
         NavItem.settings => PhosphorIconsFill.gear,
         NavItem.feedback => PhosphorIconsFill.chatCircleDots,
         NavItem.profile => PhosphorIconsFill.user,
+        NavItem.more => PhosphorIconsFill.dotsThreeCircle,
       }
     : switch (item) {
         NavItem.onboarding => PhosphorIconsDuotone.rocket,
@@ -64,11 +66,11 @@ IconData navIcon(NavItem item, {required bool active}) => active
         NavItem.settings => PhosphorIconsDuotone.gear,
         NavItem.feedback => PhosphorIconsDuotone.chatCircleDots,
         NavItem.profile => PhosphorIconsDuotone.user,
+        NavItem.more => PhosphorIconsDuotone.dotsThreeCircle,
       };
 
 /// Tab-icoon, als `BottomNav.tsx`: agenda = kalender, stats = de bal van de
-/// sport (`sport.field_variant`), ranking, poule. De Mij-tab heeft geen icoon
-/// maar een avatar (zie de tabbalk).
+/// sport (`sport.field_variant`), ranking, poule, en de drie puntjes van Meer.
 IconData tabIcon(TeamMembership m, NavItem item, {required bool active}) {
   if (item == NavItem.agenda) {
     return active

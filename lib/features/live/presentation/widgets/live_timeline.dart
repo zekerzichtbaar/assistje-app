@@ -95,19 +95,29 @@ class LiveTimeline extends StatelessWidget {
           child: minute,
         );
       }
-      final children = left
-          ? [...actions.reversed, Flexible(child: content)]
-          : [Flexible(child: content), ...actions];
-      return Row(
-        mainAxisAlignment: left
-            ? MainAxisAlignment.end
-            : MainAxisAlignment.start,
-        children: [
-          for (var i = 0; i < children.length; i++) ...[
-            if (i > 0) const SizedBox(width: 8),
-            children[i],
-          ],
-        ],
+      final ordered = left ? actions.reversed.toList() : actions;
+      final children = [
+        content,
+        // De acties blijven bij elkaar en schuiven samen mee.
+        if (ordered.isNotEmpty)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < ordered.length; i++) ...[
+                if (i > 0) const SizedBox(width: 8),
+                ordered[i],
+              ],
+            ],
+          ),
+      ];
+      // Wrap: past het niet naast elkaar, dan zakken de actieknoppen onder
+      // de inhoud in plaats van de naam weg te drukken.
+      return Wrap(
+        alignment: left ? WrapAlignment.end : WrapAlignment.start,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 8,
+        runSpacing: 4,
+        children: children,
       );
     }
 
@@ -240,7 +250,13 @@ class LiveTimeline extends StatelessWidget {
       fontWeight: FontWeight.w600,
       color: t.ink,
     );
-    final small = TextStyle(fontSize: 11, color: t.muted);
+    // w500: dunne 11-pt-tekst is in muted anders te zwak leesbaar.
+    final small = TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      color: t.muted,
+    );
+    final dark = Theme.of(context).brightness == Brightness.dark;
 
     switch (item.kind) {
       case LiveFeedKind.goal:
@@ -278,7 +294,7 @@ class LiveTimeline extends StatelessWidget {
                     child: Text(
                       l10n.liveOwnGoalBadge.toUpperCase(),
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: StatusColors.red700,
                       ),
@@ -295,11 +311,20 @@ class LiveTimeline extends StatelessWidget {
         return Column(
           crossAxisAlignment: cross,
           children: [
+            // -700 in licht / -400 in donker: ≥ 4.5:1 op het vlak.
             line(
               sub.on ?? '',
-              strong.copyWith(fontSize: 14, color: StatusColors.emerald600),
+              strong.copyWith(
+                fontSize: 14,
+                color: dark ? StatusColors.emerald400 : StatusColors.emerald700,
+              ),
             ),
-            line(sub.off ?? '', small.copyWith(color: StatusColors.red500)),
+            line(
+              sub.off ?? '',
+              small.copyWith(
+                color: dark ? StatusColors.red400 : StatusColors.red700,
+              ),
+            ),
           ],
         );
       case LiveFeedKind.card:
@@ -351,9 +376,10 @@ class _IconAction extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Icon(icon, size: 16, color: t.muted),
+        // Klein icoon, tikvlak 44×44 pt.
+        child: SizedBox.square(
+          dimension: 44,
+          child: Center(child: Icon(icon, size: 16, color: t.muted)),
         ),
       ),
     );
@@ -389,21 +415,35 @@ class _ReactionRow extends StatelessWidget {
             key: ValueKey('live-reaction-$itemKey-${r.emoji}'),
             behavior: HitTestBehavior.opaque,
             onTap: enabled ? () => onToggle(r.emoji) : null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: r.mine ? t.primary.withValues(alpha: 0.12) : t.raised,
-                border: Border.all(
-                  color: r.mine ? t.primary : Colors.transparent,
-                ),
-                borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-              ),
-              child: Text(
-                '${r.emoji} ${r.count}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: r.mine ? FontWeight.w700 : FontWeight.w500,
-                  color: t.inkSoft,
+            // Tikvlak minstens 44×44 pt rond het compacte chipje.
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+              child: Center(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    // Je eigen reactie: getint vlak + vette tekst; geen rand
+                    // (die overstemt het contrast van de tekst).
+                    color: r.mine
+                        ? t.primary.withValues(alpha: 0.18)
+                        : t.raised,
+                    borderRadius: BorderRadius.circular(
+                      AssistjeTokens.radiusFull,
+                    ),
+                  ),
+                  child: Text(
+                    '${r.emoji} ${r.count}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: r.mine ? FontWeight.w700 : FontWeight.w500,
+                      color: r.mine ? t.ink : t.inkSoft,
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -128,7 +128,7 @@ class _CsvImportFormState extends State<CsvImportForm> {
           onTap: _busy ? null : _pick,
         ),
         const SizedBox(height: 8),
-        CheckboxListTile(
+        CheckboxListTile.adaptive(
           key: const ValueKey('pm-csv-invites'),
           contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading,

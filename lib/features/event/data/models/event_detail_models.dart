@@ -63,6 +63,10 @@ abstract class EventPlayer with _$EventPlayer {
     @Default(AttendanceStatus.pending)
     AttendanceStatus status,
     String? reason,
+
+    /// Wanneer het antwoord voor het laatst wijzigde, en door wie.
+    DateTime? respondedAt,
+    EventChangedBy? changedBy,
     @Default(false) bool isMe,
     @Default(false) bool isCaptain,
     @Default(false) bool isKeeper,
@@ -70,6 +74,41 @@ abstract class EventPlayer with _$EventPlayer {
 
   factory EventPlayer.fromJson(Map<String, dynamic> json) =>
       _$EventPlayerFromJson(json);
+}
+
+/// Wie een antwoord wijzigde (`players[].changed_by`): de speler zelf
+/// ([self]) of iemand anders (bv. de trainer).
+@freezed
+abstract class EventChangedBy with _$EventChangedBy {
+  const factory EventChangedBy({
+    @Default('') String name,
+    @Default(false) bool self,
+  }) = _EventChangedBy;
+
+  factory EventChangedBy.fromJson(Map<String, dynamic> json) =>
+      _$EventChangedByFromJson(json);
+}
+
+/// De inleg bij een activiteit (`savings_pot`, `SavingsPotBlock` in de PWA).
+@freezed
+abstract class EventSavingsPot with _$EventSavingsPot {
+  const factory EventSavingsPot({
+    required int id,
+    @Default('') String name,
+    @Default(0) int amountCents,
+    @Default(true) bool oneOff,
+    @Default(0) int paidCount,
+    @Default(0) int participantCount,
+    @Default(0) int openCents,
+
+    /// `null`: de kijker doet niet mee.
+    bool? iPaid,
+    @Default(false) bool iRefund,
+    @Default(false) bool iRefunded,
+  }) = _EventSavingsPot;
+
+  factory EventSavingsPot.fromJson(Map<String, dynamic> json) =>
+      _$EventSavingsPotFromJson(json);
 }
 
 /// Iemand op wie je kunt stemmen (`motm.eligible`).
@@ -285,6 +324,12 @@ abstract class EventDetail with _$EventDetail {
     @Default(false) bool canAssignTeams,
     @Default(<EventDuty>[]) List<EventDuty> duties,
     FlagDuty? flag,
+
+    /// Inleg bij een activiteit (niet voor toeschouwers), of `null`.
+    EventSavingsPot? savingsPot,
+
+    /// Penningmeester, nog geen pot: de ingang "Inleg vragen".
+    @Default(false) bool canStartSavings,
   }) = _EventDetail;
 
   const EventDetail._();

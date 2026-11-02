@@ -89,28 +89,15 @@ Future<bool> confirmSeasons(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('seasons-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.seasonsCancel),
-        ),
-        TextButton(
-          key: const ValueKey('seasons-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.seasonsCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('seasons-confirm-cancel'),
+    confirmKey: const ValueKey('seasons-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Een tikbaar datumveld met label, waarde (of placeholder) en veldfout.
@@ -193,7 +180,6 @@ class SeasonDateField extends StatelessWidget {
                     if (onClear != null && value != null)
                       IconButton(
                         tooltip: clearLabel,
-                        visualDensity: VisualDensity.compact,
                         onPressed: onClear,
                         icon: Icon(
                           PhosphorIconsBold.x,
@@ -231,12 +217,11 @@ Future<DateTime?> pickSeasonDate(
   var start = initial ?? DateTime(now.year, now.month, now.day);
   if (start.isBefore(firstDate)) start = firstDate;
   if (start.isAfter(lastDate)) start = lastDate;
-  return showDatePicker(
+  return showAppDatePicker(
     context: context,
     initialDate: start,
     firstDate: firstDate,
     lastDate: lastDate,
-    locale: const Locale('nl'),
   );
 }
 

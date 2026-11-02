@@ -335,7 +335,6 @@ class _DutiesScreenState extends ConsumerState<DutiesScreen> {
     return IconButton(
       key: ValueKey(key),
       tooltip: label,
-      visualDensity: VisualDensity.compact,
       color: t.primary,
       disabledColor: t.line,
       icon: Icon(icon, size: 18),
@@ -557,7 +556,6 @@ class _GroupRow extends StatelessWidget {
             IconButton(
               key: ValueKey('duties-group-${group.id}-up'),
               tooltip: l10n.dutiesGroupMoveUp,
-              visualDensity: VisualDensity.compact,
               color: t.muted,
               disabledColor: t.lineSoft,
               icon: const Icon(PhosphorIconsBold.caretUp, size: 16),
@@ -566,7 +564,6 @@ class _GroupRow extends StatelessWidget {
             IconButton(
               key: ValueKey('duties-group-${group.id}-down'),
               tooltip: l10n.dutiesGroupMoveDown,
-              visualDensity: VisualDensity.compact,
               color: t.muted,
               disabledColor: t.lineSoft,
               icon: const Icon(PhosphorIconsBold.caretDown, size: 16),
@@ -670,7 +667,6 @@ class _AssignmentRow extends StatelessWidget {
           IconButton(
             key: ValueKey('duties-assignment-${a.id}-done'),
             tooltip: a.isDone ? l10n.dutiesMarkUndone : l10n.dutiesMarkDone,
-            visualDensity: VisualDensity.compact,
             color: a.isDone ? StatusColors.emerald600 : t.muted,
             icon: Icon(
               a.isDone
@@ -683,7 +679,6 @@ class _AssignmentRow extends StatelessWidget {
           IconButton(
             key: ValueKey('duties-assignment-${a.id}-edit'),
             tooltip: l10n.dutiesEdit,
-            visualDensity: VisualDensity.compact,
             color: t.muted,
             icon: const Icon(PhosphorIconsBold.pencilSimple, size: 18),
             onPressed: onEdit,
@@ -691,7 +686,6 @@ class _AssignmentRow extends StatelessWidget {
           IconButton(
             key: ValueKey('duties-assignment-${a.id}-delete'),
             tooltip: l10n.dutiesDelete,
-            visualDensity: VisualDensity.compact,
             color: StatusColors.red500,
             icon: const Icon(PhosphorIconsBold.trash, size: 18),
             onPressed: onDelete,

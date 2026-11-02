@@ -303,5 +303,18 @@
   "settingsDutyBadgeMatch": "Bij wedstrijd",
   "settingsDutyBadgeFree": "Losse datums",
   "settingsDutyBadgeAuto": "Auto",
-  "settingsDutyBadgeNotify": "Melden"
+  "settingsDutyBadgeNotify": "Melden",
+  "settingsSwatchGreen": "Groen",
+  "@settingsSwatchGreen": {
+    "description": "VoiceOver-naam van een teamkleur-bolletje in Instellingen"
+  },
+  "settingsSwatchRed": "Donkerrood",
+  "settingsSwatchBrightRed": "Rood",
+  "settingsSwatchOrange": "Oranje",
+  "settingsSwatchYellow": "Geel",
+  "settingsSwatchBlue": "Blauw",
+  "settingsSwatchLightBlue": "Lichtblauw",
+  "settingsSwatchPurple": "Paars",
+  "settingsSwatchBlack": "Zwart",
+  "settingsSwatchGrey": "Grijs"
 }

@@ -46,6 +46,21 @@ const List<String> settingsColorSwatches = [
   '#5B6770',
 ];
 
+/// De naam van een clubkleur voor VoiceOver (in plaats van de hexcode).
+String _swatchName(AppLocalizations l10n, String hex) => switch (hex) {
+  '#006837' => l10n.settingsSwatchGreen,
+  '#C8102E' => l10n.settingsSwatchRed,
+  '#E30613' => l10n.settingsSwatchBrightRed,
+  '#F18A00' => l10n.settingsSwatchOrange,
+  '#FFD200' => l10n.settingsSwatchYellow,
+  '#0055A4' => l10n.settingsSwatchBlue,
+  '#00A3E0' => l10n.settingsSwatchLightBlue,
+  '#6A1B9A' => l10n.settingsSwatchPurple,
+  '#000000' => l10n.settingsSwatchBlack,
+  '#5B6770' => l10n.settingsSwatchGrey,
+  _ => hex,
+};
+
 final RegExp _hex = RegExp(r'^#[0-9A-Fa-f]{6}$');
 
 /// Teamnaam, logo, clubkleur en vaste opstelling (`TeamTab.tsx`), plus de
@@ -261,9 +276,9 @@ class _SettingsTeamTabState extends State<SettingsTeamTab> {
             ),
             const SizedBox(height: 20),
             SettingsFieldLabel(l10n.settingsColor),
+            // Geen extra spacing: het tikvlak (44 pt) rond elk bolletje geeft
+            // de ruimte al.
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
               children: [
                 for (final hex in settingsColorSwatches)
                   _Swatch(
@@ -544,18 +559,25 @@ class _Swatch extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: hex,
+      label: _swatchName(AppLocalizations.of(context), hex),
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: TeamColor.toColor(hex),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: selected ? t.ink : t.line,
-              width: selected ? 3 : 1,
+        // Bolletje van 32 pt in een tikvlak van 44×44 pt.
+        child: SizedBox.square(
+          dimension: 44,
+          child: Center(
+            child: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: TeamColor.toColor(hex),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: selected ? t.ink : t.line,
+                  width: selected ? 3 : 1,
+                ),
+              ),
             ),
           ),
         ),

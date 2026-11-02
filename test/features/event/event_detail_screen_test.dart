@@ -10,6 +10,7 @@ import '../../helpers/api_fixtures.dart';
 import '../../helpers/fake_http_adapter.dart';
 import '../../helpers/pump.dart';
 import '../../helpers/shell.dart';
+import '../savings/savings_fixtures.dart';
 import 'event_fixtures.dart';
 
 const _detail = 'GET /teams/3/events/412';
@@ -557,6 +558,177 @@ void main() {
       expect(uri.queryParameters['event'], '412');
       expect(currentTitle(tester), 'Event bewerken');
       expect(find.text('Sportpark Arnhemia'), findsOneWidget);
+    });
+  });
+
+  group('laatst gewijzigd (changed_by)', () {
+    testWidgets('door de speler zelf: voornaam + zelf', (tester) async {
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({'starts_at': _future}),
+      );
+      final toggle = _inScreen(
+        find.byKey(const ValueKey('event-player-toggle-p37')),
+      );
+      await _scrollTo(tester, toggle);
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(
+          RegExp(r'Laatst gewijzigd: 08 okt 2026, \d\d:02 door Kees zelf'),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('door een ander: volledige naam; zonder antwoord: —', (
+      tester,
+    ) async {
+      final base = EventFixtures.eventDetailData();
+      final players = [
+        for (final p in base['players'] as List<dynamic>)
+          {
+            ...(p as Map<String, dynamic>),
+            if (p['row_key'] == 'p37')
+              'changed_by': {'name': 'Trainer Tom', 'self': false},
+            if (p['row_key'] == 'u51') 'responded_at': null,
+          },
+      ];
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'starts_at': _future,
+          'players': players,
+        }),
+      );
+      for (final key in ['p37', 'u51']) {
+        final toggle = _inScreen(
+          find.byKey(ValueKey('event-player-toggle-$key')),
+        );
+        await _scrollTo(tester, toggle);
+        await tester.tap(toggle);
+        await tester.pumpAndSettle();
+      }
+      expect(find.textContaining('door Trainer Tom'), findsOneWidget);
+      expect(find.text('Laatst gewijzigd: —'), findsOneWidget);
+    });
+  });
+
+  group('inleg bij een activiteit (savings_pot)', () {
+    Map<String, dynamic> pot([Map<String, dynamic> overrides = const {}]) => {
+      'id': 7,
+      'name': 'Bowlen',
+      'amount_cents': 1250,
+      'one_off': true,
+      'paid_count': 3,
+      'participant_count': 8,
+      'open_cents': 6250,
+      'i_paid': false,
+      'i_refund': false,
+      'i_refunded': false,
+      ...overrides,
+    };
+
+    testWidgets('geen pot, penningmeester: "Inleg vragen" opent het '
+        'formulier met deze activiteit', (tester) async {
+      final (_, http) = await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'type': 'activity',
+          'starts_at': _future,
+          'savings_pot': null,
+          'can_start_savings': true,
+        }),
+        setup: (http) => http.on(
+          'GET /teams/3/savings/create',
+          200,
+          SavingsFixtures.createOptions(presetEventId: 412),
+        ),
+      );
+      final start = _inScreen(
+        find.byKey(const ValueKey('event-savings-start')),
+      );
+      await _scrollTo(tester, start);
+      expect(
+        find.text(
+          'Vraag iedereen die meedoet om een bedrag, en houd bij wie betaald heeft.',
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(start);
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('savings-form-screen')),
+      );
+      final request = http.requestsTo('GET /teams/3/savings/create').single;
+      expect(request.options.uri.queryParameters['event'], '412');
+    });
+
+    testWidgets('geen pot en geen recht: geen kaart; wedstrijd: nooit', (
+      tester,
+    ) async {
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'type': 'activity',
+          'starts_at': _future,
+          'savings_pot': null,
+          'can_start_savings': false,
+        }),
+      );
+      expect(find.byKey(const ValueKey('event-savings')), findsNothing);
+    });
+
+    testWidgets('met pot: bedrag, betaald/open, eigen stand; tik opent pot', (
+      tester,
+    ) async {
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'type': 'activity',
+          'starts_at': _future,
+          'savings_pot': pot(),
+        }),
+        setup: (http) => http.on(
+          'GET /teams/3/savings/7',
+          200,
+          SavingsFixtures.oneOffDetail(),
+        ),
+      );
+      final row = _inScreen(find.byKey(const ValueKey('event-savings-pot')));
+      await _scrollTo(tester, row);
+      expect(find.text('€ 12,50 p.p. · Bowlen'), findsOneWidget);
+      expect(find.text('3 van 8 betaald · € 62,50 open'), findsOneWidget);
+      expect(find.text('Jij hebt nog niet betaald.'), findsOneWidget);
+      await tester.tap(row);
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('savings-pot-screen')),
+      );
+    });
+
+    testWidgets('maandelijks en afgelast: terugbetaal-teksten', (tester) async {
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'type': 'activity',
+          'starts_at': _future,
+          'cancelled_at': '2099-10-01T10:00:00+02:00',
+          'savings_pot': pot({
+            'one_off': false,
+            'amount_cents': 500,
+            'i_refund': true,
+          }),
+        }),
+      );
+      final row = _inScreen(find.byKey(const ValueKey('event-savings-pot')));
+      await _scrollTo(tester, row);
+      expect(find.text('€ 5 p.p. per maand · Bowlen'), findsOneWidget);
+      expect(
+        find.text('Afgelast — wie betaalde krijgt de inleg terug.'),
+        findsOneWidget,
+      );
+      expect(find.text('Je krijgt je inleg terug.'), findsOneWidget);
     });
   });
 }

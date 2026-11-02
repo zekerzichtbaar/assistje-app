@@ -137,12 +137,11 @@ class _AccountCardState extends ConsumerState<AccountCard> {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final current = parseProfileDate(_birthdate);
-    final picked = await showDatePicker(
+    final picked = await showAppDatePicker(
       context: context,
       initialDate: current ?? DateTime(today.year - 25, today.month),
       firstDate: DateTime(1900),
       lastDate: yesterday,
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null && mounted) {
       setState(() => _birthdate = formatProfileIsoDate(picked));
@@ -357,7 +356,6 @@ class _AccountCardState extends ConsumerState<AccountCard> {
                   IconButton(
                     key: const ValueKey('profile-birthdate-clear'),
                     tooltip: l10n.profileBirthdateClear,
-                    visualDensity: VisualDensity.compact,
                     icon: Icon(
                       PhosphorIconsRegular.x,
                       size: 16,
@@ -388,7 +386,7 @@ class _AccountCardState extends ConsumerState<AccountCard> {
     enabledBorder: InputBorder.none,
     focusedBorder: InputBorder.none,
     filled: false,
-    contentPadding: EdgeInsets.zero,
+    contentPadding: const EdgeInsets.symmetric(vertical: 12),
     hintText: hint,
   );
 }
@@ -425,7 +423,9 @@ class _FieldRow extends StatelessWidget {
     final t = AssistjeTokens.of(context);
     final row = Container(
       constraints: const BoxConstraints(minHeight: 48),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      // Geen verticale padding: het invoerveld vult zelf de hoogte, zodat het
+      // hele vak tikbaar is (≥ 44 pt).
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: t.surface,
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),

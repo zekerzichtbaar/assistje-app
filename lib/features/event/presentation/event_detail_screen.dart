@@ -14,6 +14,10 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../agenda/application/agenda_controller.dart';
 import '../../agenda/data/models/agenda_models.dart';
 import '../../agenda/presentation/widgets/absence_reason_sheet.dart';
+import '../../savings/data/models/savings_models.dart';
+import '../../savings/data/savings_repository.dart';
+import '../../savings/presentation/savings_form_screen.dart';
+import '../../savings/presentation/savings_pot_screen.dart';
 import '../application/event_detail_controller.dart';
 import '../data/models/event_detail_models.dart';
 import 'widgets/event_actions.dart';
@@ -25,6 +29,7 @@ import 'widgets/event_motm_section.dart';
 import 'widgets/event_players_section.dart';
 import 'widgets/event_responses_card.dart';
 import 'widgets/event_rsvp_section.dart';
+import 'widgets/event_savings_section.dart';
 import 'widgets/event_trainer_actions.dart';
 
 /// De eventpagina (`Pages/Player/EventDetail.tsx`): info, je eigen RSVP,
@@ -66,6 +71,49 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
       variant: AppToastVariant.error,
       closeLabel: AppLocalizations.of(context).close,
     );
+  }
+
+  /// De spaarpot van deze activiteit openen (zoals vanuit de Spaarpot).
+  Future<void> _openPot(int teamId, int potId) async {
+    unawaited(Haptics.light());
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SavingsPotScreen(teamId: teamId, potId: potId),
+      ),
+    );
+    if (mounted) await _refresh(teamId);
+  }
+
+  /// "Inleg vragen": het spaarpotformulier met deze activiteit voorgezet;
+  /// daarna de nieuwe pot openen.
+  Future<void> _startSavings(int teamId) async {
+    unawaited(Haptics.light());
+    final repository = ref.read(savingsRepositoryProvider);
+    SavingsPot? created;
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute<bool>(
+        builder: (_) => SavingsFormScreen(
+          teamId: teamId,
+          eventId: widget.eventId,
+          onSubmit: (draft) async {
+            try {
+              created = await repository.createPot(teamId, draft);
+              return null;
+            } on Object catch (error) {
+              return error;
+            }
+          },
+        ),
+      ),
+    );
+    final pot = created;
+    if (pot == null || !mounted) return;
+    showAppToast(
+      context,
+      title: AppLocalizations.of(context).eventSavingsCreated,
+      closeLabel: AppLocalizations.of(context).close,
+    );
+    await _openPot(teamId, pot.id);
   }
 
   Future<void> _refresh(int teamId) async {
@@ -271,6 +319,14 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
           ),
         ),
       EventResponsesCard(counts: event.counts, guestsPresent: guestsPresent),
+      if (event.type == EventType.activity)
+        EventSavingsSection(
+          pot: event.savingsPot,
+          canStart: event.canStartSavings,
+          cancelled: event.isCancelled,
+          onOpen: (potId) => _openPot(teamId, potId),
+          onStart: () => _startSavings(teamId),
+        ),
       if (event.showsDuties)
         EventDutiesSection(
           eventKey: _key(teamId),

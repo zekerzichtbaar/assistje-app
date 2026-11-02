@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/theme/assistje_tokens.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -126,8 +128,17 @@ class _Rows extends StatelessWidget {
   }
 }
 
-/// Eén persoon in de lijst: rugnummer, avatar, naam met badges, reden.
-class EventPlayerRow extends StatelessWidget {
+/// "08 okt 2026, 19:02" (als `toLocaleString('nl-NL', …)` in de PWA).
+String eventChangedAt(DateTime at) {
+  final local = at.toLocal();
+  final month = DateFormat.MMM('nl').format(local).replaceAll('.', '');
+  final day = local.day.toString().padLeft(2, '0');
+  return '$day $month ${local.year}, ${DateFormat.Hm('nl').format(local)}';
+}
+
+/// Eén persoon in de lijst: rugnummer, avatar, naam met badges, reden. Een
+/// tik klapt uit wanneer en door wie het antwoord het laatst wijzigde.
+class EventPlayerRow extends StatefulWidget {
   const EventPlayerRow({
     super.key,
     required this.player,
@@ -138,10 +149,30 @@ class EventPlayerRow extends StatelessWidget {
   final bool showStatus;
 
   @override
+  State<EventPlayerRow> createState() => _EventPlayerRowState();
+}
+
+class _EventPlayerRowState extends State<EventPlayerRow> {
+  bool _open = false;
+
+  String _changedText(AppLocalizations l10n) {
+    final p = widget.player;
+    final at = p.respondedAt;
+    if (at == null) return l10n.eventDetailLastChanged('—');
+    final by = p.changedBy;
+    if (by == null) return l10n.eventDetailLastChanged(eventChangedAt(at));
+    final who = by.self
+        ? l10n.eventDetailChangedBySelf(by.name.split(' ').first)
+        : by.name;
+    return l10n.eventDetailLastChangedBy(eventChangedAt(at), who);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
-    final p = player;
+    final p = widget.player;
+    final showStatus = widget.showStatus;
     final personal = p.kind == EventPlayerKind.player;
     final injured = personal && p.isInjured;
     final style = eventStatusStyle(context, p.status);
@@ -190,8 +221,8 @@ class EventPlayerRow extends StatelessWidget {
         ),
     ];
 
-    return Padding(
-      key: ValueKey('event-player-${p.rowKey ?? '${p.kind.name}-${p.id}'}'),
+    final rowKey = p.rowKey ?? '${p.kind.name}-${p.id}';
+    final row = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
@@ -253,8 +284,54 @@ class EventPlayerRow extends StatelessWidget {
               foreground: style.softForeground,
             ),
           ],
+          const SizedBox(width: 8),
+          AnimatedRotation(
+            turns: _open ? 0.5 : 0,
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 200),
+            child: Icon(PhosphorIconsBold.caretDown, size: 14, color: t.muted),
+          ),
         ],
       ),
+    );
+
+    return Column(
+      key: ValueKey('event-player-$rowKey'),
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          expanded: _open,
+          child: InkWell(
+            key: ValueKey('event-player-toggle-$rowKey'),
+            onTap: () => setState(() => _open = !_open),
+            child: row,
+          ),
+        ),
+        AnimatedSize(
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          alignment: Alignment.topCenter,
+          child: _open
+              ? Container(
+                  key: ValueKey('event-player-detail-$rowKey'),
+                  decoration: BoxDecoration(
+                    border: Border(top: BorderSide(color: t.lineSoft)),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Text(
+                    _changedText(l10n),
+                    style: TextStyle(fontSize: 14, color: t.inkSoft),
+                  ),
+                )
+              : const SizedBox(width: double.infinity),
+        ),
+      ],
     );
   }
 }
@@ -277,7 +354,7 @@ class _Badge extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: FontWeight.w500,
           color: style.softForeground,
         ),

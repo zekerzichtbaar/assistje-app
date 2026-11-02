@@ -447,7 +447,7 @@ class _BankCard extends StatelessWidget {
     }
 
     TextStyle caption() => TextStyle(
-      fontSize: 9,
+      fontSize: 11,
       fontWeight: FontWeight.w600,
       letterSpacing: 1.1,
       color: faint,
@@ -606,31 +606,38 @@ class _BankCard extends StatelessWidget {
                           color: fg,
                           backgroundColor: fg.withValues(alpha: 0.25),
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '$ring%',
-                              key: const ValueKey('savings-ring'),
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: fg,
-                              ),
+                        // Vaste ring: bij grote tekst verkleint het label
+                        // binnen de ring in plaats van eruit te lopen.
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: FittedBox(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '$ring%',
+                                  key: const ValueKey('savings-ring'),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: fg,
+                                  ),
+                                ),
+                                Text(
+                                  (pot.goalCents != null
+                                          ? l10n.savingsRingGoal
+                                          : l10n.savingsRingPaid)
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                    color: soft,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              (pot.goalCents != null
-                                      ? l10n.savingsRingGoal
-                                      : l10n.savingsRingPaid)
-                                  .toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                                color: soft,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),

@@ -99,12 +99,11 @@ class _ScheduleEventFormState extends State<ScheduleEventForm> {
     final firstDate = first ?? DateTime(now.year - 2);
     var initial = current ?? first ?? now;
     if (initial.isBefore(firstDate)) initial = firstDate;
-    return showDatePicker(
+    return showAppDatePicker(
       context: context,
       initialDate: initial,
       firstDate: firstDate,
       lastDate: DateTime(now.year + 3, 12, 31),
-      locale: const Locale('nl'),
     );
   }
 
@@ -114,13 +113,9 @@ class _ScheduleEventFormState extends State<ScheduleEventForm> {
   }) async {
     unawaited(Haptics.selection());
     final base = current ?? fallback ?? (hour: 19, minute: 0);
-    final picked = await showTimePicker(
+    final picked = await showAppTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: base.hour, minute: base.minute),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
-      ),
     );
     return picked == null ? null : (hour: picked.hour, minute: picked.minute);
   }

@@ -46,7 +46,8 @@ class AssistjeTokens extends ThemeExtension<AssistjeTokens> {
       raised: const Color.fromARGB(255, 249, 250, 251),
       ink: const Color.fromARGB(255, 17, 24, 39),
       inkSoft: const Color.fromARGB(255, 55, 65, 81),
-      muted: const Color.fromARGB(255, 107, 114, 128),
+      // Iets donkerder dan gray-500: ≥ 4.5:1 ook op `sunken` (WCAG AA).
+      muted: const Color.fromARGB(255, 100, 107, 120),
       line: const Color.fromARGB(255, 229, 231, 235),
       lineSoft: const Color.fromARGB(255, 243, 244, 246),
       control: const Color.fromARGB(255, 255, 255, 255),

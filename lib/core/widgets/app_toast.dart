@@ -195,12 +195,15 @@ class _ToastHostState extends State<_ToastHost>
               key: const ValueKey('app-toast-close'),
               behavior: HitTestBehavior.opaque,
               onTap: dismiss,
-              child: Padding(
-                padding: const EdgeInsets.all(2),
-                child: PhosphorIcon(
-                  PhosphorIconsRegular.x,
-                  size: 18,
-                  color: t.muted,
+              // Tikvlak 44×44 pt; het kruisje zelf blijft klein.
+              child: SizedBox.square(
+                dimension: 44,
+                child: Center(
+                  child: PhosphorIcon(
+                    PhosphorIconsRegular.x,
+                    size: 18,
+                    color: t.muted,
+                  ),
                 ),
               ),
             ),

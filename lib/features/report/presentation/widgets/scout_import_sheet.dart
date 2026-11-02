@@ -296,7 +296,7 @@ class _ScoutImportFormState extends State<ScoutImportForm> {
         ),
         if (_showSets) ...[
           const SizedBox(height: 8),
-          CheckboxListTile(
+          CheckboxListTile.adaptive(
             key: const ValueKey('report-scout-sets'),
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,

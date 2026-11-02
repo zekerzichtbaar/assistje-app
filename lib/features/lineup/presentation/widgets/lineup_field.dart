@@ -66,6 +66,9 @@ class LineupField extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onBackgroundTap,
+        // Naast een speler tikken heft alleen de selectie op; voor
+        // VoiceOver geen eigen (naamloos) element.
+        excludeFromSemantics: true,
         child: Stack(
           children: [
             Positioned.fill(

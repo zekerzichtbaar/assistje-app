@@ -144,6 +144,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         if (multiTeam) const TeamsCard(),
         const LogoutButton(),
         const ThemeCard(),
+        const AppIconCard(),
         const NotificationsLinkCard(),
       ];
     }
@@ -222,6 +223,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           membership.hasFeature('standing_absences'))
         StandingAbsencesCard(absences: standing),
       const ThemeCard(),
+      const AppIconCard(),
       const NotificationsLinkCard(),
       if (!membership.isSpectator || player != null)
         PlayerProfileCard(

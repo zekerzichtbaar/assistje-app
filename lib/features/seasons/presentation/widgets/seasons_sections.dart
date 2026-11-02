@@ -35,7 +35,6 @@ class CurrentSeasonCard extends StatelessWidget {
               key: const ValueKey('seasons-edit'),
               onPressed: onEdit,
               style: TextButton.styleFrom(
-                visualDensity: VisualDensity.compact,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
               ),
               child: Text(l10n.seasonsEdit),

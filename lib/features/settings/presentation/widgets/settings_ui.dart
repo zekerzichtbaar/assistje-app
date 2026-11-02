@@ -60,29 +60,16 @@ Future<bool> confirmSettings(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: title == null ? null : Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('settings-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.settingsCancel),
-        ),
-        TextButton(
-          key: const ValueKey('settings-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.settingsCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('settings-confirm-cancel'),
+    confirmKey: const ValueKey('settings-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Kaart met een kopregel in hoofdletters (`CardTitle` in de PWA).

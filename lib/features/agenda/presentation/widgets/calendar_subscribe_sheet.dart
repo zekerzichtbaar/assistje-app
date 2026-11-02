@@ -35,27 +35,31 @@ class AgendaCalendarButton extends StatelessWidget {
             unawaited(Haptics.light());
             unawaited(showCalendarSubscribeSheet(context, data: data));
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            child: ExcludeSemantics(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  PhosphorIcon(
-                    PhosphorIconsDuotone.calendarPlus,
-                    size: 18,
-                    color: t.ink,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l10n.agendaCalendarButton,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+          child: ConstrainedBox(
+            // Tikvlak minstens 44×44 pt.
+            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              child: ExcludeSemantics(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PhosphorIcon(
+                      PhosphorIconsDuotone.calendarPlus,
+                      size: 18,
                       color: t.ink,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 6),
+                    Text(
+                      l10n.agendaCalendarButton,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: t.ink,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -400,7 +404,7 @@ class _SubscribeButton extends StatelessWidget {
       button: true,
       enabled: enabled,
       child: Material(
-        color: enabled ? StatusColors.emerald600 : t.line,
+        color: enabled ? StatusColors.emerald700 : t.line,
         borderRadius: BorderRadius.circular(16),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

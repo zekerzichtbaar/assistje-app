@@ -16,7 +16,7 @@ const _allFeatures = {
 };
 
 void main() {
-  group('widget: zichtbare tabs en menu per rol', () {
+  group('widget: zichtbare tabs en Meer-tab per rol', () {
     Future<(List<String>, List<String>)> compose(
       WidgetTester tester,
       Map<String, dynamic> membership,
@@ -45,16 +45,12 @@ void main() {
         'tab-stats',
         'tab-hallOfFame',
         'tab-poule',
-        'tab-profile',
+        'tab-more',
       ]);
       expect(menu, [
         'menu-onboarding',
-        'menu-agenda',
         'menu-players',
         'menu-duties',
-        'menu-stats',
-        'menu-hallOfFame',
-        'menu-poule',
         'menu-fines',
         'menu-savings',
         'menu-wheel',
@@ -84,14 +80,11 @@ void main() {
         'tab-agenda',
         'tab-stats',
         'tab-hallOfFame',
-        'tab-profile',
+        'tab-more',
       ]);
       expect(menu, [
-        'menu-agenda',
         'menu-players',
         'menu-duties',
-        'menu-stats',
-        'menu-hallOfFame',
         'menu-fines',
         'menu-wheel',
         'menu-messages',
@@ -109,13 +102,10 @@ void main() {
         'tab-agenda',
         'tab-stats',
         'tab-hallOfFame',
-        'tab-profile',
+        'tab-more',
       ]);
       expect(menu, [
-        'menu-agenda',
         'menu-team',
-        'menu-stats',
-        'menu-hallOfFame',
         'menu-fines',
         'menu-savings',
         'menu-wheel',
@@ -135,9 +125,6 @@ void main() {
         ),
       );
       expect(menu, [
-        'menu-agenda',
-        'menu-stats',
-        'menu-hallOfFame',
         'menu-fines',
         'menu-wheel',
         'menu-feedback',
@@ -158,14 +145,10 @@ void main() {
         'tab-stats',
         'tab-hallOfFame',
         'tab-poule',
-        'tab-profile',
+        'tab-more',
       ]);
       expect(menu, [
-        'menu-agenda',
         'menu-team',
-        'menu-stats',
-        'menu-hallOfFame',
-        'menu-poule',
         'menu-wheel',
         'menu-agreements',
         'menu-feedback',
@@ -186,10 +169,9 @@ void main() {
         'tab-agenda',
         'tab-stats',
         'tab-hallOfFame',
-        'tab-profile',
+        'tab-more',
       ]);
       expect(menu, [
-        'menu-agenda',
         'menu-team',
         'menu-savings',
         'menu-feedback',

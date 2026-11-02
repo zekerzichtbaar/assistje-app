@@ -106,5 +106,25 @@
       }
     }
   },
-  "playerDetailReadOnlyHint": "Bewerken kan voorlopig in de webapp."
+  "playerDetailReadOnlyHint": "Bewerken kan voorlopig in de webapp.",
+  "playerInjuryTitle": "Geblesseerd",
+  "playerInjuryActive": "{name} staat als geblesseerd",
+  "@playerInjuryActive": {
+    "description": "Blessurekaart op de spelerpagina (trainer), aan",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playerInjuryBody": "Afgemeld voor komende wedstrijden en trainingen tot je dit weer uitzet.",
+  "playerInjuryBodyAccount": "Afgemeld voor komende wedstrijden en trainingen tot je dit weer uitzet of {name} zich fit meldt.",
+  "@playerInjuryBodyAccount": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playerInjuryFailed": "Blessure aanpassen mislukt"
 }

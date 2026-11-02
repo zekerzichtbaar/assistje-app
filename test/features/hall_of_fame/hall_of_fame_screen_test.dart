@@ -116,7 +116,17 @@ void main() {
 
     expect(_key('hof-title-season-top_scorer'), findsOneWidget);
     expect(_key('hof-titles-now'), findsOneWidget);
-    expect(find.text('2 spelers gelijk'), findsOneWidget);
+    expect(find.text('gedeeld'), findsOneWidget);
+    // Zonder houder: drempel uit de API, emoji grijs en vervaagd (als de PWA).
+    expect(find.text('Nog niemand · vanaf 5 wedstrijden'), findsOneWidget);
+    expect(
+      find.ancestor(of: find.text('🧱'), matching: find.byType(ColorFiltered)),
+      findsOneWidget,
+    );
+    expect(
+      find.ancestor(of: find.text('🔥'), matching: find.byType(ColorFiltered)),
+      findsNothing,
+    );
     expect(_key('hof-awards'), findsOneWidget);
     expect(_key('hof-award-1-top_scorer'), findsOneWidget);
     expect(_key('hof-badge-player-14'), findsOneWidget);

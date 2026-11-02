@@ -149,7 +149,7 @@ const _greenChrome = FieldChrome(
   shell: Color(0xFF047857), // emerald-700
   header: Color(0xFF065F46), // emerald-800
   track: Color(0x66064E3B), // emerald-900/40
-  subtle: Color(0xFFA7F3D0), // emerald-200
+  subtle: Color(0xFFD1FAE5), // emerald-100 (≥ 4.5:1 op shell en header)
   activeText: Color(0xFF065F46),
 );
 

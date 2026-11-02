@@ -130,8 +130,12 @@ class _DeleteAccountCardState extends State<DeleteAccountCard> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    // Wrap: bij grote tekst zakt de knop onder Annuleren.
+                    Wrap(
+                      alignment: WrapAlignment.end,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 8,
                       children: [
                         TextButton(
                           key: const ValueKey('profile-delete-cancel'),
@@ -144,7 +148,6 @@ class _DeleteAccountCardState extends State<DeleteAccountCard> {
                                 }),
                           child: Text(l10n.profileCancel),
                         ),
-                        const SizedBox(width: 8),
                         ProfileDangerButton(
                           key: const ValueKey('profile-delete-submit'),
                           label: l10n.profileDelete,

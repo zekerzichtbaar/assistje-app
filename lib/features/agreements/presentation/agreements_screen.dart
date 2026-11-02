@@ -220,7 +220,6 @@ class _AgreementsScreenState extends ConsumerState<AgreementsScreen> {
                     IconButton(
                       key: const ValueKey('agreements-intro-edit'),
                       tooltip: l10n.agreementsIntroEdit,
-                      visualDensity: VisualDensity.compact,
                       color: t.muted,
                       icon: const Icon(
                         PhosphorIconsBold.pencilSimple,

@@ -151,9 +151,11 @@ class _CountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AssistjeTokens.of(context);
+    // Uitgeschakeld (te weinig spelers) meldt VoiceOver als "gedimd".
     return Semantics(
       selected: selected,
       button: true,
+      enabled: onTap != null,
       child: Opacity(
         opacity: onTap == null ? 0.3 : 1,
         child: Material(
@@ -406,9 +408,10 @@ class _StrengthButton extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
+          // Tikvlak 44×44 pt (iOS-minimum).
           child: SizedBox(
-            width: 32,
-            height: 32,
+            width: 44,
+            height: 44,
             child: Center(
               child: Text(
                 '$value',

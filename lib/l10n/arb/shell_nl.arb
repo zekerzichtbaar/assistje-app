@@ -21,9 +21,13 @@
   "navAgreements": "Afspraken",
   "navSettings": "Instellingen",
   "navFeedback": "Feedback",
-  "navProfile": "Mij",
+  "navProfile": "Profiel",
   "@navProfile": {
-    "description": "Tab met je eigen profiel"
+    "description": "Je eigen profiel (bovenaan de Meer-tab)"
+  },
+  "navMore": "Meer",
+  "@navMore": {
+    "description": "Laatste tab: profiel, teamwissel en alle overige schermen (iOS-patroon \"Meer\")"
   },
   "tabStats": "Stats",
   "@tabStats": {
@@ -44,7 +48,6 @@
   "screenVacations": "Vakanties",
   "screenStandingAbsences": "Vaste afwezigheid",
   "screenTeamlink": "Teamlink",
-  "shellMenu": "Menu",
   "shellBack": "Terug",
   "shellHome": "Naar de agenda",
   "shellTabBar": "Hoofdmenu",
@@ -56,6 +59,5 @@
         "type": "int"
       }
     }
-  },
-  "shellCloseMenu": "Menu sluiten"
+  }
 }

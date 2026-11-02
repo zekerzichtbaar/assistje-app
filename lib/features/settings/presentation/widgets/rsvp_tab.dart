@@ -94,15 +94,11 @@ class _SettingsRsvpTabState extends State<SettingsRsvpTab> {
 
   Future<void> _pickTime() async {
     final parts = _weeklyTime.split(':');
-    final picked = await showTimePicker(
+    final picked = await showAppTimePicker(
       context: context,
       initialTime: TimeOfDay(
         hour: int.tryParse(parts.first) ?? 0,
         minute: parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0,
-      ),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
       ),
     );
     if (picked == null || !mounted) return;

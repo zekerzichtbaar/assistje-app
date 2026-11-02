@@ -78,31 +78,35 @@ class _AbsenceReasonFormState extends State<_AbsenceReasonForm> {
             ),
           ),
         Wrap(
+          // Geen runSpacing: het tikvlak van elke chip loopt 4 pt boven en
+          // onder door (samen 44 pt), zichtbaar blijft er 8 pt tussen de rijen.
           spacing: 8,
-          runSpacing: 8,
           children: [
             for (final q in quick)
               GestureDetector(
                 key: ValueKey('reason-quick-$q'),
                 behavior: HitTestBehavior.opaque,
                 onTap: () => Navigator.of(context).pop(q),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: t.raised,
-                    borderRadius: BorderRadius.circular(
-                      AssistjeTokens.radiusXl,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
                     ),
-                  ),
-                  child: Text(
-                    q,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: t.inkSoft,
+                    decoration: BoxDecoration(
+                      color: t.raised,
+                      borderRadius: BorderRadius.circular(
+                        AssistjeTokens.radiusXl,
+                      ),
+                    ),
+                    child: Text(
+                      q,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: t.inkSoft,
+                      ),
                     ),
                   ),
                 ),

@@ -328,7 +328,7 @@ void main() {
       haptics.where((h) => h == 'HapticFeedbackType.selectionClick').length,
       greaterThanOrEqualTo(10),
     );
-    expect(haptics, contains('HapticFeedbackType.mediumImpact'));
+    expect(haptics, contains('HapticFeedbackType.successNotification'));
     expect(find.text('Draai!'), findsOneWidget);
   });
 }

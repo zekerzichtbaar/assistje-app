@@ -5,7 +5,6 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../l10n/generated/app_localizations.dart';
 import '../session/models/team_membership.dart';
-import '../session/models/user.dart';
 import '../theme/assistje_tokens.dart';
 import 'nav_items.dart';
 import 'nav_presentation.dart';
@@ -20,7 +19,6 @@ class GlassTabBar extends StatefulWidget {
     required this.items,
     required this.activeIndex,
     required this.membership,
-    required this.user,
     required this.onSelect,
   });
 
@@ -29,7 +27,6 @@ class GlassTabBar extends StatefulWidget {
   /// `-1` als geen tab bij het huidige scherm hoort: dan geen pil.
   final int activeIndex;
   final TeamMembership membership;
-  final User? user;
   final ValueChanged<int> onSelect;
 
   @override
@@ -81,99 +78,104 @@ class _GlassTabBarState extends State<GlassTabBar>
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
     final radius = BorderRadius.circular(AssistjeTokens.radiusFull);
 
-    return Semantics(
-      container: true,
-      label: l10n.shellTabBar,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: radius,
-          boxShadow: [
-            BoxShadow(
-              color: tokens.glassShadow,
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: radius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: radius,
-                color: tokens.glassFill,
+    // Vaste hoogte, net als de systeemtabbalk: de labels schalen niet mee met
+    // grote tekst (anders lopen ze over); VoiceOver leest label + status.
+    return MediaQuery.withNoTextScaling(
+      child: Semantics(
+        container: true,
+        label: l10n.shellTabBar,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            boxShadow: [
+              BoxShadow(
+                color: tokens.glassShadow,
+                blurRadius: 24,
+                offset: const Offset(0, 8),
               ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: radius,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   borderRadius: radius,
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [tokens.glassSheenTop, tokens.glassSheenBottom],
-                  ),
-                  border: Border.all(color: tokens.glassEdge),
+                  color: tokens.glassFill,
                 ),
-                child: SizedBox(
-                  height: ShellInsets.tabBarHeight,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final slot =
-                          (constraints.maxWidth - 2 * _padding) /
-                          widget.items.length;
-                      return Stack(
-                        children: [
-                          if (widget.activeIndex >= 0)
-                            AnimatedPositioned(
-                              key: const Key('tab-pill'),
-                              duration: reduceMotion
-                                  ? Duration.zero
-                                  : const Duration(milliseconds: 450),
-                              curve: _spring,
-                              left: _padding + widget.activeIndex * slot + 2,
-                              width: slot - 4,
-                              top: 7,
-                              bottom: 7,
-                              child: AnimatedBuilder(
-                                animation: _stretch,
-                                builder: (context, child) => Transform.scale(
-                                  scaleX: _stretch.value,
-                                  child: child,
-                                ),
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    borderRadius: radius,
-                                    color: tokens.control.withValues(
-                                      alpha: 0.85,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: radius,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [tokens.glassSheenTop, tokens.glassSheenBottom],
+                    ),
+                    border: Border.all(color: tokens.glassEdge),
+                  ),
+                  child: SizedBox(
+                    height: ShellInsets.tabBarHeight,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final slot =
+                            (constraints.maxWidth - 2 * _padding) /
+                            widget.items.length;
+                        return Stack(
+                          children: [
+                            if (widget.activeIndex >= 0)
+                              AnimatedPositioned(
+                                key: const Key('tab-pill'),
+                                duration: reduceMotion
+                                    ? Duration.zero
+                                    : const Duration(milliseconds: 450),
+                                curve: _spring,
+                                left: _padding + widget.activeIndex * slot + 2,
+                                width: slot - 4,
+                                top: 7,
+                                bottom: 7,
+                                child: AnimatedBuilder(
+                                  animation: _stretch,
+                                  builder: (context, child) => Transform.scale(
+                                    scaleX: _stretch.value,
+                                    child: child,
+                                  ),
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: radius,
+                                      color: tokens.control.withValues(
+                                        alpha: 0.85,
+                                      ),
+                                      border: Border.all(
+                                        color: tokens.glassRing,
+                                      ),
+                                      boxShadow: AssistjeTokens.shadowSm,
                                     ),
-                                    border: Border.all(color: tokens.glassRing),
-                                    boxShadow: AssistjeTokens.shadowSm,
                                   ),
                                 ),
                               ),
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: _padding,
-                            ),
-                            child: Row(
-                              children: [
-                                for (var i = 0; i < widget.items.length; i++)
-                                  Expanded(
-                                    child: _TabButton(
-                                      item: widget.items[i],
-                                      active: i == widget.activeIndex,
-                                      membership: widget.membership,
-                                      user: widget.user,
-                                      onTap: () => widget.onSelect(i),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: _padding,
+                              ),
+                              child: Row(
+                                children: [
+                                  for (var i = 0; i < widget.items.length; i++)
+                                    Expanded(
+                                      child: _TabButton(
+                                        item: widget.items[i],
+                                        active: i == widget.activeIndex,
+                                        membership: widget.membership,
+                                        onTap: () => widget.onSelect(i),
+                                      ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -190,14 +192,12 @@ class _TabButton extends StatelessWidget {
     required this.item,
     required this.active,
     required this.membership,
-    required this.user,
     required this.onTap,
   });
 
   final NavItem item;
   final bool active;
   final TeamMembership membership;
-  final User? user;
   final VoidCallback onTap;
 
   @override
@@ -217,15 +217,10 @@ class _TabButton extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 24,
-              child: item == NavItem.profile
-                  ? _ProfileBadge(user: user, active: active)
-                  : PhosphorIcon(
-                      tabIcon(membership, item, active: active),
-                      size: 24,
-                      color: tokens.primary,
-                    ),
+            PhosphorIcon(
+              tabIcon(membership, item, active: active),
+              size: 24,
+              color: tokens.primary,
             ),
             const SizedBox(height: 3),
             Text(
@@ -234,55 +229,14 @@ class _TabButton extends StatelessWidget {
               overflow: TextOverflow.fade,
               softWrap: false,
               style: TextStyle(
-                fontSize: 10.5,
+                fontSize: 11,
                 height: 1,
-                color: active ? tokens.primary : tokens.muted,
+                color: active ? tokens.primary : tokens.inkSoft,
                 fontWeight: active ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-/// De Mij-tab: je avatar, of je initialen als er (nog) geen foto is.
-class _ProfileBadge extends StatelessWidget {
-  const _ProfileBadge({required this.user, required this.active});
-
-  final User? user;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    final tokens = AssistjeTokens.of(context);
-    final fallback = Container(
-      width: 24,
-      height: 24,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: active ? tokens.control : tokens.line,
-        shape: BoxShape.circle,
-      ),
-      child: Text(
-        initials(user?.name ?? ''),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: active ? tokens.ink : tokens.inkSoft,
-        ),
-      ),
-    );
-    final url = user?.avatarUrl;
-    if (url == null || url.isEmpty) return fallback;
-    return ClipOval(
-      child: Image.network(
-        url,
-        width: 24,
-        height: 24,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => fallback,
       ),
     );
   }

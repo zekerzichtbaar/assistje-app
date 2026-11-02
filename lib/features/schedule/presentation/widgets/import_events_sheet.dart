@@ -448,7 +448,7 @@ class _ImportEventsSheetState extends ConsumerState<ImportEventsSheet> {
                 },
           child: Row(
             children: [
-              Checkbox(
+              Checkbox.adaptive(
                 value: _dryRun,
                 onChanged: _importing
                     ? null

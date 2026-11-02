@@ -269,7 +269,7 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
             onPicked: (id) => _assist = id,
           ),
           if (_tracksPenalties)
-            CheckboxListTile(
+            CheckboxListTile.adaptive(
               key: const ValueKey('live-penalty'),
               value: _penalty,
               onChanged: (v) => setState(() => _penalty = v ?? false),

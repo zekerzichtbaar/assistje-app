@@ -53,26 +53,15 @@ Future<bool> confirmAgreementsDelete(
   String question,
 ) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('agreements-delete-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.agreementsCancel),
-        ),
-        TextButton(
-          key: const ValueKey('agreements-delete-confirm'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(l10n.agreementsDelete),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: l10n.agreementsDelete,
+    cancelLabel: l10n.agreementsCancel,
+    destructive: true,
+    cancelKey: const ValueKey('agreements-delete-cancel'),
+    confirmKey: const ValueKey('agreements-delete-confirm'),
   );
-  return ok ?? false;
 }
 
 /// Het icoon per categorie, zoals `CATEGORY_ICON` in de PWA.

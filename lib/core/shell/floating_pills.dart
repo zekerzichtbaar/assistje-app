@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../session/models/team.dart';
 import '../theme/assistje_tokens.dart';
+import '../widgets/status_colors.dart';
 import 'nav_presentation.dart';
 import 'shell_insets.dart';
 
@@ -128,8 +129,10 @@ class _TeamLogo extends StatelessWidget {
       height: 28,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: tokens.primary, shape: BoxShape.circle),
+      // Vaste chrome in een cirkel van 28 pt: schaalt niet mee met grote tekst.
       child: Text(
         initials(team?.name ?? 'Assistje'),
+        textScaler: TextScaler.noScaling,
         style: TextStyle(
           color: tokens.primaryContrast,
           fontSize: 11,
@@ -151,111 +154,74 @@ class _TeamLogo extends StatelessWidget {
   }
 }
 
-/// Rechtsboven: bel (met ongelezen-badge) | hamburger.
-class BellMenuPill extends StatelessWidget {
-  const BellMenuPill({
-    super.key,
-    required this.unread,
-    required this.onBell,
-    required this.onMenu,
-  });
+/// Rechtsboven: de bel, met ongelezen-badge.
+class BellPill extends StatelessWidget {
+  const BellPill({super.key, required this.unread, required this.onBell});
 
   final int unread;
   final VoidCallback onBell;
-  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = AssistjeTokens.of(context);
 
-    return _PillSurface(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Semantics(
-              button: true,
-              label: l10n.shellNotificationsUnread(unread),
-              excludeSemantics: true,
-              child: GestureDetector(
-                key: const Key('shell-bell'),
-                behavior: HitTestBehavior.opaque,
-                onTap: onBell,
-                child: SizedBox(
-                  width: 38,
-                  height: ShellInsets.pillSize,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    clipBehavior: Clip.none,
-                    children: [
-                      PhosphorIcon(
-                        PhosphorIconsRegular.bell,
-                        size: 22,
-                        color: tokens.ink,
-                      ),
-                      if (unread > 0)
-                        Positioned(
-                          top: 7,
-                          right: 3,
-                          child: Container(
-                            key: const Key('shell-bell-badge'),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFDC2626),
-                              borderRadius: BorderRadius.circular(
-                                AssistjeTokens.radiusFull,
-                              ),
-                              border: Border.all(
-                                color: tokens.surface,
-                                width: 1.5,
-                              ),
-                            ),
-                            child: Text(
-                              unread > 99 ? '99+' : '$unread',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 9.5,
-                                height: 1,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
+    return Semantics(
+      button: true,
+      label: l10n.shellNotificationsUnread(unread),
+      excludeSemantics: true,
+      child: GestureDetector(
+        key: const Key('shell-bell'),
+        behavior: HitTestBehavior.opaque,
+        onTap: onBell,
+        child: _PillSurface(
+          width: ShellInsets.pillSize,
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              PhosphorIcon(
+                PhosphorIconsRegular.bell,
+                size: 22,
+                color: tokens.ink,
               ),
-            ),
-            Container(width: 1, height: 20, color: tokens.line),
-            Semantics(
-              button: true,
-              label: l10n.shellMenu,
-              excludeSemantics: true,
-              child: GestureDetector(
-                key: const Key('shell-menu'),
-                behavior: HitTestBehavior.opaque,
-                onTap: onMenu,
-                child: SizedBox(
-                  width: 38,
-                  height: ShellInsets.pillSize,
-                  child: Center(
-                    child: PhosphorIcon(
-                      PhosphorIconsRegular.list,
-                      size: 22,
-                      color: tokens.ink,
+              if (unread > 0)
+                Positioned(
+                  top: 6,
+                  right: 4,
+                  // Vaste chrome: de badge schaalt niet mee met grote tekst
+                  // (net als de systeembadges op iOS); het aantal zit in het
+                  // VoiceOver-label.
+                  child: MediaQuery.withNoTextScaling(
+                    child: Container(
+                      key: const Key('shell-bell-badge'),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: StatusColors.red600,
+                        borderRadius: BorderRadius.circular(
+                          AssistjeTokens.radiusFull,
+                        ),
+                        border: Border.all(color: tokens.surface, width: 1.5),
+                      ),
+                      child: Text(
+                        unread > 99 ? '99+' : '$unread',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          height: 1,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

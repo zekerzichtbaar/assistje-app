@@ -49,6 +49,9 @@ abstract class HofTitle with _$HofTitle {
     @Default(<HofPerson>[]) List<HofPerson> holders,
     @asStringOrNull String? value,
     @asStringOrNull String? caption,
+
+    /// Drempel voor de titel (bv. vanaf 5 wedstrijden); 1 = geen drempel.
+    @Default(1) int minimum,
   }) = _HofTitle;
 
   const HofTitle._();

@@ -560,7 +560,8 @@ as String?,
 mixin _$HofTitle {
 
  String get key; String get label; String get icon;/// `season` (seizoen/periode) of `now` (rollend venster).
- String get group; HofPerson? get holder; List<HofPerson> get holders;@asStringOrNull String? get value;@asStringOrNull String? get caption;
+ String get group; HofPerson? get holder; List<HofPerson> get holders;@asStringOrNull String? get value;@asStringOrNull String? get caption;/// Drempel voor de titel (bv. vanaf 5 wedstrijden); 1 = geen drempel.
+ int get minimum;
 /// Create a copy of HofTitle
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -573,16 +574,16 @@ $HofTitleCopyWith<HofTitle> get copyWith => _$HofTitleCopyWithImpl<HofTitle>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HofTitle&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.group, group) || other.group == group)&&(identical(other.holder, holder) || other.holder == holder)&&const DeepCollectionEquality().equals(other.holders, holders)&&(identical(other.value, value) || other.value == value)&&(identical(other.caption, caption) || other.caption == caption));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HofTitle&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.group, group) || other.group == group)&&(identical(other.holder, holder) || other.holder == holder)&&const DeepCollectionEquality().equals(other.holders, holders)&&(identical(other.value, value) || other.value == value)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.minimum, minimum) || other.minimum == minimum));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,key,label,icon,group,holder,const DeepCollectionEquality().hash(holders),value,caption);
+int get hashCode => Object.hash(runtimeType,key,label,icon,group,holder,const DeepCollectionEquality().hash(holders),value,caption,minimum);
 
 @override
 String toString() {
-  return 'HofTitle(key: $key, label: $label, icon: $icon, group: $group, holder: $holder, holders: $holders, value: $value, caption: $caption)';
+  return 'HofTitle(key: $key, label: $label, icon: $icon, group: $group, holder: $holder, holders: $holders, value: $value, caption: $caption, minimum: $minimum)';
 }
 
 
@@ -593,7 +594,7 @@ abstract mixin class $HofTitleCopyWith<$Res>  {
   factory $HofTitleCopyWith(HofTitle value, $Res Function(HofTitle) _then) = _$HofTitleCopyWithImpl;
 @useResult
 $Res call({
- String key, String label, String icon, String group, HofPerson? holder, List<HofPerson> holders,@asStringOrNull String? value,@asStringOrNull String? caption
+ String key, String label, String icon, String group, HofPerson? holder, List<HofPerson> holders,@asStringOrNull String? value,@asStringOrNull String? caption, int minimum
 });
 
 
@@ -610,7 +611,7 @@ class _$HofTitleCopyWithImpl<$Res>
 
 /// Create a copy of HofTitle
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? key = null,Object? label = null,Object? icon = null,Object? group = null,Object? holder = freezed,Object? holders = null,Object? value = freezed,Object? caption = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? key = null,Object? label = null,Object? icon = null,Object? group = null,Object? holder = freezed,Object? holders = null,Object? value = freezed,Object? caption = freezed,Object? minimum = null,}) {
   return _then(_self.copyWith(
 key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
@@ -620,7 +621,8 @@ as String,holder: freezed == holder ? _self.holder : holder // ignore: cast_null
 as HofPerson?,holders: null == holders ? _self.holders : holders // ignore: cast_nullable_to_non_nullable
 as List<HofPerson>,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,minimum: null == minimum ? _self.minimum : minimum // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 /// Create a copy of HofTitle
@@ -717,10 +719,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption,  int minimum)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HofTitle() when $default != null:
-return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption);case _:
+return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption,_that.minimum);case _:
   return orElse();
 
 }
@@ -738,10 +740,10 @@ return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption,  int minimum)  $default,) {final _that = this;
 switch (_that) {
 case _HofTitle():
-return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption);case _:
+return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption,_that.minimum);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -758,10 +760,10 @@ return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String key,  String label,  String icon,  String group,  HofPerson? holder,  List<HofPerson> holders, @asStringOrNull  String? value, @asStringOrNull  String? caption,  int minimum)?  $default,) {final _that = this;
 switch (_that) {
 case _HofTitle() when $default != null:
-return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption);case _:
+return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.holders,_that.value,_that.caption,_that.minimum);case _:
   return null;
 
 }
@@ -773,7 +775,7 @@ return $default(_that.key,_that.label,_that.icon,_that.group,_that.holder,_that.
 @JsonSerializable()
 
 class _HofTitle extends HofTitle {
-  const _HofTitle({this.key = '', this.label = '', this.icon = '', this.group = 'season', this.holder, final  List<HofPerson> holders = const <HofPerson>[], @asStringOrNull this.value, @asStringOrNull this.caption}): _holders = holders,super._();
+  const _HofTitle({this.key = '', this.label = '', this.icon = '', this.group = 'season', this.holder, final  List<HofPerson> holders = const <HofPerson>[], @asStringOrNull this.value, @asStringOrNull this.caption, this.minimum = 1}): _holders = holders,super._();
   factory _HofTitle.fromJson(Map<String, dynamic> json) => _$HofTitleFromJson(json);
 
 @override@JsonKey() final  String key;
@@ -791,6 +793,8 @@ class _HofTitle extends HofTitle {
 
 @override@asStringOrNull final  String? value;
 @override@asStringOrNull final  String? caption;
+/// Drempel voor de titel (bv. vanaf 5 wedstrijden); 1 = geen drempel.
+@override@JsonKey() final  int minimum;
 
 /// Create a copy of HofTitle
 /// with the given fields replaced by the non-null parameter values.
@@ -805,16 +809,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HofTitle&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.group, group) || other.group == group)&&(identical(other.holder, holder) || other.holder == holder)&&const DeepCollectionEquality().equals(other._holders, _holders)&&(identical(other.value, value) || other.value == value)&&(identical(other.caption, caption) || other.caption == caption));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HofTitle&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.group, group) || other.group == group)&&(identical(other.holder, holder) || other.holder == holder)&&const DeepCollectionEquality().equals(other._holders, _holders)&&(identical(other.value, value) || other.value == value)&&(identical(other.caption, caption) || other.caption == caption)&&(identical(other.minimum, minimum) || other.minimum == minimum));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,key,label,icon,group,holder,const DeepCollectionEquality().hash(_holders),value,caption);
+int get hashCode => Object.hash(runtimeType,key,label,icon,group,holder,const DeepCollectionEquality().hash(_holders),value,caption,minimum);
 
 @override
 String toString() {
-  return 'HofTitle(key: $key, label: $label, icon: $icon, group: $group, holder: $holder, holders: $holders, value: $value, caption: $caption)';
+  return 'HofTitle(key: $key, label: $label, icon: $icon, group: $group, holder: $holder, holders: $holders, value: $value, caption: $caption, minimum: $minimum)';
 }
 
 
@@ -825,7 +829,7 @@ abstract mixin class _$HofTitleCopyWith<$Res> implements $HofTitleCopyWith<$Res>
   factory _$HofTitleCopyWith(_HofTitle value, $Res Function(_HofTitle) _then) = __$HofTitleCopyWithImpl;
 @override @useResult
 $Res call({
- String key, String label, String icon, String group, HofPerson? holder, List<HofPerson> holders,@asStringOrNull String? value,@asStringOrNull String? caption
+ String key, String label, String icon, String group, HofPerson? holder, List<HofPerson> holders,@asStringOrNull String? value,@asStringOrNull String? caption, int minimum
 });
 
 
@@ -842,7 +846,7 @@ class __$HofTitleCopyWithImpl<$Res>
 
 /// Create a copy of HofTitle
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? key = null,Object? label = null,Object? icon = null,Object? group = null,Object? holder = freezed,Object? holders = null,Object? value = freezed,Object? caption = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? key = null,Object? label = null,Object? icon = null,Object? group = null,Object? holder = freezed,Object? holders = null,Object? value = freezed,Object? caption = freezed,Object? minimum = null,}) {
   return _then(_HofTitle(
 key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
@@ -852,7 +856,8 @@ as String,holder: freezed == holder ? _self.holder : holder // ignore: cast_null
 as HofPerson?,holders: null == holders ? _self._holders : holders // ignore: cast_nullable_to_non_nullable
 as List<HofPerson>,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String?,caption: freezed == caption ? _self.caption : caption // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,minimum: null == minimum ? _self.minimum : minimum // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

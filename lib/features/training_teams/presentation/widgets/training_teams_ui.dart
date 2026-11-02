@@ -135,26 +135,15 @@ Future<bool> confirmTrainingTeams(
   required String confirmLabel,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('training-teams-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.trainingTeamsCancel),
-        ),
-        TextButton(
-          key: const ValueKey('training-teams-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.trainingTeamsCancel,
+    destructive: true,
+    cancelKey: const ValueKey('training-teams-confirm-cancel'),
+    confirmKey: const ValueKey('training-teams-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Een kaart met een kopregel en een icoon (`CardTitle` in de PWA).
@@ -244,24 +233,30 @@ class SoftButton extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onPressed,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icon != null) ...[
-                  PhosphorIcon(icon!, size: 15, color: fg),
-                  const SizedBox(width: 6),
-                ],
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: fg,
+          child: ConstrainedBox(
+            // Tikvlak minstens 44 pt hoog.
+            constraints: const BoxConstraints(minHeight: 44),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    PhosphorIcon(icon!, size: 15, color: fg),
+                    const SizedBox(width: 6),
+                  ],
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: fg,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -298,9 +293,10 @@ class StepButton extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: onPressed,
+            // Tikvlak 44×44 pt (iOS-minimum).
             child: SizedBox(
-              width: 32,
-              height: 32,
+              width: 44,
+              height: 44,
               child: Center(
                 child: PhosphorIcon(icon, size: 14, color: t.inkSoft),
               ),
@@ -311,3 +307,10 @@ class StepButton extends StatelessWidget {
     );
   }
 }
+
+/// Een tikbaar element met minstens 44 pt hoogte; [child] blijft links en
+/// verticaal gecentreerd.
+Widget minTapHeight(Widget child) => ConstrainedBox(
+  constraints: const BoxConstraints(minHeight: 44),
+  child: Align(alignment: Alignment.centerLeft, widthFactor: 1, child: child),
+);

@@ -283,7 +283,6 @@ class _ShiftCard extends StatelessWidget {
                 IconButton(
                   key: ValueKey('report-flag-remove-$index'),
                   tooltip: l10n.reportFlagRemove,
-                  visualDensity: VisualDensity.compact,
                   icon: Icon(PhosphorIconsBold.x, size: 16, color: t.muted),
                   onPressed: onRemove,
                 ),

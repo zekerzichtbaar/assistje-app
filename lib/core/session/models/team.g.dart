@@ -16,6 +16,7 @@ _Team _$TeamFromJson(Map<String, dynamic> json) => _Team(
   primaryColor: json['primary_color'] as String?,
   url: json['url'] as String?,
   isDemo: json['is_demo'] as bool? ?? false,
+  clubId: (json['club_id'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
@@ -28,4 +29,5 @@ Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
   'primary_color': instance.primaryColor,
   'url': instance.url,
   'is_demo': instance.isDemo,
+  'club_id': instance.clubId,
 };

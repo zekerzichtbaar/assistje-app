@@ -496,12 +496,11 @@ class _RowFields extends StatelessWidget {
     unawaited(Haptics.selection());
     final now = DateTime.now();
     final current = row.date == null ? null : DateTime.tryParse(row.date!);
-    final picked = await showDatePicker(
+    final picked = await showAppDatePicker(
       context: context,
       initialDate: current ?? now,
       firstDate: DateTime(now.year - 1),
       lastDate: DateTime(now.year + 3, 12, 31),
-      locale: const Locale('nl'),
     );
     if (picked == null) return;
     row.date =
@@ -521,7 +520,10 @@ class _RowFields extends StatelessWidget {
             minute: int.tryParse(parts[1]) ?? 0,
           )
         : const TimeOfDay(hour: 12, minute: 0);
-    final picked = await showTimePicker(context: context, initialTime: initial);
+    final picked = await showAppTimePicker(
+      context: context,
+      initialTime: initial,
+    );
     if (picked == null) return;
     final value =
         '${picked.hour.toString().padLeft(2, '0')}:'
@@ -673,7 +675,6 @@ class _PickerField extends StatelessWidget {
               ? null
               : IconButton(
                   tooltip: clearLabel,
-                  visualDensity: VisualDensity.compact,
                   icon: Icon(PhosphorIconsBold.x, size: 14, color: t.muted),
                   onPressed: onClear,
                 ),

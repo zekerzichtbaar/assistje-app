@@ -53,8 +53,8 @@ void main() {
       brightness: Brightness.dark,
       tokens: dark,
     );
-    expect(l.solid, StatusColors.emerald600);
-    expect(d.solid, StatusColors.emerald600);
+    expect(l.solid, StatusColors.emerald700);
+    expect(d.solid, StatusColors.emerald700);
     expect(l.softForeground, StatusColors.emerald700);
     expect(d.softForeground, StatusColors.emerald400);
     expect(l.softBackground, StatusColors.emerald100);

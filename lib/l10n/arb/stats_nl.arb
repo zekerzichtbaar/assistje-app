@@ -117,15 +117,6 @@
   },
   "hallOfFameTitlesNow": "Op dit moment",
   "hallOfFameNoHolder": "Nog niemand",
-  "hallOfFameShared": "{count, plural, =1{1 speler} other{{count} spelers}} gelijk",
-  "@hallOfFameShared": {
-    "description": "Een titel die meerdere spelers delen",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "hallOfFameAwards": "Erelijst per periode",
   "hallOfFameBadges": "Behaalde prestaties",
   "hallOfFameBadgesEmptySeason": "Nog niemand heeft dit seizoen een prestatie ontgrendeld.",
@@ -166,5 +157,21 @@
   "hallOfFameTimesUnit": "keer",
   "hallOfFameTrainingPoints": "Trainingspunten",
   "hallOfFameTrainingPointsUnit": "pt",
-  "hallOfFameLeaderboardEmpty": "Nog niemand op dit podium."
+  "hallOfFameLeaderboardEmpty": "Nog niemand op dit podium.",
+  "hallOfFameNoHolderFrom": "Nog niemand · vanaf {minimum} {caption}",
+  "@hallOfFameNoHolderFrom": {
+    "description": "Titel zonder houder met een drempel (zoals de PWA)",
+    "placeholders": {
+      "minimum": {
+        "type": "int"
+      },
+      "caption": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFameSharedShort": "gedeeld",
+  "@hallOfFameSharedShort": {
+    "description": "Naast de avatarstapel bij een gedeelde titel"
+  }
 }

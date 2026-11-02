@@ -42,24 +42,13 @@ Future<bool> confirmAttendanceRemove(
   String question,
 ) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('attendance-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.attendanceCancel),
-        ),
-        TextButton(
-          key: const ValueKey('attendance-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(l10n.attendanceRemove),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: l10n.attendanceRemove,
+    cancelLabel: l10n.attendanceCancel,
+    destructive: true,
+    cancelKey: const ValueKey('attendance-confirm-cancel'),
+    confirmKey: const ValueKey('attendance-confirm-ok'),
   );
-  return ok ?? false;
 }

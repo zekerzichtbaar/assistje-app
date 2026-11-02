@@ -6,6 +6,7 @@ import 'core/deep_links/deep_link_handler.dart';
 import 'core/push/push_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/session/session_providers.dart';
+import 'core/theme/app_text_scaler.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_providers.dart';
 import 'l10n/generated/app_localizations.dart';
@@ -42,6 +43,14 @@ class AssistjeApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: router,
+      // Dynamic Type zoals iOS: koppen groeien minder dan broodtekst.
+      builder: (context, child) {
+        final mq = MediaQuery.of(context);
+        return MediaQuery(
+          data: mq.copyWith(textScaler: AppTextScaler.from(mq.textScaler)),
+          child: child!,
+        );
+      },
     );
   }
 }

@@ -19,7 +19,8 @@ enum NavItem {
   agreements(AppRoutes.agreements),
   settings(AppRoutes.settings),
   feedback(AppRoutes.feedback),
-  profile(AppRoutes.profile);
+  profile(AppRoutes.profile),
+  more(AppRoutes.more);
 
   const NavItem(this.path);
 
@@ -37,10 +38,11 @@ List<NavItem> buildTabItems(TeamMembership m) => [
   NavItem.stats,
   NavItem.hallOfFame,
   if (m.hasPoule) NavItem.poule,
-  NavItem.profile,
+  NavItem.more,
 ];
 
-/// Het hamburgermenu, een port van `getNavItems()` in `navItems.ts`.
+/// De bestemmingen van de rol, een port van `getNavItems()` in `navItems.ts`.
+/// Het Meer-scherm toont hiervan wat géén eigen tab heeft.
 ///
 /// - trainer: (Aan de slag zolang de checklist openstaat), Agenda, Spelers,
 ///   Diensten, [stats] Statistieken + Ranking, [poule] Poule, [fines] Boetepot,
@@ -140,6 +142,7 @@ String parentPath(TeamMembership? m, String path) {
   if (segments.length == 2 && segments.first == 'profile') {
     return AppRoutes.profile;
   }
+  if (path == AppRoutes.profile) return AppRoutes.more;
   return AppRoutes.home;
 }
 

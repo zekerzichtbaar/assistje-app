@@ -74,28 +74,15 @@ Future<bool> confirmDuties(
   bool destructive = true,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('duties-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.dutiesCancel),
-        ),
-        TextButton(
-          key: const ValueKey('duties-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel ?? l10n.dutiesDelete),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: confirmLabel ?? l10n.dutiesDelete,
+    cancelLabel: l10n.dutiesCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('duties-confirm-cancel'),
+    confirmKey: const ValueKey('duties-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// `2026-10-12` → `zo 12 okt` (zoals `formatDate` in de PWA).

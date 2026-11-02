@@ -285,94 +285,134 @@ class HofTitlesCard extends StatelessWidget {
   }
 }
 
+/// Eén titel, als `TitlesStrip` in de PWA: emoji (grijs en vervaagd zolang
+/// niemand hem heeft), de titel met eronder de stand of de drempel, en rechts
+/// de houder (avatar + voornaam) of de gedeelde stapel.
 class _TitleRow extends StatelessWidget {
   const _TitleRow({super.key, required this.title, this.onTap});
 
   final HofTitle title;
   final VoidCallback? onTap;
 
+  /// CSS `grayscale(1)`: luminantie-gewogen grijs.
+  static const _grayscale = ColorFilter.matrix([
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0, 0, 0, 1, 0,
+  ]);
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
     final holder = title.holder;
+    final held = holder != null || title.isShared;
 
-    final String who;
-    final Widget avatar;
-    if (title.isShared) {
-      who = l10n.hallOfFameShared(title.holders.length);
-      avatar = _AvatarStack(people: title.holders);
-    } else if (holder != null) {
-      who = holder.name;
-      avatar = AppAvatar(
-        name: holder.name,
-        imageUrl: holder.avatarUrl,
-        size: 32,
-      );
+    // Zonder de drempel leest "Nog niemand" als een fout; met drempel lees
+    // je dat er nog te weinig gespeeld is.
+    final caption = title.caption;
+    final String sub;
+    if (held) {
+      sub = [?title.value, ?caption].join(' ');
+    } else if (title.minimum > 1 && caption != null && caption.isNotEmpty) {
+      sub = l10n.hallOfFameNoHolderFrom(title.minimum, caption);
     } else {
-      who = l10n.hallOfFameNoHolder;
-      avatar = Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(color: t.raised, shape: BoxShape.circle),
-        alignment: Alignment.center,
-        child: Icon(PhosphorIconsDuotone.question, size: 16, color: t.muted),
+      sub = l10n.hallOfFameNoHolder;
+    }
+
+    Widget emoji = Text(
+      title.icon,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 24),
+    );
+    if (!held) {
+      emoji = Opacity(
+        opacity: 0.3,
+        child: ColorFiltered(colorFilter: _grayscale, child: emoji),
       );
     }
-    final value = [?title.value, ?title.caption].join(' ');
 
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 28,
-              child: Text(
-                title.icon,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20),
+    Widget? trailing;
+    if (title.isShared) {
+      trailing = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _AvatarStack(people: title.holders),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              l10n.hallOfFameSharedShort,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: t.muted,
               ),
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title.label,
-                    style: TextStyle(fontSize: 12, color: t.muted),
-                  ),
-                  Text(
-                    who,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: holder == null && !title.isShared
-                          ? t.muted
-                          : t.ink,
+          ),
+        ],
+      );
+    } else if (holder != null) {
+      trailing = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppAvatar(name: holder.name, imageUrl: holder.avatarUrl, size: 32),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              holder.name.split(' ').first,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: t.inkSoft,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Semantics(
+      button: onTap != null,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              emoji,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title.label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: t.ink,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            if (value.isNotEmpty) ...[
-              const SizedBox(width: 8),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: t.inkSoft,
+                    if (sub.isNotEmpty)
+                      Text(sub, style: TextStyle(fontSize: 12, color: t.muted)),
+                  ],
                 ),
               ),
+              if (trailing != null) ...[
+                const SizedBox(width: 12),
+                // PWA: `w-32` rechts.
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 128),
+                  child: trailing,
+                ),
+              ],
             ],
-            const SizedBox(width: 10),
-            avatar,
-          ],
+          ),
         ),
       ),
     );

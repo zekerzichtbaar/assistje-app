@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers/api_fixtures.dart';
 import 'helpers/pump.dart';
+import 'helpers/shell.dart';
 import 'helpers/test_app.dart';
 
 void main() {
@@ -45,10 +46,9 @@ void main() {
 
     // Na inloggen: de Agenda-tab.
     expect(find.text('Agenda'), findsWidgets);
-    expect(find.text('Mij'), findsOneWidget);
+    expect(find.text('Meer'), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('tab-profile')));
-    await tester.pumpAndSettle();
+    await openProfile(tester);
     expect(find.text('Vogels 3'), findsOneWidget);
     expect(find.text('Speler'), findsOneWidget);
 

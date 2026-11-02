@@ -413,6 +413,8 @@ class _TypeRow extends StatelessWidget {
                   onChanged: (_) => onAmountChanged(),
                   decoration: InputDecoration(
                     isDense: true,
+                    // Compact veld, maar een tikvlak van 44 pt.
+                    constraints: const BoxConstraints(minHeight: 44),
                     errorText: hasError ? '' : null,
                     errorStyle: const TextStyle(height: 0, fontSize: 0),
                   ),

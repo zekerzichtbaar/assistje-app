@@ -126,6 +126,18 @@ abstract final class HallOfFameFixtures {
     ],
     'titles': [
       ...(data()['titles'] as List),
+      // Nog geen houder, met drempel (`minimum` uit de API).
+      {
+        'key': 'clean_sheet',
+        'label': 'De muur',
+        'icon': '🧱',
+        'group': 'season',
+        'holder': null,
+        'holders': <Object>[],
+        'value': null,
+        'caption': 'wedstrijden',
+        'minimum': 5,
+      },
       {
         'key': 'iron_man',
         'label': 'IJzeren man',

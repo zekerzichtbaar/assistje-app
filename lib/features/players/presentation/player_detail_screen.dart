@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -50,6 +52,20 @@ class _PlayerDetailScreenState extends ConsumerState<PlayerDetailScreen> {
       showRosterError(
         context,
         AppLocalizations.of(context).rosterRefreshFailed,
+        error,
+      );
+    }
+  }
+
+  Future<void> _setInjured(int teamId, {required bool injured}) async {
+    unawaited(injured ? Haptics.error() : Haptics.light());
+    final error = await ref
+        .read(playerDetailControllerProvider(_key(teamId)).notifier)
+        .setInjured(injured: injured);
+    if (error != null && mounted) {
+      showRosterError(
+        context,
+        AppLocalizations.of(context).playerInjuryFailed,
         error,
       );
     }
@@ -119,6 +135,14 @@ class _PlayerDetailScreenState extends ConsumerState<PlayerDetailScreen> {
         positionLabel: sport.positionLabel(player.position),
       ),
       if (detail.canManage) PlayerManageCard(player: player),
+      if (detail.canManage &&
+          !player.isGuest &&
+          membership.hasFeature('injuries'))
+        PlayerInjuryCard(
+          player: player,
+          onChanged: (injured) =>
+              _setInjured(membership.team.id, injured: injured),
+        ),
       if (detail.canManage &&
           (detail.vacations.isNotEmpty ||
               (!player.isGuest && membership.hasFeature('vacations'))))

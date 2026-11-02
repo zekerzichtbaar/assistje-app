@@ -30,27 +30,31 @@ class AgendaAddEventButton extends StatelessWidget {
             unawaited(Haptics.light());
             unawaited(context.push(AppRoutes.schedule));
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-            child: ExcludeSemantics(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  PhosphorIcon(
-                    PhosphorIconsBold.plus,
-                    size: 16,
-                    color: t.primaryContrast,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    l10n.scheduleAddEvent,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+          child: ConstrainedBox(
+            // Tikvlak minstens 44×44 pt.
+            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              child: ExcludeSemantics(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PhosphorIcon(
+                      PhosphorIconsBold.plus,
+                      size: 16,
                       color: t.primaryContrast,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 6),
+                    Text(
+                      l10n.scheduleAddEvent,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: t.primaryContrast,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

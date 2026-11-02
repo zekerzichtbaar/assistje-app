@@ -66,7 +66,7 @@ class LiveShareRow extends ConsumerWidget {
               key: const ValueKey('live-share'),
               label: l10n.liveShareButton,
               icon: const Icon(PhosphorIconsBold.shareNetwork, size: 16),
-              background: StatusColors.emerald500,
+              background: StatusColors.emerald700,
               foreground: Colors.white,
               horizontalPadding: 14,
               onPressed: () => _share(buttonContext, ref),

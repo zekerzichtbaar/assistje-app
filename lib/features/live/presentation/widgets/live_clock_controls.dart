@@ -237,7 +237,7 @@ class _LiveClockControlsState extends State<LiveClockControls> {
               ? l10n.liveStartMatch
               : l10n.liveStartFirst(names.part),
           icon: PhosphorIconsFill.play,
-          background: StatusColors.emerald600,
+          background: StatusColors.emerald700,
           foreground: Colors.white,
           onPressed: busy ? null : _start,
         ),
@@ -287,9 +287,9 @@ class _LiveClockControlsState extends State<LiveClockControls> {
             label: names.breakLabel,
             icon: PhosphorIconsFill.pause,
             background: overdue
-                ? StatusColors.amber500
+                ? StatusColors.amber700
                 : overrun
-                ? StatusColors.emerald600
+                ? StatusColors.emerald700
                 : t.sunken,
             foreground: overdue || overrun ? Colors.white : t.inkSoft,
             onPressed: busy ? null : () => _pause(names, overdue: overdue),
@@ -334,7 +334,7 @@ class _LiveClockControlsState extends State<LiveClockControls> {
                   key: const ValueKey('live-next'),
                   label: _nextLabel(l10n, names),
                   icon: const Icon(PhosphorIconsFill.play, size: 16),
-                  background: StatusColors.emerald600,
+                  background: StatusColors.emerald700,
                   foreground: Colors.white,
                   horizontalPadding: 12,
                   onPressed: busy ? null : () => _next(names),
@@ -352,7 +352,7 @@ class _LiveClockControlsState extends State<LiveClockControls> {
           label: l10n.liveStop,
           icon: PhosphorIconsFill.stop,
           background: overtime ? StatusColors.red600 : StatusColors.red50,
-          foreground: overtime ? Colors.white : StatusColors.red600,
+          foreground: overtime ? Colors.white : StatusColors.red700,
           onPressed: busy ? null : _stop,
         ),
         if (misfire)
@@ -373,70 +373,83 @@ class _LiveClockControlsState extends State<LiveClockControls> {
       ]);
     } else {
       sections.add(
-        Row(
+        // Wrap: bij grote tekst zakken de knoppen onder de speelduur in
+        // plaats van die tot "A…" in te drukken.
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 8,
+          runSpacing: 8,
           children: [
-            Flexible(
-              child: OutlinedButton(
-                key: const ValueKey('live-duration'),
-                onPressed: busy ? null : () => _duration(names),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: t.line),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AssistjeTokens.radiusLg,
-                    ),
-                  ),
+            OutlinedButton(
+              key: const ValueKey('live-duration'),
+              onPressed: busy ? null : () => _duration(names),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: t.line),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),
                 ),
-                child: Text(
-                  l10n.liveEndedDuration(clock.mmssAt(now)),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: t.inkSoft,
-                  ),
+              ),
+              child: Text(
+                l10n.liveEndedDuration(clock.mmssAt(now)),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: t.inkSoft,
                 ),
               ),
             ),
-            const Spacer(),
-            AppButtonBase(
-              key: const ValueKey('live-reopen'),
-              label: l10n.liveReopen,
-              icon: const Icon(
-                PhosphorIconsBold.arrowCounterClockwise,
-                size: 16,
-              ),
-              background: t.sunken,
-              foreground: t.inkSoft,
-              horizontalPadding: 12,
-              onPressed: busy ? null : () => _run(_c.reopen),
-            ),
-            const SizedBox(width: 8),
-            if (_match.hasEntries)
-              Semantics(
-                label: l10n.liveResetLabel,
-                button: true,
-                child: AppButtonBase(
-                  key: const ValueKey('live-reset'),
-                  label: '',
-                  icon: const Icon(PhosphorIconsBold.trash, size: 16),
-                  background: StatusColors.red50,
-                  foreground: StatusColors.red600,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppButtonBase(
+                  key: const ValueKey('live-reopen'),
+                  label: l10n.liveReopen,
+                  icon: const Icon(
+                    PhosphorIconsBold.arrowCounterClockwise,
+                    size: 16,
+                  ),
+                  background: t.sunken,
+                  foreground: t.inkSoft,
                   horizontalPadding: 12,
-                  onPressed: busy ? null : _resetReport,
+                  onPressed: busy ? null : () => _run(_c.reopen),
                 ),
-              )
-            else
-              AppButtonBase(
-                key: const ValueKey('live-restore'),
-                label: l10n.liveRestoreLabel,
-                icon: const Icon(PhosphorIconsBold.arrowsClockwise, size: 16),
-                background: t.sunken,
-                foreground: t.inkSoft,
-                horizontalPadding: 12,
-                onPressed: busy ? null : _restore,
-              ),
+                const SizedBox(width: 8),
+                if (_match.hasEntries)
+                  // Eén knop voor VoiceOver: het label hoort bij de tikbare
+                  // knop zelf (die heeft alleen een icoon).
+                  MergeSemantics(
+                    child: Semantics(
+                      label: l10n.liveResetLabel,
+                      button: true,
+                      child: AppButtonBase(
+                        key: const ValueKey('live-reset'),
+                        label: '',
+                        icon: const Icon(PhosphorIconsBold.trash, size: 16),
+                        background: StatusColors.red50,
+                        foreground: StatusColors.red700,
+                        horizontalPadding: 12,
+                        onPressed: busy ? null : _resetReport,
+                      ),
+                    ),
+                  )
+                else
+                  AppButtonBase(
+                    key: const ValueKey('live-restore'),
+                    label: l10n.liveRestoreLabel,
+                    icon: const Icon(
+                      PhosphorIconsBold.arrowsClockwise,
+                      size: 16,
+                    ),
+                    background: t.sunken,
+                    foreground: t.inkSoft,
+                    horizontalPadding: 12,
+                    onPressed: busy ? null : _restore,
+                  ),
+              ],
+            ),
           ],
         ),
       );
@@ -596,7 +609,7 @@ class _OverrunSheetState extends State<_OverrunSheet> {
           AppButtonBase(
             key: const ValueKey('live-overrun-next'),
             label: widget.nextLabel,
-            background: StatusColors.emerald600,
+            background: StatusColors.emerald700,
             foreground: Colors.white,
             expand: true,
             onPressed: () => Navigator.of(
@@ -606,7 +619,7 @@ class _OverrunSheetState extends State<_OverrunSheet> {
         ]),
         if (widget.trimCount > 0) ...[
           const SizedBox(height: 12),
-          CheckboxListTile(
+          CheckboxListTile.adaptive(
             key: const ValueKey('live-overrun-trim'),
             value: _trim,
             onChanged: (v) => setState(() => _trim = v ?? false),

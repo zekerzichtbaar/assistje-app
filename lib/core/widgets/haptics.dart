@@ -9,9 +9,10 @@ abstract final class Haptics {
   /// Keuze gewijzigd: pill, segment, picker.
   static Future<void> selection() => HapticFeedback.selectionClick();
 
-  /// Iets is gelukt (opgeslagen, RSVP verwerkt).
-  static Future<void> success() => HapticFeedback.mediumImpact();
+  /// Iets is gelukt (opgeslagen, RSVP verwerkt). Op iOS het systeempatroon
+  /// voor een geslaagde uitkomst (`UINotificationFeedbackGenerator.success`).
+  static Future<void> success() => HapticFeedback.successNotification();
 
-  /// Iets ging mis of is geweigerd.
-  static Future<void> error() => HapticFeedback.heavyImpact();
+  /// Iets ging mis of is geweigerd (`UINotificationFeedbackGenerator.error`).
+  static Future<void> error() => HapticFeedback.errorNotification();
 }

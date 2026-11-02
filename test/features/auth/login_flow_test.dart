@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/api_fixtures.dart';
 import '../../helpers/pump.dart';
+import '../../helpers/shell.dart';
 import '../../helpers/test_app.dart';
 
 void main() {
@@ -159,9 +160,8 @@ void main() {
     await pumpUntilFound(tester, find.byKey(const Key('glass-tab-bar')));
     expect(container.read(teamColorProvider), '#006837');
 
-    // De teamwissel staat in het menu.
-    await tester.tap(find.byKey(const Key('shell-menu')));
-    await tester.pumpAndSettle();
+    // De teamwissel staat op de Meer-tab.
+    await openMenu(tester);
     await tester.tap(find.byKey(const ValueKey('team-9')));
     await tester.pumpAndSettle();
 
@@ -182,8 +182,7 @@ void main() {
       ..on('POST /auth/logout', 204);
 
     await pumpUntilFound(tester, find.byKey(const Key('glass-tab-bar')));
-    await tester.tap(find.byKey(const Key('tab-profile')));
-    await tester.pumpAndSettle();
+    await openProfile(tester);
     await tester.tap(find.byKey(const Key('logout')));
     await pumpUntilFound(tester, find.text('Log in bij je team'));
 

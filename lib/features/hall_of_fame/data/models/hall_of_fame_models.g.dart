@@ -55,6 +55,7 @@ _HofTitle _$HofTitleFromJson(Map<String, dynamic> json) => _HofTitle(
       const <HofPerson>[],
   value: readStringOrNull(json['value']),
   caption: readStringOrNull(json['caption']),
+  minimum: (json['minimum'] as num?)?.toInt() ?? 1,
 );
 
 Map<String, dynamic> _$HofTitleToJson(_HofTitle instance) => <String, dynamic>{
@@ -66,6 +67,7 @@ Map<String, dynamic> _$HofTitleToJson(_HofTitle instance) => <String, dynamic>{
   'holders': instance.holders.map((e) => e.toJson()).toList(),
   'value': instance.value,
   'caption': instance.caption,
+  'minimum': instance.minimum,
 };
 
 _PeriodAwardWinner _$PeriodAwardWinnerFromJson(Map<String, dynamic> json) =>

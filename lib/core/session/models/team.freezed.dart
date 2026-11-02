@@ -16,7 +16,9 @@ T _$identity<T>(T value) => value;
 mixin _$Team {
 
  int get id; String get name; String get slug; String get sport; String? get logoUrl; bool get logoFills;/// Teamkleur als hex (`#006837`); `null` = standaardkleur.
- String? get primaryColor; String? get url; bool get isDemo;
+ String? get primaryColor; String? get url; bool get isDemo;/// De club achter het team: bepaalt welk clubwapen als app-icoon kan
+/// (`tool/app_icons.dart`); `null` zonder club.
+ int? get clubId;
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +31,16 @@ $TeamCopyWith<Team> get copyWith => _$TeamCopyWithImpl<Team>(this as Team, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.logoFills, logoFills) || other.logoFills == logoFills)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDemo, isDemo) || other.isDemo == isDemo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.logoFills, logoFills) || other.logoFills == logoFills)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDemo, isDemo) || other.isDemo == isDemo)&&(identical(other.clubId, clubId) || other.clubId == clubId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,sport,logoUrl,logoFills,primaryColor,url,isDemo);
+int get hashCode => Object.hash(runtimeType,id,name,slug,sport,logoUrl,logoFills,primaryColor,url,isDemo,clubId);
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, slug: $slug, sport: $sport, logoUrl: $logoUrl, logoFills: $logoFills, primaryColor: $primaryColor, url: $url, isDemo: $isDemo)';
+  return 'Team(id: $id, name: $name, slug: $slug, sport: $sport, logoUrl: $logoUrl, logoFills: $logoFills, primaryColor: $primaryColor, url: $url, isDemo: $isDemo, clubId: $clubId)';
 }
 
 
@@ -49,7 +51,7 @@ abstract mixin class $TeamCopyWith<$Res>  {
   factory $TeamCopyWith(Team value, $Res Function(Team) _then) = _$TeamCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String slug, String sport, String? logoUrl, bool logoFills, String? primaryColor, String? url, bool isDemo
+ int id, String name, String slug, String sport, String? logoUrl, bool logoFills, String? primaryColor, String? url, bool isDemo, int? clubId
 });
 
 
@@ -66,7 +68,7 @@ class _$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? sport = null,Object? logoUrl = freezed,Object? logoFills = null,Object? primaryColor = freezed,Object? url = freezed,Object? isDemo = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? sport = null,Object? logoUrl = freezed,Object? logoFills = null,Object? primaryColor = freezed,Object? url = freezed,Object? isDemo = null,Object? clubId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -77,7 +79,8 @@ as String?,logoFills: null == logoFills ? _self.logoFills : logoFills // ignore:
 as bool,primaryColor: freezed == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,isDemo: null == isDemo ? _self.isDemo : isDemo // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,clubId: freezed == clubId ? _self.clubId : clubId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -162,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo,  int? clubId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo);case _:
+return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo,_that.clubId);case _:
   return orElse();
 
 }
@@ -183,10 +186,10 @@ return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo,  int? clubId)  $default,) {final _that = this;
 switch (_that) {
 case _Team():
-return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo);case _:
+return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo,_that.clubId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +206,10 @@ return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String slug,  String sport,  String? logoUrl,  bool logoFills,  String? primaryColor,  String? url,  bool isDemo,  int? clubId)?  $default,) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo);case _:
+return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.logoFills,_that.primaryColor,_that.url,_that.isDemo,_that.clubId);case _:
   return null;
 
 }
@@ -218,7 +221,7 @@ return $default(_that.id,_that.name,_that.slug,_that.sport,_that.logoUrl,_that.l
 @JsonSerializable()
 
 class _Team implements Team {
-  const _Team({required this.id, required this.name, required this.slug, required this.sport, this.logoUrl, this.logoFills = false, this.primaryColor, this.url, this.isDemo = false});
+  const _Team({required this.id, required this.name, required this.slug, required this.sport, this.logoUrl, this.logoFills = false, this.primaryColor, this.url, this.isDemo = false, this.clubId});
   factory _Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
 @override final  int id;
@@ -231,6 +234,9 @@ class _Team implements Team {
 @override final  String? primaryColor;
 @override final  String? url;
 @override@JsonKey() final  bool isDemo;
+/// De club achter het team: bepaalt welk clubwapen als app-icoon kan
+/// (`tool/app_icons.dart`); `null` zonder club.
+@override final  int? clubId;
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.logoFills, logoFills) || other.logoFills == logoFills)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDemo, isDemo) || other.isDemo == isDemo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl)&&(identical(other.logoFills, logoFills) || other.logoFills == logoFills)&&(identical(other.primaryColor, primaryColor) || other.primaryColor == primaryColor)&&(identical(other.url, url) || other.url == url)&&(identical(other.isDemo, isDemo) || other.isDemo == isDemo)&&(identical(other.clubId, clubId) || other.clubId == clubId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,sport,logoUrl,logoFills,primaryColor,url,isDemo);
+int get hashCode => Object.hash(runtimeType,id,name,slug,sport,logoUrl,logoFills,primaryColor,url,isDemo,clubId);
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, slug: $slug, sport: $sport, logoUrl: $logoUrl, logoFills: $logoFills, primaryColor: $primaryColor, url: $url, isDemo: $isDemo)';
+  return 'Team(id: $id, name: $name, slug: $slug, sport: $sport, logoUrl: $logoUrl, logoFills: $logoFills, primaryColor: $primaryColor, url: $url, isDemo: $isDemo, clubId: $clubId)';
 }
 
 
@@ -265,7 +271,7 @@ abstract mixin class _$TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
   factory _$TeamCopyWith(_Team value, $Res Function(_Team) _then) = __$TeamCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String slug, String sport, String? logoUrl, bool logoFills, String? primaryColor, String? url, bool isDemo
+ int id, String name, String slug, String sport, String? logoUrl, bool logoFills, String? primaryColor, String? url, bool isDemo, int? clubId
 });
 
 
@@ -282,7 +288,7 @@ class __$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? sport = null,Object? logoUrl = freezed,Object? logoFills = null,Object? primaryColor = freezed,Object? url = freezed,Object? isDemo = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = null,Object? sport = null,Object? logoUrl = freezed,Object? logoFills = null,Object? primaryColor = freezed,Object? url = freezed,Object? isDemo = null,Object? clubId = freezed,}) {
   return _then(_Team(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -293,7 +299,8 @@ as String?,logoFills: null == logoFills ? _self.logoFills : logoFills // ignore:
 as bool,primaryColor: freezed == primaryColor ? _self.primaryColor : primaryColor // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,isDemo: null == isDemo ? _self.isDemo : isDemo // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,clubId: freezed == clubId ? _self.clubId : clubId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

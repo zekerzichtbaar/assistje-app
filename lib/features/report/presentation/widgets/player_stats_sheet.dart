@@ -124,9 +124,12 @@ class _PlayerStatsFormState extends State<PlayerStatsForm> {
                       errorText: _fieldError(column),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      statLabel(l10n, column),
-                      style: const TextStyle(fontSize: 12),
+                    // Het veld draagt dit label al voor VoiceOver.
+                    ExcludeSemantics(
+                      child: Text(
+                        statLabel(l10n, column),
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ),
                   ],
                 ),

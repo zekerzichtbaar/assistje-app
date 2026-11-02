@@ -48,3 +48,6 @@ app.*.map.json
 /lib/l10n/generated/
 # Gegenereerd door `dart run tool/l10n.dart` uit lib/l10n/arb/*_nl.arb
 /lib/l10n/app_nl.arb
+
+# Clubwapens als app-icoon: gegenereerd door tool/app_icons.dart (voor elke release).
+ios/Runner/Assets.xcassets/ClubIcon-*.appiconset/

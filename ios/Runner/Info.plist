@@ -5,7 +5,7 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<string>nl</string>
 	<key>CFBundleDisplayName</key>
 	<string>Assistje</string>
 	<key>CFBundleExecutable</key>
@@ -14,6 +14,10 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>nl</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>Assistje</string>
 	<key>CFBundlePackageType</key>
@@ -31,7 +35,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Assistje gebruikt je camera om een profielfoto te maken.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Assistje gebruikt je foto's om een profielfoto te kiezen.</string>
+	<string>Assistje gebruikt je foto’s om een profielfoto, teamlogo of schermafbeelding bij feedback te kiezen.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -66,8 +70,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

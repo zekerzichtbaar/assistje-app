@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/widgets.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/widgets/door_scaffold.dart';
 import '../../../join/presentation/widgets/join_door.dart';
@@ -86,13 +87,9 @@ class _SignupTrainingStepState extends State<SignupTrainingStep> {
       '${time.minute.toString().padLeft(2, '0')}';
 
   Future<void> _pickTime(SignupTraining slot, {required bool start}) async {
-    final picked = await showTimePicker(
+    final picked = await showAppTimePicker(
       context: context,
       initialTime: _parse(start ? slot.startsAt : slot.endsAt),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
-      ),
     );
     if (picked == null) return;
     _update(

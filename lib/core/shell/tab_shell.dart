@@ -16,7 +16,7 @@ const List<NavItem> tabBranches = [
   NavItem.stats,
   NavItem.hallOfFame,
   NavItem.poule,
-  NavItem.profile,
+  NavItem.more,
 ];
 
 /// Het tabdeel van de shell: de tak-navigators plus de glazen tabbalk.
@@ -28,7 +28,6 @@ class TabShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final membership = ref.watch(currentMembershipProvider);
-    final user = ref.watch(meProvider).value?.user;
     if (membership == null) return navigationShell;
 
     final items = buildTabItems(membership);
@@ -59,7 +58,6 @@ class TabShell extends ConsumerWidget {
                 items: items,
                 activeIndex: activeIndex,
                 membership: membership,
-                user: user,
                 onSelect: select,
               ),
             ),

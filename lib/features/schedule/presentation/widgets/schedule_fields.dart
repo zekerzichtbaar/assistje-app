@@ -47,29 +47,16 @@ Future<bool> confirmSchedule(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title),
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('schedule-confirm-back'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.scheduleConfirmBack),
-        ),
-        TextButton(
-          key: const ValueKey('schedule-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    title: title,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.scheduleConfirmBack,
+    destructive: destructive,
+    cancelKey: const ValueKey('schedule-confirm-back'),
+    confirmKey: const ValueKey('schedule-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Label boven een veld.
@@ -304,7 +291,7 @@ class _SegmentButton extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 11),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -376,41 +363,44 @@ class ScheduleToggleCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: t.ink,
+                // VoiceOver leest titel + uitleg als label van de schakelaar.
+                MergeSemantics(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: t.ink,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            body,
-                            style: TextStyle(fontSize: 12, color: t.muted),
-                          ),
-                        ],
+                            const SizedBox(height: 2),
+                            Text(
+                              body,
+                              style: TextStyle(fontSize: 12, color: t.muted),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Switch.adaptive(
-                      key: switchKey,
-                      value: value,
-                      onChanged: onChanged == null
-                          ? null
-                          : (v) {
-                              Haptics.selection();
-                              onChanged!(v);
-                            },
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      Switch.adaptive(
+                        key: switchKey,
+                        value: value,
+                        onChanged: onChanged == null
+                            ? null
+                            : (v) {
+                                Haptics.selection();
+                                onChanged!(v);
+                              },
+                      ),
+                    ],
+                  ),
                 ),
                 if (value && child != null) ...[
                   const SizedBox(height: 16),

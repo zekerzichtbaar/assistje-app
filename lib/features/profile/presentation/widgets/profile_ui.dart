@@ -77,27 +77,16 @@ Future<bool> confirmProfileAction(
   String? title,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: title == null ? null : Text(title),
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('profile-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.profileCancel),
-        ),
-        TextButton(
-          key: const ValueKey('profile-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    title: title,
+    message: question,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.profileCancel,
+    destructive: true,
+    cancelKey: const ValueKey('profile-confirm-cancel'),
+    confirmKey: const ValueKey('profile-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Kop + uitleg bovenaan een kaart (`font-medium text-ink` + `text-xs

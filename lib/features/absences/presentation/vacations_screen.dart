@@ -59,26 +59,16 @@ class _VacationsScreenState extends ConsumerState<VacationsScreen> {
   Future<void> _remove(int teamId, ProfileVacation vacation) async {
     final l10n = AppLocalizations.of(context);
     unawaited(Haptics.light());
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text(l10n.absencesVacationRemoveConfirm),
-        actions: [
-          TextButton(
-            key: const ValueKey('vacation-remove-cancel'),
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.absencesCancel),
-          ),
-          TextButton(
-            key: const ValueKey('vacation-remove-confirm'),
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-            child: Text(l10n.absencesDelete),
-          ),
-        ],
-      ),
+    final ok = await showConfirmDialog(
+      context,
+      message: l10n.absencesVacationRemoveConfirm,
+      confirmLabel: l10n.absencesDelete,
+      cancelLabel: l10n.absencesCancel,
+      destructive: true,
+      cancelKey: const ValueKey('vacation-remove-cancel'),
+      confirmKey: const ValueKey('vacation-remove-confirm'),
     );
-    if (!(ok ?? false) || !mounted) return;
+    if (!ok || !mounted) return;
     setState(() => _removing.add(vacation.id));
     final error = await _controller(teamId).removeVacation(vacation.id);
     if (!mounted) return;

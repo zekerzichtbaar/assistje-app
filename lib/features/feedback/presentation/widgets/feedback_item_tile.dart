@@ -187,9 +187,11 @@ class FeedbackImageThumb extends ConsumerWidget {
         children: [
           Icon(PhosphorIconsDuotone.imageBroken, size: 16, color: t.muted),
           const SizedBox(width: 6),
-          Text(
-            l10n.feedbackImageUnavailable,
-            style: TextStyle(fontSize: 12, color: t.muted),
+          Flexible(
+            child: Text(
+              l10n.feedbackImageUnavailable,
+              style: TextStyle(fontSize: 12, color: t.muted),
+            ),
           ),
         ],
       ),

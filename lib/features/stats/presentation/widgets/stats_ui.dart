@@ -220,7 +220,8 @@ class SeasonPickerButton extends StatelessWidget {
     final label = selected == null ? '' : _label(l10n, selected);
     return AppCard(
       key: ValueKey('$keyPrefix-season-picker'),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      // 12 pt boven/onder: samen ≥ 44 pt tikvlak.
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       onTap: enabled ? () => _open(context) : null,
       child: Row(
         children: [

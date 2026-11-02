@@ -356,3 +356,88 @@ class PlayerDetailSkeleton extends StatelessWidget {
     ],
   );
 }
+
+/// Blessure namens de speler (trainer, `InjuryCard` op de spelerpagina in de
+/// PWA): een schakelaar, rood getint zolang de speler geblesseerd staat. Geen
+/// einddatum: de trainer zet hem weer uit, of de speler meldt zich fit.
+class PlayerInjuryCard extends StatelessWidget {
+  const PlayerInjuryCard({
+    super.key,
+    required this.player,
+    required this.onChanged,
+  });
+
+  final PlayerProfile player;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final injured = player.isInjured;
+    return AppCard(
+      key: const ValueKey('player-injury'),
+      color: injured
+          ? (dark ? const Color(0x26EF4444) : StatusColors.red50)
+          : null,
+      child: MergeSemantics(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        PhosphorIconsDuotone.ambulance,
+                        size: 18,
+                        color: StatusColors.red500,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          injured
+                              ? l10n.playerInjuryActive(player.name)
+                              : l10n.playerInjuryTitle,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: injured
+                                ? (dark
+                                      ? const Color(0xFFFECACA)
+                                      : const Color(0xFF7F1D1D))
+                                : t.ink,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    player.hasAccount
+                        ? l10n.playerInjuryBodyAccount(player.name)
+                        : l10n.playerInjuryBody,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: injured && !dark ? StatusColors.red700 : t.muted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Switch.adaptive(
+              key: const ValueKey('player-injury-switch'),
+              value: injured,
+              activeTrackColor: StatusColors.red500,
+              onChanged: onChanged,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -48,26 +48,15 @@ void showFinesSuccess(BuildContext context, String title) {
 /// Vraagt "Echt verwijderen?" — `true` als bevestigd.
 Future<bool> confirmFinesDelete(BuildContext context, String question) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(question),
-      actions: [
-        TextButton(
-          key: const ValueKey('fines-delete-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.finesCancel),
-        ),
-        TextButton(
-          key: const ValueKey('fines-delete-confirm'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: TextButton.styleFrom(foregroundColor: StatusColors.red600),
-          child: Text(l10n.finesDelete),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: question,
+    confirmLabel: l10n.finesDelete,
+    cancelLabel: l10n.finesCancel,
+    destructive: true,
+    cancelKey: const ValueKey('fines-delete-cancel'),
+    confirmKey: const ValueKey('fines-delete-confirm'),
   );
-  return ok ?? false;
 }
 
 /// Vraagt bevestiging met een eigen knoptekst ([confirmLabel]); `true` als
@@ -79,28 +68,15 @@ Future<bool> confirmFinesAction(
   bool destructive = false,
 }) async {
   final l10n = AppLocalizations.of(context);
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      content: Text(message),
-      actions: [
-        TextButton(
-          key: const ValueKey('fines-confirm-cancel'),
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(l10n.finesCancel),
-        ),
-        TextButton(
-          key: const ValueKey('fines-confirm-ok'),
-          onPressed: () => Navigator.of(context).pop(true),
-          style: destructive
-              ? TextButton.styleFrom(foregroundColor: StatusColors.red600)
-              : null,
-          child: Text(confirmLabel),
-        ),
-      ],
-    ),
+  return showConfirmDialog(
+    context,
+    message: message,
+    confirmLabel: confirmLabel,
+    cancelLabel: l10n.finesCancel,
+    destructive: destructive,
+    cancelKey: const ValueKey('fines-confirm-cancel'),
+    confirmKey: const ValueKey('fines-confirm-ok'),
   );
-  return ok ?? false;
 }
 
 /// Een 403 op een beheeractie (geen penningmeester meer, of een demoteam):

@@ -294,31 +294,30 @@ class _LineupViewState extends ConsumerState<LineupView> {
       backgroundColor: chrome.shell,
       body: Column(
         children: [
-          // Kop: titel tussen de zwevende pills, daaronder formatie + stand.
-          ColoredBox(
+          // Kop: titel onder de zwevende pills (de vervaging van de shell
+          // achter de pills zou witte tekst onleesbaar maken), daaronder
+          // formatie + stand. Groeit mee met grote tekst.
+          Container(
+            width: double.infinity,
             color: chrome.header,
             child: Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.paddingOf(context).top + ShellInsets.pillTopGap,
-                left: ShellInsets.pillSize + 24,
-                right: ShellInsets.pillSize + 24,
-                bottom: ShellInsets.pillTopGap,
+              padding: EdgeInsets.fromLTRB(
+                16,
+                ShellInsets.top(context) - 8,
+                16,
+                ShellInsets.pillTopGap,
               ),
-              child: SizedBox(
-                height: ShellInsets.pillSize,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _title(Colors.white, size: 17),
-                    if (lineup.event.title.isNotEmpty)
-                      Text(
-                        lineup.event.title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: chrome.subtle),
-                      ),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  _title(Colors.white, size: 17),
+                  if (lineup.event.title.isNotEmpty)
+                    Text(
+                      lineup.event.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 12, color: chrome.subtle),
+                    ),
+                ],
               ),
             ),
           ),
@@ -334,7 +333,7 @@ class _LineupViewState extends ConsumerState<LineupView> {
                           chrome: chrome,
                           onChanged: (key) => _changeFormation(teamId, key),
                         )
-                      : const SizedBox(height: 36),
+                      : const SizedBox(height: 44),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -364,20 +363,24 @@ class _LineupViewState extends ConsumerState<LineupView> {
             ),
           ),
           Expanded(
-            child: LineupField(
-              painter: painter,
-              slots: lineup.formationSlots,
-              assignments: assignments,
-              captainId: lineup.captainPlayerId,
-              canEdit: canEdit,
-              selectedSlot: _selectedSlot,
-              picking: picking,
-              onDrop: (code, player) => _drop(teamId, code, player),
-              onTapSlot: (code) => _tapSlot(teamId, code),
-              onSelect: _select,
-              onRemove: (code) => _remove(teamId, code),
-              onToggleCaptain: (id) => _toggleCaptain(teamId, id),
-              onBackgroundTap: _clearSelection,
+            // Het veld is een tekening met vaste maten (tokens, namen):
+            // tekst schaalt daar niet mee; VoiceOver leest de spelers voor.
+            child: MediaQuery.withNoTextScaling(
+              child: LineupField(
+                painter: painter,
+                slots: lineup.formationSlots,
+                assignments: assignments,
+                captainId: lineup.captainPlayerId,
+                canEdit: canEdit,
+                selectedSlot: _selectedSlot,
+                picking: picking,
+                onDrop: (code, player) => _drop(teamId, code, player),
+                onTapSlot: (code) => _tapSlot(teamId, code),
+                onSelect: _select,
+                onRemove: (code) => _remove(teamId, code),
+                onToggleCaptain: (id) => _toggleCaptain(teamId, id),
+                onBackgroundTap: _clearSelection,
+              ),
             ),
           ),
           DecoratedBox(
@@ -448,7 +451,7 @@ class _FormationPicker extends StatelessWidget {
       label: l10n.lineupFormations,
       container: true,
       child: Container(
-        height: 36,
+        height: 44,
         decoration: BoxDecoration(
           color: chrome.track,
           borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
@@ -456,7 +459,7 @@ class _FormationPicker extends StatelessWidget {
         child: ListView(
           key: const ValueKey('lineup-formations'),
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.all(3),
+          padding: const EdgeInsets.symmetric(horizontal: 3),
           children: [
             for (final formation in formations)
               _FormationChip(
@@ -493,24 +496,28 @@ class _FormationChip extends StatelessWidget {
       key: ValueKey('lineup-formation-${option.key}'),
       behavior: HitTestBehavior.opaque,
       onTap: active ? null : onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: active ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-          boxShadow: active ? AssistjeTokens.shadowSm : null,
-        ),
-        child: Text(
-          option.label.isEmpty ? option.key : option.label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            fontFeatures: const [FontFeature.tabularFigures()],
-            color: active
-                ? chrome.activeText
-                : Colors.white.withValues(alpha: 0.8),
+      // De baan-marge hoort bij het tikvlak: samen 44 pt hoog.
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? Colors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
+            boxShadow: active ? AssistjeTokens.shadowSm : null,
+          ),
+          child: Text(
+            option.label.isEmpty ? option.key : option.label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              fontFeatures: const [FontFeature.tabularFigures()],
+              color: active
+                  ? chrome.activeText
+                  : Colors.white.withValues(alpha: 0.8),
+            ),
           ),
         ),
       ),

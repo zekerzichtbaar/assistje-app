@@ -326,7 +326,7 @@ class _AddPersonFormState extends State<_AddPersonForm> {
       ],
     ),
     const SizedBox(height: 8),
-    CheckboxListTile(
+    CheckboxListTile.adaptive(
       key: const ValueKey('pm-add-guest'),
       contentPadding: EdgeInsets.zero,
       controlAffinity: ListTileControlAffinity.leading,
@@ -334,7 +334,7 @@ class _AddPersonFormState extends State<_AddPersonForm> {
       onChanged: _busy ? null : (v) => setState(() => _isGuest = v ?? false),
       title: Text(l10n.pmFieldGuest, style: const TextStyle(fontSize: 14)),
     ),
-    CheckboxListTile(
+    CheckboxListTile.adaptive(
       key: const ValueKey('pm-add-invite'),
       contentPadding: EdgeInsets.zero,
       controlAffinity: ListTileControlAffinity.leading,

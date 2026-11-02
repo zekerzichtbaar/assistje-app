@@ -182,18 +182,20 @@ class TrainingBoardCard extends StatelessWidget {
           child: InkWell(
             key: ValueKey('training-player-${p.id}'),
             onTap: canTap ? () => onTapPlayer(p) : null,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Text(
-                p.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                  color: selected
-                      ? t.primaryContrast
-                      : (onBench ? t.inkSoft : t.ink),
+            child: minTapHeight(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: Text(
+                  p.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                    color: selected
+                        ? t.primaryContrast
+                        : (onBench ? t.inkSoft : t.ink),
+                  ),
                 ),
               ),
             ),
@@ -343,7 +345,7 @@ class TrainingBoardCard extends StatelessWidget {
                 key: const ValueKey('training-copy'),
                 label: l10n.trainingTeamsCopy,
                 icon: PhosphorIconsBold.copy,
-                background: StatusColors.emerald500,
+                background: StatusColors.emerald700,
                 foreground: Colors.white,
                 onPressed: onCopy,
               ),
@@ -611,14 +613,19 @@ class TrainingScoringCard extends StatelessWidget {
                         child: InkWell(
                           key: ValueKey('training-include-${option.id}'),
                           onTap: busy ? null : () => onInclude(option),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 6,
-                            ),
-                            child: Text(
-                              option.name,
-                              style: TextStyle(fontSize: 14, color: t.inkSoft),
+                          child: minTapHeight(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                option.name,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: t.inkSoft,
+                                ),
+                              ),
                             ),
                           ),
                         ),

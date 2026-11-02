@@ -92,6 +92,11 @@ abstract final class AppRoutes {
   static const String stats = '/stats';
   static const String hallOfFame = '/hall-of-fame';
   static const String poule = '/poule';
+
+  /// De Meer-tab: profiel, teamwissel en de schermen zonder eigen tab.
+  static const String more = '/more';
+
+  // Onder de Meer-tab (gepusht binnen de tab, de tabbalk blijft staan).
   static const String profile = '/profile';
 
   // Onder de Agenda-tab.
@@ -102,10 +107,9 @@ abstract final class AppRoutes {
   static const String eventReport = '/events/:eventId/report';
   static const String eventTrainingTeams = '/events/:eventId/teams';
 
-  // Onder de Mij-tab.
   static const String notificationPreferences = '/profile/notifications';
 
-  // Over de tabs heen (menu, bel, doorklikken).
+  // Over de tabs heen (Meer-tab, bel, doorklikken).
   static const String notifications = '/notifications';
   static const String onboarding = '/onboarding';
   static const String team = '/team';
@@ -126,13 +130,7 @@ abstract final class AppRoutes {
   static const String teamlink = '/teamlink';
 
   /// De paden waar een tab bij hoort (de wortel van elke tab).
-  static const List<String> tabRoots = [
-    agenda,
-    stats,
-    hallOfFame,
-    poule,
-    profile,
-  ];
+  static const List<String> tabRoots = [agenda, stats, hallOfFame, poule, more];
 
   static String event(int eventId) => '/events/$eventId';
   static String player(int playerId) => '/players/$playerId';

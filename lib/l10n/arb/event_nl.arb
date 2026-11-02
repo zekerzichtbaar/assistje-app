@@ -123,5 +123,89 @@
   "eventDetailCarpoolSeatsMore": "Meer plekken",
   "eventDetailCarpoolConfirm": "Bevestigen",
   "eventDetailCarpoolFailed": "Aanmelden lukte niet",
-  "eventDetailCarpoolRemoveFailed": "Verwijderen lukte niet"
+  "eventDetailCarpoolRemoveFailed": "Verwijderen lukte niet",
+  "eventDetailLastChanged": "Laatst gewijzigd: {when}",
+  "@eventDetailLastChanged": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "eventDetailLastChangedBy": "Laatst gewijzigd: {when} door {who}",
+  "@eventDetailLastChangedBy": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "eventDetailChangedBySelf": "{firstName} zelf",
+  "@eventDetailChangedBySelf": {
+    "placeholders": {
+      "firstName": {
+        "type": "String"
+      }
+    }
+  },
+  "eventSavingsTitle": "Inleg",
+  "eventSavingsIntro": "Vraag iedereen die meedoet om een bedrag, en houd bij wie betaald heeft.",
+  "eventSavingsStart": "Inleg vragen",
+  "eventSavingsAmount": "{amount} p.p. · {name}",
+  "@eventSavingsAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "eventSavingsAmountMonthly": "{amount} p.p. per maand · {name}",
+  "@eventSavingsAmountMonthly": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "eventSavingsPaid": "{paid} van {total} betaald",
+  "@eventSavingsPaid": {
+    "placeholders": {
+      "paid": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "eventSavingsPaidOpen": "{paid} van {total} betaald · {open} open",
+  "@eventSavingsPaidOpen": {
+    "placeholders": {
+      "paid": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "open": {
+        "type": "String"
+      }
+    }
+  },
+  "eventSavingsCancelled": "Afgelast — wie betaalde krijgt de inleg terug.",
+  "eventSavingsRefunded": "Je inleg is terugbetaald.",
+  "eventSavingsRefundCancelled": "Je krijgt je inleg terug.",
+  "eventSavingsRefund": "Je bent afgemeld — je krijgt je inleg terug.",
+  "eventSavingsIPaid": "Jij hebt betaald.",
+  "eventSavingsNotPaid": "Jij hebt nog niet betaald.",
+  "eventSavingsCreated": "Pot aangemaakt"
 }

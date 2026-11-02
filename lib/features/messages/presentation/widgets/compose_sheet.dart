@@ -77,25 +77,14 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
 
   Future<bool> _confirm() async {
     final l10n = AppLocalizations.of(context);
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text(l10n.messagesSendConfirm),
-        actions: [
-          TextButton(
-            key: const ValueKey('messages-confirm-cancel'),
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.messagesCancel),
-          ),
-          TextButton(
-            key: const ValueKey('messages-confirm-send'),
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.messagesSendConfirmOk),
-          ),
-        ],
-      ),
+    return showConfirmDialog(
+      context,
+      message: l10n.messagesSendConfirm,
+      confirmLabel: l10n.messagesSendConfirmOk,
+      cancelLabel: l10n.messagesCancel,
+      cancelKey: const ValueKey('messages-confirm-cancel'),
+      confirmKey: const ValueKey('messages-confirm-send'),
     );
-    return ok ?? false;
   }
 
   Future<void> _send() async {

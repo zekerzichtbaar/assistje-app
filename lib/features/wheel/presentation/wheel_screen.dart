@@ -652,13 +652,12 @@ class _ParticipantsCard extends StatelessWidget {
   Widget _tile(BuildContext context, WheelPlayer player) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
-    return CheckboxListTile(
+    return CheckboxListTile.adaptive(
       key: ValueKey('wheel-player-${player.key}'),
       value: state.selected.contains(player.key),
       onChanged: enabled ? (_) => onToggle(player.key) : null,
       controlAffinity: ListTileControlAffinity.leading,
       dense: true,
-      visualDensity: VisualDensity.compact,
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
       activeColor: t.primary,
       checkColor: t.primaryContrast,
@@ -686,7 +685,7 @@ class _ParticipantsCard extends StatelessWidget {
               child: Text(
                 l10n.wheelGuestBadge,
                 style: const TextStyle(
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w500,
                   color: _amber900,
                 ),
@@ -810,7 +809,6 @@ class _RecentSpinsCard extends StatelessWidget {
             IconButton(
               key: ValueKey('wheel-spin-${spin.id}-delete'),
               tooltip: l10n.wheelDeleteSpin,
-              visualDensity: VisualDensity.compact,
               color: t.muted,
               icon: const Icon(PhosphorIconsBold.x, size: 16),
               onPressed: isBusy ? null : () => onDelete(spin.id),

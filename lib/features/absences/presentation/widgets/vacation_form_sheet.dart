@@ -68,12 +68,11 @@ class _VacationFormState extends State<_VacationForm> {
     final initial = current != null && !current.isBefore(first)
         ? current
         : first;
-    final picked = await showDatePicker(
+    final picked = await showAppDatePicker(
       context: context,
       initialDate: initial,
       firstDate: first,
       lastDate: DateTime(today.year + 3, 12, 31),
-      locale: const Locale('nl'),
     );
     if (picked == null || !mounted) return;
     setState(() {

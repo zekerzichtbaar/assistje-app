@@ -229,34 +229,19 @@ class _AgendaScreenState extends ConsumerState<AgendaScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Semantics(
-                        header: true,
-                        child: Text(
-                          l10n.navAgenda,
-                          key: const ValueKey('agenda-title'),
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: t.ink,
-                          ),
-                        ),
-                      ),
-                    ),
+                child: ScreenHeader(
+                  title: l10n.navAgenda,
+                  titleKey: const ValueKey('agenda-title'),
+                  actions: [
                     // Iedereen mag de agenda-feed abonneren (zoals de PWA),
                     // zolang het team er een heeft.
                     if (state?.data.agendaFeedUrl != null)
                       AgendaCalendarButton(data: state!.data),
                     // Alleen de trainer zet events in de agenda; een demoteam
-                    // mag niet schrijven.
+                    // mag niet schrijven. Het programma importeren heet in de
+                    // PWA "Wedstrijdprogramma" in het plusmenu.
                     if (membership.isTrainer && !membership.team.isDemo) ...[
-                      // Het programma importeren: in de PWA
-                      // "Wedstrijdprogramma" in het plusmenu.
-                      const SizedBox(width: 8),
                       AgendaScheduleButton(membership: membership),
-                      const SizedBox(width: 8),
                       const AgendaAddEventButton(),
                     ],
                   ],

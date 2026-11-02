@@ -71,40 +71,48 @@ class DateTile extends StatelessWidget {
             key: const ValueKey('date-tile-band'),
             color: bandColor,
             padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Text(
-              weekdayLabel(date).toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.4,
-                color: bandText,
+            // Vaste breedte (een kalenderblaadje): bij grote tekst verkleinen
+            // in plaats van afbreken.
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                weekdayLabel(date).toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4,
+                  color: bandText,
+                ),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${date.day}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1,
-                    fontWeight: FontWeight.w700,
-                    color: t.ink,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${date.day}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1,
+                      fontWeight: FontWeight.w700,
+                      color: t.ink,
+                    ),
                   ),
-                ),
-                Text(
-                  monthLabel(date),
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: t.muted,
+                  Text(
+                    monthLabel(date),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: t.muted,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           if (showTime)
@@ -114,13 +122,16 @@ class DateTile extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
-                child: Text(
-                  timeLabel(date),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: t.ink,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    timeLabel(date),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: t.ink,
+                    ),
                   ),
                 ),
               ),
