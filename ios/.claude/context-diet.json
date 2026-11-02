@@ -1,0 +1,33 @@
+{
+  "_note": "written by context-diet on 2026-11-02; edit freely, an existing file is never regenerated except by /diet init",
+  "mcp": [
+    "claude_ai_Higgsfield",
+    "higgsfield"
+  ],
+  "skills": [
+    "audit-website",
+    "seo-audit",
+    "general-video",
+    "hyperframes",
+    "hyperframes-animation",
+    "hyperframes-audio",
+    "hyperframes-cli",
+    "hyperframes-core",
+    "hyperframes-creative",
+    "hyperframes-keyframes",
+    "hyperframes-registry",
+    "hyperframes-studio",
+    "media-use",
+    "music-to-video",
+    "remotion-best-practices",
+    "hyperframes:*",
+    "sage-wordpress-builder:sage-wordpress-builder",
+    "osmo:osmo",
+    "dezzign:dezzign"
+  ],
+  "agents": [
+    "sage-wordpress-builder:laravel-simplifier",
+    "sage-wordpress-builder:php-wordpress-simplifier",
+    "sage-wordpress-builder:python-simplifier"
+  ]
+}
