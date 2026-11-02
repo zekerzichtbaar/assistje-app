@@ -103,6 +103,30 @@ void main() {
       expect(current().liveViewers, 9);
     });
 
+    test('pollt ook tijdens een open strafschoppenserie', () async {
+      final controller = await start(
+        live: LiveFixtures.response(
+          live: LiveFixtures.ended(shootout: LiveFixtures.shootout(us: [true])),
+        ),
+        setup: (http) => http.on(
+          'POST ${LiveFixtures.event}/shootout/kicks',
+          201,
+          LiveFixtures.response(
+            live: LiveFixtures.ended(
+              resultSuffix: '4–3 n.s.',
+              shootout: LiveFixtures.shootout(us: [true], winner: 'us'),
+            ),
+          ),
+        ),
+      );
+      expect(controller.isPolling, isTrue);
+
+      // Beslist: niets meer te volgen.
+      expect(await controller.shootoutKick(side: 'opp', scored: false), isNull);
+      expect(current().clock.shootout!.winner, 'us');
+      expect(controller.isPolling, isFalse);
+    });
+
     test('pollt niet als de wedstrijd niet live is', () async {
       final controller = await start(
         live: LiveFixtures.response(

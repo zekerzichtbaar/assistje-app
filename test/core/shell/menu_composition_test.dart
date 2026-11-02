@@ -76,12 +76,7 @@ void main() {
           },
         ),
       );
-      expect(tabs, [
-        'tab-agenda',
-        'tab-stats',
-        'tab-hallOfFame',
-        'tab-more',
-      ]);
+      expect(tabs, ['tab-agenda', 'tab-stats', 'tab-hallOfFame', 'tab-more']);
       expect(menu, [
         'menu-players',
         'menu-duties',
@@ -98,12 +93,7 @@ void main() {
         tester,
         ApiFixtures.membership(features: _allFeatures),
       );
-      expect(tabs, [
-        'tab-agenda',
-        'tab-stats',
-        'tab-hallOfFame',
-        'tab-more',
-      ]);
+      expect(tabs, ['tab-agenda', 'tab-stats', 'tab-hallOfFame', 'tab-more']);
       expect(menu, [
         'menu-team',
         'menu-fines',
@@ -124,11 +114,7 @@ void main() {
           features: {'stats': true, 'fines': true, 'wheel': true},
         ),
       );
-      expect(menu, [
-        'menu-fines',
-        'menu-wheel',
-        'menu-feedback',
-      ]);
+      expect(menu, ['menu-fines', 'menu-wheel', 'menu-feedback']);
     });
 
     testWidgets('toeschouwer: geen boetepot/spaarpot', (tester) async {
@@ -165,17 +151,8 @@ void main() {
         ),
       );
       // De tabbalk filtert niet op stats (als BottomNav.tsx).
-      expect(tabs, [
-        'tab-agenda',
-        'tab-stats',
-        'tab-hallOfFame',
-        'tab-more',
-      ]);
-      expect(menu, [
-        'menu-team',
-        'menu-savings',
-        'menu-feedback',
-      ]);
+      expect(tabs, ['tab-agenda', 'tab-stats', 'tab-hallOfFame', 'tab-more']);
+      expect(menu, ['menu-team', 'menu-savings', 'menu-feedback']);
     });
   });
 

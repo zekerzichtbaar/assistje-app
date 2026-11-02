@@ -10,9 +10,10 @@ class SavingsPotDraft {
   const SavingsPotDraft({
     required this.name,
     required this.scope,
-    required this.amountCents,
     required this.startMonth,
     required this.months,
+    this.amountCents,
+    this.withoutAmount = false,
     this.includeGuests = false,
     this.goalCents,
     this.members = const [],
@@ -22,7 +23,12 @@ class SavingsPotDraft {
   final String name;
   final SavingsScope scope;
   final bool includeGuests;
-  final int amountCents;
+
+  /// Afvinklijst zonder geld: dan geen [amountCents] en geen [goalCents].
+  final bool withoutAmount;
+
+  /// Verplicht tenzij [withoutAmount].
+  final int? amountCents;
   final int? goalCents;
 
   /// `YYYY-MM`.
@@ -39,8 +45,13 @@ class SavingsPotDraft {
     'name': name,
     'scope': scope.apiValue,
     'include_guests': includeGuests,
-    'amount': centsToEuros(amountCents),
-    'goal': goalCents == null ? null : centsToEuros(goalCents!),
+    'without_amount': withoutAmount,
+    'amount': withoutAmount || amountCents == null
+        ? null
+        : centsToEuros(amountCents!),
+    'goal': withoutAmount || goalCents == null
+        ? null
+        : centsToEuros(goalCents!),
     'start_month': startMonth,
     'months': months,
     'members': scope == SavingsScope.custom ? members : const <String>[],

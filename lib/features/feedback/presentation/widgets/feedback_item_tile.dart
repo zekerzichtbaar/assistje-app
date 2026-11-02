@@ -137,6 +137,11 @@ class _StatusBadge extends StatelessWidget {
         StatusColors.emerald500.withValues(alpha: dark ? 0.15 : 0.12),
         dark ? StatusColors.emerald400 : StatusColors.emerald700,
       ),
+      FeedbackStatus.declined => (
+        l10n.feedbackStatusDeclined,
+        t.sunken,
+        t.inkSoft,
+      ),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

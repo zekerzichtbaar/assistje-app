@@ -365,4 +365,61 @@ void main() {
     expect(http.requestsTo('DELETE $_base/guests/88'), hasLength(1));
     expect(find.text('Gast verwijderd'), findsOneWidget);
   });
+
+  testWidgets('activiteit: aanwezige staf telt op in Aanwezig met chipje', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      setup: (http) => http.on(
+        _index,
+        200,
+        AttendanceFixtures.attendance(
+          type: 'activity',
+          title: 'Teamuitje',
+          rows: [
+            AttendanceFixtures.row(
+              playerId: 37,
+              name: 'Kees Jansen',
+              status: 'present',
+            ),
+            AttendanceFixtures.row(
+              kind: 'staff',
+              userId: 51,
+              name: 'Trainer Tom',
+              status: 'present',
+            ),
+            AttendanceFixtures.row(
+              playerId: 88,
+              name: 'Gerrit Gast',
+              isGuest: true,
+              status: 'present',
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final present = find.byKey(const ValueKey('event-count-present'));
+    // 1 speler + 1 staf + 1 gast.
+    expect(
+      find.descendant(of: present, matching: find.text('3')),
+      findsOneWidget,
+    );
+    expect(find.text('1 staf'), findsOneWidget);
+    expect(find.text('1 gast'), findsOneWidget);
+  });
+
+  testWidgets('training: staf zit niet in het aanwezig-getal', (tester) async {
+    await _open(
+      tester,
+      setup: (http) => http.on(_index, 200, AttendanceFixtures.attendance()),
+    );
+
+    expect(find.byKey(const ValueKey('event-count-staff-chip')), findsNothing);
+    expect(
+      find.byKey(const ValueKey('event-count-guests-chip')),
+      findsOneWidget,
+    );
+  });
 }

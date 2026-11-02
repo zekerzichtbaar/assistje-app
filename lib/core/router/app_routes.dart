@@ -99,6 +99,10 @@ abstract final class AppRoutes {
   // Onder de Meer-tab (gepusht binnen de tab, de tabbalk blijft staan).
   static const String profile = '/profile';
 
+  /// Het dienstenoverzicht voor elk teamlid (alleen lezen); [duties] is het
+  /// beheer van de trainer. Zelfde pad als het web.
+  static const String dutyOverview = '/diensten';
+
   // Onder de Agenda-tab.
   static const String eventDetail = '/events/:eventId';
   static const String eventAttendance = '/events/:eventId/attendance';

@@ -82,6 +82,10 @@ enum StatsSort {
   attendanceTraining,
   matchesPlayed,
   minutes,
+
+  /// Speelminuten gedeeld door aanwezige wedstrijden. Oplopend: de vraag is
+  /// wie er te weinig speelt.
+  minutesPerMatch,
   goals,
   assists,
   flagMinutes,
@@ -101,7 +105,10 @@ List<StatsSort> availableSorts(
   StatsSort.attendanceMatch,
   StatsSort.attendanceTraining,
   StatsSort.matchesPlayed,
-  if (profile.tracksPlayingTime) StatsSort.minutes,
+  if (profile.tracksPlayingTime) ...[
+    StatsSort.minutes,
+    StatsSort.minutesPerMatch,
+  ],
   if (profile.tracksScorers) ...[StatsSort.goals, StatsSort.assists],
   if (profile.supportsFlagDuty) ...[
     StatsSort.flagMinutes,
@@ -117,6 +124,7 @@ num? statsMetric(StatsRow row, StatsSort sort) => switch (sort) {
   StatsSort.attendanceTraining => row.attendanceTrainingRate,
   StatsSort.matchesPlayed => row.matchesPlayed,
   StatsSort.minutes => row.minutes,
+  StatsSort.minutesPerMatch => row.minutesPerMatch,
   StatsSort.goals => row.goals,
   StatsSort.assists => row.assists,
   StatsSort.flagMinutes => row.flagMinutes,
@@ -125,17 +133,37 @@ num? statsMetric(StatsRow row, StatsSort sort) => switch (sort) {
   StatsSort.name => null,
 };
 
-/// Een gesorteerde kopie: naam oplopend, al het andere aflopend met naam
-/// als tiebreak (stabiel, ook bij gelijke stand).
+/// Sortering [sort] loopt oplopend (de minste bovenaan) in plaats van
+/// aflopend. Geldt voor naam en minuten per wedstrijd.
+bool statsSortAscending(StatsSort sort) =>
+    sort == StatsSort.name || sort == StatsSort.minutesPerMatch;
+
+/// Krijgt de top 3 bij [sort] een medaille? Niet bij overzicht/naam, en niet
+/// bij minuten per wedstrijd: een medaille voor de minste speeltijd klopt
+/// niet.
+bool statsSortPodium(StatsSort sort) =>
+    sort != StatsSort.overview &&
+    sort != StatsSort.name &&
+    sort != StatsSort.minutesPerMatch;
+
+/// Een gesorteerde kopie: naam oplopend, minuten per wedstrijd oplopend (wie
+/// geen wedstrijd had altijd achteraan), al het andere aflopend; naam als
+/// tiebreak (stabiel, ook bij gelijke stand).
 List<StatsRow> sortStatsRows(List<StatsRow> rows, StatsSort sort) {
   int byName(StatsRow a, StatsRow b) =>
       a.name.toLowerCase().compareTo(b.name.toLowerCase());
   final copy = [...rows];
   copy.sort((a, b) {
     if (sort == StatsSort.name) return byName(a, b);
+    // Zonder wedstrijden is er geen gemiddelde: altijd achteraan, anders
+    // staat wie er nooit was bovenaan als "0 min".
+    if (sort == StatsSort.minutesPerMatch &&
+        (a.matchesPresent > 0) != (b.matchesPresent > 0)) {
+      return a.matchesPresent > 0 ? -1 : 1;
+    }
     final va = statsMetric(a, sort) ?? 0;
     final vb = statsMetric(b, sort) ?? 0;
-    final cmp = vb.compareTo(va);
+    final cmp = statsSortAscending(sort) ? va.compareTo(vb) : vb.compareTo(va);
     return cmp != 0 ? cmp : byName(a, b);
   });
   return copy;

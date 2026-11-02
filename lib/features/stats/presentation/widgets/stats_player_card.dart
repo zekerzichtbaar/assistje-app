@@ -11,7 +11,8 @@ import 'stats_ui.dart';
 /// Een speler in de statistieken (`PlayerCard` in `TeamStats.tsx`): kop met
 /// avatar, rugnummer, positie, titels en kaarten; aanwezigheidsbalken; en
 /// alleen de tegels die de sport vult. Bij een gekozen sortering staat de
-/// waarde daarvan rechts, met een medaille voor de top 3.
+/// waarde daarvan rechts, met een medaille voor de top 3 (niet bij minuten
+/// per wedstrijd).
 class StatsPlayerCard extends StatelessWidget {
   const StatsPlayerCard({
     super.key,
@@ -37,7 +38,7 @@ class StatsPlayerCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
     final ranked = sort != StatsSort.overview && sort != StatsSort.name;
-    final medal = ranked ? podiumMedal(rank) : null;
+    final medal = statsSortPodium(sort) ? podiumMedal(rank) : null;
 
     final tiles = <(String, String, String)>[
       if (profile.tracksScorers) ...[
@@ -150,6 +151,13 @@ class StatsPlayerCard extends StatelessWidget {
       StatsSort.overview => l10n.statsValuePercent(value.round()),
       StatsSort.minutes ||
       StatsSort.flagMinutes => l10n.statsValueMinutes(value.round()),
+      StatsSort.minutesPerMatch =>
+        row.matchesPresent > 0
+            ? l10n.statsValueMinutesPerMatch(
+                row.minutesPerMatch,
+                row.matchesPresent,
+              )
+            : l10n.statsValueNone,
       _ => '${value.round()}',
     };
   }

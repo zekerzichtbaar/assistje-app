@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'live_models.freezed.dart';
@@ -16,8 +18,23 @@ abstract class LiveClock with _$LiveClock {
     @Default(1) int period,
 
     /// Minuten waarop de delen eindigen (`[45, 90]`); leeg bij een sport die
-    /// niet op tijd speelt.
+    /// niet op tijd speelt. Bij een verlenging lopen ze door
+    /// (`[45, 90, 105, 120]`).
     @Default(<int>[]) List<int> periodEnds,
+
+    /// Hoeveel delen de reguliere speeltijd telt; `0` als de server het niet
+    /// meestuurt (dan geldt `rules.periods.count`). Een deel daarboven is
+    /// verlenging.
+    @Default(0) int regularPeriods,
+
+    /// Is de verlenging gestart?
+    @Default(false) bool extraTime,
+
+    /// De strafschoppenserie, of `null` als er geen is.
+    LiveShootout? shootout,
+
+    /// Wat er achter de uitslag hoort: `n.v.` of `4–3 n.s.` (thuis–uit).
+    String? resultSuffix,
   }) = _LiveClock;
 
   const LiveClock._();
@@ -75,6 +92,18 @@ abstract class LiveClock with _$LiveClock {
         : "${minuteAt(now)}'";
   }
 
+  /// Loopt er een strafschoppenserie die nog niet beslist is?
+  bool get shootoutOpen => shootout != null && shootout!.winner == null;
+
+  /// Het hoeveelste deel van de verlenging dit is (1, 2), of `null` in de
+  /// reguliere speeltijd. [regular] is de terugval als de server
+  /// `regular_periods` niet meestuurt.
+  int? extraPeriod(int regular) {
+    final base = regularPeriods > 0 ? regularPeriods : regular;
+    if (!extraTime || period <= base) return null;
+    return period - base;
+  }
+
   /// `07:42`: minuten en seconden van de gelopen tijd.
   String mmssAt(DateTime now) {
     final secs = secondsAt(now);
@@ -82,6 +111,51 @@ abstract class LiveClock with _$LiveClock {
     final ss = (secs % 60).toString().padLeft(2, '0');
     return '$mm:$ss';
   }
+}
+
+/// Eén schot in de strafschoppenserie. [player] alleen bij ons, en alleen
+/// als de nemer is ingevuld.
+@freezed
+abstract class LiveShootoutKick with _$LiveShootoutKick {
+  const factory LiveShootoutKick({
+    @Default(false) bool scored,
+    String? player,
+  }) = _LiveShootoutKick;
+
+  factory LiveShootoutKick.fromJson(Map<String, dynamic> json) =>
+      _$LiveShootoutKickFromJson(json);
+}
+
+/// De strafschoppenserie (`event.live.shootout`, `lib/shootout.ts` in de
+/// PWA): per kant de schoten op volgorde, `us`/`opp` (niet thuis/uit).
+/// [winner] is `us` of `opp` zodra de serie beslist is.
+@freezed
+abstract class LiveShootout with _$LiveShootout {
+  const factory LiveShootout({
+    @Default(<LiveShootoutKick>[]) List<LiveShootoutKick> us,
+    @Default(<LiveShootoutKick>[]) List<LiveShootoutKick> opp,
+    String? winner,
+  }) = _LiveShootout;
+
+  const LiveShootout._();
+
+  factory LiveShootout.fromJson(Map<String, dynamic> json) =>
+      _$LiveShootoutFromJson(json);
+
+  /// Eerst vijf per kant, daarna sudden death.
+  static const int rounds = 5;
+
+  /// Raak geschoten door ons.
+  int get usScore => us.where((k) => k.scored).length;
+
+  /// Raak geschoten door de tegenstander.
+  int get oppScore => opp.where((k) => k.scored).length;
+
+  bool get hasKicks => us.isNotEmpty || opp.isNotEmpty;
+
+  /// Hoeveel bolletjes per rij: minstens vijf, daarna zoveel als er genomen
+  /// zijn.
+  int get slots => [rounds, us.length, opp.length].reduce(math.max);
 }
 
 /// Een setstand (`event.sets[]`) bij een set-scoremodel.
@@ -147,6 +221,19 @@ abstract class LiveTypeOption with _$LiveTypeOption {
       _$LiveTypeOptionFromJson(json);
 }
 
+/// De verlenging die de sport kent (`rules.extra_time`): `2 × 15` bij
+/// voetbal.
+@freezed
+abstract class LiveExtraTime with _$LiveExtraTime {
+  const factory LiveExtraTime({
+    @Default(2) int count,
+    @Default(15) int minutes,
+  }) = _LiveExtraTime;
+
+  factory LiveExtraTime.fromJson(Map<String, dynamic> json) =>
+      _$LiveExtraTimeFromJson(json);
+}
+
 /// Wat de knoppenbalk mag aanbieden (`rules`).
 @freezed
 abstract class LiveRules with _$LiveRules {
@@ -156,6 +243,12 @@ abstract class LiveRules with _$LiveRules {
     LivePeriods? periods,
     @Default(<LiveTypeOption>[]) List<LiveTypeOption> cardTypes,
     @Default(<LiveTypeOption>[]) List<LiveTypeOption> momentTypes,
+
+    /// De verlenging bij een gelijke beker, of `null` (sport kent die niet).
+    LiveExtraTime? extraTime,
+
+    /// Beslist de sport een gelijke beker met strafschoppen?
+    @Default(false) bool hasShootout,
   }) = _LiveRules;
 
   factory LiveRules.fromJson(Map<String, dynamic> json) =>
@@ -229,9 +322,17 @@ abstract class LiveMoment with _$LiveMoment {
     @Default(0) int minute,
     @Default('') String type,
     @Default('') String label,
+
+    /// `us` of `opp`; bij `opp` is [player] de naam van de tegenstander.
+    @Default('us') String side,
     String? player,
     @Default(0) int createdAt,
   }) = _LiveMoment;
+
+  const LiveMoment._();
+
+  /// Van ons (anders van de tegenstander).
+  bool get isOurs => side != 'opp';
 
   factory LiveMoment.fromJson(Map<String, dynamic> json) =>
       _$LiveMomentFromJson(json);
@@ -352,6 +453,29 @@ abstract class LiveMatch with _$LiveMatch {
       _$LiveMatchFromJson(json);
 
   LiveClock get clock => event.live;
+
+  /// Staat het gelijk op het bord (met een ingevulde stand)?
+  bool get isTied =>
+      event.homeScore != null && event.homeScore == event.awayScore;
+
+  /// De naam van de tegenstander, of `null` als die er niet is.
+  String? get opponentName => event.weAreHome ? event.awayTeam : event.homeTeam;
+
+  /// Een gelijke beker beslissen kan nu: na de eindfluit, gelijk, de sport
+  /// kent strafschoppen en er is nog geen serie (`Event::canBeDecided()`;
+  /// [isCup] komt uit het event-detail, de live-stand kent de competitie
+  /// niet).
+  bool canDecide({required bool isCup}) =>
+      isCup &&
+      clock.isEnded &&
+      isTied &&
+      rules.hasShootout &&
+      clock.shootout == null;
+
+  /// Verlenging aanbieden: als [canDecide], de sport kent hem en hij is nog
+  /// niet gespeeld.
+  bool canStartExtraTime({required bool isCup}) =>
+      canDecide(isCup: isCup) && rules.extraTime != null && !clock.extraTime;
 
   /// Staat er al iets in het verslag?
   bool get hasEntries =>

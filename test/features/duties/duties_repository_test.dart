@@ -1,6 +1,7 @@
 import 'package:assistje/core/api/api_client.dart';
 import 'package:assistje/core/api/api_exception.dart';
 import 'package:assistje/features/duties/data/duties_repository.dart';
+import 'package:assistje/features/duties/data/models/duties_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_http_adapter.dart';
@@ -106,7 +107,7 @@ void main() {
   test('beurten inplannen: individueel op wedstrijden', () async {
     http.on('POST /teams/3/duties/assignments', 201, DutiesFixtures.stored());
 
-    final all = await repository.storeAssignments(
+    final result = await repository.storeAssignments(
       3,
       const DutyAssignmentDraft(
         dutyTypeId: 3,
@@ -128,7 +129,82 @@ void main() {
         {'event_id': 815},
       ],
     });
-    expect(all.single.id, 120);
+    expect(result.assignments.single.id, 120);
+    expect(result.message, 'Toewijzing aangemaakt.');
+  });
+
+  test('beurten inplannen: één of meer personen met member_keys', () async {
+    http.on(
+      'POST /teams/3/duties/assignments',
+      201,
+      DutiesFixtures.stored(message: '2 mensen ingedeeld.'),
+    );
+
+    final result = await repository.storeAssignments(
+      3,
+      const DutyAssignmentDraft(
+        dutyTypeId: 5,
+        mode: 'multi',
+        memberKeys: ['p_18', 'p_17'],
+        // Genegeerd buiten `individual`.
+        memberKey: 'p_99',
+        dates: [DutyDateRow(eventId: 812)],
+      ),
+    );
+
+    expect(http.requests.single.body, {
+      'duty_type_id': 5,
+      'mode': 'multi',
+      'member_keys': ['p_18', 'p_17'],
+      'dates': [
+        {'event_id': 812},
+      ],
+    });
+    expect(result.message, '2 mensen ingedeeld.');
+  });
+
+  test('leest het dienstenoverzicht voor elk teamlid', () async {
+    http.on('GET /teams/3/duty-overview', 200, DutiesFixtures.overview());
+
+    final o = await repository.fetchOverview(3);
+
+    final mine = o.mine.single;
+    expect(mine.dutyId, 120);
+    expect(mine.eventId, 812);
+    expect(mine.matchBound, isTrue);
+    expect(mine.date, '2026-11-08T00:00:00+01:00');
+    expect(mine.playerNames, ['Sam de Vries', 'Bram Visser']);
+    expect(mine.mine, isTrue);
+    expect(mine.eventLabel, 'Kraaien 1 – Vogels 3');
+    expect(o.duties.map((t) => t.mode), ['multi', 'group']);
+    expect(o.duties.first.upcomingTotal, 10);
+    expect(o.duties.first.more, 9);
+    expect(o.duties.last.more, 0);
+    expect(o.duties.last.upcoming.single.eventId, isNull);
+    expect(o.duties.last.groups.first.members, ['Bram Visser', 'Sam de Vries']);
+    expect(o.duties.last.groups.first.mine, isTrue);
+  });
+
+  test('model: één-of-meer plant personen en verdeelt niet automatisch', () {
+    final multi = DutiesOverview.fromJson(
+      DutiesFixtures.multi()['data'] as Map<String, dynamic>,
+    );
+    expect(multi.isMulti, isTrue);
+    expect(multi.isIndividual, isFalse);
+    expect(multi.assignsPeople, isTrue);
+    expect(multi.canAutoAssign, isFalse);
+
+    final single = DutiesOverview.fromJson(
+      DutiesFixtures.individual()['data'] as Map<String, dynamic>,
+    );
+    expect(single.assignsPeople, isTrue);
+    expect(single.canAutoAssign, isTrue);
+
+    final groups = DutiesOverview.fromJson(
+      DutiesFixtures.groups()['data'] as Map<String, dynamic>,
+    );
+    expect(groups.assignsPeople, isFalse);
+    expect(groups.canAutoAssign, isFalse);
   });
 
   test('beurten inplannen: vaste groep op datums met tijden', () async {

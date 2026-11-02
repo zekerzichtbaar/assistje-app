@@ -85,6 +85,10 @@ abstract class LiveState with _$LiveState {
     DateTime? endedAt,
     @Default(1) int period,
     @Default(<int>[]) List<int> periodEnds,
+
+    /// Wat er achter een afgelopen uitslag hoort: `n.v.` of `4–3 n.s.`
+    /// (thuis–uit), anders `null`.
+    String? resultSuffix,
   }) = _LiveState;
 
   const LiveState._();

@@ -287,7 +287,9 @@ as int,
 /// @nodoc
 mixin _$LiveState {
 
- bool get isLive; bool get running; DateTime? get startedAt; int get accumulatedSeconds; DateTime? get endedAt; int get period; List<int> get periodEnds;
+ bool get isLive; bool get running; DateTime? get startedAt; int get accumulatedSeconds; DateTime? get endedAt; int get period; List<int> get periodEnds;/// Wat er achter een afgelopen uitslag hoort: `n.v.` of `4–3 n.s.`
+/// (thuis–uit), anders `null`.
+ String? get resultSuffix;
 /// Create a copy of LiveState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +302,16 @@ $LiveStateCopyWith<LiveState> get copyWith => _$LiveStateCopyWithImpl<LiveState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveState&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other.periodEnds, periodEnds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveState&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other.periodEnds, periodEnds)&&(identical(other.resultSuffix, resultSuffix) || other.resultSuffix == resultSuffix));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(periodEnds));
+int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(periodEnds),resultSuffix);
 
 @override
 String toString() {
-  return 'LiveState(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds)';
+  return 'LiveState(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds, resultSuffix: $resultSuffix)';
 }
 
 
@@ -320,7 +322,7 @@ abstract mixin class $LiveStateCopyWith<$Res>  {
   factory $LiveStateCopyWith(LiveState value, $Res Function(LiveState) _then) = _$LiveStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds
+ bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds, String? resultSuffix
 });
 
 
@@ -337,7 +339,7 @@ class _$LiveStateCopyWithImpl<$Res>
 
 /// Create a copy of LiveState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,Object? resultSuffix = freezed,}) {
   return _then(_self.copyWith(
 isLive: null == isLive ? _self.isLive : isLive // ignore: cast_nullable_to_non_nullable
 as bool,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
@@ -346,7 +348,8 @@ as DateTime?,accumulatedSeconds: null == accumulatedSeconds ? _self.accumulatedS
 as int,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as int,periodEnds: null == periodEnds ? _self.periodEnds : periodEnds // ignore: cast_nullable_to_non_nullable
-as List<int>,
+as List<int>,resultSuffix: freezed == resultSuffix ? _self.resultSuffix : resultSuffix // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -431,10 +434,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  String? resultSuffix)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveState() when $default != null:
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.resultSuffix);case _:
   return orElse();
 
 }
@@ -452,10 +455,10 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  String? resultSuffix)  $default,) {final _that = this;
 switch (_that) {
 case _LiveState():
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.resultSuffix);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -472,10 +475,10 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  String? resultSuffix)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveState() when $default != null:
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.resultSuffix);case _:
   return null;
 
 }
@@ -487,7 +490,7 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 @JsonSerializable()
 
 class _LiveState extends LiveState {
-  const _LiveState({this.isLive = false, this.running = false, this.startedAt, this.accumulatedSeconds = 0, this.endedAt, this.period = 1, final  List<int> periodEnds = const <int>[]}): _periodEnds = periodEnds,super._();
+  const _LiveState({this.isLive = false, this.running = false, this.startedAt, this.accumulatedSeconds = 0, this.endedAt, this.period = 1, final  List<int> periodEnds = const <int>[], this.resultSuffix}): _periodEnds = periodEnds,super._();
   factory _LiveState.fromJson(Map<String, dynamic> json) => _$LiveStateFromJson(json);
 
 @override@JsonKey() final  bool isLive;
@@ -503,6 +506,9 @@ class _LiveState extends LiveState {
   return EqualUnmodifiableListView(_periodEnds);
 }
 
+/// Wat er achter een afgelopen uitslag hoort: `n.v.` of `4–3 n.s.`
+/// (thuis–uit), anders `null`.
+@override final  String? resultSuffix;
 
 /// Create a copy of LiveState
 /// with the given fields replaced by the non-null parameter values.
@@ -517,16 +523,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveState&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other._periodEnds, _periodEnds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveState&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other._periodEnds, _periodEnds)&&(identical(other.resultSuffix, resultSuffix) || other.resultSuffix == resultSuffix));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(_periodEnds));
+int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(_periodEnds),resultSuffix);
 
 @override
 String toString() {
-  return 'LiveState(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds)';
+  return 'LiveState(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds, resultSuffix: $resultSuffix)';
 }
 
 
@@ -537,7 +543,7 @@ abstract mixin class _$LiveStateCopyWith<$Res> implements $LiveStateCopyWith<$Re
   factory _$LiveStateCopyWith(_LiveState value, $Res Function(_LiveState) _then) = __$LiveStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds
+ bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds, String? resultSuffix
 });
 
 
@@ -554,7 +560,7 @@ class __$LiveStateCopyWithImpl<$Res>
 
 /// Create a copy of LiveState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,Object? resultSuffix = freezed,}) {
   return _then(_LiveState(
 isLive: null == isLive ? _self.isLive : isLive // ignore: cast_nullable_to_non_nullable
 as bool,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
@@ -563,7 +569,8 @@ as DateTime?,accumulatedSeconds: null == accumulatedSeconds ? _self.accumulatedS
 as int,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as int,periodEnds: null == periodEnds ? _self._periodEnds : periodEnds // ignore: cast_nullable_to_non_nullable
-as List<int>,
+as List<int>,resultSuffix: freezed == resultSuffix ? _self.resultSuffix : resultSuffix // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

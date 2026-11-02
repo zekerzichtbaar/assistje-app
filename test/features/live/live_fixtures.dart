@@ -30,6 +30,58 @@ abstract final class LiveFixtures {
     ],
   };
 
+  /// Voetbal zoals de server hem nu stuurt: de nieuwe momenten, verlenging
+  /// `2 × 15` en strafschoppen.
+  static Map<String, dynamic> cupRules() => {
+    ...footballRules(),
+    'moment_types': [
+      {'type': 'penalty_awarded', 'label': 'Penalty toegekend'},
+      {'type': 'penalty_missed', 'label': 'Penalty gemist'},
+      {'type': 'penalty_saved', 'label': 'Penalty gestopt'},
+      {'type': 'post', 'label': 'Schot op de paal'},
+      {'type': 'crossbar', 'label': 'Schot op de lat'},
+      {'type': 'big_chance', 'label': 'Grote kans'},
+    ],
+    'extra_time': {'count': 2, 'minutes': 15},
+    'has_shootout': true,
+  };
+
+  /// Een strafschoppenserie: [us]/[opp] als raak (`true`) of mis.
+  static Map<String, dynamic> shootout({
+    List<bool> us = const [],
+    List<bool> opp = const [],
+    List<String?>? players,
+    String? winner,
+  }) => {
+    'us': [
+      for (var i = 0; i < us.length; i++)
+        {
+          'scored': us[i],
+          'player': players != null && i < players.length ? players[i] : null,
+        },
+    ],
+    'opp': [
+      for (final scored in opp) {'scored': scored},
+    ],
+    'winner': winner,
+  };
+
+  /// Afgefloten (na 90 minuten, of na verlenging met [extraTime]).
+  static Map<String, dynamic> ended({
+    bool extraTime = false,
+    Map<String, dynamic>? shootout,
+    String? resultSuffix,
+  }) => clock(
+    isLive: false,
+    seconds: (extraTime ? 120 : 90) * 60,
+    endedAt: '2026-10-11T16:20:51+02:00',
+    period: extraTime ? 4 : 2,
+    periodEnds: extraTime ? const [45, 90, 105, 120] : const [45, 90],
+    extraTime: extraTime,
+    shootout: shootout,
+    resultSuffix: resultSuffix,
+  );
+
   static Map<String, dynamic> hockeyRules() => {
     'score_model': 'goals',
     'tracks_scorers': true,
@@ -55,6 +107,10 @@ abstract final class LiveFixtures {
     String? endedAt,
     int period = 1,
     List<int> periodEnds = const [45, 90],
+    int regularPeriods = 2,
+    bool extraTime = false,
+    Map<String, dynamic>? shootout,
+    String? resultSuffix,
   }) => {
     'is_live': isLive,
     'running': running,
@@ -63,6 +119,10 @@ abstract final class LiveFixtures {
     'ended_at': endedAt,
     'period': period,
     'period_ends': periodEnds,
+    'regular_periods': regularPeriods,
+    'extra_time': extraTime,
+    'shootout': shootout,
+    'result_suffix': resultSuffix,
   };
 
   static Map<String, dynamic> goal({
@@ -106,14 +166,22 @@ abstract final class LiveFixtures {
     'created_at': 1760187252000,
   };
 
-  static Map<String, dynamic> moment({int id = 1841, int minute = 35}) => {
+  static Map<String, dynamic> moment({
+    int id = 1841,
+    int minute = 35,
+    String type = 'woodwork',
+    String label = 'Paal of lat',
+    String side = 'us',
+    String? player,
+  }) => {
     'id': id,
     'item_key': 'm$id',
     'minute': minute,
-    'type': 'woodwork',
-    'label': 'Paal of lat',
-    'player': null,
-    'created_at': 1760187372000,
+    'type': type,
+    'label': label,
+    'side': side,
+    'player': player,
+    'created_at': 1760187372000 + id,
   };
 
   static Map<String, dynamic> pickers() => {
@@ -189,6 +257,7 @@ abstract final class LiveFixtures {
     Map<String, dynamic>? live,
     int? homeScore = 1,
     int? awayScore = 0,
+    bool weAreHome = true,
     String startsAt = '2026-10-11T14:30:00+02:00',
     List<Map<String, dynamic>>? goals,
     List<Map<String, dynamic>>? subs,
@@ -207,6 +276,7 @@ abstract final class LiveFixtures {
       live: live,
       homeScore: homeScore,
       awayScore: awayScore,
+      weAreHome: weAreHome,
       startsAt: startsAt,
       goals: goals,
       subs: subs,

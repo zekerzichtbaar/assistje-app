@@ -24,6 +24,18 @@
   "@notificationsDeleteFailed": {
     "description": "Toast als weghalen mislukt (bv. demo-team)"
   },
+  "notificationsDeleteAll": "Alles verwijderen",
+  "@notificationsDeleteAll": {
+    "description": "Prullenbak bovenaan de inbox (tooltip/schermlezer): alle meldingen van dit team weghalen"
+  },
+  "notificationsDeleteAllConfirm": "Alle meldingen verwijderen?",
+  "@notificationsDeleteAllConfirm": {
+    "description": "Bevestigingsvraag voor alles verwijderen"
+  },
+  "notificationsDeleteAllConfirmOk": "Verwijder alles",
+  "@notificationsDeleteAllConfirmOk": {
+    "description": "Destructieve knop in de bevestiging voor alles verwijderen"
+  },
   "notificationsDeleteAction": "Verwijderen",
   "@notificationsDeleteAction": {
     "description": "Label onder de veeg-achtergrond / schermlezer-actie"

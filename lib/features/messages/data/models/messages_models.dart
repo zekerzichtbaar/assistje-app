@@ -118,6 +118,10 @@ abstract class MessagesOverview with _$MessagesOverview {
     @Default(<AutoMessageSetting>[]) List<AutoMessageSetting> autoSettings,
     @Default(<AutoHistoryEntry>[]) List<AutoHistoryEntry> autoHistory,
     @Default(<LinkTargetGroup>[]) List<LinkTargetGroup> linkTargets,
+
+    /// Hoeveel toeschouwers het team heeft; bij `0` valt er bij
+    /// `include_spectators` niets te kiezen.
+    @Default(0) int spectatorsCount,
   }) = _MessagesOverview;
 
   const MessagesOverview._();

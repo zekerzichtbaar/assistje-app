@@ -49,7 +49,7 @@ class NotificationsState {
 }
 
 /// De inbox van team [teamId]: laden, verversen, doorbladeren (`?page=`),
-/// als gelezen markeren (één of alles) en weghalen — alles optimistisch, met
+/// als gelezen markeren (één of alles) en weghalen (één of alles) — alles optimistisch, met
 /// terugdraaien bij een fout. Methodes geven de fout terug (of `null`).
 ///
 /// Na een geslaagde wijziging wordt [meProvider] ververst, zodat
@@ -242,6 +242,30 @@ class NotificationsController extends AsyncNotifier<NotificationsState> {
           ),
         );
       }
+      return error;
+    }
+  }
+
+  /// Maakt de inbox van dit team leeg. De lijst is meteen leeg; bij een
+  /// fout komt alles (met paginering en telling) terug zoals het stond.
+  Future<Object?> deleteAll() async {
+    final current = state.value;
+    if (current == null) return null;
+    state = AsyncData(
+      current.copyWith(
+        items: const [],
+        page: 1,
+        lastPage: 1,
+        total: 0,
+        unreadCount: 0,
+      ),
+    );
+    try {
+      await _repository.deleteAll(teamId);
+      _refreshBell();
+      return null;
+    } on Object catch (error) {
+      state = AsyncData(current);
       return error;
     }
   }

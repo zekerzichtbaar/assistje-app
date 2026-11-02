@@ -45,6 +45,12 @@ abstract class SavingsPotSummary with _$SavingsPotSummary {
     @Default(1) int months,
     @Default(0) int memberCount,
     @Default(0) int savedCents,
+
+    /// Afvinklijst zonder geld: de voortgang is [checkedCount].
+    @Default(false) bool withoutAmount,
+
+    /// Aantal afgevinkte cellen (terugbetaald telt niet).
+    @Default(0) int checkedCount,
   }) = _SavingsPotSummary;
 
   const SavingsPotSummary._();
@@ -57,6 +63,16 @@ abstract class SavingsPotSummary with _$SavingsPotSummary {
 
   /// Percentage van het doel (0–100), of `null` zonder doel.
   int? get goalPercent => savingsPercent(savedCents, goalCents);
+
+  /// Zonder bedrag: alle vakjes (deelnemers × maanden).
+  int get cellsTotal => memberCount * months;
+
+  /// Zonder bedrag: percentage afgevinkte vakjes (0–100), of `null` zonder
+  /// vakjes.
+  int? get checkedPercent => savingsPercent(checkedCount, cellsTotal);
+
+  /// De voortgangsbalk: vinkjes bij een afvinklijst, anders het doel.
+  int? get progressPercent => withoutAmount ? checkedPercent : goalPercent;
 }
 
 /// `GET /teams/{team}/savings`.
@@ -93,6 +109,9 @@ abstract class SavingsPot with _$SavingsPot {
     required int id,
     @Default('') String name,
     @Default(0) int amountCents,
+
+    /// Afvinklijst zonder geld: geen bedrag, geen doel, geen afrekening.
+    @Default(false) bool withoutAmount,
     int? goalCents,
     @Default(1) int months,
     DateTime? startsOn,
@@ -216,9 +235,17 @@ abstract class SavingsPotDetail with _$SavingsPotDetail {
   /// Aantal cellen in de matrix.
   int get cellsTotal => participants.length * periods.length;
 
+  /// Zonder bedrag: hoeveel vinkjes deelnemer [key] heeft.
+  int rowChecks(String key) => payments.where((p) => p.key == key).length;
+
+  /// Zonder bedrag: hoeveel vinkjes er in maand [ym] staan.
+  int columnChecks(String ym) => payments.where((p) => p.ym == ym).length;
+
   /// Percentage voor de ring: van het doel, of zonder doel van de vakjes.
   int? get ringPercent {
-    final goal = savingsPercent(savedCents, pot.goalCents);
+    final goal = pot.withoutAmount
+        ? null
+        : savingsPercent(savedCents, pot.goalCents);
     if (goal != null) return goal;
     if (pot.oneOff) {
       final n = counting.length;
@@ -250,8 +277,11 @@ abstract class SavingsPotDetail with _$SavingsPotDetail {
   }
 
   /// Toont het detail een afrekenblok?
+  /// Een afvinklijst reken je niet af.
   bool get showsSettle =>
-      (pot.oneOff || pot.event != null) && (canManage || pot.isSettled);
+      !pot.withoutAmount &&
+      (pot.oneOff || pot.event != null) &&
+      (canManage || pot.isSettled);
 
   /// Kan de penningmeester een herinnering sturen?
   bool get canRemind => canManage && counting.isNotEmpty && !pot.isCancelled;
@@ -318,7 +348,10 @@ abstract class SavingsFormValues with _$SavingsFormValues {
     @Default(SavingsScope.all)
     SavingsScope scope,
     @Default(false) bool includeGuests,
-    @Default(0) num amount,
+
+    /// Afvinklijst zonder geld; [amount] is dan `null`.
+    @Default(false) bool withoutAmount,
+    num? amount,
     num? goal,
     @Default('') String startMonth,
     @Default(1) int months,

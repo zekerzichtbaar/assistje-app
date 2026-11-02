@@ -96,6 +96,10 @@ abstract class EventSavingsPot with _$EventSavingsPot {
     required int id,
     @Default('') String name,
     @Default(0) int amountCents,
+
+    /// Afvinklijst zonder geld (`amount_cents`/`open_cents` dan `0`,
+    /// `paid_count` = afgevinkt).
+    @Default(false) bool withoutAmount,
     @Default(true) bool oneOff,
     @Default(0) int paidCount,
     @Default(0) int participantCount,

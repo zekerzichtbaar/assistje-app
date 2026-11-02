@@ -116,6 +116,70 @@ void main() {
     expect(http.requestsTo('POST /teams/3/savings/3/payments/toggle'), isEmpty);
   });
 
+  testWidgets('afvinklijst: vinkjes in plaats van geld, geen afrekening', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      membership: _treasurer,
+      overview: SavingsFixtures.overview(
+        canManage: true,
+        pots: [SavingsFixtures.checklistRow()..['id'] = 12],
+      ),
+      setup: (http) => http.on(
+        'GET /teams/3/savings/12',
+        200,
+        SavingsFixtures.checklistDetail(),
+      ),
+    );
+
+    expect(_text(tester, 'savings-pot-12-meta'), '4 · afvinklijst · 3 mnd');
+    expect(_text(tester, 'savings-pot-12-saved'), '3 van 12');
+    expect(_text(tester, 'savings-pot-12-goal'), 'afgevinkt · 25%');
+
+    await _tap(tester, find.byKey(const ValueKey('savings-pot-12')));
+    expect(_text(tester, 'savings-card-saved'), '1 van 3');
+    expect(_text(tester, 'savings-card-line'), 'afgevinkt');
+    expect(_text(tester, 'savings-ring'), '33%');
+    expect(find.text('AFGEVINKT'), findsOneWidget);
+    expect(find.byKey(const ValueKey('savings-card-target')), findsNothing);
+    expect(_text(tester, 'savings-oneoff-footer'), '1 van 3 afgevinkt');
+    expect(find.byKey(const ValueKey('savings-settle')), findsNothing);
+    expect(find.text('Tik een vakje om iemand af te vinken.'), findsOneWidget);
+    expect(
+      find.text(
+        'Pushmelding via de app naar iedereen die nog niet afgevinkt is.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(RegExp(r"^Sam de Vries nov '26 afgevinkt$")),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('afvinklijst per maand: totalen tellen vinkjes', (tester) async {
+    await _open(
+      tester,
+      membership: _player,
+      overview: SavingsFixtures.overview(
+        pots: [SavingsFixtures.checklistRow()..['id'] = 12],
+      ),
+      setup: (http) => http.on(
+        'GET /teams/3/savings/12',
+        200,
+        SavingsFixtures.checklistDetail(canManage: false, oneOff: false),
+      ),
+    );
+
+    await _tap(tester, find.byKey(const ValueKey('savings-pot-12')));
+    expect(_text(tester, 'savings-card-saved'), '1 van 6');
+    expect(_text(tester, 'savings-row-total-p17'), '1');
+    expect(_text(tester, 'savings-col-total-2026-11'), '1');
+    expect(_text(tester, 'savings-grid-total'), '1');
+    expect(find.textContaining('€'), findsNothing);
+  });
+
   testWidgets('leeg overzicht voor een speler', (tester) async {
     await _open(
       tester,
@@ -407,6 +471,95 @@ void main() {
       expect(find.byKey(const ValueKey('savings-form-submit')), findsOneWidget);
     });
 
+    testWidgets('zonder bedrag: schakelaar verbergt bedrag en doel', (
+      tester,
+    ) async {
+      final (_, http) = await _open(
+        tester,
+        membership: _treasurer,
+        overview: SavingsFixtures.overview(canManage: true),
+        setup: (http) => http
+          ..on(
+            'GET /teams/3/savings/create',
+            200,
+            SavingsFixtures.createOptions(),
+          )
+          ..on('POST /teams/3/savings', 201, SavingsFixtures.pot9Response())
+          ..on('GET /teams/3/savings/9', 200, {
+            'data': {
+              'pot': SavingsFixtures.pot9Response()['data'],
+              'periods': ['2026-11'],
+              'participants': <Object>[],
+              'payments': <Object>[],
+              'can_manage': true,
+            },
+          }),
+      );
+
+      await _tap(tester, find.byKey(const ValueKey('savings-new')));
+      expect(find.text('Zonder bedrag'), findsOneWidget);
+      await _tap(
+        tester,
+        find.byKey(const ValueKey('savings-form-without-amount')),
+      );
+      expect(find.byKey(const ValueKey('savings-form-amount')), findsNothing);
+      expect(find.byKey(const ValueKey('savings-form-goal')), findsNothing);
+      // Per maand blijft het aantal maanden staan.
+      expect(find.byKey(const ValueKey('savings-form-months')), findsOneWidget);
+
+      await tester.enterText(
+        find.byKey(const ValueKey('savings-form-name')),
+        'Krat bier',
+      );
+      await tester.enterText(
+        find.byKey(const ValueKey('savings-form-months')),
+        '3',
+      );
+      await _tap(tester, find.byKey(const ValueKey('savings-form-submit')));
+
+      final body =
+          http.requestsTo('POST /teams/3/savings').single.body!
+              as Map<String, dynamic>;
+      expect(body['name'], 'Krat bier');
+      expect(body['without_amount'], isTrue);
+      expect(body['amount'], isNull);
+      expect(body['goal'], isNull);
+      expect(body['months'], 3);
+    });
+
+    testWidgets('bewerken van een afvinklijst: schakelaar aan, geen bedrag', (
+      tester,
+    ) async {
+      await _open(
+        tester,
+        membership: _treasurer,
+        overview: SavingsFixtures.overview(
+          canManage: true,
+          pots: [SavingsFixtures.checklistRow()..['id'] = 13],
+        ),
+        setup: (http) => http
+          ..on('GET /teams/3/savings/13', 200, {
+            'data': {
+              ...SavingsFixtures.checklistDetail(oneOff: false)['data']
+                  as Map<String, dynamic>,
+            },
+          })
+          ..on(
+            'GET /teams/3/savings/13/edit',
+            200,
+            SavingsFixtures.checklistEditOptions(),
+          ),
+      );
+
+      await _tap(tester, find.byKey(const ValueKey('savings-pot-13')));
+      await _tap(tester, find.byKey(const ValueKey('savings-edit')));
+      final toggle = tester.widget<Switch>(
+        find.byKey(const ValueKey('savings-form-without-amount')),
+      );
+      expect(toggle.value, isTrue);
+      expect(find.byKey(const ValueKey('savings-form-amount')), findsNothing);
+    });
+
     testWidgets('bewerken (PATCH) en archiveren (DELETE)', (tester) async {
       final (_, http) = await _open(
         tester,
@@ -444,6 +597,7 @@ void main() {
         'name': 'Weekendje weg',
         'scope': 'custom',
         'include_guests': false,
+        'without_amount': false,
         'amount': 12.5,
         'goal': 300,
         'start_month': '2026-12',

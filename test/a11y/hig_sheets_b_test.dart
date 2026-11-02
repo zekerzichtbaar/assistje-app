@@ -136,8 +136,12 @@ final _sheets = <AuditScreen>[
   AuditScreen(
     '/messages',
     label: 'opstellen',
-    setup: (h) =>
-        h.on('GET /teams/3/messages', 200, MessagesFixtures.overview()),
+    // Met toeschouwers, zodat de schakelaar "Ook naar toeschouwers" meedoet.
+    setup: (h) => h.on(
+      'GET /teams/3/messages',
+      200,
+      MessagesFixtures.overview(spectators: 3),
+    ),
     open: _taps(['messages-compose']),
   ),
   AuditScreen(
@@ -233,6 +237,22 @@ final _sheets = <AuditScreen>[
       if (tab.evaluate().isEmpty) return;
       await auditTap(t, tab);
       await _taps(['settings-duty-add'])(t);
+    },
+  ),
+  AuditScreen(
+    '/settings',
+    label: 'dienst bij wedstrijd',
+    // Bestaand type met scope `match`: ook "Alleen uitwedstrijden" en de beurt.
+    setup: (h) =>
+        h.on('GET /teams/3/settings', 200, SettingsFixtures.response()),
+    open: (t) async {
+      final tab = find.descendant(
+        of: find.byKey(const ValueKey('settings-tabs')),
+        matching: find.text('Diensten'),
+      );
+      if (tab.evaluate().isEmpty) return;
+      await auditTap(t, tab);
+      await _taps(['settings-duty-12'])(t);
     },
   ),
   // Stats en ranking.

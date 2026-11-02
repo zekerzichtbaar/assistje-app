@@ -112,6 +112,20 @@ class LiveRepository {
   Future<LiveMatch> reset(int teamId, int eventId) =>
       _clock(teamId, eventId, 'reset', null);
 
+  /// De klok gelijkzetten tijdens de wedstrijd ([minute] 0–120, [second]
+  /// 0–59); het speeldeel blijft wat het was.
+  Future<LiveMatch> setClock(
+    int teamId,
+    int eventId, {
+    required int minute,
+    int? second,
+  }) => _clock(teamId, eventId, 'clock', {'minute': minute, 'second': ?second});
+
+  /// Verlenging starten (gelijke beker na de eindfluit); de klok staat
+  /// daarna stil op het einde van de reguliere speeltijd.
+  Future<LiveMatch> extraTime(int teamId, int eventId) =>
+      _clock(teamId, eventId, 'extra-time', null);
+
   Future<LiveMatch> _clock(
     int teamId,
     int eventId,
@@ -123,6 +137,42 @@ class LiveRepository {
       data: body == null || body.isEmpty ? null : body,
     ),
   );
+
+  // ── Strafschoppen ───────────────────────────────────────────────────────
+
+  static String _shootout(int teamId, int eventId) =>
+      '${_event(teamId, eventId)}/shootout';
+
+  /// De strafschoppenserie starten.
+  Future<LiveMatch> startShootout(int teamId, int eventId) async =>
+      _match(await _api.post(_shootout(teamId, eventId)));
+
+  /// Eén schot van [side] (`us`/`opp`); [playerId] (de nemer) alleen bij
+  /// ons, de server negeert hem bij `opp`.
+  Future<LiveMatch> shootoutKick(
+    int teamId,
+    int eventId, {
+    required String side,
+    required bool scored,
+    int? playerId,
+  }) async => _match(
+    await _api.post(
+      '${_shootout(teamId, eventId)}/kicks',
+      data: {
+        'side': side,
+        'scored': scored,
+        'player_id': side == 'us' ? playerId : null,
+      },
+    ),
+  );
+
+  /// Het laatst geregistreerde schot terug (van welke kant ook).
+  Future<LiveMatch> undoShootoutKick(int teamId, int eventId) async =>
+      _match(await _api.delete('${_shootout(teamId, eventId)}/kicks/last'));
+
+  /// De hele serie wissen.
+  Future<LiveMatch> clearShootout(int teamId, int eventId) async =>
+      _match(await _api.delete(_shootout(teamId, eventId)));
 
   // ── Tijdlijn ────────────────────────────────────────────────────────────
 
@@ -185,17 +235,24 @@ class LiveRepository {
   Future<LiveMatch> deleteCard(int teamId, int eventId, int cardId) async =>
       _match(await _api.delete('${_event(teamId, eventId)}/cards/$cardId'));
 
-  /// Een moment van soort [type] (uit `rules.moment_types`), speler optioneel.
+  /// Een moment van soort [type] (uit `rules.moment_types`), speler
+  /// optioneel. Van de tegenstander ([opponent]) gaat zonder speler: die
+  /// combinatie weigert de server.
   Future<LiveMatch> addMoment(
     int teamId,
     int eventId, {
     required int minute,
     required String type,
     int? playerId,
+    bool opponent = false,
   }) async => _match(
     await _api.post(
       '${_event(teamId, eventId)}/moments',
-      data: {'minute': minute, 'type': type, 'player_id': playerId},
+      data: {
+        'minute': minute,
+        'type': type,
+        if (opponent) 'opponent': true else 'player_id': playerId,
+      },
     ),
   );
 

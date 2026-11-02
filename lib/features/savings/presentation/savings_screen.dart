@@ -208,8 +208,20 @@ class _PotTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
     final amount = formatCents(pot.amountCents);
-    final pct = pot.goalPercent;
+    final pct = pot.progressPercent;
     final goal = pot.goalCents;
+    // Een afvinklijst: geen geld, de voortgang is het aantal vinkjes.
+    final noMoney = pot.withoutAmount;
+    final String meta;
+    if (noMoney) {
+      meta = pot.isOneOff
+          ? l10n.savingsListChecklist
+          : l10n.savingsListChecklistMonths(pot.months);
+    } else {
+      meta = pot.isOneOff
+          ? l10n.savingsListOneOff(amount)
+          : l10n.savingsListMonthly(amount, '${pot.months}');
+    }
 
     return AppCard(
       key: ValueKey('savings-pot-${pot.id}'),
@@ -229,8 +241,10 @@ class _PotTile extends StatelessWidget {
                     color: StatusColors.emerald500.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    PhosphorIconsDuotone.piggyBank,
+                  child: Icon(
+                    noMoney
+                        ? PhosphorIconsDuotone.checkSquare
+                        : PhosphorIconsDuotone.piggyBank,
                     size: 22,
                     color: StatusColors.emerald600,
                   ),
@@ -264,8 +278,7 @@ class _PotTile extends StatelessWidget {
                           const SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              '${pot.memberCount} · '
-                              '${pot.isOneOff ? l10n.savingsListOneOff(amount) : l10n.savingsListMonthly(amount, '${pot.months}')}',
+                              '${pot.memberCount} · $meta',
                               key: ValueKey('savings-pot-${pot.id}-meta'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -293,7 +306,12 @@ class _PotTile extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        formatCents(pot.savedCents),
+                        noMoney
+                            ? l10n.savingsListCheckedOf(
+                                pot.checkedCount,
+                                pot.cellsTotal,
+                              )
+                            : formatCents(pot.savedCents),
                         key: ValueKey('savings-pot-${pot.id}-saved'),
                         style: TextStyle(
                           fontSize: 14,
@@ -304,7 +322,11 @@ class _PotTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      goal != null && pct != null
+                      noMoney
+                          ? (pct != null
+                                ? l10n.savingsListCheckedPercent(pct)
+                                : l10n.savingsListChecked)
+                          : goal != null && pct != null
                           ? l10n.savingsListOfGoal(formatCents(goal), '$pct')
                           : l10n.savingsListSaved,
                       key: ValueKey('savings-pot-${pot.id}-goal'),

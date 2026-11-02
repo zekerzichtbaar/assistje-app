@@ -139,6 +139,11 @@ const List<_Case> _notificationCases = [
     expected: '/events/12',
   ),
   (
+    notification: 'LiveShootoutNotification',
+    url: '/events/12',
+    expected: '/events/12',
+  ),
+  (
     notification: 'LiveStartedNotification',
     url: '/events/12',
     expected: '/events/12',

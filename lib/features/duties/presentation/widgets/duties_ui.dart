@@ -118,11 +118,15 @@ class DutiesCard extends StatelessWidget {
     required this.title,
     required this.child,
     this.count,
+    this.icon,
     this.actions = const [],
   });
 
   final String title;
   final int? count;
+
+  /// Optioneel icoon vóór de titel (het diensttype).
+  final IconData? icon;
   final List<Widget> actions;
   final Widget child;
 
@@ -140,6 +144,10 @@ class DutiesCard extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 44),
             child: Row(
               children: [
+                if (icon != null) ...[
+                  Icon(icon, size: 14, color: t.inkSoft),
+                  const SizedBox(width: 6),
+                ],
                 Expanded(
                   child: Semantics(
                     header: true,

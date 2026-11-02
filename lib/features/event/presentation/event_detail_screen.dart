@@ -277,6 +277,17 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     final guestsPresent = event.players
         .where((p) => p.isGuest && p.status == AttendanceStatus.present)
         .length;
+    // Bij een activiteit telt ook de staf mee: daar gaat het om wie er komt,
+    // niet om wie er kan spelen.
+    final staffPresent = event.type == EventType.activity
+        ? event.players
+              .where(
+                (p) =>
+                    p.kind == EventPlayerKind.staff &&
+                    p.status == AttendanceStatus.present,
+              )
+              .length
+        : 0;
 
     final children = <Widget>[
       if (manages) EventTrainerActions(eventKey: _key(teamId), event: event),
@@ -318,7 +329,12 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
             ),
           ),
         ),
-      EventResponsesCard(counts: event.counts, guestsPresent: guestsPresent),
+      EventResponsesCard(
+        counts: event.counts,
+        playerCounts: event.playerCounts,
+        guestsPresent: guestsPresent,
+        staffPresent: staffPresent,
+      ),
       if (event.type == EventType.activity)
         EventSavingsSection(
           pot: event.savingsPot,

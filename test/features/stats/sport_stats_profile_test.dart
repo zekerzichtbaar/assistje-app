@@ -55,6 +55,7 @@ void main() {
         StatsSort.attendanceTraining,
         StatsSort.matchesPlayed,
         StatsSort.minutes,
+        StatsSort.minutesPerMatch,
         StatsSort.goals,
         StatsSort.assists,
         StatsSort.flagMinutes,
@@ -98,6 +99,38 @@ void main() {
         sortStatsRows([sam, joris], StatsSort.assists).map((r) => r.playerId),
         [22, 14],
       );
+    });
+
+    test('minuten per wedstrijd: oplopend, zonder wedstrijd achteraan', () {
+      final never = StatsRow.fromJson(
+        StatsFixtures.samRow({
+          'player_id': 31,
+          'name': 'Bram',
+          'matches_present': 0,
+          'minutes_per_match': 0,
+        }),
+      );
+      expect(
+        sortStatsRows([
+          never,
+          sam,
+          joris,
+        ], StatsSort.minutesPerMatch).map((r) => r.playerId),
+        [22, 14, 31],
+      );
+      expect(statsSortAscending(StatsSort.minutesPerMatch), isTrue);
+      expect(statsSortPodium(StatsSort.minutesPerMatch), isFalse);
+      expect(statsSortPodium(StatsSort.minutes), isTrue);
+    });
+
+    test('ontbrekende velden: 0', () {
+      final row = StatsRow.fromJson(
+        StatsFixtures.samRow()
+          ..remove('matches_present')
+          ..remove('minutes_per_match'),
+      );
+      expect(row.matchesPresent, 0);
+      expect(row.minutesPerMatch, 0);
     });
 
     test('naam oplopend', () {

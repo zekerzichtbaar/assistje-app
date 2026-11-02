@@ -847,7 +847,8 @@ as bool,
 /// @nodoc
 mixin _$DutyTypeSetting {
 
-@JsonKey(fromJson: _int) int get id; String get name; String? get slug; String? get icon;@JsonKey(fromJson: _int) int get sortOrder;@JsonKey(unknownEnumValue: DutyMode.group) DutyMode get mode;@JsonKey(unknownEnumValue: DutyScope.free) DutyScope get scope;@JsonKey(fromJson: _bool) bool get autoRotate;@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? get onUnavailable;@JsonKey(fromJson: _strings) List<String> get pool;@JsonKey(fromJson: _strings) List<String> get poolMembers;
+@JsonKey(fromJson: _int) int get id; String get name; String? get slug; String? get icon;@JsonKey(fromJson: _int) int get sortOrder;@JsonKey(unknownEnumValue: DutyMode.group) DutyMode get mode;@JsonKey(unknownEnumValue: DutyScope.free) DutyScope get scope;/// Alleen bij uitwedstrijden (rijden); zegt niets bij [DutyScope.free].
+@JsonKey(fromJson: _bool) bool get awayOnly;@JsonKey(fromJson: _bool) bool get autoRotate;@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? get onUnavailable;@JsonKey(fromJson: _strings) List<String> get pool;@JsonKey(fromJson: _strings) List<String> get poolMembers;
 /// Create a copy of DutyTypeSetting
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -860,16 +861,16 @@ $DutyTypeSettingCopyWith<DutyTypeSetting> get copyWith => _$DutyTypeSettingCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DutyTypeSetting&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.autoRotate, autoRotate) || other.autoRotate == autoRotate)&&(identical(other.onUnavailable, onUnavailable) || other.onUnavailable == onUnavailable)&&const DeepCollectionEquality().equals(other.pool, pool)&&const DeepCollectionEquality().equals(other.poolMembers, poolMembers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DutyTypeSetting&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.awayOnly, awayOnly) || other.awayOnly == awayOnly)&&(identical(other.autoRotate, autoRotate) || other.autoRotate == autoRotate)&&(identical(other.onUnavailable, onUnavailable) || other.onUnavailable == onUnavailable)&&const DeepCollectionEquality().equals(other.pool, pool)&&const DeepCollectionEquality().equals(other.poolMembers, poolMembers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,icon,sortOrder,mode,scope,autoRotate,onUnavailable,const DeepCollectionEquality().hash(pool),const DeepCollectionEquality().hash(poolMembers));
+int get hashCode => Object.hash(runtimeType,id,name,slug,icon,sortOrder,mode,scope,awayOnly,autoRotate,onUnavailable,const DeepCollectionEquality().hash(pool),const DeepCollectionEquality().hash(poolMembers));
 
 @override
 String toString() {
-  return 'DutyTypeSetting(id: $id, name: $name, slug: $slug, icon: $icon, sortOrder: $sortOrder, mode: $mode, scope: $scope, autoRotate: $autoRotate, onUnavailable: $onUnavailable, pool: $pool, poolMembers: $poolMembers)';
+  return 'DutyTypeSetting(id: $id, name: $name, slug: $slug, icon: $icon, sortOrder: $sortOrder, mode: $mode, scope: $scope, awayOnly: $awayOnly, autoRotate: $autoRotate, onUnavailable: $onUnavailable, pool: $pool, poolMembers: $poolMembers)';
 }
 
 
@@ -880,7 +881,7 @@ abstract mixin class $DutyTypeSettingCopyWith<$Res>  {
   factory $DutyTypeSettingCopyWith(DutyTypeSetting value, $Res Function(DutyTypeSetting) _then) = _$DutyTypeSettingCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(fromJson: _int) int id, String name, String? slug, String? icon,@JsonKey(fromJson: _int) int sortOrder,@JsonKey(unknownEnumValue: DutyMode.group) DutyMode mode,@JsonKey(unknownEnumValue: DutyScope.free) DutyScope scope,@JsonKey(fromJson: _bool) bool autoRotate,@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? onUnavailable,@JsonKey(fromJson: _strings) List<String> pool,@JsonKey(fromJson: _strings) List<String> poolMembers
+@JsonKey(fromJson: _int) int id, String name, String? slug, String? icon,@JsonKey(fromJson: _int) int sortOrder,@JsonKey(unknownEnumValue: DutyMode.group) DutyMode mode,@JsonKey(unknownEnumValue: DutyScope.free) DutyScope scope,@JsonKey(fromJson: _bool) bool awayOnly,@JsonKey(fromJson: _bool) bool autoRotate,@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? onUnavailable,@JsonKey(fromJson: _strings) List<String> pool,@JsonKey(fromJson: _strings) List<String> poolMembers
 });
 
 
@@ -897,7 +898,7 @@ class _$DutyTypeSettingCopyWithImpl<$Res>
 
 /// Create a copy of DutyTypeSetting
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = freezed,Object? icon = freezed,Object? sortOrder = null,Object? mode = null,Object? scope = null,Object? autoRotate = null,Object? onUnavailable = freezed,Object? pool = null,Object? poolMembers = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? slug = freezed,Object? icon = freezed,Object? sortOrder = null,Object? mode = null,Object? scope = null,Object? awayOnly = null,Object? autoRotate = null,Object? onUnavailable = freezed,Object? pool = null,Object? poolMembers = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -906,7 +907,8 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as int,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as DutyMode,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
-as DutyScope,autoRotate: null == autoRotate ? _self.autoRotate : autoRotate // ignore: cast_nullable_to_non_nullable
+as DutyScope,awayOnly: null == awayOnly ? _self.awayOnly : awayOnly // ignore: cast_nullable_to_non_nullable
+as bool,autoRotate: null == autoRotate ? _self.autoRotate : autoRotate // ignore: cast_nullable_to_non_nullable
 as bool,onUnavailable: freezed == onUnavailable ? _self.onUnavailable : onUnavailable // ignore: cast_nullable_to_non_nullable
 as DutyOnUnavailable?,pool: null == pool ? _self.pool : pool // ignore: cast_nullable_to_non_nullable
 as List<String>,poolMembers: null == poolMembers ? _self.poolMembers : poolMembers // ignore: cast_nullable_to_non_nullable
@@ -995,10 +997,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool awayOnly, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DutyTypeSetting() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
+return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.awayOnly,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
   return orElse();
 
 }
@@ -1016,10 +1018,10 @@ return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool awayOnly, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)  $default,) {final _that = this;
 switch (_that) {
 case _DutyTypeSetting():
-return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
+return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.awayOnly,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1036,10 +1038,10 @@ return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _int)  int id,  String name,  String? slug,  String? icon, @JsonKey(fromJson: _int)  int sortOrder, @JsonKey(unknownEnumValue: DutyMode.group)  DutyMode mode, @JsonKey(unknownEnumValue: DutyScope.free)  DutyScope scope, @JsonKey(fromJson: _bool)  bool awayOnly, @JsonKey(fromJson: _bool)  bool autoRotate, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)  DutyOnUnavailable? onUnavailable, @JsonKey(fromJson: _strings)  List<String> pool, @JsonKey(fromJson: _strings)  List<String> poolMembers)?  $default,) {final _that = this;
 switch (_that) {
 case _DutyTypeSetting() when $default != null:
-return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
+return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.mode,_that.scope,_that.awayOnly,_that.autoRotate,_that.onUnavailable,_that.pool,_that.poolMembers);case _:
   return null;
 
 }
@@ -1051,7 +1053,7 @@ return $default(_that.id,_that.name,_that.slug,_that.icon,_that.sortOrder,_that.
 @JsonSerializable()
 
 class _DutyTypeSetting implements DutyTypeSetting {
-  const _DutyTypeSetting({@JsonKey(fromJson: _int) required this.id, this.name = '', this.slug, this.icon, @JsonKey(fromJson: _int) this.sortOrder = 0, @JsonKey(unknownEnumValue: DutyMode.group) this.mode = DutyMode.group, @JsonKey(unknownEnumValue: DutyScope.free) this.scope = DutyScope.free, @JsonKey(fromJson: _bool) this.autoRotate = false, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) this.onUnavailable, @JsonKey(fromJson: _strings) final  List<String> pool = const <String>[], @JsonKey(fromJson: _strings) final  List<String> poolMembers = const <String>[]}): _pool = pool,_poolMembers = poolMembers;
+  const _DutyTypeSetting({@JsonKey(fromJson: _int) required this.id, this.name = '', this.slug, this.icon, @JsonKey(fromJson: _int) this.sortOrder = 0, @JsonKey(unknownEnumValue: DutyMode.group) this.mode = DutyMode.group, @JsonKey(unknownEnumValue: DutyScope.free) this.scope = DutyScope.free, @JsonKey(fromJson: _bool) this.awayOnly = false, @JsonKey(fromJson: _bool) this.autoRotate = false, @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) this.onUnavailable, @JsonKey(fromJson: _strings) final  List<String> pool = const <String>[], @JsonKey(fromJson: _strings) final  List<String> poolMembers = const <String>[]}): _pool = pool,_poolMembers = poolMembers;
   factory _DutyTypeSetting.fromJson(Map<String, dynamic> json) => _$DutyTypeSettingFromJson(json);
 
 @override@JsonKey(fromJson: _int) final  int id;
@@ -1061,6 +1063,8 @@ class _DutyTypeSetting implements DutyTypeSetting {
 @override@JsonKey(fromJson: _int) final  int sortOrder;
 @override@JsonKey(unknownEnumValue: DutyMode.group) final  DutyMode mode;
 @override@JsonKey(unknownEnumValue: DutyScope.free) final  DutyScope scope;
+/// Alleen bij uitwedstrijden (rijden); zegt niets bij [DutyScope.free].
+@override@JsonKey(fromJson: _bool) final  bool awayOnly;
 @override@JsonKey(fromJson: _bool) final  bool autoRotate;
 @override@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) final  DutyOnUnavailable? onUnavailable;
  final  List<String> _pool;
@@ -1091,16 +1095,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DutyTypeSetting&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.autoRotate, autoRotate) || other.autoRotate == autoRotate)&&(identical(other.onUnavailable, onUnavailable) || other.onUnavailable == onUnavailable)&&const DeepCollectionEquality().equals(other._pool, _pool)&&const DeepCollectionEquality().equals(other._poolMembers, _poolMembers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DutyTypeSetting&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.awayOnly, awayOnly) || other.awayOnly == awayOnly)&&(identical(other.autoRotate, autoRotate) || other.autoRotate == autoRotate)&&(identical(other.onUnavailable, onUnavailable) || other.onUnavailable == onUnavailable)&&const DeepCollectionEquality().equals(other._pool, _pool)&&const DeepCollectionEquality().equals(other._poolMembers, _poolMembers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,slug,icon,sortOrder,mode,scope,autoRotate,onUnavailable,const DeepCollectionEquality().hash(_pool),const DeepCollectionEquality().hash(_poolMembers));
+int get hashCode => Object.hash(runtimeType,id,name,slug,icon,sortOrder,mode,scope,awayOnly,autoRotate,onUnavailable,const DeepCollectionEquality().hash(_pool),const DeepCollectionEquality().hash(_poolMembers));
 
 @override
 String toString() {
-  return 'DutyTypeSetting(id: $id, name: $name, slug: $slug, icon: $icon, sortOrder: $sortOrder, mode: $mode, scope: $scope, autoRotate: $autoRotate, onUnavailable: $onUnavailable, pool: $pool, poolMembers: $poolMembers)';
+  return 'DutyTypeSetting(id: $id, name: $name, slug: $slug, icon: $icon, sortOrder: $sortOrder, mode: $mode, scope: $scope, awayOnly: $awayOnly, autoRotate: $autoRotate, onUnavailable: $onUnavailable, pool: $pool, poolMembers: $poolMembers)';
 }
 
 
@@ -1111,7 +1115,7 @@ abstract mixin class _$DutyTypeSettingCopyWith<$Res> implements $DutyTypeSetting
   factory _$DutyTypeSettingCopyWith(_DutyTypeSetting value, $Res Function(_DutyTypeSetting) _then) = __$DutyTypeSettingCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(fromJson: _int) int id, String name, String? slug, String? icon,@JsonKey(fromJson: _int) int sortOrder,@JsonKey(unknownEnumValue: DutyMode.group) DutyMode mode,@JsonKey(unknownEnumValue: DutyScope.free) DutyScope scope,@JsonKey(fromJson: _bool) bool autoRotate,@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? onUnavailable,@JsonKey(fromJson: _strings) List<String> pool,@JsonKey(fromJson: _strings) List<String> poolMembers
+@JsonKey(fromJson: _int) int id, String name, String? slug, String? icon,@JsonKey(fromJson: _int) int sortOrder,@JsonKey(unknownEnumValue: DutyMode.group) DutyMode mode,@JsonKey(unknownEnumValue: DutyScope.free) DutyScope scope,@JsonKey(fromJson: _bool) bool awayOnly,@JsonKey(fromJson: _bool) bool autoRotate,@JsonKey(unknownEnumValue: DutyOnUnavailable.reassign) DutyOnUnavailable? onUnavailable,@JsonKey(fromJson: _strings) List<String> pool,@JsonKey(fromJson: _strings) List<String> poolMembers
 });
 
 
@@ -1128,7 +1132,7 @@ class __$DutyTypeSettingCopyWithImpl<$Res>
 
 /// Create a copy of DutyTypeSetting
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = freezed,Object? icon = freezed,Object? sortOrder = null,Object? mode = null,Object? scope = null,Object? autoRotate = null,Object? onUnavailable = freezed,Object? pool = null,Object? poolMembers = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? slug = freezed,Object? icon = freezed,Object? sortOrder = null,Object? mode = null,Object? scope = null,Object? awayOnly = null,Object? autoRotate = null,Object? onUnavailable = freezed,Object? pool = null,Object? poolMembers = null,}) {
   return _then(_DutyTypeSetting(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -1137,7 +1141,8 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as int,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as DutyMode,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
-as DutyScope,autoRotate: null == autoRotate ? _self.autoRotate : autoRotate // ignore: cast_nullable_to_non_nullable
+as DutyScope,awayOnly: null == awayOnly ? _self.awayOnly : awayOnly // ignore: cast_nullable_to_non_nullable
+as bool,autoRotate: null == autoRotate ? _self.autoRotate : autoRotate // ignore: cast_nullable_to_non_nullable
 as bool,onUnavailable: freezed == onUnavailable ? _self.onUnavailable : onUnavailable // ignore: cast_nullable_to_non_nullable
 as DutyOnUnavailable?,pool: null == pool ? _self._pool : pool // ignore: cast_nullable_to_non_nullable
 as List<String>,poolMembers: null == poolMembers ? _self._poolMembers : poolMembers // ignore: cast_nullable_to_non_nullable
@@ -1952,7 +1957,7 @@ as int,
 /// @nodoc
 mixin _$GuestSettings {
 
-@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance get attendance;@JsonKey(fromJson: _bool) bool get inFines;@JsonKey(fromJson: _bool) bool get inStats;@JsonKey(fromJson: _bool) bool get staffInFines;
+@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance get attendance;@JsonKey(fromJson: _bool) bool get inFines;@JsonKey(fromJson: _bool) bool get inStats;@JsonKey(fromJson: _bool) bool get staffInFines;@JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline) CleanSheetFinesTo get cleanSheetFinesTo;
 /// Create a copy of GuestSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1965,16 +1970,16 @@ $GuestSettingsCopyWith<GuestSettings> get copyWith => _$GuestSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuestSettings&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.inFines, inFines) || other.inFines == inFines)&&(identical(other.inStats, inStats) || other.inStats == inStats)&&(identical(other.staffInFines, staffInFines) || other.staffInFines == staffInFines));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GuestSettings&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.inFines, inFines) || other.inFines == inFines)&&(identical(other.inStats, inStats) || other.inStats == inStats)&&(identical(other.staffInFines, staffInFines) || other.staffInFines == staffInFines)&&(identical(other.cleanSheetFinesTo, cleanSheetFinesTo) || other.cleanSheetFinesTo == cleanSheetFinesTo));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,attendance,inFines,inStats,staffInFines);
+int get hashCode => Object.hash(runtimeType,attendance,inFines,inStats,staffInFines,cleanSheetFinesTo);
 
 @override
 String toString() {
-  return 'GuestSettings(attendance: $attendance, inFines: $inFines, inStats: $inStats, staffInFines: $staffInFines)';
+  return 'GuestSettings(attendance: $attendance, inFines: $inFines, inStats: $inStats, staffInFines: $staffInFines, cleanSheetFinesTo: $cleanSheetFinesTo)';
 }
 
 
@@ -1985,7 +1990,7 @@ abstract mixin class $GuestSettingsCopyWith<$Res>  {
   factory $GuestSettingsCopyWith(GuestSettings value, $Res Function(GuestSettings) _then) = _$GuestSettingsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance attendance,@JsonKey(fromJson: _bool) bool inFines,@JsonKey(fromJson: _bool) bool inStats,@JsonKey(fromJson: _bool) bool staffInFines
+@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance attendance,@JsonKey(fromJson: _bool) bool inFines,@JsonKey(fromJson: _bool) bool inStats,@JsonKey(fromJson: _bool) bool staffInFines,@JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline) CleanSheetFinesTo cleanSheetFinesTo
 });
 
 
@@ -2002,13 +2007,14 @@ class _$GuestSettingsCopyWithImpl<$Res>
 
 /// Create a copy of GuestSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? attendance = null,Object? inFines = null,Object? inStats = null,Object? staffInFines = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? attendance = null,Object? inFines = null,Object? inStats = null,Object? staffInFines = null,Object? cleanSheetFinesTo = null,}) {
   return _then(_self.copyWith(
 attendance: null == attendance ? _self.attendance : attendance // ignore: cast_nullable_to_non_nullable
 as GuestAttendance,inFines: null == inFines ? _self.inFines : inFines // ignore: cast_nullable_to_non_nullable
 as bool,inStats: null == inStats ? _self.inStats : inStats // ignore: cast_nullable_to_non_nullable
 as bool,staffInFines: null == staffInFines ? _self.staffInFines : staffInFines // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,cleanSheetFinesTo: null == cleanSheetFinesTo ? _self.cleanSheetFinesTo : cleanSheetFinesTo // ignore: cast_nullable_to_non_nullable
+as CleanSheetFinesTo,
   ));
 }
 
@@ -2093,10 +2099,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines, @JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline)  CleanSheetFinesTo cleanSheetFinesTo)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GuestSettings() when $default != null:
-return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines);case _:
+return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines,_that.cleanSheetFinesTo);case _:
   return orElse();
 
 }
@@ -2114,10 +2120,10 @@ return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines, @JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline)  CleanSheetFinesTo cleanSheetFinesTo)  $default,) {final _that = this;
 switch (_that) {
 case _GuestSettings():
-return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines);case _:
+return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines,_that.cleanSheetFinesTo);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2134,10 +2140,10 @@ return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(unknownEnumValue: GuestAttendance.none)  GuestAttendance attendance, @JsonKey(fromJson: _bool)  bool inFines, @JsonKey(fromJson: _bool)  bool inStats, @JsonKey(fromJson: _bool)  bool staffInFines, @JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline)  CleanSheetFinesTo cleanSheetFinesTo)?  $default,) {final _that = this;
 switch (_that) {
 case _GuestSettings() when $default != null:
-return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines);case _:
+return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines,_that.cleanSheetFinesTo);case _:
   return null;
 
 }
@@ -2149,13 +2155,14 @@ return $default(_that.attendance,_that.inFines,_that.inStats,_that.staffInFines)
 @JsonSerializable()
 
 class _GuestSettings implements GuestSettings {
-  const _GuestSettings({@JsonKey(unknownEnumValue: GuestAttendance.none) this.attendance = GuestAttendance.none, @JsonKey(fromJson: _bool) this.inFines = false, @JsonKey(fromJson: _bool) this.inStats = false, @JsonKey(fromJson: _bool) this.staffInFines = false});
+  const _GuestSettings({@JsonKey(unknownEnumValue: GuestAttendance.none) this.attendance = GuestAttendance.none, @JsonKey(fromJson: _bool) this.inFines = false, @JsonKey(fromJson: _bool) this.inStats = false, @JsonKey(fromJson: _bool) this.staffInFines = false, @JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline) this.cleanSheetFinesTo = CleanSheetFinesTo.sideline});
   factory _GuestSettings.fromJson(Map<String, dynamic> json) => _$GuestSettingsFromJson(json);
 
 @override@JsonKey(unknownEnumValue: GuestAttendance.none) final  GuestAttendance attendance;
 @override@JsonKey(fromJson: _bool) final  bool inFines;
 @override@JsonKey(fromJson: _bool) final  bool inStats;
 @override@JsonKey(fromJson: _bool) final  bool staffInFines;
+@override@JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline) final  CleanSheetFinesTo cleanSheetFinesTo;
 
 /// Create a copy of GuestSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -2170,16 +2177,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuestSettings&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.inFines, inFines) || other.inFines == inFines)&&(identical(other.inStats, inStats) || other.inStats == inStats)&&(identical(other.staffInFines, staffInFines) || other.staffInFines == staffInFines));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GuestSettings&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.inFines, inFines) || other.inFines == inFines)&&(identical(other.inStats, inStats) || other.inStats == inStats)&&(identical(other.staffInFines, staffInFines) || other.staffInFines == staffInFines)&&(identical(other.cleanSheetFinesTo, cleanSheetFinesTo) || other.cleanSheetFinesTo == cleanSheetFinesTo));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,attendance,inFines,inStats,staffInFines);
+int get hashCode => Object.hash(runtimeType,attendance,inFines,inStats,staffInFines,cleanSheetFinesTo);
 
 @override
 String toString() {
-  return 'GuestSettings(attendance: $attendance, inFines: $inFines, inStats: $inStats, staffInFines: $staffInFines)';
+  return 'GuestSettings(attendance: $attendance, inFines: $inFines, inStats: $inStats, staffInFines: $staffInFines, cleanSheetFinesTo: $cleanSheetFinesTo)';
 }
 
 
@@ -2190,7 +2197,7 @@ abstract mixin class _$GuestSettingsCopyWith<$Res> implements $GuestSettingsCopy
   factory _$GuestSettingsCopyWith(_GuestSettings value, $Res Function(_GuestSettings) _then) = __$GuestSettingsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance attendance,@JsonKey(fromJson: _bool) bool inFines,@JsonKey(fromJson: _bool) bool inStats,@JsonKey(fromJson: _bool) bool staffInFines
+@JsonKey(unknownEnumValue: GuestAttendance.none) GuestAttendance attendance,@JsonKey(fromJson: _bool) bool inFines,@JsonKey(fromJson: _bool) bool inStats,@JsonKey(fromJson: _bool) bool staffInFines,@JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline) CleanSheetFinesTo cleanSheetFinesTo
 });
 
 
@@ -2207,13 +2214,14 @@ class __$GuestSettingsCopyWithImpl<$Res>
 
 /// Create a copy of GuestSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? attendance = null,Object? inFines = null,Object? inStats = null,Object? staffInFines = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? attendance = null,Object? inFines = null,Object? inStats = null,Object? staffInFines = null,Object? cleanSheetFinesTo = null,}) {
   return _then(_GuestSettings(
 attendance: null == attendance ? _self.attendance : attendance // ignore: cast_nullable_to_non_nullable
 as GuestAttendance,inFines: null == inFines ? _self.inFines : inFines // ignore: cast_nullable_to_non_nullable
 as bool,inStats: null == inStats ? _self.inStats : inStats // ignore: cast_nullable_to_non_nullable
 as bool,staffInFines: null == staffInFines ? _self.staffInFines : staffInFines // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,cleanSheetFinesTo: null == cleanSheetFinesTo ? _self.cleanSheetFinesTo : cleanSheetFinesTo // ignore: cast_nullable_to_non_nullable
+as CleanSheetFinesTo,
   ));
 }
 

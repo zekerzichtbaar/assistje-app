@@ -305,6 +305,16 @@
   "savingsFormEventFallback": "de activiteit",
   "savingsFormAllInfo": "Alle spelers doen mee. Nieuwe spelers komen er automatisch bij.",
   "savingsFormAllStaffInfo": "Alle spelers én staf doen mee. Nieuwe spelers/staf komen er automatisch bij.",
+  "savingsFormEventInfoWithoutAmount": "Iedereen die bij {title} \"Ik ben er\" zegt doet mee. Afmelden haalt iemand eraf.",
+  "@savingsFormEventInfoWithoutAmount": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsFormWithoutAmount": "Zonder bedrag",
+  "savingsFormWithoutAmountInfo": "Alleen afvinken wie het gedaan heeft, zonder geld. Bijvoorbeeld een krat bier na je verjaardag.",
   "savingsFormGuests": "Ook gasten",
   "savingsFormGuestsInfo": "Gastspelers doen dan ook mee. Een gast die al betaalde blijft altijd staan.",
   "savingsFormCreate": "Pot aanmaken",
@@ -319,5 +329,100 @@
         "type": "int"
       }
     }
-  }
+  },
+  "savingsListChecklist": "afvinklijst",
+  "savingsListChecklistMonths": "afvinklijst · {months} mnd",
+  "@savingsListChecklistMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "savingsListCheckedOf": "{checked} van {total}",
+  "@savingsListCheckedOf": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "savingsListChecked": "afgevinkt",
+  "savingsListCheckedPercent": "afgevinkt · {percent}%",
+  "@savingsListCheckedPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "savingsCardChecked": "afgevinkt",
+  "savingsCardOf": "van {total}",
+  "@savingsCardOf": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCardCheckedOf": "{checked} van {total} afgevinkt",
+  "@savingsCardCheckedOf": {
+    "placeholders": {
+      "checked": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsRingChecked": "afgevinkt",
+  "savingsOneOffFooterChecklist": "{checked} van {total} afgevinkt",
+  "@savingsOneOffFooterChecklist": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "savingsCellChecked": "{name} {month} afgevinkt",
+  "@savingsCellChecked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsCellUnchecked": "{name} {month} niet afgevinkt",
+  "@savingsCellUnchecked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsTapHintChecklist": "Tik een vakje om iemand af te vinken.",
+  "savingsRemindHintChecklist": "Pushmelding via de app naar iedereen die nog niet afgevinkt is.",
+  "savingsRemindConfirmChecklist": "Een pushmelding sturen via de app naar iedereen die nog niet afgevinkt is?",
+  "savingsArchiveConfirmChecklist": "\"{name}\" archiveren? Wat er afgevinkt is blijft bewaard.",
+  "@savingsArchiveConfirmChecklist": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "savingsSettleWithoutAmount": "Een lijst zonder bedrag reken je niet af."
 }

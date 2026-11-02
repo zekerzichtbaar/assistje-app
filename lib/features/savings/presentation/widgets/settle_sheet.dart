@@ -13,11 +13,13 @@ const int maxSettleCents = 10000000;
 
 /// "Afrekenen": de werkelijke kosten invullen; toont het verschil met wat er
 /// betaald is. [onSubmit] doet het verzoek en geeft de fout terug; bij
-/// succes sluit de sheet met `true`.
+/// succes sluit de sheet met `true`. Een afvinklijst ([withoutAmount]) reken
+/// je niet af: dan alleen die uitleg (de API geeft er een 422 op).
 Future<bool?> showSettleSheet(
   BuildContext context, {
   required int paidCents,
   required bool finesEnabled,
+  bool withoutAmount = false,
   int? currentCostCents,
   required Future<Object?> Function(int costCents) onSubmit,
 }) {
@@ -29,6 +31,7 @@ Future<bool?> showSettleSheet(
     builder: (context) => SettleForm(
       paidCents: paidCents,
       finesEnabled: finesEnabled,
+      withoutAmount: withoutAmount,
       currentCostCents: currentCostCents,
       onSubmit: onSubmit,
     ),
@@ -41,11 +44,15 @@ class SettleForm extends StatefulWidget {
     required this.paidCents,
     required this.finesEnabled,
     required this.onSubmit,
+    this.withoutAmount = false,
     this.currentCostCents,
   });
 
   final int paidCents;
   final bool finesEnabled;
+
+  /// Afvinklijst zonder geld: niets af te rekenen.
+  final bool withoutAmount;
   final int? currentCostCents;
   final Future<Object?> Function(int costCents) onSubmit;
 
@@ -104,6 +111,13 @@ class _SettleFormState extends State<SettleForm> {
     final cost = _costCents;
     final diff = cost == null ? null : widget.paidCents - cost;
     final formMessage = savingsFormMessage(l10n, error);
+
+    if (widget.withoutAmount) {
+      return SavingsFormError(
+        l10n.savingsSettleWithoutAmount,
+        key: const ValueKey('savings-settle-without-amount'),
+      );
+    }
 
     return Column(
       mainAxisSize: MainAxisSize.min,

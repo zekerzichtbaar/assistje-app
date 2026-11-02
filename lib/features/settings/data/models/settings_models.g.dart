@@ -94,6 +94,7 @@ _DutyTypeSetting _$DutyTypeSettingFromJson(Map<String, dynamic> json) =>
             unknownValue: DutyScope.free,
           ) ??
           DutyScope.free,
+      awayOnly: json['away_only'] == null ? false : _bool(json['away_only']),
       autoRotate: json['auto_rotate'] == null
           ? false
           : _bool(json['auto_rotate']),
@@ -117,6 +118,7 @@ Map<String, dynamic> _$DutyTypeSettingToJson(_DutyTypeSetting instance) =>
       'sort_order': instance.sortOrder,
       'mode': _$DutyModeEnumMap[instance.mode]!,
       'scope': _$DutyScopeEnumMap[instance.scope]!,
+      'away_only': instance.awayOnly,
       'auto_rotate': instance.autoRotate,
       'on_unavailable': _$DutyOnUnavailableEnumMap[instance.onUnavailable],
       'pool': instance.pool,
@@ -184,6 +186,13 @@ _GuestSettings _$GuestSettingsFromJson(Map<String, dynamic> json) =>
       staffInFines: json['staff_in_fines'] == null
           ? false
           : _bool(json['staff_in_fines']),
+      cleanSheetFinesTo:
+          $enumDecodeNullable(
+            _$CleanSheetFinesToEnumMap,
+            json['clean_sheet_fines_to'],
+            unknownValue: CleanSheetFinesTo.sideline,
+          ) ??
+          CleanSheetFinesTo.sideline,
     );
 
 Map<String, dynamic> _$GuestSettingsToJson(_GuestSettings instance) =>
@@ -192,12 +201,20 @@ Map<String, dynamic> _$GuestSettingsToJson(_GuestSettings instance) =>
       'in_fines': instance.inFines,
       'in_stats': instance.inStats,
       'staff_in_fines': instance.staffInFines,
+      'clean_sheet_fines_to':
+          _$CleanSheetFinesToEnumMap[instance.cleanSheetFinesTo]!,
     };
 
 const _$GuestAttendanceEnumMap = {
   GuestAttendance.none: 'none',
   GuestAttendance.training: 'training',
   GuestAttendance.all: 'all',
+};
+
+const _$CleanSheetFinesToEnumMap = {
+  CleanSheetFinesTo.staff: 'staff',
+  CleanSheetFinesTo.sideline: 'sideline',
+  CleanSheetFinesTo.notPlaying: 'not_playing',
 };
 
 _TrainingPointsSettings _$TrainingPointsSettingsFromJson(

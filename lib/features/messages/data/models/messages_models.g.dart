@@ -121,6 +121,7 @@ _MessagesOverview _$MessagesOverviewFromJson(Map<String, dynamic> json) =>
               ?.map((e) => LinkTargetGroup.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <LinkTargetGroup>[],
+      spectatorsCount: (json['spectators_count'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$MessagesOverviewToJson(_MessagesOverview instance) =>
@@ -129,4 +130,5 @@ Map<String, dynamic> _$MessagesOverviewToJson(_MessagesOverview instance) =>
       'auto_settings': instance.autoSettings.map((e) => e.toJson()).toList(),
       'auto_history': instance.autoHistory.map((e) => e.toJson()).toList(),
       'link_targets': instance.linkTargets.map((e) => e.toJson()).toList(),
+      'spectators_count': instance.spectatorsCount,
     };

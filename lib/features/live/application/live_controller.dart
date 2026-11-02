@@ -26,7 +26,8 @@ final liveTickerProvider = Provider<LiveTicker>(
 
 /// De live-stand van één wedstrijd.
 ///
-/// - Pollt elke [livePollInterval] zolang `event.live.is_live` en het scherm
+/// - Pollt elke [livePollInterval] zolang `event.live.is_live` (of een
+///   strafschoppenserie open is) en het scherm
 ///   actief is ([setActive]; de app op de achtergrond zet hem uit). Stopt
 ///   zodra de provider weg is (scherm dicht).
 /// - Elke schrijfactie zet de live-stand uit het antwoord meteen neer (geen
@@ -78,7 +79,7 @@ class LiveController extends AsyncNotifier<LiveMatch> {
     }
     final match = state.value;
     _syncPolling(match);
-    if (active && match != null && match.clock.isLive) unawaited(poll());
+    if (active && match != null && _shouldFollow(match)) unawaited(poll());
   }
 
   /// Eén poll: de verse stand, of bij een fout de vorige laten staan.
@@ -204,6 +205,39 @@ class LiveController extends AsyncNotifier<LiveMatch> {
 
   Future<Object?> reset() => _write(() => _repository.reset(_teamId, _eventId));
 
+  Future<Object?> setClock({required int minute, int? second}) => _write(
+    () =>
+        _repository.setClock(_teamId, _eventId, minute: minute, second: second),
+  );
+
+  Future<Object?> startExtraTime() =>
+      _write(() => _repository.extraTime(_teamId, _eventId));
+
+  // ── Strafschoppen ───────────────────────────────────────────────────────
+
+  Future<Object?> startShootout() =>
+      _write(() => _repository.startShootout(_teamId, _eventId));
+
+  Future<Object?> shootoutKick({
+    required String side,
+    required bool scored,
+    int? playerId,
+  }) => _write(
+    () => _repository.shootoutKick(
+      _teamId,
+      _eventId,
+      side: side,
+      scored: scored,
+      playerId: playerId,
+    ),
+  );
+
+  Future<Object?> undoShootoutKick() =>
+      _write(() => _repository.undoShootoutKick(_teamId, _eventId));
+
+  Future<Object?> clearShootout() =>
+      _write(() => _repository.clearShootout(_teamId, _eventId));
+
   // ── Tijdlijn ────────────────────────────────────────────────────────────
 
   Future<Object?> addGoal({
@@ -249,6 +283,7 @@ class LiveController extends AsyncNotifier<LiveMatch> {
     required int minute,
     required String type,
     int? playerId,
+    bool opponent = false,
   }) => _write(
     () => _repository.addMoment(
       _teamId,
@@ -256,6 +291,7 @@ class LiveController extends AsyncNotifier<LiveMatch> {
       minute: minute,
       type: type,
       playerId: playerId,
+      opponent: opponent,
     ),
   );
 
@@ -317,9 +353,15 @@ class LiveController extends AsyncNotifier<LiveMatch> {
     state = AsyncData(match);
   }
 
-  /// Timer aan zolang de wedstrijd live is en het scherm actief; anders uit.
+  /// Moet de stand ververst worden? Zolang de wedstrijd live is, en ook
+  /// tijdens een open strafschoppenserie (dan is er afgefloten, maar valt er
+  /// nog elk moment iets te zien — zoals de PWA).
+  static bool _shouldFollow(LiveMatch match) =>
+      match.clock.isLive || match.clock.shootoutOpen;
+
+  /// Timer aan zolang er iets te volgen is en het scherm actief; anders uit.
   void _syncPolling(LiveMatch? match) {
-    final shouldPoll = _active && match != null && match.clock.isLive;
+    final shouldPoll = _active && match != null && _shouldFollow(match);
     if (shouldPoll && _timer == null) {
       _timer = ref.read(liveTickerProvider)(livePollInterval, _tick);
     } else if (!shouldPoll) {

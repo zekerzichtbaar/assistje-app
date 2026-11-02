@@ -147,35 +147,38 @@ class SettingsToggleRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AssistjeTokens.of(context);
-    final row = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: inset ? 14 : 15,
-                  fontWeight: FontWeight.w500,
-                  color: t.ink,
-                ),
-              ),
-              if (subtitle != null && subtitle!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 2),
-                  child: Text(
-                    subtitle!,
-                    style: TextStyle(fontSize: 13, color: t.muted),
+    // Eén knoop voor VoiceOver: de schakelaar krijgt titel + uitleg als label.
+    final row = MergeSemantics(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: inset ? 14 : 15,
+                    fontWeight: FontWeight.w500,
+                    color: t.ink,
                   ),
                 ),
-            ],
+                if (subtitle != null && subtitle!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      subtitle!,
+                      style: TextStyle(fontSize: 13, color: t.muted),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Switch.adaptive(key: switchKey, value: value, onChanged: onChanged),
-      ],
+          const SizedBox(width: 12),
+          Switch.adaptive(key: switchKey, value: value, onChanged: onChanged),
+        ],
+      ),
     );
     if (!inset) {
       return Padding(

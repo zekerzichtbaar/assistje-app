@@ -79,6 +79,10 @@ void main() {
     expect(items.last.image, isNull);
   });
 
+  test('"Niet nu" (declined) is een eigen status', () {
+    expect(FeedbackStatus.parse('declined'), FeedbackStatus.declined);
+  });
+
   test('POST zonder afbeelding gaat als JSON met getrimde body', () async {
     http.on('POST /teams/3/feedback', 201, FeedbackFixtures.created());
 

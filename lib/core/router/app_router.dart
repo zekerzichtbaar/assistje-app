@@ -10,6 +10,7 @@ import '../../features/auth/presentation/login_code_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/splash_screen.dart';
 import '../../features/duties/presentation/duties_screen.dart';
+import '../../features/duties/presentation/duty_overview_screen.dart';
 import '../../features/event/presentation/event_attendance_screen.dart';
 import '../../features/event/presentation/event_detail_screen.dart';
 import '../../features/event/presentation/event_lineup_screen.dart';
@@ -229,6 +230,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: AppRoutes.more,
                     builder: (context, state) => const MoreScreen(),
+                  ),
+                  // In de Meer-tak (zoals Profiel), niet over de tabs heen:
+                  // vanuit hier een wedstrijd pushen (een route in de
+                  // Agenda-tak) moet kunnen zonder dubbele shellpagina.
+                  GoRoute(
+                    path: AppRoutes.dutyOverview,
+                    builder: (context, state) => const DutyOverviewScreen(),
                   ),
                   GoRoute(
                     path: AppRoutes.profile,

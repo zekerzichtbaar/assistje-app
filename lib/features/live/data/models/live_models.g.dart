@@ -22,6 +22,12 @@ _LiveClock _$LiveClockFromJson(Map<String, dynamic> json) => _LiveClock(
           ?.map((e) => (e as num).toInt())
           .toList() ??
       const <int>[],
+  regularPeriods: (json['regular_periods'] as num?)?.toInt() ?? 0,
+  extraTime: json['extra_time'] as bool? ?? false,
+  shootout: json['shootout'] == null
+      ? null
+      : LiveShootout.fromJson(json['shootout'] as Map<String, dynamic>),
+  resultSuffix: json['result_suffix'] as String?,
 );
 
 Map<String, dynamic> _$LiveClockToJson(_LiveClock instance) =>
@@ -33,6 +39,41 @@ Map<String, dynamic> _$LiveClockToJson(_LiveClock instance) =>
       'ended_at': instance.endedAt?.toIso8601String(),
       'period': instance.period,
       'period_ends': instance.periodEnds,
+      'regular_periods': instance.regularPeriods,
+      'extra_time': instance.extraTime,
+      'shootout': instance.shootout?.toJson(),
+      'result_suffix': instance.resultSuffix,
+    };
+
+_LiveShootoutKick _$LiveShootoutKickFromJson(Map<String, dynamic> json) =>
+    _LiveShootoutKick(
+      scored: json['scored'] as bool? ?? false,
+      player: json['player'] as String?,
+    );
+
+Map<String, dynamic> _$LiveShootoutKickToJson(_LiveShootoutKick instance) =>
+    <String, dynamic>{'scored': instance.scored, 'player': instance.player};
+
+_LiveShootout _$LiveShootoutFromJson(Map<String, dynamic> json) =>
+    _LiveShootout(
+      us:
+          (json['us'] as List<dynamic>?)
+              ?.map((e) => LiveShootoutKick.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <LiveShootoutKick>[],
+      opp:
+          (json['opp'] as List<dynamic>?)
+              ?.map((e) => LiveShootoutKick.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const <LiveShootoutKick>[],
+      winner: json['winner'] as String?,
+    );
+
+Map<String, dynamic> _$LiveShootoutToJson(_LiveShootout instance) =>
+    <String, dynamic>{
+      'us': instance.us.map((e) => e.toJson()).toList(),
+      'opp': instance.opp.map((e) => e.toJson()).toList(),
+      'winner': instance.winner,
     };
 
 _LiveSet _$LiveSetFromJson(Map<String, dynamic> json) => _LiveSet(
@@ -110,6 +151,15 @@ _LiveTypeOption _$LiveTypeOptionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$LiveTypeOptionToJson(_LiveTypeOption instance) =>
     <String, dynamic>{'type': instance.type, 'label': instance.label};
 
+_LiveExtraTime _$LiveExtraTimeFromJson(Map<String, dynamic> json) =>
+    _LiveExtraTime(
+      count: (json['count'] as num?)?.toInt() ?? 2,
+      minutes: (json['minutes'] as num?)?.toInt() ?? 15,
+    );
+
+Map<String, dynamic> _$LiveExtraTimeToJson(_LiveExtraTime instance) =>
+    <String, dynamic>{'count': instance.count, 'minutes': instance.minutes};
+
 _LiveRules _$LiveRulesFromJson(Map<String, dynamic> json) => _LiveRules(
   scoreModel: json['score_model'] as String? ?? 'goals',
   tracksScorers: json['tracks_scorers'] as bool? ?? false,
@@ -126,6 +176,10 @@ _LiveRules _$LiveRulesFromJson(Map<String, dynamic> json) => _LiveRules(
           ?.map((e) => LiveTypeOption.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const <LiveTypeOption>[],
+  extraTime: json['extra_time'] == null
+      ? null
+      : LiveExtraTime.fromJson(json['extra_time'] as Map<String, dynamic>),
+  hasShootout: json['has_shootout'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$LiveRulesToJson(_LiveRules instance) =>
@@ -135,6 +189,8 @@ Map<String, dynamic> _$LiveRulesToJson(_LiveRules instance) =>
       'periods': instance.periods?.toJson(),
       'card_types': instance.cardTypes.map((e) => e.toJson()).toList(),
       'moment_types': instance.momentTypes.map((e) => e.toJson()).toList(),
+      'extra_time': instance.extraTime?.toJson(),
+      'has_shootout': instance.hasShootout,
     };
 
 _LiveGoal _$LiveGoalFromJson(Map<String, dynamic> json) => _LiveGoal(
@@ -203,6 +259,7 @@ _LiveMoment _$LiveMomentFromJson(Map<String, dynamic> json) => _LiveMoment(
   minute: (json['minute'] as num?)?.toInt() ?? 0,
   type: json['type'] as String? ?? '',
   label: json['label'] as String? ?? '',
+  side: json['side'] as String? ?? 'us',
   player: json['player'] as String?,
   createdAt: (json['created_at'] as num?)?.toInt() ?? 0,
 );
@@ -214,6 +271,7 @@ Map<String, dynamic> _$LiveMomentToJson(_LiveMoment instance) =>
       'minute': instance.minute,
       'type': instance.type,
       'label': instance.label,
+      'side': instance.side,
       'player': instance.player,
       'created_at': instance.createdAt,
     };

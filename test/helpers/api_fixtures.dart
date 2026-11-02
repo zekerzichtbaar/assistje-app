@@ -88,6 +88,7 @@ abstract final class ApiFixtures {
     List<String> abilities = const [],
     Map<String, bool> features = const {},
     bool hasPoule = false,
+    bool hasDuties = false,
     bool onboardingOpen = false,
     int unread = 0,
     String fieldVariant = 'football',
@@ -104,6 +105,7 @@ abstract final class ApiFixtures {
     'features': features,
     'sport': {'key': fieldVariant, 'field_variant': fieldVariant},
     'has_poule': hasPoule,
+    'has_duties': hasDuties,
     'onboarding_open': onboardingOpen,
     'unread_notifications_count': unread,
   };

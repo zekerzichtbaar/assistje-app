@@ -14,6 +14,7 @@ const _list = 'GET /teams/3/notifications';
 const _readAll = 'POST /teams/3/notifications/read-all';
 String _read(String id) => 'POST /teams/3/notifications/$id/read';
 String _delete(String id) => 'DELETE /teams/3/notifications/$id';
+const _deleteAll = 'DELETE /teams/3/notifications';
 const _prefs = 'GET /notification-preferences';
 const _patch = 'PATCH /notification-preferences';
 
@@ -201,6 +202,51 @@ void main() {
       expect(state().items.map((n) => n.id), ['n-0', 'n-1']);
       expect(state().unreadCount, 2);
       expect(state().total, 2);
+    });
+  });
+
+  group('NotificationsController.deleteAll', () {
+    Future<NotificationsController> start(
+      void Function(FakeHttpAdapter http) setup,
+    ) async {
+      await boot(setup);
+      container.listen(notificationsControllerProvider(3), (_, _) {});
+      await container.read(notificationsControllerProvider(3).future);
+      return container.read(notificationsControllerProvider(3).notifier);
+    }
+
+    NotificationsState state() =>
+        container.read(notificationsControllerProvider(3)).requireValue;
+
+    test('alles weg: meteen leeg; bij een fout alles terug', () async {
+      final controller = await start((http) {
+        http.on(
+          _list,
+          200,
+          NotificationFixtures.page(
+            items: NotificationFixtures.many(3),
+            lastPage: 2,
+            total: 23,
+          ),
+        );
+        http.on(_deleteAll, 403, {'message': 'Niet in de demo.'});
+      });
+
+      final pending = controller.deleteAll();
+      expect(state().items, isEmpty);
+      expect(state().hasMore, isFalse);
+      expect(state().unreadCount, 0);
+      expect(await pending, isA<ForbiddenException>());
+      expect(state().items.map((n) => n.id), ['n-0', 'n-1', 'n-2']);
+      expect(state().hasMore, isTrue);
+      expect(state().total, 23);
+
+      backend.http.on(_deleteAll, 204);
+      expect(await controller.deleteAll(), isNull);
+      expect(state().items, isEmpty);
+      expect(state().total, 0);
+      expect(state().unreadCount, 0);
+      expect(backend.http.requestsTo(_deleteAll), hasLength(2));
     });
   });
 

@@ -884,7 +884,9 @@ as bool,
 /// @nodoc
 mixin _$EventSavingsPot {
 
- int get id; String get name; int get amountCents; bool get oneOff; int get paidCount; int get participantCount; int get openCents;/// `null`: de kijker doet niet mee.
+ int get id; String get name; int get amountCents;/// Afvinklijst zonder geld (`amount_cents`/`open_cents` dan `0`,
+/// `paid_count` = afgevinkt).
+ bool get withoutAmount; bool get oneOff; int get paidCount; int get participantCount; int get openCents;/// `null`: de kijker doet niet mee.
  bool? get iPaid; bool get iRefund; bool get iRefunded;
 /// Create a copy of EventSavingsPot
 /// with the given fields replaced by the non-null parameter values.
@@ -898,16 +900,16 @@ $EventSavingsPotCopyWith<EventSavingsPot> get copyWith => _$EventSavingsPotCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,withoutAmount,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
 
 @override
 String toString() {
-  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
+  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, withoutAmount: $withoutAmount, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
 }
 
 
@@ -918,7 +920,7 @@ abstract mixin class $EventSavingsPotCopyWith<$Res>  {
   factory $EventSavingsPotCopyWith(EventSavingsPot value, $Res Function(EventSavingsPot) _then) = _$EventSavingsPotCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, int amountCents, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
+ int id, String name, int amountCents, bool withoutAmount, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
 });
 
 
@@ -935,12 +937,13 @@ class _$EventSavingsPotCopyWithImpl<$Res>
 
 /// Create a copy of EventSavingsPot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? withoutAmount = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
-as int,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
 as bool,paidCount: null == paidCount ? _self.paidCount : paidCount // ignore: cast_nullable_to_non_nullable
 as int,participantCount: null == participantCount ? _self.participantCount : participantCount // ignore: cast_nullable_to_non_nullable
 as int,openCents: null == openCents ? _self.openCents : openCents // ignore: cast_nullable_to_non_nullable
@@ -1032,10 +1035,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool withoutAmount,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventSavingsPot() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
   return orElse();
 
 }
@@ -1053,10 +1056,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCou
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool withoutAmount,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)  $default,) {final _that = this;
 switch (_that) {
 case _EventSavingsPot():
-return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1073,10 +1076,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCou
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  bool withoutAmount,  bool oneOff,  int paidCount,  int participantCount,  int openCents,  bool? iPaid,  bool iRefund,  bool iRefunded)?  $default,) {final _that = this;
 switch (_that) {
 case _EventSavingsPot() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.oneOff,_that.paidCount,_that.participantCount,_that.openCents,_that.iPaid,_that.iRefund,_that.iRefunded);case _:
   return null;
 
 }
@@ -1088,12 +1091,15 @@ return $default(_that.id,_that.name,_that.amountCents,_that.oneOff,_that.paidCou
 @JsonSerializable()
 
 class _EventSavingsPot implements EventSavingsPot {
-  const _EventSavingsPot({required this.id, this.name = '', this.amountCents = 0, this.oneOff = true, this.paidCount = 0, this.participantCount = 0, this.openCents = 0, this.iPaid, this.iRefund = false, this.iRefunded = false});
+  const _EventSavingsPot({required this.id, this.name = '', this.amountCents = 0, this.withoutAmount = false, this.oneOff = true, this.paidCount = 0, this.participantCount = 0, this.openCents = 0, this.iPaid, this.iRefund = false, this.iRefunded = false});
   factory _EventSavingsPot.fromJson(Map<String, dynamic> json) => _$EventSavingsPotFromJson(json);
 
 @override final  int id;
 @override@JsonKey() final  String name;
 @override@JsonKey() final  int amountCents;
+/// Afvinklijst zonder geld (`amount_cents`/`open_cents` dan `0`,
+/// `paid_count` = afgevinkt).
+@override@JsonKey() final  bool withoutAmount;
 @override@JsonKey() final  bool oneOff;
 @override@JsonKey() final  int paidCount;
 @override@JsonKey() final  int participantCount;
@@ -1116,16 +1122,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventSavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.paidCount, paidCount) || other.paidCount == paidCount)&&(identical(other.participantCount, participantCount) || other.participantCount == participantCount)&&(identical(other.openCents, openCents) || other.openCents == openCents)&&(identical(other.iPaid, iPaid) || other.iPaid == iPaid)&&(identical(other.iRefund, iRefund) || other.iRefund == iRefund)&&(identical(other.iRefunded, iRefunded) || other.iRefunded == iRefunded));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,withoutAmount,oneOff,paidCount,participantCount,openCents,iPaid,iRefund,iRefunded);
 
 @override
 String toString() {
-  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
+  return 'EventSavingsPot(id: $id, name: $name, amountCents: $amountCents, withoutAmount: $withoutAmount, oneOff: $oneOff, paidCount: $paidCount, participantCount: $participantCount, openCents: $openCents, iPaid: $iPaid, iRefund: $iRefund, iRefunded: $iRefunded)';
 }
 
 
@@ -1136,7 +1142,7 @@ abstract mixin class _$EventSavingsPotCopyWith<$Res> implements $EventSavingsPot
   factory _$EventSavingsPotCopyWith(_EventSavingsPot value, $Res Function(_EventSavingsPot) _then) = __$EventSavingsPotCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, int amountCents, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
+ int id, String name, int amountCents, bool withoutAmount, bool oneOff, int paidCount, int participantCount, int openCents, bool? iPaid, bool iRefund, bool iRefunded
 });
 
 
@@ -1153,12 +1159,13 @@ class __$EventSavingsPotCopyWithImpl<$Res>
 
 /// Create a copy of EventSavingsPot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? withoutAmount = null,Object? oneOff = null,Object? paidCount = null,Object? participantCount = null,Object? openCents = null,Object? iPaid = freezed,Object? iRefund = null,Object? iRefunded = null,}) {
   return _then(_EventSavingsPot(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
-as int,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,oneOff: null == oneOff ? _self.oneOff : oneOff // ignore: cast_nullable_to_non_nullable
 as bool,paidCount: null == paidCount ? _self.paidCount : paidCount // ignore: cast_nullable_to_non_nullable
 as int,participantCount: null == participantCount ? _self.participantCount : participantCount // ignore: cast_nullable_to_non_nullable
 as int,openCents: null == openCents ? _self.openCents : openCents // ignore: cast_nullable_to_non_nullable

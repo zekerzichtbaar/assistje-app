@@ -293,5 +293,119 @@
         "type": "String"
       }
     }
-  }
+  },
+  "liveExtraPeriod": "{number}e verlenging",
+  "@liveExtraPeriod": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "liveStartExtraTime": "Start verlenging",
+  "liveStartExtraNext": "Start 2e {part} verlenging",
+  "@liveStartExtraNext": {
+    "placeholders": {
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "liveExtraTimeFrom": "Verlenging vanaf minuut",
+  "liveClockSet": "Klok gelijkzetten",
+  "liveClockSetBodyRunning": "Klok vergeten of te laat aangezet? Zet hem op de tijd van de scheidsrechter. Hij loopt vanaf daar gewoon door.",
+  "liveClockSetBodyPaused": "Klok vergeten of te laat aangezet? Zet hem op de tijd van de scheidsrechter. Hij blijft stilstaan tot je hervat.",
+  "liveClockMinutes": "Minuten",
+  "liveClockSeconds": "Seconden",
+  "liveClockSetTo": "Zet op {time}",
+  "@liveClockSetTo": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "liveDecidePrompt": "Gelijk in de beker. Hoe gaat het verder?",
+  "liveExtraTime": "Verlenging",
+  "liveConfirmExtraTimeTitle": "Verlenging?",
+  "liveConfirmExtraTimeBody": "{count} × {minutes} minuten. De klok staat klaar op {minute}; je trapt de verlenging zelf af.",
+  "@liveConfirmExtraTimeBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "minute": {
+        "type": "int"
+      }
+    }
+  },
+  "liveShootout": "Strafschoppen",
+  "liveConfirmShootoutTitle": "Strafschoppen?",
+  "liveConfirmShootoutBody": "De volgers krijgen bij elk schot een melding. De stand van de wedstrijd blijft staan.",
+  "liveConfirmShootoutLabel": "Beginnen",
+  "liveShootoutError": "Strafschoppen bijwerken mislukt",
+  "liveShootoutScored": "Raak",
+  "liveShootoutMissed": "Mis",
+  "liveShootoutKickScored": "Schot {number}: raak",
+  "@liveShootoutKickScored": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "liveShootoutKickMissed": "Schot {number}: gemist",
+  "@liveShootoutKickMissed": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "liveShootoutRow": "{team}: {score} raak",
+  "@liveShootoutRow": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "liveShootoutShooter": "Nemer (hoeft niet)",
+  "liveShootoutWinUs": "🏆 {team} wint na strafschoppen",
+  "@liveShootoutWinUs": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "liveShootoutWinThem": "{team} wint na strafschoppen",
+  "@liveShootoutWinThem": {
+    "placeholders": {
+      "team": {
+        "type": "String"
+      }
+    }
+  },
+  "liveShootoutUndo": "Laatste schot terug",
+  "liveShootoutClear": "Strafschoppen wissen",
+  "liveShootoutClearBody": "Alle schoten gaan weg. De stand van de wedstrijd blijft staan.",
+  "liveShootoutClearLabel": "Wissen",
+  "liveAfterExtraTime": "na verlenging",
+  "liveAfterShootout": "{score} na strafschoppen",
+  "@liveAfterShootout": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "liveMomentUs": "Wij",
+  "liveOpponent": "Tegenstander"
 }

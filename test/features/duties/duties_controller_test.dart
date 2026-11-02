@@ -143,7 +143,7 @@ void main() {
     });
 
     final before = indexCalls().length;
-    final error = await controller.storeAssignments(
+    final (error, _) = await controller.storeAssignments(
       const DutyAssignmentDraft(
         dutyTypeId: 3,
         mode: 'individual',

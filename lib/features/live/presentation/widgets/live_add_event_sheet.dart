@@ -88,6 +88,9 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
             ? _cardKind
             : _rules.momentTypes.first.type);
   bool _penalty = false;
+
+  /// Een moment van de tegenstander: hún bal op de lat, hún grote kans.
+  bool _theirs = false;
   bool _busy = false;
 
   static const String _cardKind = 'card';
@@ -116,6 +119,7 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
       _off = null;
       _on = null;
       _penalty = false;
+      _theirs = false;
     });
   }
 
@@ -163,10 +167,13 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
                 type: _cardType,
                 playerId: player!,
               )
+            // Van de tegenstander gaat zonder speler: hun namen kennen we
+            // niet.
             : await c.addMoment(
                 minute: minute,
                 type: _otherKind,
-                playerId: player,
+                playerId: _theirs ? null : player,
+                opponent: _theirs,
               );
     }
     if (!mounted) return;
@@ -341,6 +348,7 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
                   onTap: () => setState(() {
                     _otherKind = kind.type;
                     _player = null;
+                    if (kind.type == _cardKind) _theirs = false;
                   }),
                 ),
             ],
@@ -362,14 +370,36 @@ class _LiveAddEventFormState extends State<LiveAddEventForm> {
                 ],
               ),
             ),
-          field(
-            _otherKind == _cardKind ? l10n.livePlayer : l10n.livePlayerOptional,
-            'player',
-            value: _player,
-            noneLabel: _otherKind == _cardKind ? null : l10n.liveNoName,
-            placeholder: _otherKind == _cardKind ? null : l10n.liveNoName,
-            onPicked: (id) => _player = id,
-          ),
+          // Van wie was het? Een kaart geven we alleen onszelf (daar hangt
+          // de kaartentelling aan), een moment kan ook van de tegenstander.
+          if (_otherKind != _cardKind)
+            AppTabPills<bool>(
+              key: const ValueKey('live-moment-side'),
+              fullWidth: true,
+              tabs: [
+                AppTabPill(value: false, label: l10n.liveMomentUs),
+                AppTabPill(
+                  value: true,
+                  label: widget.match.opponentName ?? l10n.liveOpponent,
+                ),
+              ],
+              selected: _theirs,
+              onChanged: (theirs) => setState(() {
+                _theirs = theirs;
+                _player = null;
+              }),
+            ),
+          if (_otherKind == _cardKind || !_theirs)
+            field(
+              _otherKind == _cardKind
+                  ? l10n.livePlayer
+                  : l10n.livePlayerOptional,
+              'player',
+              value: _player,
+              noneLabel: _otherKind == _cardKind ? null : l10n.liveNoName,
+              placeholder: _otherKind == _cardKind ? null : l10n.liveNoName,
+              onPicked: (id) => _player = id,
+            ),
           if (_otherKind != _cardKind)
             Text(l10n.liveMomentExplain, style: muted),
         ]);

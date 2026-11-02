@@ -312,6 +312,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
     StatsSort.attendanceTraining => l10n.statsSortAttendanceTraining,
     StatsSort.matchesPlayed => l10n.statsSortMatches,
     StatsSort.minutes => l10n.statsSortMinutes,
+    StatsSort.minutesPerMatch => l10n.statsSortMinutesPerMatch,
     StatsSort.goals => profile.goalsTerm ?? l10n.statsSortGoals,
     StatsSort.assists => profile.assistsTerm ?? l10n.statsSortAssists,
     StatsSort.flagMinutes => l10n.statsSortFlagMinutes,

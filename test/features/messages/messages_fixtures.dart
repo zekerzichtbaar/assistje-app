@@ -51,6 +51,7 @@ abstract final class MessagesFixtures {
     bool empty = false,
     bool birthdayEnabled = true,
     List<Map<String, dynamic>>? messages,
+    int spectators = 0,
   }) => {
     'data': {
       'messages': messages ?? (empty ? <Object>[] : [message()]),
@@ -81,6 +82,7 @@ abstract final class MessagesFixtures {
           ],
         },
       ],
+      'spectators_count': spectators,
     },
   };
 

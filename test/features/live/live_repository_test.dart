@@ -292,4 +292,166 @@ void main() {
       );
     });
   });
+
+  group('beker beslissen', () {
+    const event = LiveFixtures.event;
+
+    test('leest verlenging, strafschoppen en uitslag-toevoeging', () async {
+      backend.http.on(
+        LiveFixtures.get,
+        200,
+        LiveFixtures.response(
+          rules: LiveFixtures.cupRules(),
+          homeScore: 2,
+          awayScore: 2,
+          live: LiveFixtures.ended(
+            extraTime: true,
+            resultSuffix: '4–3 n.s.',
+            shootout: LiveFixtures.shootout(
+              us: [true, false],
+              opp: [true],
+              players: ['Sem de Wit'],
+              winner: 'us',
+            ),
+          ),
+          moments: [
+            LiveFixtures.moment(
+              type: 'post',
+              label: 'Schot op de paal',
+              side: 'opp',
+              player: 'De Buren',
+            ),
+          ],
+        ),
+      );
+
+      final match = await repository.fetch(3, 412);
+      final clock = match.clock;
+      expect(clock.regularPeriods, 2);
+      expect(clock.extraTime, isTrue);
+      expect(clock.periodEnds, [45, 90, 105, 120]);
+      expect(clock.resultSuffix, '4–3 n.s.');
+      expect(clock.extraPeriod(2), 2);
+      final shootout = clock.shootout!;
+      expect(shootout.us.first.player, 'Sem de Wit');
+      expect(shootout.us.last.player, isNull);
+      expect(shootout.usScore, 1);
+      expect(shootout.oppScore, 1);
+      expect(shootout.winner, 'us');
+      expect(shootout.slots, 5);
+      expect(clock.shootoutOpen, isFalse);
+      expect(match.rules.extraTime, const LiveExtraTime());
+      expect(match.rules.hasShootout, isTrue);
+      expect(match.rules.momentTypes.map((m) => m.type), [
+        'penalty_awarded',
+        'penalty_missed',
+        'penalty_saved',
+        'post',
+        'crossbar',
+        'big_chance',
+      ]);
+      expect(match.moments.single.isOurs, isFalse);
+      expect(match.moments.single.player, 'De Buren');
+      // Al een serie: niets meer te beslissen.
+      expect(match.canDecide(isCup: true), isFalse);
+    });
+
+    test('zonder de nieuwe velden: oude defaults', () async {
+      backend.http.on(LiveFixtures.get, 200, LiveFixtures.response());
+      final match = await repository.fetch(3, 412);
+      expect(match.clock.shootout, isNull);
+      expect(match.clock.resultSuffix, isNull);
+      expect(match.clock.extraPeriod(2), isNull);
+      expect(match.rules.extraTime, isNull);
+      expect(match.rules.hasShootout, isFalse);
+      expect(match.moments.single.isOurs, isTrue);
+    });
+
+    test('gelijke beker: verlenging en strafschoppen aanbieden', () async {
+      backend.http.on(
+        LiveFixtures.get,
+        200,
+        LiveFixtures.response(
+          rules: LiveFixtures.cupRules(),
+          awayScore: 1,
+          live: LiveFixtures.ended(),
+        ),
+      );
+      final match = await repository.fetch(3, 412);
+      expect(match.canDecide(isCup: true), isTrue);
+      expect(match.canStartExtraTime(isCup: true), isTrue);
+      // Geen beker, dan niet.
+      expect(match.canDecide(isCup: false), isFalse);
+    });
+
+    test('klok gelijkzetten en verlenging', () async {
+      backend.http
+        ..on(LiveFixtures.post('clock'), 200, LiveFixtures.response())
+        ..on(LiveFixtures.post('extra-time'), 200, LiveFixtures.response());
+      await repository.setClock(3, 412, minute: 30, second: 15);
+      expect(lastBody(LiveFixtures.post('clock')), {
+        'minute': 30,
+        'second': 15,
+      });
+      await repository.extraTime(3, 412);
+      expect(lastBody(LiveFixtures.post('extra-time')), isNull);
+    });
+
+    test('strafschoppen: starten, schoten, terug en wissen', () async {
+      backend.http
+        ..on('POST $event/shootout', 200, LiveFixtures.response())
+        ..on('POST $event/shootout/kicks', 201, LiveFixtures.response())
+        ..on('DELETE $event/shootout/kicks/last', 200, LiveFixtures.response())
+        ..on('DELETE $event/shootout', 200, LiveFixtures.response());
+
+      await repository.startShootout(3, 412);
+      expect(backend.http.requestsTo('POST $event/shootout'), hasLength(1));
+
+      await repository.shootoutKick(
+        3,
+        412,
+        side: 'us',
+        scored: true,
+        playerId: 21,
+      );
+      // Bij de tegenstander gaat er nooit een speler mee.
+      await repository.shootoutKick(
+        3,
+        412,
+        side: 'opp',
+        scored: false,
+        playerId: 21,
+      );
+      final kicks = backend.http.requestsTo('POST $event/shootout/kicks');
+      expect(kicks.map((r) => r.body), [
+        {'side': 'us', 'scored': true, 'player_id': 21},
+        {'side': 'opp', 'scored': false, 'player_id': null},
+      ]);
+
+      await repository.undoShootoutKick(3, 412);
+      await repository.clearShootout(3, 412);
+      expect(
+        backend.http.requestsTo('DELETE $event/shootout/kicks/last'),
+        hasLength(1),
+      );
+      expect(backend.http.requestsTo('DELETE $event/shootout'), hasLength(1));
+    });
+
+    test('moment van de tegenstander gaat zonder speler', () async {
+      backend.http.on('POST $event/moments', 201, LiveFixtures.response());
+      await repository.addMoment(
+        3,
+        412,
+        minute: 70,
+        type: 'crossbar',
+        playerId: 21,
+        opponent: true,
+      );
+      expect(lastBody('POST $event/moments'), {
+        'minute': 70,
+        'type': 'crossbar',
+        'opponent': true,
+      });
+    });
+  });
 }

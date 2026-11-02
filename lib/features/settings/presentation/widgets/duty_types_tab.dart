@@ -140,11 +140,12 @@ class _DutyTypeTile extends StatelessWidget {
                         DutyMode.multi => l10n.settingsDutyBadgeMulti,
                         DutyMode.group => l10n.settingsDutyBadgeGroup,
                       }),
-                      badge(
-                        type.scope == DutyScope.match
-                            ? l10n.settingsDutyBadgeMatch
-                            : l10n.settingsDutyBadgeFree,
-                      ),
+                      badge(switch (type.scope) {
+                        DutyScope.match when type.awayOnly =>
+                          l10n.settingsDutyBadgeAway,
+                        DutyScope.match => l10n.settingsDutyBadgeMatch,
+                        DutyScope.free => l10n.settingsDutyBadgeFree,
+                      }),
                       if (type.autoRotate)
                         badge(
                           l10n.settingsDutyBadgeAuto,

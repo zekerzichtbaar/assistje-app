@@ -11,11 +11,13 @@ import '../../data/models/duties_models.dart';
 import 'duties_ui.dart';
 
 const _whoFields = ['member_key', 'player_id'];
+const _multiFields = ['member_keys', 'member_key'];
 const _groupFields = ['duty_group_id'];
 const _rowFields = ['event_id', 'scheduled_for', 'starts_at', 'ends_at'];
 
-/// Beurten inplannen, zoals `IndividualAssignmentModal` (één persoon, één
-/// beurt) en `AssignmentModal` (groepen: rotatie of vaste groep, één of
+/// Beurten inplannen, zoals `IndividualAssignmentModal` (één persoon, of bij
+/// "Eén of meer personen" een paar aangevinkte namen, één beurt) en
+/// `AssignmentModal` (groepen: rotatie of vaste groep, één of
 /// meer datums/wedstrijden) in de PWA. [onSave] doet het verzoek en geeft
 /// de fout terug; bij succes sluit de sheet met `true`.
 Future<bool?> showDutyPlanSheet(
@@ -26,7 +28,7 @@ Future<bool?> showDutyPlanSheet(
   final l10n = AppLocalizations.of(context);
   return showAppSheet<bool>(
     context: context,
-    title: overview.isIndividual
+    title: overview.assignsPeople
         ? l10n.dutiesAssignmentFormTitleNew
         : (overview.isMatchBound
               ? l10n.dutiesPlanFormTitleMatches
@@ -117,6 +119,9 @@ class _DutyPlanFormState extends State<DutyPlanForm>
   DutiesOverview get _o => widget.overview;
 
   late String? _memberKey = _o.suggestedMemberKey;
+
+  /// Bij "Eén of meer": de aangevinkte namen; niemand vooraf aangevinkt.
+  final Set<String> _memberKeys = {};
   String _mode = 'rotate';
   late int? _groupId = _o.groups.isEmpty ? null : _o.groups.first.id;
   final List<_Row> _rows = [_Row()];
@@ -135,15 +140,25 @@ class _DutyPlanFormState extends State<DutyPlanForm>
   Future<void> _save() async {
     setState(() => tried = true);
     if (_o.isIndividual && _memberKey == null) return;
-    if (!_o.isIndividual && _mode == 'single' && _groupId == null) return;
+    if (_o.isMulti && _memberKeys.isEmpty) return;
+    if (!_o.assignsPeople && _mode == 'single' && _groupId == null) return;
     if (!_rowsComplete) return;
-    final mode = _o.isIndividual ? 'individual' : _mode;
+    final mode = _o.isMulti
+        ? 'multi'
+        : (_o.isIndividual ? 'individual' : _mode);
     await run(
       () => widget.onSave(
         DutyAssignmentDraft(
           dutyTypeId: _o.dutyTypeId,
           mode: mode,
           memberKey: mode == 'individual' ? _memberKey : null,
+          // In de volgorde van de lijst (minste beurten eerst).
+          memberKeys: mode == 'multi'
+              ? [
+                  for (final p in _o.peopleByCount)
+                    if (_memberKeys.contains(p.key)) p.key,
+                ]
+              : const [],
           groupId: mode == 'single' ? _groupId : null,
           dates: [for (final r in _rows) r.toDraft(match: _o.isMatchBound)],
         ),
@@ -164,14 +179,50 @@ class _DutyPlanFormState extends State<DutyPlanForm>
         if (error != null &&
             !isDutiesFieldError(
               error,
-              [..._whoFields, ..._groupFields],
+              [..._whoFields, ..._multiFields, ..._groupFields],
               prefixes: const ['dates'],
             ))
           DutiesErrorText(
             dutiesErrorText(l10n, error),
             key: const ValueKey('duty-plan-form-error'),
           ),
-        if (_o.isIndividual) ...[
+        if (_o.isMulti) ...[
+          DutiesFieldLabel(l10n.dutiesFormWho),
+          // Lucht tussen label en kader: anders valt de kaderrand binnen het
+          // label (en meet de contrastaudit de rand i.p.v. de tekst).
+          const SizedBox(height: 4),
+          _PersonChecklist(
+            key: const ValueKey('duty-plan-form-who-multi'),
+            people: _o.peopleByCount,
+            selected: _memberKeys,
+            enabled: !busy,
+            onToggle: (key, checked) => setState(() {
+              if (checked) {
+                _memberKeys.add(key);
+              } else {
+                _memberKeys.remove(key);
+              }
+            }),
+          ),
+          if (dutiesFieldError(error, _multiFields) ??
+                  (tried && _memberKeys.isEmpty
+                      ? l10n.dutiesFormWhoRequired
+                      : null)
+              case final message?)
+            DutiesErrorText(
+              message,
+              key: const ValueKey('duty-plan-form-who-error'),
+              bottom: 0,
+            ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              '${l10n.dutiesFormWhoMultiCount(_memberKeys.length)} · '
+              '${l10n.dutiesFormWhoSorted}',
+              style: TextStyle(fontSize: 12, color: t.muted),
+            ),
+          ),
+        ] else if (_o.isIndividual) ...[
           DutiesFieldLabel(l10n.dutiesFormWho),
           _PersonDropdown(
             key: const ValueKey('duty-plan-form-who'),
@@ -286,7 +337,7 @@ class _DutyPlanFormState extends State<DutyPlanForm>
             ]),
           ),
         ],
-        if (!_o.isIndividual)
+        if (!_o.assignsPeople)
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
@@ -361,13 +412,15 @@ class _DutyEditFormState extends State<DutyEditForm>
 
   Future<void> _save() async {
     setState(() => tried = true);
-    if (_o.isIndividual && _memberKey == null) return;
-    if (!_o.isIndividual && _groupId == null) return;
+    if (_o.assignsPeople && _memberKey == null) return;
+    if (!_o.assignsPeople && _groupId == null) return;
     if (_o.isMatchBound ? _row.eventId == null : _row.date == null) return;
     final note = _row.notes.text.trim();
     await run(
       () => widget.onSave({
-        if (_o.isIndividual)
+        // Bij "Eén of meer" is elke naam een eigen beurt: wijzigen gaat per
+        // persoon, net als individueel.
+        if (_o.assignsPeople)
           'member_key': _memberKey
         else
           'duty_group_id': _groupId,
@@ -403,7 +456,7 @@ class _DutyEditFormState extends State<DutyEditForm>
             dutiesErrorText(l10n, error),
             key: const ValueKey('duty-edit-form-error'),
           ),
-        if (_o.isIndividual) ...[
+        if (_o.assignsPeople) ...[
           DutiesFieldLabel(l10n.dutiesFormWho),
           _PersonDropdown(
             key: const ValueKey('duty-edit-form-who'),
@@ -723,6 +776,65 @@ class _PersonDropdown extends StatelessWidget {
           ),
       ],
       onChanged: enabled ? onChanged : null,
+    );
+  }
+}
+
+/// Aanvinken wie er staat ("Eén of meer personen"), op aantal beurten.
+class _PersonChecklist extends StatelessWidget {
+  const _PersonChecklist({
+    super.key,
+    required this.people,
+    required this.selected,
+    required this.enabled,
+    required this.onToggle,
+  });
+
+  final List<DutyPerson> people;
+  final Set<String> selected;
+  final bool enabled;
+  final void Function(String key, bool checked) onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    if (people.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(
+          l10n.dutiesNoPeople,
+          style: TextStyle(fontSize: 14, color: t.muted),
+        ),
+      );
+    }
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: t.line),
+        borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),
+      ),
+      child: Column(
+        children: [
+          for (final person in people)
+            CheckboxListTile.adaptive(
+              key: ValueKey('duty-plan-form-person-${person.key}'),
+              dense: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+              value: selected.contains(person.key),
+              onChanged: enabled
+                  ? (checked) {
+                      Haptics.selection();
+                      onToggle(person.key, checked ?? false);
+                    }
+                  : null,
+              title: Text(
+                '${dutiesPersonLabel(l10n, person)} · ${person.count}×',
+                style: TextStyle(fontSize: 14, color: t.ink),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

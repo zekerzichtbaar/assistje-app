@@ -29,6 +29,7 @@
   "statsSortAttendanceTraining": "Aanwez. training",
   "statsSortMatches": "Wedstrijden",
   "statsSortMinutes": "Speelminuten",
+  "statsSortMinutesPerMatch": "Min. per wedstrijd",
   "statsSortGoals": "Goals",
   "statsSortAssists": "Assists",
   "statsSortFlagMinutes": "Vlag-minuten",
@@ -64,6 +65,18 @@
       }
     }
   },
+  "statsValueMinutesPerMatch": "{minutes} min · {matches}×",
+  "@statsValueMinutesPerMatch": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "matches": {
+        "type": "int"
+      }
+    }
+  },
+  "statsValueNone": "–",
   "statsValuePercent": "{value}%",
   "@statsValuePercent": {
     "placeholders": {

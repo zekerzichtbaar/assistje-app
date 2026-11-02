@@ -27,6 +27,7 @@ _TeamMembership _$TeamMembershipFromJson(
       const <String, bool>{},
   sport: json['sport'] as Map<String, dynamic>? ?? const <String, dynamic>{},
   hasPoule: json['has_poule'] as bool? ?? false,
+  hasDuties: json['has_duties'] as bool? ?? false,
   onboardingOpen: json['onboarding_open'] as bool? ?? false,
   unreadNotificationsCount:
       (json['unread_notifications_count'] as num?)?.toInt() ?? 0,
@@ -40,6 +41,7 @@ Map<String, dynamic> _$TeamMembershipToJson(_TeamMembership instance) =>
       'features': instance.features,
       'sport': instance.sport,
       'has_poule': instance.hasPoule,
+      'has_duties': instance.hasDuties,
       'onboarding_open': instance.onboardingOpen,
       'unread_notifications_count': instance.unreadNotificationsCount,
     };

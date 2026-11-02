@@ -617,6 +617,7 @@ class _ScorePill extends StatelessWidget {
     final t = AssistjeTokens.of(context);
     final dark = Theme.of(context).brightness == Brightness.dark;
     final live = event.isLive;
+    final suffix = event.live?.resultSuffix;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
@@ -628,7 +629,11 @@ class _ScorePill extends StatelessWidget {
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusMd),
       ),
       child: Text(
-        '${event.homeScore ?? 0} - ${event.awayScore ?? 0}',
+        // Een gewonnen 2-2 hoort niet als gelijkspel te lezen: na de
+        // eindfluit "n.v." of "4–3 n.s." erachter.
+        '${event.homeScore ?? 0} - ${event.awayScore ?? 0}'
+        '${!live && suffix != null ? ' $suffix' : ''}',
+        key: const ValueKey('agenda-score'),
         style: TextStyle(
           fontSize: live ? 13 : 12,
           fontWeight: FontWeight.w700,

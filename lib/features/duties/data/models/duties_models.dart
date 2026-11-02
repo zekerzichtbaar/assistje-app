@@ -145,9 +145,21 @@ abstract class DutiesOverview with _$DutiesOverview {
   factory DutiesOverview.fromJson(Map<String, dynamic> json) =>
       _$DutiesOverviewFromJson(json);
 
-  /// Eén persoon per beurt. Alle andere modi plannen in groepen, zoals
-  /// `isIndividual` in de PWA (`Trainer/Duties/Index.tsx`).
+  /// Eén persoon per beurt, zoals `isIndividual` in de PWA
+  /// (`Trainer/Duties/Index.tsx`).
   bool get isIndividual => dutyTypeMode == 'individual';
+
+  /// "Eén of meer personen": per beurt vink je aan wie er staat. Deelt
+  /// mensen in net als individueel, maar zonder groepen en zonder
+  /// automatisch verdelen.
+  bool get isMulti => dutyTypeMode == 'multi';
+
+  /// Plant personen in (individueel of één-of-meer) in plaats van groepen.
+  bool get assignsPeople => isIndividual || isMulti;
+
+  /// Automatisch verdelen kan alleen bij een wedstrijddienst die niet
+  /// `multi` is (anders `422` op `duty_type_id`).
+  bool get canAutoAssign => isMatchBound && !isMulti;
 
   /// Hangt aan een wedstrijd: je kiest een wedstrijd in plaats van een datum.
   bool get isMatchBound => dutyTypeScope == 'match';

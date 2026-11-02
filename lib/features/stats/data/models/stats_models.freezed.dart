@@ -553,7 +553,9 @@ as String,
 /// @nodoc
 mixin _$StatsRow {
 
-@asInt int get playerId; String get name;@asIntOrNull int? get shirtNumber; String? get position; String? get avatarUrl;@asDouble double get attendanceRate;@asDouble double get attendanceMatchRate;@asDouble double get attendanceTrainingRate;@asInt int get minutes;@asInt int get goals;@asInt int get assists;@asInt int get yellow;@asInt int get red;@asInt int get matchesPlayed;@asInt int get flagMinutes;@asInt int get flagShifts; List<StatsTitle> get titles;@asInt int get trainingPoints;
+@asInt int get playerId; String get name;@asIntOrNull int? get shirtNumber; String? get position; String? get avatarUrl;@asDouble double get attendanceRate;@asDouble double get attendanceMatchRate;@asDouble double get attendanceTrainingRate;@asInt int get minutes;@asInt int get goals;@asInt int get assists;@asInt int get yellow;@asInt int get red;@asInt int get matchesPlayed;/// Wedstrijden (met opstelling) waarbij de speler er was of speelde.
+@asInt int get matchesPresent;/// `minutes / matches_present`, afgerond; `0` zonder aanwezige wedstrijd.
+@asInt int get minutesPerMatch;@asInt int get flagMinutes;@asInt int get flagShifts; List<StatsTitle> get titles;@asInt int get trainingPoints;
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -566,16 +568,16 @@ $StatsRowCopyWith<StatsRow> get copyWith => _$StatsRowCopyWithImpl<StatsRow>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other.titles, titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other.titles, titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,flagMinutes,flagShifts,const DeepCollectionEquality().hash(titles),trainingPoints);
+int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(titles),trainingPoints]);
 
 @override
 String toString() {
-  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
+  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
 }
 
 
@@ -586,7 +588,7 @@ abstract mixin class $StatsRowCopyWith<$Res>  {
   factory $StatsRowCopyWith(StatsRow value, $Res Function(StatsRow) _then) = _$StatsRowCopyWithImpl;
 @useResult
 $Res call({
-@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
+@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
 });
 
 
@@ -603,7 +605,7 @@ class _$StatsRowCopyWithImpl<$Res>
 
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
   return _then(_self.copyWith(
 playerId: null == playerId ? _self.playerId : playerId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -619,6 +621,8 @@ as int,assists: null == assists ? _self.assists : assists // ignore: cast_nullab
 as int,yellow: null == yellow ? _self.yellow : yellow // ignore: cast_nullable_to_non_nullable
 as int,red: null == red ? _self.red : red // ignore: cast_nullable_to_non_nullable
 as int,matchesPlayed: null == matchesPlayed ? _self.matchesPlayed : matchesPlayed // ignore: cast_nullable_to_non_nullable
+as int,matchesPresent: null == matchesPresent ? _self.matchesPresent : matchesPresent // ignore: cast_nullable_to_non_nullable
+as int,minutesPerMatch: null == minutesPerMatch ? _self.minutesPerMatch : minutesPerMatch // ignore: cast_nullable_to_non_nullable
 as int,flagMinutes: null == flagMinutes ? _self.flagMinutes : flagMinutes // ignore: cast_nullable_to_non_nullable
 as int,flagShifts: null == flagShifts ? _self.flagShifts : flagShifts // ignore: cast_nullable_to_non_nullable
 as int,titles: null == titles ? _self.titles : titles // ignore: cast_nullable_to_non_nullable
@@ -708,10 +712,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StatsRow() when $default != null:
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
   return orElse();
 
 }
@@ -729,10 +733,10 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)  $default,) {final _that = this;
 switch (_that) {
 case _StatsRow():
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -749,10 +753,10 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,) {final _that = this;
 switch (_that) {
 case _StatsRow() when $default != null:
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
   return null;
 
 }
@@ -764,7 +768,7 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 @JsonSerializable()
 
 class _StatsRow implements StatsRow {
-  const _StatsRow({@asInt required this.playerId, this.name = '', @asIntOrNull this.shirtNumber, this.position, this.avatarUrl, @asDouble this.attendanceRate = 0, @asDouble this.attendanceMatchRate = 0, @asDouble this.attendanceTrainingRate = 0, @asInt this.minutes = 0, @asInt this.goals = 0, @asInt this.assists = 0, @asInt this.yellow = 0, @asInt this.red = 0, @asInt this.matchesPlayed = 0, @asInt this.flagMinutes = 0, @asInt this.flagShifts = 0, final  List<StatsTitle> titles = const <StatsTitle>[], @asInt this.trainingPoints = 0}): _titles = titles;
+  const _StatsRow({@asInt required this.playerId, this.name = '', @asIntOrNull this.shirtNumber, this.position, this.avatarUrl, @asDouble this.attendanceRate = 0, @asDouble this.attendanceMatchRate = 0, @asDouble this.attendanceTrainingRate = 0, @asInt this.minutes = 0, @asInt this.goals = 0, @asInt this.assists = 0, @asInt this.yellow = 0, @asInt this.red = 0, @asInt this.matchesPlayed = 0, @asInt this.matchesPresent = 0, @asInt this.minutesPerMatch = 0, @asInt this.flagMinutes = 0, @asInt this.flagShifts = 0, final  List<StatsTitle> titles = const <StatsTitle>[], @asInt this.trainingPoints = 0}): _titles = titles;
   factory _StatsRow.fromJson(Map<String, dynamic> json) => _$StatsRowFromJson(json);
 
 @override@asInt final  int playerId;
@@ -781,6 +785,10 @@ class _StatsRow implements StatsRow {
 @override@asInt final  int yellow;
 @override@asInt final  int red;
 @override@asInt final  int matchesPlayed;
+/// Wedstrijden (met opstelling) waarbij de speler er was of speelde.
+@override@asInt final  int matchesPresent;
+/// `minutes / matches_present`, afgerond; `0` zonder aanwezige wedstrijd.
+@override@asInt final  int minutesPerMatch;
 @override@asInt final  int flagMinutes;
 @override@asInt final  int flagShifts;
  final  List<StatsTitle> _titles;
@@ -805,16 +813,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other._titles, _titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other._titles, _titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,flagMinutes,flagShifts,const DeepCollectionEquality().hash(_titles),trainingPoints);
+int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(_titles),trainingPoints]);
 
 @override
 String toString() {
-  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
+  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
 }
 
 
@@ -825,7 +833,7 @@ abstract mixin class _$StatsRowCopyWith<$Res> implements $StatsRowCopyWith<$Res>
   factory _$StatsRowCopyWith(_StatsRow value, $Res Function(_StatsRow) _then) = __$StatsRowCopyWithImpl;
 @override @useResult
 $Res call({
-@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
+@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
 });
 
 
@@ -842,7 +850,7 @@ class __$StatsRowCopyWithImpl<$Res>
 
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
   return _then(_StatsRow(
 playerId: null == playerId ? _self.playerId : playerId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -858,6 +866,8 @@ as int,assists: null == assists ? _self.assists : assists // ignore: cast_nullab
 as int,yellow: null == yellow ? _self.yellow : yellow // ignore: cast_nullable_to_non_nullable
 as int,red: null == red ? _self.red : red // ignore: cast_nullable_to_non_nullable
 as int,matchesPlayed: null == matchesPlayed ? _self.matchesPlayed : matchesPlayed // ignore: cast_nullable_to_non_nullable
+as int,matchesPresent: null == matchesPresent ? _self.matchesPresent : matchesPresent // ignore: cast_nullable_to_non_nullable
+as int,minutesPerMatch: null == minutesPerMatch ? _self.minutesPerMatch : minutesPerMatch // ignore: cast_nullable_to_non_nullable
 as int,flagMinutes: null == flagMinutes ? _self.flagMinutes : flagMinutes // ignore: cast_nullable_to_non_nullable
 as int,flagShifts: null == flagShifts ? _self.flagShifts : flagShifts // ignore: cast_nullable_to_non_nullable
 as int,titles: null == titles ? _self._titles : titles // ignore: cast_nullable_to_non_nullable

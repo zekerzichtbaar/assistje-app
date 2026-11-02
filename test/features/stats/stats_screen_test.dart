@@ -110,6 +110,10 @@ void main() {
     expect(find.byKey(const ValueKey('stats-sort-goals')), findsNothing);
     expect(find.byKey(const ValueKey('stats-sort-minutes')), findsNothing);
     expect(
+      find.byKey(const ValueKey('stats-sort-minutesPerMatch')),
+      findsNothing,
+    );
+    expect(
       find.byKey(const ValueKey('stats-sort-trainingPoints')),
       findsOneWidget,
     );
@@ -140,6 +144,45 @@ void main() {
       tester.widget<Text>(find.byKey(const ValueKey('stats-metric-22'))).data,
       '5',
     );
+  });
+
+  testWidgets('min. per wedstrijd: minste bovenaan, geen medaille', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      setup: (http) => http.on(
+        _stats,
+        200,
+        StatsFixtures.response({
+          'rows': [
+            StatsFixtures.samRow(),
+            StatsFixtures.joriRow(),
+            StatsFixtures.samRow({
+              'player_id': 31,
+              'name': 'Bram',
+              'matches_present': 0,
+              'minutes_per_match': 0,
+            }),
+          ],
+        }),
+      ),
+    );
+
+    double top(int id) =>
+        tester.getTopLeft(find.byKey(ValueKey('stats-row-$id'))).dy;
+    final sort = find.byKey(const ValueKey('stats-sort-minutesPerMatch'));
+    expect(find.text('Min. per wedstrijd'), findsOneWidget);
+    await _tap(tester, sort);
+
+    expect(top(22), lessThan(top(14)));
+    expect(top(14), lessThan(top(31)));
+    expect(find.text('🥇'), findsNothing);
+    String metric(int id) =>
+        tester.widget<Text>(find.byKey(ValueKey('stats-metric-$id'))).data!;
+    expect(metric(14), '68 min · 9×');
+    expect(metric(22), '67 min · 6×');
+    expect(metric(31), '–');
   });
 
   testWidgets('venster en seizoen wisselen vragen de server opnieuw', (

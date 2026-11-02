@@ -104,6 +104,21 @@ Map<String, dynamic> _ended() => LiveFixtures.clock(
   period: 2,
 );
 
+/// Een gelijke (1-1) bekerwedstrijd in de live-stand met klok [live].
+Map<String, dynamic> _cupLive(
+  Map<String, dynamic> live, {
+  bool manager = true,
+}) => LiveFixtures.response(
+  canManage: manager,
+  rules: LiveFixtures.cupRules(),
+  awayScore: 1,
+  live: live,
+);
+
+/// Het event-detail van die wedstrijd: een beker.
+Map<String, dynamic> _cupDetail() =>
+    EventFixtures.eventDetail({'competition': 'cup'});
+
 /// Antwoordt per `?type=`: `wassen` → groepen, anders het individuele type.
 FakeResponse _dutiesByType(RecordedRequest r) => FakeResponse(
   200,
@@ -312,6 +327,121 @@ final _sheets = <AuditScreen>[
     },
     open: _taps(['live-reset']),
   ),
+  // Beker beslissen: verlenging en strafschoppen.
+  AuditScreen(
+    '/events/412/live',
+    label: 'beker-beslissen',
+    setup: (h) {
+      _me(h, _liveMember());
+      h
+        ..on(LiveFixtures.get, 200, _cupLive(LiveFixtures.ended()))
+        ..on('GET ${LiveFixtures.event}', 200, _cupDetail());
+    },
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'verlenging',
+    setup: (h) {
+      _me(h, _liveMember());
+      h.on(
+        LiveFixtures.get,
+        200,
+        _cupLive(
+          LiveFixtures.clock(
+            seconds: 90 * 60,
+            period: 2,
+            periodEnds: const [45, 90, 105, 120],
+            extraTime: true,
+          ),
+        ),
+      );
+    },
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'klok-gelijkzetten',
+    setup: (h) {
+      _me(h, _liveMember());
+      h.on(LiveFixtures.get, 200, LiveFixtures.response(canManage: true));
+    },
+    open: _taps(['live-clock-set']),
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'strafschoppen',
+    contrastFalsePositives: ['🔥 4'],
+    setup: (h) {
+      _me(h, _liveMember());
+      h.on(
+        LiveFixtures.get,
+        200,
+        _cupLive(
+          LiveFixtures.ended(
+            shootout: LiveFixtures.shootout(
+              us: [true, false, true],
+              opp: [true, true],
+            ),
+          ),
+        ),
+      );
+    },
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'nemer-kiezen',
+    setup: (h) {
+      _me(h, _liveMember());
+      h.on(
+        LiveFixtures.get,
+        200,
+        _cupLive(
+          LiveFixtures.ended(shootout: LiveFixtures.shootout(us: [true])),
+        ),
+      );
+    },
+    open: _taps(['live-shooter']),
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'strafschoppen-kijker',
+    contrastFalsePositives: ['🔥 4'],
+    setup: (h) {
+      _me(h, LiveFixtures.membership());
+      h.on(
+        LiveFixtures.get,
+        200,
+        _cupLive(
+          LiveFixtures.ended(
+            resultSuffix: '4–3 n.s.',
+            shootout: LiveFixtures.shootout(
+              us: [true, true, true, true],
+              opp: [true, true, false, true, false],
+              winner: 'us',
+            ),
+          ),
+          manager: false,
+        ),
+      );
+    },
+  ),
+  AuditScreen(
+    '/events/412/live',
+    label: 'moment-tegenstander',
+    setup: (h) {
+      _me(h, _liveMember());
+      h.on(
+        LiveFixtures.get,
+        200,
+        // Zonder kaarten staat "Overige" meteen op een moment, met de
+        // kantkeuze in beeld (geen scroll die de pillen half wegschuift).
+        LiveFixtures.response(
+          canManage: true,
+          rules: {...LiveFixtures.cupRules(), 'card_types': <Object>[]},
+        ),
+      );
+    },
+    open: (t) => _tapAll(t, [_key('live-add'), find.text('Overige')]),
+  ),
   // ── Verslag ─────────────────────────────────────────────────────────────
   AuditScreen(
     '/events/412/report',
@@ -346,6 +476,13 @@ final _sheets = <AuditScreen>[
     '/duties',
     label: 'plannen',
     setup: (h) => h.routes['GET /teams/3/duties'] = _dutiesByType,
+    open: _taps(['duties-plan']),
+  ),
+  // "Eén of meer personen": aanvinken wie er staat.
+  AuditScreen(
+    '/duties',
+    label: 'plannen-een-of-meer',
+    setup: (h) => h.on('GET /teams/3/duties', 200, DutiesFixtures.multi()),
     open: _taps(['duties-plan']),
   ),
   AuditScreen(

@@ -117,6 +117,23 @@ void main() {
     });
   });
 
+  group('NotificationsRepository.deleteAll', () {
+    test('DELETE zonder id: 204; 403 op een demo', () async {
+      final repository = NotificationsRepository(api);
+      http.on('DELETE /teams/3/notifications', 204);
+      await repository.deleteAll(3);
+      expect(http.requestsTo('DELETE /teams/3/notifications'), hasLength(1));
+
+      http.on('DELETE /teams/3/notifications', 403, {
+        'message': 'Niet in de demo.',
+      });
+      await expectLater(
+        repository.deleteAll(3),
+        throwsA(isA<ForbiddenException>()),
+      );
+    });
+  });
+
   group('NotificationPreferencesRepository', () {
     late NotificationPreferencesRepository repository;
     setUp(() => repository = NotificationPreferencesRepository(api));

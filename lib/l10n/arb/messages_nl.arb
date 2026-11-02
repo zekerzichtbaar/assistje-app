@@ -6,7 +6,7 @@
   "messagesNotFoundTitle": "Berichten staan uit",
   "messagesNotFoundBody": "Berichten staat niet aan voor dit team.",
   "messagesComposeCardTitle": "Bericht aan het team",
-  "messagesComposeIntro": "Stuur een push-bericht naar alle teamgenoten, bijvoorbeeld bij afgelasting of een mededeling. Iedereen die push aan heeft staan ontvangt het direct.",
+  "messagesComposeIntro": "Stuur een push-bericht naar het team, bijvoorbeeld bij afgelasting of een mededeling. Iedereen die push aan heeft staan ontvangt het direct.",
   "messagesComposeOpen": "Nieuw bericht",
   "messagesComposeSheetTitle": "Nieuw bericht",
   "messagesFieldTitle": "Titel",
@@ -27,8 +27,19 @@
   "messagesLinkNone": "Geen link",
   "messagesLinkOwn": "Eigen link…",
   "messagesLinkOwnHint": "Bijv. /events/123 of https://…",
-  "messagesSend": "Verstuur naar iedereen",
-  "messagesSendConfirm": "Verstuur dit bericht als push naar alle teamgenoten?",
+  "messagesSend": "Verstuur naar het team",
+  "messagesSendWithSpectators": "Verstuur naar team + toeschouwers",
+  "messagesSendConfirm": "Verstuur dit bericht als push naar het team?",
+  "messagesSendConfirmWithSpectators": "Verstuur dit bericht als push naar het team én de toeschouwers?",
+  "messagesIncludeSpectators": "Ook naar toeschouwers",
+  "messagesSpectatorsCount": "{count, plural, =1{1 toeschouwer in dit team} other{{count} toeschouwers in dit team}}",
+  "@messagesSpectatorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "messagesSendConfirmOk": "Versturen",
   "messagesCancel": "Annuleer",
   "messagesSent": "Bericht verstuurd",

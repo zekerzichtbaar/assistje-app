@@ -112,7 +112,10 @@ class EventInfoCard extends StatelessWidget {
                 ),
               if (hasScore)
                 Text(
-                  '${e.homeScore ?? 0} - ${e.awayScore ?? 0}',
+                  // Na verlenging of strafschoppen hoort "n.v." / "4–3 n.s."
+                  // achter de uitslag.
+                  '${e.homeScore ?? 0} - ${e.awayScore ?? 0}'
+                  '${!e.isLive && e.live?.resultSuffix != null ? ' ${e.live!.resultSuffix}' : ''}',
                   key: const ValueKey('event-score'),
                   style: TextStyle(
                     fontSize: 15,

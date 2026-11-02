@@ -56,6 +56,12 @@ _StatsRow _$StatsRowFromJson(Map<String, dynamic> json) => _StatsRow(
   matchesPlayed: json['matches_played'] == null
       ? 0
       : readInt(json['matches_played']),
+  matchesPresent: json['matches_present'] == null
+      ? 0
+      : readInt(json['matches_present']),
+  minutesPerMatch: json['minutes_per_match'] == null
+      ? 0
+      : readInt(json['minutes_per_match']),
   flagMinutes: json['flag_minutes'] == null ? 0 : readInt(json['flag_minutes']),
   flagShifts: json['flag_shifts'] == null ? 0 : readInt(json['flag_shifts']),
   titles:
@@ -83,6 +89,8 @@ Map<String, dynamic> _$StatsRowToJson(_StatsRow instance) => <String, dynamic>{
   'yellow': instance.yellow,
   'red': instance.red,
   'matches_played': instance.matchesPlayed,
+  'matches_present': instance.matchesPresent,
+  'minutes_per_match': instance.minutesPerMatch,
   'flag_minutes': instance.flagMinutes,
   'flag_shifts': instance.flagShifts,
   'titles': instance.titles.map((e) => e.toJson()).toList(),

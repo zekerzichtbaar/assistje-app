@@ -86,7 +86,9 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
     final ok = await confirmSavings(
       context,
       title: l10n.savingsRemindConfirmTitle,
-      message: pot.oneOff
+      message: pot.withoutAmount
+          ? l10n.savingsRemindConfirmChecklist
+          : pot.oneOff
           ? l10n.savingsRemindConfirmOneOff
           : l10n.savingsRemindConfirmMonthly,
       confirmLabel: l10n.savingsRemindSend,
@@ -124,7 +126,9 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
     final ok = await confirmSavings(
       context,
       title: l10n.savingsArchive,
-      message: l10n.savingsArchiveConfirm(pot.name),
+      message: pot.withoutAmount
+          ? l10n.savingsArchiveConfirmChecklist(pot.name)
+          : l10n.savingsArchiveConfirm(pot.name),
       confirmLabel: l10n.savingsArchiveAction,
       destructive: true,
     );
@@ -147,6 +151,7 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
       context,
       paidCents: detail.savedCents,
       finesEnabled: detail.finesEnabled,
+      withoutAmount: detail.pot.withoutAmount,
       currentCostCents: detail.pot.actualCostCents,
       onSubmit: controller.settle,
     );
@@ -379,7 +384,9 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
       if (detail.canRemind) ...[
         const SizedBox(height: 14),
         Text(
-          l10n.savingsTapHint(formatCents(pot.amountCents)),
+          pot.withoutAmount
+              ? l10n.savingsTapHintChecklist
+              : l10n.savingsTapHint(formatCents(pot.amountCents)),
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 12, color: t.muted),
         ),
@@ -393,7 +400,9 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
         ),
         const SizedBox(height: 6),
         Text(
-          pot.oneOff
+          pot.withoutAmount
+              ? l10n.savingsRemindHintChecklist
+              : pot.oneOff
               ? l10n.savingsRemindHintOneOff
               : l10n.savingsRemindHintMonthly,
           textAlign: TextAlign.center,
@@ -428,8 +437,15 @@ class _BankCard extends StatelessWidget {
     final periods = detail.periods;
     final event = pot.event;
 
+    // Een afvinklijst telt vinkjes in plaats van geld.
+    final noMoney = pot.withoutAmount;
+    final checked = pot.oneOff ? detail.countingPaid : detail.payments.length;
+    final cells = pot.oneOff ? detail.counting.length : detail.cellsTotal;
+
     final String line;
-    if (pot.oneOff) {
+    if (noMoney) {
+      line = l10n.savingsCardChecked;
+    } else if (pot.oneOff) {
       final n = detail.counting.length;
       line = [
         l10n.savingsCardPerPerson(amount),
@@ -499,7 +515,7 @@ class _BankCard extends StatelessWidget {
       );
     }
 
-    final target = detail.targetCents;
+    final target = noMoney ? 0 : detail.targetCents;
     return Container(
       key: const ValueKey('savings-card'),
       constraints: const BoxConstraints(minHeight: 168),
@@ -540,45 +556,78 @@ class _BankCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Semantics(
-                      label: formatCents(saved),
-                      excludeSemantics: true,
-                      child: Text.rich(
-                        key: const ValueKey('savings-card-saved'),
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '€ ',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: soft,
+                    if (noMoney)
+                      Semantics(
+                        label: l10n.savingsCardCheckedOf('$checked', '$cells'),
+                        excludeSemantics: true,
+                        child: Text.rich(
+                          key: const ValueKey('savings-card-saved'),
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '$checked',
+                                style: TextStyle(
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1,
+                                  color: fg,
+                                ),
                               ),
-                            ),
-                            TextSpan(
-                              text: whole,
-                              style: TextStyle(
-                                fontSize: 34,
-                                fontWeight: FontWeight.w700,
-                                height: 1,
-                                color: fg,
+                              TextSpan(
+                                text: ' ${l10n.savingsCardOf('$cells')}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: soft,
+                                ),
                               ),
-                            ),
-                            TextSpan(
-                              text: ',$frac',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: soft,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          style: const TextStyle(
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
                         ),
-                        style: const TextStyle(
-                          fontFeatures: [FontFeature.tabularFigures()],
+                      )
+                    else
+                      Semantics(
+                        label: formatCents(saved),
+                        excludeSemantics: true,
+                        child: Text.rich(
+                          key: const ValueKey('savings-card-saved'),
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '€ ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: soft,
+                                ),
+                              ),
+                              TextSpan(
+                                text: whole,
+                                style: TextStyle(
+                                  fontSize: 34,
+                                  fontWeight: FontWeight.w700,
+                                  height: 1,
+                                  color: fg,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ',$frac',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: soft,
+                                ),
+                              ),
+                            ],
+                          ),
+                          style: const TextStyle(
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 8),
                     Text(
                       line,
@@ -624,7 +673,9 @@ class _BankCard extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  (pot.goalCents != null
+                                  (noMoney
+                                          ? l10n.savingsRingChecked
+                                          : pot.goalCents != null
                                           ? l10n.savingsRingGoal
                                           : l10n.savingsRingPaid)
                                       .toUpperCase(),

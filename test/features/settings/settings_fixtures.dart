@@ -92,6 +92,7 @@ abstract final class SettingsFixtures {
     'sort_order': 1,
     'mode': 'individual',
     'scope': 'match',
+    'away_only': false,
     'auto_rotate': true,
     'on_unavailable': 'reassign',
     'pool': ['players'],
@@ -155,6 +156,7 @@ abstract final class SettingsFixtures {
           'in_fines': false,
           'in_stats': true,
           'staff_in_fines': false,
+          'clean_sheet_fines_to': 'sideline',
         },
     'training_points': {'attendance_point': attendancePoint},
     'period':

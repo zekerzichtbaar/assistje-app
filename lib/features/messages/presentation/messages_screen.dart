@@ -53,6 +53,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
     final sent = await showComposeSheet(
       context,
       linkTargets: overview.linkTargets,
+      spectatorsCount: overview.spectatorsCount,
       onSend: controller.send,
     );
     if ((sent ?? false) && mounted) {

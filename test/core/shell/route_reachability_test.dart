@@ -71,6 +71,7 @@ Map<String, dynamic> _member(
   _Role role, {
   Map<String, bool> features = const {},
   bool hasPoule = false,
+  bool hasDuties = false,
   bool onboardingOpen = false,
   List<String>? abilities,
 }) => ApiFixtures.membership(
@@ -88,6 +89,7 @@ Map<String, dynamic> _member(
       },
   features: features,
   hasPoule: hasPoule,
+  hasDuties: hasDuties,
   onboardingOpen: onboardingOpen,
 );
 
@@ -113,6 +115,7 @@ const _routeMatrix = <String, String>{
   // opent de spelerpagina') en test/features/stats/stats_screen_test.dart.
   AppRoutes.playerDetail: 'Team/Spelers/Statistieken/Ranking → speler',
   AppRoutes.duties: 'menu, trainer',
+  AppRoutes.dutyOverview: 'menu, speler/toeschouwer met diensten',
   AppRoutes.fines: 'menu [fines], niet voor toeschouwers',
   AppRoutes.savings: 'menu [savings], niet voor toeschouwers',
   AppRoutes.wheel: 'menu [wheel], iedereen',
@@ -170,6 +173,7 @@ class _MenuRow {
     this.roles, {
     this.flag,
     this.poule = false,
+    this.duties = false,
     this.onboarding = false,
   });
 
@@ -182,6 +186,9 @@ class _MenuRow {
   /// Alleen met een poulekoppeling (`has_poule`).
   final bool poule;
 
+  /// Alleen als het team diensten heeft (`has_duties`).
+  final bool duties;
+
   /// Alleen zolang de checklist openstaat (`onboarding_open`).
   final bool onboarding;
 
@@ -189,6 +196,7 @@ class _MenuRow {
       roles.contains(role) &&
       (flag == null || (s.features[flag] ?? false)) &&
       (!poule || s.hasPoule) &&
+      (!duties || s.hasDuties) &&
       (!onboarding || s.onboardingOpen);
 }
 
@@ -202,6 +210,12 @@ const _menuTable = <_MenuRow>[
   // geen Team-item.
   _MenuRow(NavItem.team, {_Role.speler, _Role.toeschouwer}),
   _MenuRow(NavItem.duties, {_Role.trainer}),
+  // Het leesoverzicht: wie geen trainer is, en alleen met diensttypes.
+  _MenuRow(NavItem.dutyOverview, {
+    _Role.speler,
+    _Role.penningmeester,
+    _Role.toeschouwer,
+  }, duties: true),
   _MenuRow(NavItem.stats, _allRoles, flag: 'stats'),
   // Ranking hangt aan dezelfde `stats`-flag als Statistieken.
   _MenuRow(NavItem.hallOfFame, _allRoles, flag: 'stats'),
@@ -230,12 +244,14 @@ class _Scenario {
     this.name, {
     required this.features,
     this.hasPoule = false,
+    this.hasDuties = false,
     this.onboardingOpen = false,
   });
 
   final String name;
   final Map<String, bool> features;
   final bool hasPoule;
+  final bool hasDuties;
   final bool onboardingOpen;
 }
 
@@ -244,6 +260,7 @@ const _scenarios = [
     'alles aan',
     features: _allFeatures,
     hasPoule: true,
+    hasDuties: true,
     onboardingOpen: true,
   ),
   _Scenario('alles uit', features: {}),
@@ -326,6 +343,7 @@ void main() {
                 role,
                 features: scenario.features,
                 hasPoule: scenario.hasPoule,
+                hasDuties: scenario.hasDuties,
                 onboardingOpen: scenario.onboardingOpen,
               ),
             ],
@@ -400,6 +418,7 @@ void main() {
           'alles aan',
           features: _allFeatures,
           hasPoule: true,
+          hasDuties: true,
           onboardingOpen: true,
         );
         final (container, _) = await pumpSignedIn(
@@ -409,6 +428,7 @@ void main() {
               role,
               features: _allFeatures,
               hasPoule: true,
+              hasDuties: true,
               onboardingOpen: true,
             ),
           ],

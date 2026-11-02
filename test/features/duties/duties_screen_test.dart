@@ -121,7 +121,8 @@ void main() {
     final before = http.requestsTo(_index).length;
     await _tap(tester, find.byKey(const ValueKey('duty-plan-form-save')));
     expect(find.byKey(const ValueKey('duty-plan-form-save')), findsNothing);
-    expect(find.text('Ingepland'), findsOneWidget);
+    // De melding van de server.
+    expect(find.text('Toewijzing aangemaakt.'), findsOneWidget);
     expect(http.requestsTo(_index).length, before + 1);
   });
 
@@ -289,5 +290,119 @@ void main() {
     http.routes[_index] = _byType;
     await _tap(tester, find.byKey(const ValueKey('duties-retry')));
     expect(_inScreen(find.text('Vogels 3 – Kraaien 1')), findsOneWidget);
+  });
+
+  testWidgets(
+    'één of meer personen: aanvinken, fouten van de server, melding',
+    (tester) async {
+      final (_, http) = await _open(
+        tester,
+        setup: (http) {
+          http.routes[_index] = (_) =>
+              FakeResponse(200, DutiesFixtures.multi());
+          // Thuiswedstrijd bij een type dat alleen bij uitwedstrijden geldt.
+          http.on(_store, 422, {
+            'message': 'Rijden geldt alleen bij uitwedstrijden.',
+            'errors': {
+              'dates.0.event_id': ['Rijden geldt alleen bij uitwedstrijden.'],
+            },
+          });
+        },
+      );
+
+      // Geen automatisch verdelen bij "Eén of meer"; wel de uitleg.
+      expect(find.byKey(const ValueKey('duties-auto-assign')), findsNothing);
+      expect(
+        find.text('Eén of meer personen per wedstrijd: vink aan wie er staat.'),
+        findsOneWidget,
+      );
+
+      await _tap(tester, find.byKey(const ValueKey('duties-plan')));
+      expect(find.text('Beurt toewijzen'), findsOneWidget);
+      // Aanvinken i.p.v. één keuze; niemand vooraf aangevinkt.
+      expect(find.byKey(const ValueKey('duty-plan-form-who')), findsNothing);
+      expect(
+        find.text(
+          'Niemand gekozen · Gesorteerd op aantal beurten (minste '
+          'eerst).',
+        ),
+        findsOneWidget,
+      );
+
+      await _tap(
+        tester,
+        find.byKey(const ValueKey('duty-plan-form-row-0-match')),
+      );
+      await _tap(tester, find.textContaining('Kraaien 1').last);
+      await _tap(tester, find.byKey(const ValueKey('duty-plan-form-save')));
+      expect(find.byKey(const ValueKey('duty-plan-form-who-error')), findsOne);
+      expect(http.requestsTo(_store), isEmpty);
+
+      await _tap(
+        tester,
+        find.byKey(const ValueKey('duty-plan-form-person-p_17')),
+      );
+      await _tap(
+        tester,
+        find.byKey(const ValueKey('duty-plan-form-person-p_18')),
+      );
+      expect(find.textContaining('2 gekozen'), findsOneWidget);
+      await _tap(tester, find.byKey(const ValueKey('duty-plan-form-save')));
+
+      // In lijstvolgorde (minste beurten eerst).
+      expect(http.requestsTo(_store).single.body, {
+        'duty_type_id': 5,
+        'mode': 'multi',
+        'member_keys': ['p_18', 'p_17'],
+        'dates': [
+          {'event_id': 812},
+        ],
+      });
+      // De servermelding staat bij de wedstrijd.
+      expect(
+        find.text('Rijden geldt alleen bij uitwedstrijden.'),
+        findsOneWidget,
+      );
+
+      // Lege selectie die de server toch weigert: melding onder "Wie".
+      http.on(_store, 422, {
+        'message': 'Kies wie de dienst doet.',
+        'errors': {
+          'member_keys': ['Kies wie de dienst doet.'],
+        },
+      });
+      await _tap(tester, find.byKey(const ValueKey('duty-plan-form-save')));
+      expect(find.byKey(const ValueKey('duty-plan-form-who-error')), findsOne);
+
+      http.on(
+        _store,
+        201,
+        DutiesFixtures.stored(message: '2 mensen ingedeeld.'),
+      );
+      await _tap(tester, find.byKey(const ValueKey('duty-plan-form-save')));
+      expect(find.byKey(const ValueKey('duty-plan-form-save')), findsNothing);
+      expect(find.text('2 mensen ingedeeld.'), findsOneWidget);
+    },
+  );
+
+  testWidgets('verdelen: een 422 van de server komt als toast', (tester) async {
+    await _open(
+      tester,
+      setup: (http) => http.on('POST /teams/3/duties/auto-assign', 422, {
+        'message': 'Bij "Eén of meer personen" kies je zelf wie er staat.',
+        'errors': {
+          'duty_type_id': [
+            'Bij "Eén of meer personen" kies je zelf wie er staat.',
+          ],
+        },
+      }),
+    );
+    await _tap(tester, find.byKey(const ValueKey('duties-auto-assign')));
+    await _tap(tester, find.byKey(const ValueKey('duties-confirm-ok')));
+    expect(find.text('Dat lukte niet'), findsOneWidget);
+    expect(
+      find.text('Bij "Eén of meer personen" kies je zelf wie er staat.'),
+      findsOneWidget,
+    );
   });
 }

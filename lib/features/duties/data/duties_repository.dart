@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_exception.dart';
 import 'models/duties_models.dart';
+import 'models/duty_overview_models.dart';
 
 /// Eén rij in `dates[]` bij beurten inplannen: een [date] (`YYYY-MM-DD`,
 /// losse dienst) of een [eventId] (wedstrijddienst), met optionele tijden en
@@ -38,13 +39,15 @@ class DutyDateRow {
 }
 
 /// `POST duties/assignments`: [mode] `individual` (met [memberKey]),
-/// `single` (met [groupId]) of `rotate` (groepen om de beurt).
+/// `multi` (één of meer personen, met [memberKeys]), `single` (met
+/// [groupId]) of `rotate` (groepen om de beurt).
 class DutyAssignmentDraft {
   const DutyAssignmentDraft({
     required this.dutyTypeId,
     required this.mode,
     required this.dates,
     this.memberKey,
+    this.memberKeys = const [],
     this.groupId,
   });
 
@@ -52,19 +55,26 @@ class DutyAssignmentDraft {
   final String mode;
   final List<DutyDateRow> dates;
   final String? memberKey;
+  final List<String> memberKeys;
   final int? groupId;
 
   Map<String, Object?> toJson() => {
     'duty_type_id': dutyTypeId,
     'mode': mode,
     if (mode == 'individual') 'member_key': memberKey,
+    if (mode == 'multi') 'member_keys': memberKeys,
     if (mode == 'single') 'duty_group_id': groupId,
     'dates': [for (final row in dates) row.toJson()],
   };
 }
 
+/// Het antwoord op beurten inplannen: de melding van de server
+/// (`"Toewijzing aangemaakt."`, `"3 mensen ingedeeld."`) plus álle beurten
+/// van het type.
+typedef DutyStoreResult = ({String? message, List<DutyAssignment> assignments});
+
 /// De diensten-endpoints (vogels3 `docs/api/v1/duties.md`). Alles alleen
-/// voor de trainer (anders `403`); feature uit, onbekend type of iets van
+/// voor de trainer (anders `403`), behalve [fetchOverview]; feature uit, onbekend type of iets van
 /// een ander team `404`; veldfouten `422`.
 class DutiesRepository {
   const DutiesRepository(this._api);
@@ -120,8 +130,8 @@ class DutiesRepository {
   Future<void> reorderGroups(int teamId, List<int> ids) =>
       _api.post('${_base(teamId)}/groups/reorder', data: {'ids': ids});
 
-  /// Beurten inplannen. Geeft álle beurten van het type terug.
-  Future<List<DutyAssignment>> storeAssignments(
+  /// Beurten inplannen. Geeft de melding en álle beurten van het type terug.
+  Future<DutyStoreResult> storeAssignments(
     int teamId,
     DutyAssignmentDraft draft,
   ) async {
@@ -129,7 +139,20 @@ class DutiesRepository {
       '${_base(teamId)}/assignments',
       data: draft.toJson(),
     );
-    return _assignments(_data(body));
+    final data = _data(body);
+    final message = data['message'];
+    return (
+      message: message is String ? message : null,
+      assignments: _assignments(data),
+    );
+  }
+
+  /// Het leesoverzicht voor elk teamlid (`GET teams/{team}/duty-overview`,
+  /// `/diensten` op het web): je eigen beurten en per type wat er gepland
+  /// staat en wie in welke groep zit.
+  Future<DutyOverview> fetchOverview(int teamId) async {
+    final body = await _api.get('/teams/$teamId/duty-overview');
+    return DutyOverview.fromJson(_data(body));
   }
 
   /// Een wedstrijddienst over de komende wedstrijden verdelen. Geeft de

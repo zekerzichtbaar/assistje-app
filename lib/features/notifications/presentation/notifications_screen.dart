@@ -19,7 +19,7 @@ import 'widgets/notification_tile.dart';
 
 /// De meldingen-inbox van het actieve team (de bel in de PWA): nieuwste
 /// eerst, zelf bijladen onderaan, tik = gelezen + openen, vegen = weghalen,
-/// "Alles gelezen" bovenaan.
+/// "Alles gelezen" en "Alles verwijderen" (prullenbak) bovenaan.
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -119,6 +119,30 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         title: l10n.notificationsAllReadDone,
         closeLabel: l10n.close,
       );
+    }
+  }
+
+  /// Prullenbak bovenaan: na bevestiging de hele inbox van dit team weg.
+  Future<void> _deleteAll(int teamId) async {
+    final l10n = AppLocalizations.of(context);
+    unawaited(Haptics.light());
+    final ok = await showConfirmDialog(
+      context,
+      message: l10n.notificationsDeleteAllConfirm,
+      confirmLabel: l10n.notificationsDeleteAllConfirmOk,
+      cancelLabel: l10n.cancel,
+      destructive: true,
+      cancelKey: const ValueKey('notifications-delete-all-cancel'),
+      confirmKey: const ValueKey('notifications-delete-all-ok'),
+    );
+    if (!ok || !mounted) return;
+    setState(() => _loadMoreError = null);
+    final error = await _controller(teamId).deleteAll();
+    if (!mounted) return;
+    if (error != null) {
+      _toastError(l10n.notificationsDeleteFailed, error);
+    } else {
+      unawaited(Haptics.success());
     }
   }
 
@@ -238,6 +262,14 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   l10n.notificationsMarkAllRead,
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
+              ),
+            if (state != null && state.items.isNotEmpty)
+              IconButton(
+                key: const ValueKey('notifications-delete-all'),
+                onPressed: () => _deleteAll(teamId),
+                tooltip: l10n.notificationsDeleteAll,
+                color: t.muted,
+                icon: const Icon(PhosphorIconsDuotone.trash, size: 22),
               ),
           ],
         ),

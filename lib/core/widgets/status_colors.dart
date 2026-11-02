@@ -45,6 +45,12 @@ abstract final class StatusColors {
   static const Color amber800 = Color(0xFF92400E);
   static const Color amber900 = Color(0xFF78350F);
 
+  /// Indigo (Tailwind `indigo-*`): staf.
+  static const Color indigo100 = Color(0xFFE0E7FF);
+  static const Color indigo300 = Color(0xFFA5B4FC);
+  static const Color indigo500 = Color(0xFF6366F1);
+  static const Color indigo700 = Color(0xFF4338CA);
+
   static const Color rose100 = Color(0xFFFFE4E6);
   static const Color rose500 = Color(0xFFF43F5E);
 

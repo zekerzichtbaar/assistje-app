@@ -247,6 +247,94 @@ abstract final class SavingsFixtures {
     ),
   };
 
+  /// Een afvinklijst in het overzicht (pot 11, `without_amount`): 3 van de
+  /// 12 vakjes afgevinkt.
+  static Map<String, dynamic> checklistRow() => {
+    'id': 11,
+    'name': 'Krat bier',
+    'amount_cents': 0,
+    'without_amount': true,
+    'goal_cents': null,
+    'months': 3,
+    'member_count': 4,
+    'saved_cents': 0,
+    'checked_count': 3,
+  };
+
+  /// Een eenmalige afvinklijst (pot 12, zonder bedrag) met 3 deelnemers,
+  /// waarvan 1 afgevinkt.
+  static Map<String, dynamic> checklistDetail({
+    bool canManage = true,
+    bool oneOff = true,
+  }) => {
+    'data': {
+      'pot': {
+        'id': 12,
+        'name': 'Taart na verjaardag',
+        'amount_cents': 0,
+        'without_amount': true,
+        'goal_cents': null,
+        'months': oneOff ? 1 : 2,
+        'starts_on': '2026-11-01',
+        'scope': 'all',
+        'one_off': oneOff,
+        'event': null,
+        'actual_cost_cents': null,
+        'settled_on': null,
+      },
+      'fines_enabled': true,
+      'periods': oneOff ? ['2026-11'] : ['2026-11', '2026-12'],
+      'participants': [
+        {
+          'key': 'p17',
+          'name': 'Sam de Vries',
+          'kind': 'player',
+          'shirt_number': 7,
+          'refund': false,
+          'refund_reason': null,
+          'refunded': false,
+        },
+        {
+          'key': 'p21',
+          'name': 'Joris Bakker',
+          'kind': 'player',
+          'shirt_number': 9,
+          'refund': false,
+          'refund_reason': null,
+          'refunded': false,
+        },
+        {
+          'key': 'u4',
+          'name': 'Coach Ronald',
+          'kind': 'staff',
+          'shirt_number': null,
+          'refund': false,
+          'refund_reason': null,
+          'refunded': false,
+        },
+      ],
+      'payments': [
+        {'key': 'p17', 'ym': '2026-11', 'cents': 0},
+      ],
+      'can_manage': canManage,
+    },
+  };
+
+  /// `GET …/savings/13/edit` van een afvinklijst: `amount` is `null`.
+  static Map<String, dynamic> checklistEditOptions() {
+    final options = editOptions();
+    final data = options['data'] as Map<String, dynamic>;
+    data['pot'] = {
+      ...data['pot'] as Map<String, dynamic>,
+      'id': 13,
+      'name': 'Krat bier',
+      'without_amount': true,
+      'amount': null,
+      'goal': null,
+    };
+    return options;
+  }
+
   static Map<String, dynamic> toggleResponse({
     String key = 'p17',
     String ym = '2026-11',

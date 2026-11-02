@@ -50,6 +50,12 @@ abstract class StatsRow with _$StatsRow {
     @asInt @Default(0) int yellow,
     @asInt @Default(0) int red,
     @asInt @Default(0) int matchesPlayed,
+
+    /// Wedstrijden (met opstelling) waarbij de speler er was of speelde.
+    @asInt @Default(0) int matchesPresent,
+
+    /// `minutes / matches_present`, afgerond; `0` zonder aanwezige wedstrijd.
+    @asInt @Default(0) int minutesPerMatch,
     @asInt @Default(0) int flagMinutes,
     @asInt @Default(0) int flagShifts,
     @Default(<StatsTitle>[]) List<StatsTitle> titles,

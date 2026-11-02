@@ -38,6 +38,7 @@ _LiveState _$LiveStateFromJson(Map<String, dynamic> json) => _LiveState(
           ?.map((e) => (e as num).toInt())
           .toList() ??
       const <int>[],
+  resultSuffix: json['result_suffix'] as String?,
 );
 
 Map<String, dynamic> _$LiveStateToJson(_LiveState instance) =>
@@ -49,6 +50,7 @@ Map<String, dynamic> _$LiveStateToJson(_LiveState instance) =>
       'ended_at': instance.endedAt?.toIso8601String(),
       'period': instance.period,
       'period_ends': instance.periodEnds,
+      'result_suffix': instance.resultSuffix,
     };
 
 _AgendaEvent _$AgendaEventFromJson(Map<String, dynamic> json) => _AgendaEvent(

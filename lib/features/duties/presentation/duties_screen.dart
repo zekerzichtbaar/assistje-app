@@ -19,8 +19,8 @@ import 'widgets/duty_group_sheet.dart';
 
 /// Diensten (`Pages/Trainer/Duties/Index.tsx`), alleen voor de trainer:
 /// typewisselaar, bij een groepsdienst de groepen (aanmaken, wijzigen,
-/// volgorde) en de geplande beurten, bij een individuele dienst de beurten
-/// per persoon, en de tellers van dit seizoen. Diensttypes zelf beheren
+/// volgorde) en de geplande beurten, bij een individuele of één-of-meer-
+/// dienst de beurten per persoon, en de tellers van dit seizoen. Diensttypes zelf beheren
 /// hoort bij de instellingen en zit niet in de API.
 class DutiesScreen extends ConsumerStatefulWidget {
   const DutiesScreen({super.key});
@@ -100,13 +100,19 @@ class _DutiesScreenState extends ConsumerState<DutiesScreen> {
   Future<void> _plan(int teamId, DutiesOverview overview) async {
     unawaited(Haptics.light());
     final l10n = _l10n;
+    // De melding van de server, bv. "3 mensen ingedeeld." bij één-of-meer.
+    String? message;
     final done = await showDutyPlanSheet(
       context,
       overview: overview,
-      onSave: _controller(teamId).storeAssignments,
+      onSave: (draft) async {
+        final (error, text) = await _controller(teamId).storeAssignments(draft);
+        message = text;
+        return error;
+      },
     );
     if ((done ?? false) && mounted) {
-      showDutiesSuccess(context, l10n.dutiesPlanned);
+      showDutiesSuccess(context, message ?? l10n.dutiesPlanned);
     }
   }
 
@@ -278,7 +284,7 @@ class _DutiesScreenState extends ConsumerState<DutiesScreen> {
   }
 
   List<Widget> _content(int teamId, DutiesOverview overview) {
-    final cards = overview.isIndividual
+    final cards = overview.assignsPeople
         ? _individualCards(teamId, overview)
         : _groupCards(teamId, overview);
     return [
@@ -428,7 +434,9 @@ class _DutiesScreenState extends ConsumerState<DutiesScreen> {
         title: l10n.dutiesPlannedTurns,
         count: overview.assignments.length,
         actions: [
-          if (overview.isMatchBound)
+          // Bij "Eén of meer" kies je zelf wie er per wedstrijd staat; de
+          // server weigert verdelen dan (422).
+          if (overview.canAutoAssign)
             _addButton(
               key: 'duties-auto-assign',
               label: l10n.dutiesAutoAssign,
@@ -447,12 +455,12 @@ class _DutiesScreenState extends ConsumerState<DutiesScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Text(
-                overview.isMatchBound
-                    ? l10n.dutiesIndividualHintMatch
-                    : l10n.dutiesIndividualHint,
-                style: TextStyle(fontSize: 12, color: t.muted),
-              ),
+              child: Text(switch ((overview.isMulti, overview.isMatchBound)) {
+                (true, true) => l10n.dutiesMultiHintMatch,
+                (true, false) => l10n.dutiesMultiHint,
+                (false, true) => l10n.dutiesIndividualHintMatch,
+                (false, false) => l10n.dutiesIndividualHint,
+              }, style: TextStyle(fontSize: 12, color: t.muted)),
             ),
             _assignmentList(
               teamId,
@@ -596,7 +604,7 @@ class _AssignmentRow extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
     final a = assignment;
-    final who = overview.isIndividual
+    final who = overview.assignsPeople
         ? (a.playerName ?? l10n.dutiesNoPerson)
         : a.groupName;
     final time = a.startsAt == null

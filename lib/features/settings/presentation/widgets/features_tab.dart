@@ -105,18 +105,38 @@ class SettingsFeaturesTab extends StatelessWidget {
                 : (v) => _run(context, actions.setAttendancePoint(v)),
           );
         case 'fines':
-          return SettingsToggleRow(
-            switchKey: const ValueKey('settings-staff-in-fines'),
-            inset: true,
-            title: l10n.settingsStaffInFines,
-            subtitle: l10n.settingsStaffInFinesHint,
-            value: s.guests.staffInFines,
-            onChanged: readOnly
-                ? null
-                : (v) => _run(
-                    context,
-                    actions.updateGuests(GuestUpdate(staffInFines: v)),
-                  ),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SettingsToggleRow(
+                switchKey: const ValueKey('settings-staff-in-fines'),
+                inset: true,
+                title: l10n.settingsStaffInFines,
+                subtitle: l10n.settingsStaffInFinesHint,
+                value: s.guests.staffInFines,
+                onChanged: readOnly
+                    ? null
+                    : (v) => _run(
+                        context,
+                        actions.updateGuests(GuestUpdate(staffInFines: v)),
+                      ),
+              ),
+              // Alleen met staf erin: uit geldt de standaard (sideline).
+              if (s.guests.staffInFines) ...[
+                const SizedBox(height: 8),
+                _CleanSheetChoice(
+                  value: s.guests.cleanSheetFinesTo,
+                  onChanged: readOnly
+                      ? null
+                      : (to) => _run(
+                          context,
+                          actions.updateGuests(
+                            GuestUpdate(cleanSheetFinesTo: to),
+                          ),
+                        ),
+                ),
+              ],
+            ],
           );
         case 'carpool':
           return Column(
@@ -197,6 +217,75 @@ class SettingsFeaturesTab extends StatelessWidget {
           sections[i],
         ],
       ],
+    );
+  }
+}
+
+/// "Bij de 0": wie de "De 0 gehouden"-boete krijgt (`CLEAN_SHEET_MODES` in
+/// FeaturesTab.tsx). Staf die erbij was krijgt hem altijd.
+class _CleanSheetChoice extends StatelessWidget {
+  const _CleanSheetChoice({required this.value, required this.onChanged});
+
+  final CleanSheetFinesTo value;
+  final ValueChanged<CleanSheetFinesTo>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    String label(CleanSheetFinesTo to) => switch (to) {
+      CleanSheetFinesTo.staff => l10n.settingsCleanSheetStaff,
+      CleanSheetFinesTo.sideline => l10n.settingsCleanSheetSideline,
+      CleanSheetFinesTo.notPlaying => l10n.settingsCleanSheetNotPlaying,
+    };
+    String hint(CleanSheetFinesTo to) => switch (to) {
+      CleanSheetFinesTo.staff => l10n.settingsCleanSheetStaffHint,
+      CleanSheetFinesTo.sideline => l10n.settingsCleanSheetSidelineHint,
+      CleanSheetFinesTo.notPlaying => l10n.settingsCleanSheetNotPlayingHint,
+    };
+    final change = onChanged;
+
+    return Container(
+      key: const ValueKey('settings-clean-sheet'),
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+      decoration: BoxDecoration(
+        color: t.raised,
+        borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.settingsCleanSheetTitle,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: t.ink,
+            ),
+          ),
+          Text(
+            hint(value),
+            key: const ValueKey('settings-clean-sheet-hint'),
+            style: TextStyle(fontSize: 14, color: t.muted),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final to in CleanSheetFinesTo.values)
+                AppPill(
+                  key: ValueKey('settings-clean-sheet-${to.apiValue}'),
+                  label: label(to),
+                  selected: value == to,
+                  onTap: change == null || value == to
+                      ? null
+                      : () => change(to),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

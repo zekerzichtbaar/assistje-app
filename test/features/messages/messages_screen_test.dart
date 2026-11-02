@@ -140,7 +140,7 @@ void main() {
     // Annuleren in de bevestiging verstuurt niets.
     await _tap(tester, find.byKey(const ValueKey('messages-compose-send')));
     expect(
-      find.text('Verstuur dit bericht als push naar alle teamgenoten?'),
+      find.text('Verstuur dit bericht als push naar het team?'),
       findsOneWidget,
     );
     await _tap(tester, find.byKey(const ValueKey('messages-confirm-cancel')));
@@ -163,12 +163,58 @@ void main() {
       'title': 'Bal mee',
       'body': 'Iedereen een bal mee zaterdag.',
       'url': '/agenda',
+      'include_spectators': false,
     });
     expect(http.requestsTo(_index), hasLength(2));
     expect(find.byKey(const ValueKey('messages-compose-title')), findsNothing);
     expect(find.text('Bericht verstuurd'), findsOneWidget);
     expect(find.text('Naar 18 teamgenoten'), findsOneWidget);
     expect(find.byKey(const ValueKey('messages-message-32')), findsOneWidget);
+  });
+
+  testWidgets('zonder toeschouwers geen schakelaar', (tester) async {
+    await _open(tester);
+    await _tap(tester, find.byKey(const ValueKey('messages-compose')));
+    expect(
+      find.byKey(const ValueKey('messages-compose-spectators')),
+      findsNothing,
+    );
+    expect(find.text('Verstuur naar het team'), findsOneWidget);
+  });
+
+  testWidgets('ook naar toeschouwers: standaard uit, tekst en verzoek volgen', (
+    tester,
+  ) async {
+    final (_, http) = await _open(
+      tester,
+      overview: MessagesFixtures.overview(spectators: 3),
+      setup: (http) => http.on(_store, 201, MessagesFixtures.sent()),
+    );
+    await _tap(tester, find.byKey(const ValueKey('messages-compose')));
+    await _fill(tester);
+
+    final toggle = find.byKey(const ValueKey('messages-compose-spectators'));
+    expect(tester.widget<Switch>(toggle).value, isFalse);
+    expect(find.text('Ook naar toeschouwers'), findsOneWidget);
+    expect(find.text('3 toeschouwers in dit team'), findsOneWidget);
+
+    await _tap(tester, toggle);
+    expect(tester.widget<Switch>(toggle).value, isTrue);
+    expect(find.text('Verstuur naar team + toeschouwers'), findsOneWidget);
+
+    await _tap(tester, find.byKey(const ValueKey('messages-compose-send')));
+    expect(
+      find.text(
+        'Verstuur dit bericht als push naar het team én de toeschouwers?',
+      ),
+      findsOneWidget,
+    );
+    await _tap(tester, find.byKey(const ValueKey('messages-confirm-send')));
+    expect(
+      (http.requestsTo(_store).single.body!
+          as Map<String, dynamic>)['include_spectators'],
+      isTrue,
+    );
   });
 
   testWidgets('eigen link wordt meegestuurd', (tester) async {

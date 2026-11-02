@@ -169,9 +169,39 @@ abstract final class DutiesFixtures {
     'data': {...group(), 'duty_type_id': 1, 'sort_order': 3},
   };
 
-  static Map<String, dynamic> stored() => {
+  /// Het individuele wedstrijdtype, maar als "Eén of meer personen" (`multi`,
+  /// bv. rijden).
+  static Map<String, dynamic> multi() {
+    final base = individual();
+    final data = base['data'] as Map<String, dynamic>;
+    return {
+      'data': {
+        ...data,
+        'type': 'rijden',
+        'duty_type_id': 5,
+        'duty_type_mode': 'multi',
+        'duty_type_auto_rotate': false,
+        'duty_types': [
+          ...dutyTypes(),
+          {
+            'id': 5,
+            'name': 'Rijden',
+            'slug': 'rijden',
+            'icon': 'car',
+            'mode': 'multi',
+            'scope': 'match',
+            'auto_rotate': false,
+          },
+        ],
+      },
+    };
+  }
+
+  static Map<String, dynamic> stored({
+    String message = 'Toewijzing aangemaakt.',
+  }) => {
     'data': {
-      'message': 'Toewijzing aangemaakt.',
+      'message': message,
       'duty_type_id': 3,
       'assignments': [assignment()],
     },
@@ -203,6 +233,96 @@ abstract final class DutiesFixtures {
       'event_id': 812,
       'duty_type_id': 3,
       'assignments': [assignment()],
+    },
+  };
+
+  /// Eén rij uit `duty-overview` (`App\Support\DutyRows`).
+  static Map<String, dynamic> overviewRow({
+    int dutyId = 120,
+    int? eventId = 812,
+    bool mine = true,
+    bool done = false,
+    String title = 'Rijden',
+    String icon = 'car',
+    String? groupName = 'Sam de Vries, Bram Visser',
+    List<String> playerNames = const ['Sam de Vries', 'Bram Visser'],
+    String? notes,
+  }) => {
+    'kind': 'duty',
+    'duty_id': dutyId,
+    'duty_type_id': 3,
+    'event_id': eventId,
+    'match_bound': eventId != null,
+    'date': '2026-11-08T00:00:00+01:00',
+    'duty_type': 'rijden',
+    'title': title,
+    'icon': icon,
+    'group_name': groupName,
+    'player_names': playerNames,
+    'time_range': null,
+    'starts_at': null,
+    'ends_at': null,
+    'notes': notes,
+    'done': done,
+    'mine': mine,
+    'event_label': eventId == null ? null : 'Kraaien 1 – Vogels 3',
+  };
+
+  /// `GET teams/{team}/duty-overview` (het voorbeeld uit de API-doc, plus
+  /// een losse beurt zonder wedstrijd en "en nog meer").
+  static Map<String, dynamic> overview({
+    List<Map<String, dynamic>>? mine,
+    List<Map<String, dynamic>>? duties,
+  }) => {
+    'data': {
+      'mine': mine ?? [overviewRow()],
+      'duties':
+          duties ??
+          [
+            {
+              'id': 3,
+              'name': 'Rijden',
+              'icon': 'car',
+              'mode': 'multi',
+              'upcoming': [overviewRow()],
+              'upcoming_total': 10,
+              'groups': <Object>[],
+            },
+            {
+              'id': 4,
+              'name': 'Kantine',
+              'icon': 'coffee',
+              'mode': 'group',
+              'upcoming': [
+                overviewRow(
+                  dutyId: 140,
+                  eventId: null,
+                  mine: false,
+                  done: true,
+                  title: 'Kantine',
+                  icon: 'coffee',
+                  groupName: 'Groep B',
+                  playerNames: const [],
+                  notes: 'Sleutel ophalen',
+                ),
+              ],
+              'upcoming_total': 1,
+              'groups': [
+                {
+                  'id': 11,
+                  'name': 'Groep A',
+                  'members': ['Bram Visser', 'Sam de Vries'],
+                  'mine': true,
+                },
+                {
+                  'id': 12,
+                  'name': 'Groep B',
+                  'members': <String>[],
+                  'mine': false,
+                },
+              ],
+            },
+          ],
     },
   };
 }

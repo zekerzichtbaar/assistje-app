@@ -17,7 +17,8 @@ String eventEuros(int cents) {
 
 /// De inleg bij een activiteit (`SavingsSection` in de PWA): bedrag p.p.,
 /// wie er betaald heeft en de weg naar de pot. Zonder pot krijgt alleen de
-/// penningmeester ([canStart]) een ingang.
+/// penningmeester ([canStart]) een ingang. Een pot zonder bedrag is een
+/// afvinklijst: geen geld, "afgevinkt" in plaats van "betaald".
 class EventSavingsSection extends StatelessWidget {
   const EventSavingsSection({
     super.key,
@@ -78,18 +79,27 @@ class EventSavingsSection extends StatelessWidget {
           ? l10n.eventSavingsRefundCancelled
           : l10n.eventSavingsRefund;
     } else if (pot.iPaid == true) {
-      mine = l10n.eventSavingsIPaid;
+      mine = pot.withoutAmount
+          ? l10n.eventSavingsIChecked
+          : l10n.eventSavingsIPaid;
     } else if (pot.iPaid == false) {
-      mine = l10n.eventSavingsNotPaid;
+      mine = pot.withoutAmount
+          ? l10n.eventSavingsNotChecked
+          : l10n.eventSavingsNotPaid;
     } else {
       mine = null;
     }
 
+    final noMoney = pot.withoutAmount;
     final amount = eventEuros(pot.amountCents);
-    final headline = pot.oneOff
+    final headline = noMoney
+        ? pot.name
+        : pot.oneOff
         ? l10n.eventSavingsAmount(amount, pot.name)
         : l10n.eventSavingsAmountMonthly(amount, pot.name);
-    final status = pot.oneOff && pot.openCents > 0
+    final status = noMoney
+        ? l10n.eventSavingsChecked(pot.paidCount, pot.participantCount)
+        : pot.oneOff && pot.openCents > 0
         ? l10n.eventSavingsPaidOpen(
             pot.paidCount,
             pot.participantCount,
@@ -99,7 +109,7 @@ class EventSavingsSection extends StatelessWidget {
 
     return EventSectionCard(
       key: const ValueKey('event-savings'),
-      title: l10n.eventSavingsTitle,
+      title: noMoney ? l10n.eventSavingsChecklistTitle : l10n.eventSavingsTitle,
       child: InkWell(
         key: const ValueKey('event-savings-pot'),
         onTap: () => onOpen(pot.id),
@@ -118,7 +128,9 @@ class EventSavingsSection extends StatelessWidget {
                       : StatusColors.emerald50,
                 ),
                 child: Icon(
-                  PhosphorIconsDuotone.piggyBank,
+                  noMoney
+                      ? PhosphorIconsDuotone.checkSquare
+                      : PhosphorIconsDuotone.piggyBank,
                   size: 22,
                   color: dark
                       ? StatusColors.emerald400
@@ -142,7 +154,9 @@ class EventSavingsSection extends StatelessWidget {
                     ),
                     if (cancelled)
                       Text(
-                        l10n.eventSavingsCancelled,
+                        noMoney
+                            ? l10n.eventSavingsCancelledChecklist
+                            : l10n.eventSavingsCancelled,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,

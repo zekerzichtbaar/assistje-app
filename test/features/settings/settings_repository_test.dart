@@ -49,6 +49,7 @@ void main() {
     expect(wash.id, 12);
     expect(wash.mode, DutyMode.individual);
     expect(wash.scope, DutyScope.match);
+    expect(wash.awayOnly, isFalse);
     expect(wash.autoRotate, isTrue);
     expect(wash.onUnavailable, DutyOnUnavailable.reassign);
     expect(wash.pool, ['players']);
@@ -58,6 +59,7 @@ void main() {
     expect(s.carpool.reminderHours, 4);
     expect(s.guests.attendance, GuestAttendance.training);
     expect(s.guests.inStats, isTrue);
+    expect(s.guests.cleanSheetFinesTo, CleanSheetFinesTo.sideline);
     expect(s.trainingPoints.attendancePoint, isFalse);
     expect(s.period.mode, 'dates');
     expect(s.period.seasonLabel, '2026/2027');
@@ -85,10 +87,12 @@ void main() {
             'in_fines': 1,
             'in_stats': 0,
             'staff_in_fines': null,
+            'clean_sheet_fines_to': 'everyone',
           },
           dutyTypes: [
             {
               ...SettingsFixtures.wash(),
+              'away_only': 1,
               'mode': 'rotating',
               'on_unavailable': null,
               'pool': null,
@@ -106,6 +110,9 @@ void main() {
     expect(s.guests.inFines, isTrue);
     expect(s.guests.inStats, isFalse);
     expect(s.guests.staffInFines, isFalse);
+    // Onbekend = de standaard van de server.
+    expect(s.guests.cleanSheetFinesTo, CleanSheetFinesTo.sideline);
+    expect(s.dutyTypes.single.awayOnly, isTrue);
     expect(s.dutyTypes.single.mode, DutyMode.group);
     expect(s.dutyTypes.single.onUnavailable, isNull);
     expect(s.dutyTypes.single.pool, isEmpty);
@@ -321,6 +328,34 @@ void main() {
     });
   });
 
+  test('PATCH settings/guests: clean_sheet_fines_to (snake_case)', () async {
+    http.on(
+      'PATCH /teams/3/settings/guests',
+      200,
+      SettingsFixtures.response(
+        SettingsFixtures.settings(
+          guests: {
+            'attendance': 'training',
+            'in_fines': false,
+            'in_stats': true,
+            'staff_in_fines': true,
+            'clean_sheet_fines_to': 'not_playing',
+          },
+        ),
+      ),
+    );
+
+    final s = await repository.updateGuests(
+      3,
+      const GuestUpdate(cleanSheetFinesTo: CleanSheetFinesTo.notPlaying),
+    );
+
+    expect(body('PATCH /teams/3/settings/guests'), {
+      'clean_sheet_fines_to': 'not_playing',
+    });
+    expect(s.guests.cleanSheetFinesTo, CleanSheetFinesTo.notPlaying);
+  });
+
   test('PATCH settings/training-points', () async {
     http.on(
       'PATCH /teams/3/settings/training-points',
@@ -352,6 +387,7 @@ void main() {
               'name': 'Rijden',
               'slug': 'rijden',
               'icon': 'Car',
+              'away_only': true,
               'pool': ['players', 'guests'],
             },
           ],
@@ -366,6 +402,7 @@ void main() {
         icon: 'Car',
         mode: DutyMode.individual,
         scope: DutyScope.match,
+        awayOnly: true,
         autoRotate: true,
         pool: ['players', 'guests'],
       ),
@@ -376,12 +413,14 @@ void main() {
       'icon': 'Car',
       'mode': 'individual',
       'scope': 'match',
+      'away_only': true,
       'auto_rotate': true,
       'on_unavailable': 'reassign',
       'pool': ['players', 'guests'],
       'pool_members': <String>[],
     });
     expect(s.dutyTypes.last.id, 31);
+    expect(s.dutyTypes.last.awayOnly, isTrue);
   });
 
   test('DutyTypeInput: rotatie alleen bij individueel + wedstrijd', () {
@@ -390,6 +429,11 @@ void main() {
     expect(input.toJson()['auto_rotate'], isFalse);
     expect(input.toJson()['on_unavailable'], 'notify');
     expect(input.toJson()['icon'], isNull);
+    // Alleen uit zegt niets bij losse datums.
+    expect(
+      const DutyTypeInput(name: 'Rijden', awayOnly: true).toJson()['away_only'],
+      isFalse,
+    );
   });
 
   test('PATCH settings/duty-types/{id}', () async {

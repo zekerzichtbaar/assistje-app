@@ -17,6 +17,8 @@ abstract final class StatsFixtures {
     'yellow': 1,
     'red': 0,
     'matches_played': 8,
+    'matches_present': 9,
+    'minutes_per_match': 68,
     'flag_minutes': 45,
     'flag_shifts': 1,
     'titles': [
@@ -42,6 +44,8 @@ abstract final class StatsFixtures {
     'yellow': 0,
     'red': 1,
     'matches_played': 6,
+    'matches_present': 6,
+    'minutes_per_match': 67,
     'flag_minutes': 90,
     'flag_shifts': 2,
     'titles': <Object>[],

@@ -1405,7 +1405,9 @@ as List<LinkTarget>,
 /// @nodoc
 mixin _$MessagesOverview {
 
- List<TeamMessage> get messages; List<AutoMessageSetting> get autoSettings; List<AutoHistoryEntry> get autoHistory; List<LinkTargetGroup> get linkTargets;
+ List<TeamMessage> get messages; List<AutoMessageSetting> get autoSettings; List<AutoHistoryEntry> get autoHistory; List<LinkTargetGroup> get linkTargets;/// Hoeveel toeschouwers het team heeft; bij `0` valt er bij
+/// `include_spectators` niets te kiezen.
+ int get spectatorsCount;
 /// Create a copy of MessagesOverview
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1418,16 +1420,16 @@ $MessagesOverviewCopyWith<MessagesOverview> get copyWith => _$MessagesOverviewCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MessagesOverview&&const DeepCollectionEquality().equals(other.messages, messages)&&const DeepCollectionEquality().equals(other.autoSettings, autoSettings)&&const DeepCollectionEquality().equals(other.autoHistory, autoHistory)&&const DeepCollectionEquality().equals(other.linkTargets, linkTargets));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MessagesOverview&&const DeepCollectionEquality().equals(other.messages, messages)&&const DeepCollectionEquality().equals(other.autoSettings, autoSettings)&&const DeepCollectionEquality().equals(other.autoHistory, autoHistory)&&const DeepCollectionEquality().equals(other.linkTargets, linkTargets)&&(identical(other.spectatorsCount, spectatorsCount) || other.spectatorsCount == spectatorsCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),const DeepCollectionEquality().hash(autoSettings),const DeepCollectionEquality().hash(autoHistory),const DeepCollectionEquality().hash(linkTargets));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(messages),const DeepCollectionEquality().hash(autoSettings),const DeepCollectionEquality().hash(autoHistory),const DeepCollectionEquality().hash(linkTargets),spectatorsCount);
 
 @override
 String toString() {
-  return 'MessagesOverview(messages: $messages, autoSettings: $autoSettings, autoHistory: $autoHistory, linkTargets: $linkTargets)';
+  return 'MessagesOverview(messages: $messages, autoSettings: $autoSettings, autoHistory: $autoHistory, linkTargets: $linkTargets, spectatorsCount: $spectatorsCount)';
 }
 
 
@@ -1438,7 +1440,7 @@ abstract mixin class $MessagesOverviewCopyWith<$Res>  {
   factory $MessagesOverviewCopyWith(MessagesOverview value, $Res Function(MessagesOverview) _then) = _$MessagesOverviewCopyWithImpl;
 @useResult
 $Res call({
- List<TeamMessage> messages, List<AutoMessageSetting> autoSettings, List<AutoHistoryEntry> autoHistory, List<LinkTargetGroup> linkTargets
+ List<TeamMessage> messages, List<AutoMessageSetting> autoSettings, List<AutoHistoryEntry> autoHistory, List<LinkTargetGroup> linkTargets, int spectatorsCount
 });
 
 
@@ -1455,13 +1457,14 @@ class _$MessagesOverviewCopyWithImpl<$Res>
 
 /// Create a copy of MessagesOverview
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? autoSettings = null,Object? autoHistory = null,Object? linkTargets = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? messages = null,Object? autoSettings = null,Object? autoHistory = null,Object? linkTargets = null,Object? spectatorsCount = null,}) {
   return _then(_self.copyWith(
 messages: null == messages ? _self.messages : messages // ignore: cast_nullable_to_non_nullable
 as List<TeamMessage>,autoSettings: null == autoSettings ? _self.autoSettings : autoSettings // ignore: cast_nullable_to_non_nullable
 as List<AutoMessageSetting>,autoHistory: null == autoHistory ? _self.autoHistory : autoHistory // ignore: cast_nullable_to_non_nullable
 as List<AutoHistoryEntry>,linkTargets: null == linkTargets ? _self.linkTargets : linkTargets // ignore: cast_nullable_to_non_nullable
-as List<LinkTargetGroup>,
+as List<LinkTargetGroup>,spectatorsCount: null == spectatorsCount ? _self.spectatorsCount : spectatorsCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -1546,10 +1549,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets,  int spectatorsCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MessagesOverview() when $default != null:
-return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets);case _:
+return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets,_that.spectatorsCount);case _:
   return orElse();
 
 }
@@ -1567,10 +1570,10 @@ return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets,  int spectatorsCount)  $default,) {final _that = this;
 switch (_that) {
 case _MessagesOverview():
-return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets);case _:
+return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets,_that.spectatorsCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1587,10 +1590,10 @@ return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TeamMessage> messages,  List<AutoMessageSetting> autoSettings,  List<AutoHistoryEntry> autoHistory,  List<LinkTargetGroup> linkTargets,  int spectatorsCount)?  $default,) {final _that = this;
 switch (_that) {
 case _MessagesOverview() when $default != null:
-return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets);case _:
+return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTargets,_that.spectatorsCount);case _:
   return null;
 
 }
@@ -1602,7 +1605,7 @@ return $default(_that.messages,_that.autoSettings,_that.autoHistory,_that.linkTa
 @JsonSerializable()
 
 class _MessagesOverview extends MessagesOverview {
-  const _MessagesOverview({final  List<TeamMessage> messages = const <TeamMessage>[], final  List<AutoMessageSetting> autoSettings = const <AutoMessageSetting>[], final  List<AutoHistoryEntry> autoHistory = const <AutoHistoryEntry>[], final  List<LinkTargetGroup> linkTargets = const <LinkTargetGroup>[]}): _messages = messages,_autoSettings = autoSettings,_autoHistory = autoHistory,_linkTargets = linkTargets,super._();
+  const _MessagesOverview({final  List<TeamMessage> messages = const <TeamMessage>[], final  List<AutoMessageSetting> autoSettings = const <AutoMessageSetting>[], final  List<AutoHistoryEntry> autoHistory = const <AutoHistoryEntry>[], final  List<LinkTargetGroup> linkTargets = const <LinkTargetGroup>[], this.spectatorsCount = 0}): _messages = messages,_autoSettings = autoSettings,_autoHistory = autoHistory,_linkTargets = linkTargets,super._();
   factory _MessagesOverview.fromJson(Map<String, dynamic> json) => _$MessagesOverviewFromJson(json);
 
  final  List<TeamMessage> _messages;
@@ -1633,6 +1636,9 @@ class _MessagesOverview extends MessagesOverview {
   return EqualUnmodifiableListView(_linkTargets);
 }
 
+/// Hoeveel toeschouwers het team heeft; bij `0` valt er bij
+/// `include_spectators` niets te kiezen.
+@override@JsonKey() final  int spectatorsCount;
 
 /// Create a copy of MessagesOverview
 /// with the given fields replaced by the non-null parameter values.
@@ -1647,16 +1653,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MessagesOverview&&const DeepCollectionEquality().equals(other._messages, _messages)&&const DeepCollectionEquality().equals(other._autoSettings, _autoSettings)&&const DeepCollectionEquality().equals(other._autoHistory, _autoHistory)&&const DeepCollectionEquality().equals(other._linkTargets, _linkTargets));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MessagesOverview&&const DeepCollectionEquality().equals(other._messages, _messages)&&const DeepCollectionEquality().equals(other._autoSettings, _autoSettings)&&const DeepCollectionEquality().equals(other._autoHistory, _autoHistory)&&const DeepCollectionEquality().equals(other._linkTargets, _linkTargets)&&(identical(other.spectatorsCount, spectatorsCount) || other.spectatorsCount == spectatorsCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_autoSettings),const DeepCollectionEquality().hash(_autoHistory),const DeepCollectionEquality().hash(_linkTargets));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_messages),const DeepCollectionEquality().hash(_autoSettings),const DeepCollectionEquality().hash(_autoHistory),const DeepCollectionEquality().hash(_linkTargets),spectatorsCount);
 
 @override
 String toString() {
-  return 'MessagesOverview(messages: $messages, autoSettings: $autoSettings, autoHistory: $autoHistory, linkTargets: $linkTargets)';
+  return 'MessagesOverview(messages: $messages, autoSettings: $autoSettings, autoHistory: $autoHistory, linkTargets: $linkTargets, spectatorsCount: $spectatorsCount)';
 }
 
 
@@ -1667,7 +1673,7 @@ abstract mixin class _$MessagesOverviewCopyWith<$Res> implements $MessagesOvervi
   factory _$MessagesOverviewCopyWith(_MessagesOverview value, $Res Function(_MessagesOverview) _then) = __$MessagesOverviewCopyWithImpl;
 @override @useResult
 $Res call({
- List<TeamMessage> messages, List<AutoMessageSetting> autoSettings, List<AutoHistoryEntry> autoHistory, List<LinkTargetGroup> linkTargets
+ List<TeamMessage> messages, List<AutoMessageSetting> autoSettings, List<AutoHistoryEntry> autoHistory, List<LinkTargetGroup> linkTargets, int spectatorsCount
 });
 
 
@@ -1684,13 +1690,14 @@ class __$MessagesOverviewCopyWithImpl<$Res>
 
 /// Create a copy of MessagesOverview
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? autoSettings = null,Object? autoHistory = null,Object? linkTargets = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? messages = null,Object? autoSettings = null,Object? autoHistory = null,Object? linkTargets = null,Object? spectatorsCount = null,}) {
   return _then(_MessagesOverview(
 messages: null == messages ? _self._messages : messages // ignore: cast_nullable_to_non_nullable
 as List<TeamMessage>,autoSettings: null == autoSettings ? _self._autoSettings : autoSettings // ignore: cast_nullable_to_non_nullable
 as List<AutoMessageSetting>,autoHistory: null == autoHistory ? _self._autoHistory : autoHistory // ignore: cast_nullable_to_non_nullable
 as List<AutoHistoryEntry>,linkTargets: null == linkTargets ? _self._linkTargets : linkTargets // ignore: cast_nullable_to_non_nullable
-as List<LinkTargetGroup>,
+as List<LinkTargetGroup>,spectatorsCount: null == spectatorsCount ? _self.spectatorsCount : spectatorsCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

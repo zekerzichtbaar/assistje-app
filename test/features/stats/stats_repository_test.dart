@@ -60,6 +60,8 @@ void main() {
     expect(sam.yellow, 1);
     expect(sam.red, 0);
     expect(sam.matchesPlayed, 8);
+    expect(sam.matchesPresent, 9);
+    expect(sam.minutesPerMatch, 68);
     expect(sam.flagMinutes, 45);
     expect(sam.flagShifts, 1);
     expect(sam.titles.single.label, 'Topscorer');

@@ -11,6 +11,7 @@ import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../event/application/event_detail_controller.dart';
 import '../application/live_controller.dart';
 import '../application/live_share.dart';
 import '../data/models/live_feed.dart';
@@ -19,6 +20,7 @@ import 'widgets/live_add_event_sheet.dart';
 import 'widgets/live_clock_controls.dart';
 import 'widgets/live_scoreboard.dart';
 import 'widgets/live_share_row.dart';
+import 'widgets/live_shootout_board.dart';
 import 'widgets/live_timeline.dart';
 import 'widgets/live_ui.dart';
 
@@ -225,7 +227,12 @@ class _LiveViewState extends ConsumerState<LiveView> {
 
     final List<Widget> slivers;
     if (match != null) {
-      slivers = _content(membership, controller, match);
+      slivers = _content(
+        membership,
+        controller,
+        match,
+        isCup: _isCup(key, match),
+      );
     } else if (async.hasError) {
       slivers = [
         _title(),
@@ -265,6 +272,16 @@ class _LiveViewState extends ConsumerState<LiveView> {
         ),
       ),
     );
+  }
+
+  /// Is dit een bekerwedstrijd? De live-stand kent de competitie niet, het
+  /// event-detail wel. Alleen nodig (en dus alleen opgehaald) als er iets te
+  /// beslissen kan zijn: wie bijhoudt, na de eindfluit, gelijk, en de sport
+  /// kent strafschoppen.
+  bool _isCup(LiveKey key, LiveMatch match) {
+    if (!match.canManage || !match.canDecide(isCup: true)) return false;
+    final detail = ref.watch(eventDetailControllerProvider(key)).value;
+    return detail?.competition == 'cup';
   }
 
   /// Schermtitel; zelfde key als de placeholder (de shell-tests lezen hem).
@@ -322,8 +339,9 @@ class _LiveViewState extends ConsumerState<LiveView> {
   List<Widget> _content(
     TeamMembership membership,
     LiveController controller,
-    LiveMatch match,
-  ) {
+    LiveMatch match, {
+    required bool isCup,
+  }) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
     final feed = buildLiveFeed(match);
@@ -347,6 +365,34 @@ class _LiveViewState extends ConsumerState<LiveView> {
           now: _now,
           onToggleFollow: () => _toggleFollow(controller),
           footer: [
+            // Strafschoppen: iedereen kijkt mee, wie bijhoudt legt vast.
+            if (match.clock.shootout != null)
+              LiveShootoutBoard(
+                match: match,
+                busy: _busy,
+                onKick: match.canManage
+                    ? (side, scored, playerId) => _run(
+                        () => controller.shootoutKick(
+                          side: side,
+                          scored: scored,
+                          playerId: playerId,
+                        ),
+                        errorTitle: l10n.liveShootoutError,
+                      )
+                    : null,
+                onUndo: match.canManage
+                    ? () => _run(
+                        controller.undoShootoutKick,
+                        errorTitle: l10n.liveShootoutError,
+                      )
+                    : null,
+                onClear: match.canManage
+                    ? () => _run(
+                        controller.clearShootout,
+                        errorTitle: l10n.liveShootoutError,
+                      )
+                    : null,
+              ),
             // Delen mag iedereen, niet alleen wie de klok bedient.
             if (canShareLive(match.event))
               LiveShareRow(event: match.event, teamName: membership.team.name),
@@ -357,6 +403,7 @@ class _LiveViewState extends ConsumerState<LiveView> {
                 controller: controller,
                 run: _run,
                 busy: _busy,
+                isCup: isCup,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),

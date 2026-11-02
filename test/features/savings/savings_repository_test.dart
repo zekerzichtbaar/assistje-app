@@ -54,6 +54,56 @@ void main() {
       expect(overview.canManage, isFalse);
     });
 
+    test('afvinklijst in het overzicht: vinkjes als voortgang', () async {
+      http.on(
+        'GET /teams/3/savings',
+        200,
+        SavingsFixtures.overview(pots: [SavingsFixtures.checklistRow()]),
+      );
+
+      final pot = (await repository.fetchOverview(3)).pots.single;
+      expect(pot.withoutAmount, isTrue);
+      expect(pot.checkedCount, 3);
+      expect(pot.cellsTotal, 12);
+      expect(pot.goalPercent, isNull);
+      expect(pot.progressPercent, 25);
+    });
+
+    test('bestaande pot zonder de nieuwe velden: met bedrag', () async {
+      http.on('GET /teams/3/savings', 200, SavingsFixtures.overview());
+      final pot = (await repository.fetchOverview(3)).pots.single;
+      expect(pot.withoutAmount, isFalse);
+      expect(pot.checkedCount, 0);
+      expect(pot.progressPercent, 22);
+    });
+
+    test('afvinklijst-detail: geen afrekening, ring telt vinkjes', () async {
+      http.on(
+        'GET /teams/3/savings/12',
+        200,
+        SavingsFixtures.checklistDetail(),
+      );
+
+      final detail = await repository.fetchPot(3, 12);
+      expect(detail.pot.withoutAmount, isTrue);
+      expect(detail.showsSettle, isFalse);
+      expect(detail.countingPaid, 1);
+      expect(detail.ringPercent, 33);
+      expect(detail.rowChecks('p17'), 1);
+      expect(detail.columnChecks('2026-11'), 1);
+    });
+
+    test('formulier van een afvinklijst: amount null', () async {
+      http.on(
+        'GET /teams/3/savings/13/edit',
+        200,
+        SavingsFixtures.checklistEditOptions(),
+      );
+      final options = await repository.fetchEditOptions(3, 13);
+      expect(options.pot!.withoutAmount, isTrue);
+      expect(options.pot!.amount, isNull);
+    });
+
     test('pot met matrix uit het voorbeeld', () async {
       http.on('GET /teams/3/savings/7', 200, SavingsFixtures.oneOffDetail());
 
@@ -172,6 +222,7 @@ void main() {
         'name': 'Weekendje weg',
         'scope': 'custom',
         'include_guests': false,
+        'without_amount': false,
         'amount': 12.5,
         'goal': 300,
         'start_month': '2026-11',
@@ -212,6 +263,7 @@ void main() {
           'name': 'Weekendje Ardennen',
           'scope': 'all_staff',
           'include_guests': true,
+          'without_amount': false,
           'amount': 15.99,
           'goal': null,
           'start_month': '2026-11',
@@ -221,6 +273,48 @@ void main() {
         });
       },
     );
+
+    test('zonder bedrag: without_amount, geen amount en geen doel', () async {
+      http.on('POST /teams/3/savings', 201, SavingsFixtures.pot9Response());
+
+      await repository.createPot(
+        3,
+        const SavingsPotDraft(
+          name: 'Krat bier',
+          scope: SavingsScope.all,
+          withoutAmount: true,
+          // Wat er nog in het formulier stond telt niet mee.
+          amountCents: 1250,
+          goalCents: 30000,
+          startMonth: '2026-11',
+          months: 3,
+        ),
+      );
+
+      final body =
+          http.requestsTo('POST /teams/3/savings').single.body!
+              as Map<String, dynamic>;
+      expect(body['without_amount'], isTrue);
+      expect(body['amount'], isNull);
+      expect(body['goal'], isNull);
+      expect(body['months'], 3);
+    });
+
+    test('afrekenen van een lijst zonder bedrag: 422 met uitleg', () async {
+      http.on('PATCH /teams/3/savings/12/settle', 422, {
+        'message': 'Een lijst zonder bedrag reken je niet af.',
+      });
+      await expectLater(
+        repository.settle(3, 12, actualCostCents: 1000),
+        throwsA(
+          isA<ValidationException>().having(
+            (e) => e.message,
+            'message',
+            'Een lijst zonder bedrag reken je niet af.',
+          ),
+        ),
+      );
+    });
 
     test('archiveren: DELETE 204', () async {
       http.on('DELETE /teams/3/savings/9', 204);

@@ -17,7 +17,9 @@ mixin _$TeamMembership {
 
  Team get team;@JsonKey(unknownEnumValue: TeamRole.unknown) TeamRole get role;/// `lineup`, `training_points`, `fines`.
  List<String> get abilities; Map<String, bool> get features;/// Volledig `SportProfile::toArray()`; typering volgt in een latere slice.
- Map<String, dynamic> get sport; bool get hasPoule; bool get onboardingOpen; int get unreadNotificationsCount;
+ Map<String, dynamic> get sport; bool get hasPoule;/// Of het team diensten heeft (minstens één diensttype). Spelers en
+/// toeschouwers zien dan Diensten (`/diensten`) in het Meer-scherm.
+ bool get hasDuties; bool get onboardingOpen; int get unreadNotificationsCount;
 /// Create a copy of TeamMembership
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +32,16 @@ $TeamMembershipCopyWith<TeamMembership> get copyWith => _$TeamMembershipCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TeamMembership&&(identical(other.team, team) || other.team == team)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.abilities, abilities)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.sport, sport)&&(identical(other.hasPoule, hasPoule) || other.hasPoule == hasPoule)&&(identical(other.onboardingOpen, onboardingOpen) || other.onboardingOpen == onboardingOpen)&&(identical(other.unreadNotificationsCount, unreadNotificationsCount) || other.unreadNotificationsCount == unreadNotificationsCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TeamMembership&&(identical(other.team, team) || other.team == team)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.abilities, abilities)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.sport, sport)&&(identical(other.hasPoule, hasPoule) || other.hasPoule == hasPoule)&&(identical(other.hasDuties, hasDuties) || other.hasDuties == hasDuties)&&(identical(other.onboardingOpen, onboardingOpen) || other.onboardingOpen == onboardingOpen)&&(identical(other.unreadNotificationsCount, unreadNotificationsCount) || other.unreadNotificationsCount == unreadNotificationsCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,team,role,const DeepCollectionEquality().hash(abilities),const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(sport),hasPoule,onboardingOpen,unreadNotificationsCount);
+int get hashCode => Object.hash(runtimeType,team,role,const DeepCollectionEquality().hash(abilities),const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(sport),hasPoule,hasDuties,onboardingOpen,unreadNotificationsCount);
 
 @override
 String toString() {
-  return 'TeamMembership(team: $team, role: $role, abilities: $abilities, features: $features, sport: $sport, hasPoule: $hasPoule, onboardingOpen: $onboardingOpen, unreadNotificationsCount: $unreadNotificationsCount)';
+  return 'TeamMembership(team: $team, role: $role, abilities: $abilities, features: $features, sport: $sport, hasPoule: $hasPoule, hasDuties: $hasDuties, onboardingOpen: $onboardingOpen, unreadNotificationsCount: $unreadNotificationsCount)';
 }
 
 
@@ -50,7 +52,7 @@ abstract mixin class $TeamMembershipCopyWith<$Res>  {
   factory $TeamMembershipCopyWith(TeamMembership value, $Res Function(TeamMembership) _then) = _$TeamMembershipCopyWithImpl;
 @useResult
 $Res call({
- Team team,@JsonKey(unknownEnumValue: TeamRole.unknown) TeamRole role, List<String> abilities, Map<String, bool> features, Map<String, dynamic> sport, bool hasPoule, bool onboardingOpen, int unreadNotificationsCount
+ Team team,@JsonKey(unknownEnumValue: TeamRole.unknown) TeamRole role, List<String> abilities, Map<String, bool> features, Map<String, dynamic> sport, bool hasPoule, bool hasDuties, bool onboardingOpen, int unreadNotificationsCount
 });
 
 
@@ -67,7 +69,7 @@ class _$TeamMembershipCopyWithImpl<$Res>
 
 /// Create a copy of TeamMembership
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? team = null,Object? role = null,Object? abilities = null,Object? features = null,Object? sport = null,Object? hasPoule = null,Object? onboardingOpen = null,Object? unreadNotificationsCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? team = null,Object? role = null,Object? abilities = null,Object? features = null,Object? sport = null,Object? hasPoule = null,Object? hasDuties = null,Object? onboardingOpen = null,Object? unreadNotificationsCount = null,}) {
   return _then(_self.copyWith(
 team: null == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
 as Team,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -75,6 +77,7 @@ as TeamRole,abilities: null == abilities ? _self.abilities : abilities // ignore
 as List<String>,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
 as Map<String, bool>,sport: null == sport ? _self.sport : sport // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,hasPoule: null == hasPoule ? _self.hasPoule : hasPoule // ignore: cast_nullable_to_non_nullable
+as bool,hasDuties: null == hasDuties ? _self.hasDuties : hasDuties // ignore: cast_nullable_to_non_nullable
 as bool,onboardingOpen: null == onboardingOpen ? _self.onboardingOpen : onboardingOpen // ignore: cast_nullable_to_non_nullable
 as bool,unreadNotificationsCount: null == unreadNotificationsCount ? _self.unreadNotificationsCount : unreadNotificationsCount // ignore: cast_nullable_to_non_nullable
 as int,
@@ -171,10 +174,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool onboardingOpen,  int unreadNotificationsCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool hasDuties,  bool onboardingOpen,  int unreadNotificationsCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TeamMembership() when $default != null:
-return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
+return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.hasDuties,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
   return orElse();
 
 }
@@ -192,10 +195,10 @@ return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool onboardingOpen,  int unreadNotificationsCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool hasDuties,  bool onboardingOpen,  int unreadNotificationsCount)  $default,) {final _that = this;
 switch (_that) {
 case _TeamMembership():
-return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
+return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.hasDuties,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +215,10 @@ return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool onboardingOpen,  int unreadNotificationsCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Team team, @JsonKey(unknownEnumValue: TeamRole.unknown)  TeamRole role,  List<String> abilities,  Map<String, bool> features,  Map<String, dynamic> sport,  bool hasPoule,  bool hasDuties,  bool onboardingOpen,  int unreadNotificationsCount)?  $default,) {final _that = this;
 switch (_that) {
 case _TeamMembership() when $default != null:
-return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
+return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport,_that.hasPoule,_that.hasDuties,_that.onboardingOpen,_that.unreadNotificationsCount);case _:
   return null;
 
 }
@@ -227,7 +230,7 @@ return $default(_that.team,_that.role,_that.abilities,_that.features,_that.sport
 @JsonSerializable()
 
 class _TeamMembership extends TeamMembership {
-  const _TeamMembership({required this.team, @JsonKey(unknownEnumValue: TeamRole.unknown) this.role = TeamRole.player, final  List<String> abilities = const <String>[], final  Map<String, bool> features = const <String, bool>{}, final  Map<String, dynamic> sport = const <String, dynamic>{}, this.hasPoule = false, this.onboardingOpen = false, this.unreadNotificationsCount = 0}): _abilities = abilities,_features = features,_sport = sport,super._();
+  const _TeamMembership({required this.team, @JsonKey(unknownEnumValue: TeamRole.unknown) this.role = TeamRole.player, final  List<String> abilities = const <String>[], final  Map<String, bool> features = const <String, bool>{}, final  Map<String, dynamic> sport = const <String, dynamic>{}, this.hasPoule = false, this.hasDuties = false, this.onboardingOpen = false, this.unreadNotificationsCount = 0}): _abilities = abilities,_features = features,_sport = sport,super._();
   factory _TeamMembership.fromJson(Map<String, dynamic> json) => _$TeamMembershipFromJson(json);
 
 @override final  Team team;
@@ -258,6 +261,9 @@ class _TeamMembership extends TeamMembership {
 }
 
 @override@JsonKey() final  bool hasPoule;
+/// Of het team diensten heeft (minstens één diensttype). Spelers en
+/// toeschouwers zien dan Diensten (`/diensten`) in het Meer-scherm.
+@override@JsonKey() final  bool hasDuties;
 @override@JsonKey() final  bool onboardingOpen;
 @override@JsonKey() final  int unreadNotificationsCount;
 
@@ -274,16 +280,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TeamMembership&&(identical(other.team, team) || other.team == team)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other._abilities, _abilities)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._sport, _sport)&&(identical(other.hasPoule, hasPoule) || other.hasPoule == hasPoule)&&(identical(other.onboardingOpen, onboardingOpen) || other.onboardingOpen == onboardingOpen)&&(identical(other.unreadNotificationsCount, unreadNotificationsCount) || other.unreadNotificationsCount == unreadNotificationsCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TeamMembership&&(identical(other.team, team) || other.team == team)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other._abilities, _abilities)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._sport, _sport)&&(identical(other.hasPoule, hasPoule) || other.hasPoule == hasPoule)&&(identical(other.hasDuties, hasDuties) || other.hasDuties == hasDuties)&&(identical(other.onboardingOpen, onboardingOpen) || other.onboardingOpen == onboardingOpen)&&(identical(other.unreadNotificationsCount, unreadNotificationsCount) || other.unreadNotificationsCount == unreadNotificationsCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,team,role,const DeepCollectionEquality().hash(_abilities),const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_sport),hasPoule,onboardingOpen,unreadNotificationsCount);
+int get hashCode => Object.hash(runtimeType,team,role,const DeepCollectionEquality().hash(_abilities),const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_sport),hasPoule,hasDuties,onboardingOpen,unreadNotificationsCount);
 
 @override
 String toString() {
-  return 'TeamMembership(team: $team, role: $role, abilities: $abilities, features: $features, sport: $sport, hasPoule: $hasPoule, onboardingOpen: $onboardingOpen, unreadNotificationsCount: $unreadNotificationsCount)';
+  return 'TeamMembership(team: $team, role: $role, abilities: $abilities, features: $features, sport: $sport, hasPoule: $hasPoule, hasDuties: $hasDuties, onboardingOpen: $onboardingOpen, unreadNotificationsCount: $unreadNotificationsCount)';
 }
 
 
@@ -294,7 +300,7 @@ abstract mixin class _$TeamMembershipCopyWith<$Res> implements $TeamMembershipCo
   factory _$TeamMembershipCopyWith(_TeamMembership value, $Res Function(_TeamMembership) _then) = __$TeamMembershipCopyWithImpl;
 @override @useResult
 $Res call({
- Team team,@JsonKey(unknownEnumValue: TeamRole.unknown) TeamRole role, List<String> abilities, Map<String, bool> features, Map<String, dynamic> sport, bool hasPoule, bool onboardingOpen, int unreadNotificationsCount
+ Team team,@JsonKey(unknownEnumValue: TeamRole.unknown) TeamRole role, List<String> abilities, Map<String, bool> features, Map<String, dynamic> sport, bool hasPoule, bool hasDuties, bool onboardingOpen, int unreadNotificationsCount
 });
 
 
@@ -311,7 +317,7 @@ class __$TeamMembershipCopyWithImpl<$Res>
 
 /// Create a copy of TeamMembership
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? team = null,Object? role = null,Object? abilities = null,Object? features = null,Object? sport = null,Object? hasPoule = null,Object? onboardingOpen = null,Object? unreadNotificationsCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? team = null,Object? role = null,Object? abilities = null,Object? features = null,Object? sport = null,Object? hasPoule = null,Object? hasDuties = null,Object? onboardingOpen = null,Object? unreadNotificationsCount = null,}) {
   return _then(_TeamMembership(
 team: null == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
 as Team,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
@@ -319,6 +325,7 @@ as TeamRole,abilities: null == abilities ? _self._abilities : abilities // ignor
 as List<String>,features: null == features ? _self._features : features // ignore: cast_nullable_to_non_nullable
 as Map<String, bool>,sport: null == sport ? _self._sport : sport // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,hasPoule: null == hasPoule ? _self.hasPoule : hasPoule // ignore: cast_nullable_to_non_nullable
+as bool,hasDuties: null == hasDuties ? _self.hasDuties : hasDuties // ignore: cast_nullable_to_non_nullable
 as bool,onboardingOpen: null == onboardingOpen ? _self.onboardingOpen : onboardingOpen // ignore: cast_nullable_to_non_nullable
 as bool,unreadNotificationsCount: null == unreadNotificationsCount ? _self.unreadNotificationsCount : unreadNotificationsCount // ignore: cast_nullable_to_non_nullable
 as int,

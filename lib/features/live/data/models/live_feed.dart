@@ -26,8 +26,8 @@ class LiveFeedItem {
   final int minute;
   final int createdAt;
 
-  /// Hoort bij ons team (anders bij de tegenstander: tegendoelpunt of eigen
-  /// doelpunt).
+  /// Hoort bij ons team (anders bij de tegenstander: tegendoelpunt, eigen
+  /// doelpunt of een moment van hen).
   final bool ours;
 
   final LiveGoal? goal;
@@ -107,7 +107,7 @@ List<LiveFeedItem> buildLiveFeed(LiveMatch match) {
         itemKey: m.itemKey,
         minute: m.minute,
         createdAt: m.createdAt,
-        ours: true,
+        ours: m.isOurs,
         moment: m,
       ),
   ];

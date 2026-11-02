@@ -78,6 +78,25 @@ class SavingsCell extends StatelessWidget {
   }
 }
 
+/// Voorleestekst van een vakje: "betaald" bij geld, "afgevinkt" bij een
+/// afvinklijst ([withoutAmount]).
+String savingsCellLabel(
+  AppLocalizations l10n, {
+  required String name,
+  required String month,
+  required bool paid,
+  required bool withoutAmount,
+}) {
+  if (withoutAmount) {
+    return paid
+        ? l10n.savingsCellChecked(name, month)
+        : l10n.savingsCellUnchecked(name, month);
+  }
+  return paid
+      ? l10n.savingsCellPaid(name, month)
+      : l10n.savingsCellUnpaid(name, month);
+}
+
 /// Naam met rugnummer en "staf"-label.
 class _ParticipantName extends StatelessWidget {
   const _ParticipantName({required this.participant});
@@ -168,6 +187,8 @@ class _SavingsGridState extends State<SavingsGrid> {
     final periods = detail.periods;
     final paid = detail.paid;
     final canManage = detail.canManage;
+    // Een afvinklijst telt vinkjes in plaats van euro's.
+    final noMoney = detail.pot.withoutAmount;
 
     final headStyle = TextStyle(
       fontSize: 11,
@@ -264,12 +285,13 @@ class _SavingsGridState extends State<SavingsGrid> {
                       paid: paid.containsKey(cellKey(p.key, ym)),
                       pending: widget.pending.contains(cellKey(p.key, ym)),
                       size: 28,
-                      semanticLabel: paid.containsKey(cellKey(p.key, ym))
-                          ? l10n.savingsCellPaid(p.name, savingsMonthLabel(ym))
-                          : l10n.savingsCellUnpaid(
-                              p.name,
-                              savingsMonthLabel(ym),
-                            ),
+                      semanticLabel: savingsCellLabel(
+                        l10n,
+                        name: p.name,
+                        month: savingsMonthLabel(ym),
+                        paid: paid.containsKey(cellKey(p.key, ym)),
+                        withoutAmount: noMoney,
+                      ),
                       onTap: canManage
                           ? () => widget.onToggle(p.key, ym)
                           : null,
@@ -280,7 +302,9 @@ class _SavingsGridState extends State<SavingsGrid> {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: Text(
-                      formatCents(detail.rowCents(p.key)),
+                      noMoney
+                          ? '${detail.rowChecks(p.key)}'
+                          : formatCents(detail.rowCents(p.key)),
                       key: ValueKey('savings-row-total-${p.key}'),
                       textAlign: TextAlign.right,
                       style: footStyle,
@@ -308,7 +332,9 @@ class _SavingsGridState extends State<SavingsGrid> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: Text(
-                        formatCents(detail.columnCents(ym)),
+                        noMoney
+                            ? '${detail.columnChecks(ym)}'
+                            : formatCents(detail.columnCents(ym)),
                         key: ValueKey('savings-col-total-$ym'),
                         style: footStyle.copyWith(fontSize: 11),
                       ),
@@ -320,7 +346,9 @@ class _SavingsGridState extends State<SavingsGrid> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: Text(
-                    formatCents(detail.savedCents),
+                    noMoney
+                        ? '${detail.payments.length}'
+                        : formatCents(detail.savedCents),
                     key: const ValueKey('savings-grid-total'),
                     textAlign: TextAlign.right,
                     style: footStyle,
@@ -468,12 +496,13 @@ class SavingsOneOffList extends StatelessWidget {
                       paid: detail.isPaid(p.key, ym),
                       pending: pending.contains(cellKey(p.key, ym)),
                       size: 36,
-                      semanticLabel: detail.isPaid(p.key, ym)
-                          ? l10n.savingsCellPaid(p.name, savingsMonthLabel(ym))
-                          : l10n.savingsCellUnpaid(
-                              p.name,
-                              savingsMonthLabel(ym),
-                            ),
+                      semanticLabel: savingsCellLabel(
+                        l10n,
+                        name: p.name,
+                        month: savingsMonthLabel(ym),
+                        paid: detail.isPaid(p.key, ym),
+                        withoutAmount: detail.pot.withoutAmount,
+                      ),
                       onTap: canManage ? () => onToggle(p.key, ym) : null,
                     ),
                 ],
@@ -485,11 +514,16 @@ class SavingsOneOffList extends StatelessWidget {
               color: t.raised,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Text(
-                l10n.savingsOneOffFooter(
-                  '${detail.countingPaid}',
-                  '${detail.counting.length}',
-                  formatCents(detail.openCents),
-                ),
+                detail.pot.withoutAmount
+                    ? l10n.savingsOneOffFooterChecklist(
+                        detail.countingPaid,
+                        detail.counting.length,
+                      )
+                    : l10n.savingsOneOffFooter(
+                        '${detail.countingPaid}',
+                        '${detail.counting.length}',
+                        formatCents(detail.openCents),
+                      ),
                 key: const ValueKey('savings-oneoff-footer'),
                 style: TextStyle(
                   fontSize: 14,

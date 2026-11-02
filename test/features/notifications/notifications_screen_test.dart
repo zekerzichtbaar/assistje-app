@@ -182,6 +182,80 @@ void main() {
       await tester.pumpAndSettle();
     });
 
+    testWidgets('alles verwijderen: bevestigen, DELETE, lijst leeg', (
+      tester,
+    ) async {
+      late FakeHttpAdapter api;
+      await _open(
+        tester,
+        AppRoutes.notifications,
+        setup: (http) {
+          api = http;
+          http.on(
+            _list,
+            200,
+            NotificationFixtures.page(items: NotificationFixtures.many(2)),
+          );
+          http.on('DELETE /teams/3/notifications', 204);
+        },
+      );
+      const action = ValueKey('notifications-delete-all');
+
+      // Annuleren laat alles staan.
+      await tester.tap(find.byKey(action));
+      await tester.pumpAndSettle();
+      expect(find.text('Alle meldingen verwijderen?'), findsOneWidget);
+      await tester.tap(
+        find.byKey(const ValueKey('notifications-delete-all-cancel')),
+      );
+      await tester.pumpAndSettle();
+      expect(api.requestsTo('DELETE /teams/3/notifications'), isEmpty);
+      expect(find.text('Melding 0'), findsOneWidget);
+
+      await tester.tap(find.byKey(action));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('notifications-delete-all-ok')),
+      );
+      await tester.pumpAndSettle();
+      expect(api.requestsTo('DELETE /teams/3/notifications'), hasLength(1));
+      expect(find.text('Melding 0'), findsNothing);
+      expect(find.byKey(const ValueKey('notifications-empty')), findsOne);
+      // Lege lijst: geen prullenbak meer.
+      expect(find.byKey(action), findsNothing);
+    });
+
+    testWidgets('alles verwijderen mislukt: lijst terug met toast', (
+      tester,
+    ) async {
+      await _open(
+        tester,
+        AppRoutes.notifications,
+        setup: (http) {
+          http.on(
+            _list,
+            200,
+            NotificationFixtures.page(items: NotificationFixtures.many(2)),
+          );
+          http.on('DELETE /teams/3/notifications', 403, {
+            'message': 'Niet in de demo.',
+          });
+        },
+      );
+
+      await tester.tap(find.byKey(const ValueKey('notifications-delete-all')));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('notifications-delete-all-ok')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Melding 0'), findsOneWidget);
+      expect(find.text('Melding 1'), findsOneWidget);
+      expect(find.text('Verwijderen lukte niet.'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+    });
+
     testWidgets('bijladen via de knop onderaan (?page=2)', (tester) async {
       late FakeHttpAdapter api;
       await _open(

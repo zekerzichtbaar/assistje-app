@@ -730,5 +730,33 @@ void main() {
       );
       expect(find.text('Je krijgt je inleg terug.'), findsOneWidget);
     });
+
+    testWidgets('zonder bedrag: afvinklijst, geen geld', (tester) async {
+      await _open(
+        tester,
+        detail: EventFixtures.eventDetail({
+          'type': 'activity',
+          'starts_at': _future,
+          'savings_pot': pot({
+            'name': 'Krat bier',
+            'amount_cents': 0,
+            'open_cents': 0,
+            'without_amount': true,
+            'i_paid': true,
+          }),
+        }),
+      );
+      final row = _inScreen(find.byKey(const ValueKey('event-savings-pot')));
+      await _scrollTo(tester, row);
+      expect(find.text('AFVINKLIJST'), findsOneWidget);
+      expect(find.text('INLEG'), findsNothing);
+      expect(find.text('Krat bier'), findsOneWidget);
+      expect(find.text('3 van 8 afgevinkt'), findsOneWidget);
+      expect(find.text('Jij bent afgevinkt.'), findsOneWidget);
+      expect(
+        find.descendant(of: row, matching: find.textContaining('€')),
+        findsNothing,
+      );
+    });
   });
 }

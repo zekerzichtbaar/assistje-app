@@ -6,7 +6,12 @@ import 'models/messages_models.dart';
 
 /// Een nieuw teambericht.
 class MessageDraft {
-  const MessageDraft({required this.title, required this.body, this.url});
+  const MessageDraft({
+    required this.title,
+    required this.body,
+    this.url,
+    this.includeSpectators = false,
+  });
 
   final String title;
   final String body;
@@ -14,12 +19,17 @@ class MessageDraft {
   /// Webpad; leeg of alleen spaties wordt weggelaten.
   final String? url;
 
+  /// Ook naar de toeschouwers? Standaard niet: een mededeling over de
+  /// training gaat ouders en supporters meestal niet aan.
+  final bool includeSpectators;
+
   Map<String, Object?> toJson() {
     final link = url?.trim();
     return {
       'title': title.trim(),
       'body': body.trim(),
       if (link != null && link.isNotEmpty) 'url': link,
+      'include_spectators': includeSpectators,
     };
   }
 }
@@ -37,7 +47,8 @@ class MessagesRepository {
     return MessagesOverview.fromJson(_data(body));
   }
 
-  /// Stuurt een push + inbox-bericht naar het hele team.
+  /// Stuurt een push + inbox-bericht naar het hele team (toeschouwers alleen
+  /// met [MessageDraft.includeSpectators]).
   Future<TeamMessage> send(int teamId, MessageDraft draft) async {
     final body = await _api.post(
       '/teams/$teamId/messages',

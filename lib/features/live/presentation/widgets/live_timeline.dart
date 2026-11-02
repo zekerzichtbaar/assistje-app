@@ -6,6 +6,7 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../data/models/live_feed.dart';
 import '../../data/models/live_models.dart';
+import 'live_moment_icon.dart';
 import 'live_ui.dart';
 
 /// De tijdlijn (Forza-stijl, zoals de PWA): middenkolom met het icoon, aan
@@ -226,9 +227,8 @@ class LiveTimeline extends StatelessWidget {
           ),
         );
       case LiveFeedKind.moment:
-        return circle(
-          Icon(PhosphorIconsDuotone.flag, size: 18, color: t.muted),
-        );
+        // Grijs en zonder portret: verloop van de wedstrijd, geen prestatie.
+        return circle(LiveMomentIcon(type: item.moment!.type, color: t.muted));
     }
   }
 
@@ -341,14 +341,21 @@ class LiveTimeline extends StatelessWidget {
         );
       case LiveFeedKind.moment:
         final moment = item.moment!;
+        final label = moment.label.isEmpty ? moment.type : moment.label;
+        // Met een naam staat die bovenaan en het soort moment eronder (zoals
+        // de scorer boven de voorzet); zonder naam is het soort de regel.
+        final player = moment.player;
+        if (player == null || player.isEmpty) {
+          return line(
+            label,
+            strong.copyWith(fontWeight: FontWeight.w500, color: t.inkSoft),
+          );
+        }
         return Column(
           crossAxisAlignment: cross,
           children: [
-            line(
-              moment.label.isEmpty ? moment.type : moment.label,
-              strong.copyWith(color: t.inkSoft),
-            ),
-            if (moment.player != null) line(moment.player!, small),
+            line(player, strong.copyWith(fontWeight: FontWeight.w500)),
+            line(label, small.copyWith(color: t.inkSoft)),
           ],
         );
     }

@@ -24,6 +24,9 @@ typedef LiveRun =
 /// Start → rust/hervat → volgend deel → einde, met heropenen, speelduur
 /// rechtzetten en het verslag wissen. Elke knop die de klok verzet vraagt
 /// eerst bevestiging. Hoe de delen heten komt uit `rules.periods`.
+///
+/// Tijdens de wedstrijd kan de klok gelijkgezet worden; na de eindfluit van
+/// een gelijke beker volgen verlenging en/of strafschoppen.
 class LiveClockControls extends StatefulWidget {
   const LiveClockControls({
     super.key,
@@ -32,6 +35,7 @@ class LiveClockControls extends StatefulWidget {
     required this.controller,
     required this.run,
     required this.busy,
+    this.isCup = false,
   });
 
   final LiveMatch match;
@@ -39,6 +43,11 @@ class LiveClockControls extends StatefulWidget {
   final LiveController controller;
   final LiveRun run;
   final bool busy;
+
+  /// Is dit een bekerwedstrijd? Alleen dan valt een gelijke stand te
+  /// beslissen (komt uit het event-detail; de live-stand kent de competitie
+  /// niet).
+  final bool isCup;
 
   @override
   State<LiveClockControls> createState() => _LiveClockControlsState();
@@ -56,6 +65,22 @@ class _LiveClockControlsState extends State<LiveClockControls> {
   /// Waar het volgende deel standaard begint: het einde van dit deel.
   int _defaultNext(LivePeriodNames names) =>
       _clock.periodEnd ?? (names.minutes ?? 0) * _clock.currentPeriod;
+
+  /// Delen van de reguliere speeltijd (van de server, anders de sport).
+  int _regular(LivePeriodNames names) =>
+      _clock.regularPeriods > 0 ? _clock.regularPeriods : names.count;
+
+  /// Delen van déze wedstrijd: bij een verlenging meer dan de sport kent.
+  int _totalParts(LivePeriodNames names) =>
+      _clock.periodEnds.isNotEmpty ? _clock.periodEnds.length : names.count;
+
+  /// Volgt er na dit deel een verlengingsdeel (of loopt de verlenging al)?
+  bool _inExtraTime(LivePeriodNames names) =>
+      _clock.extraTime && _clock.currentPeriod >= _regular(names);
+
+  /// Volle speeltijd: het einde van het laatste deel (ook na verlenging).
+  int? _fullTime(LivePeriodNames names) =>
+      _clock.periodEnds.isNotEmpty ? _clock.periodEnds.last : names.fullTime;
 
   Future<void> _run(Future<Object?> Function() action) {
     final l10n = AppLocalizations.of(context);
@@ -160,7 +185,7 @@ class _LiveClockControlsState extends State<LiveClockControls> {
       title: l10n.liveDurationTitle,
       builder: (_) => _DurationSheet(
         current: _clock.minuteAt(widget.now),
-        suggestion: names.fullTime,
+        suggestion: _fullTime(names),
       ),
     );
     if (minutes == null || !mounted) return;
@@ -193,10 +218,64 @@ class _LiveClockControlsState extends State<LiveClockControls> {
     }
   }
 
-  String _nextLabel(AppLocalizations l10n, LivePeriodNames names) =>
-      names.part.isEmpty
-      ? l10n.liveResume
-      : l10n.liveStartNext(_clock.currentPeriod + 1, names.part);
+  /// De klok gelijkzetten (`ClockSheet` in de PWA): minuut en seconde van
+  /// de scheidsrechter overnemen.
+  Future<void> _setClock() async {
+    final l10n = AppLocalizations.of(context);
+    if (widget.busy) return;
+    final picked = await showAppSheet<({int minute, int second})>(
+      context: context,
+      title: l10n.liveClockSet,
+      builder: (_) => _ClockSheet(
+        seconds: _clock.secondsAt(widget.now),
+        running: _clock.running,
+      ),
+    );
+    if (picked == null || !mounted) return;
+    await _run(() => _c.setClock(minute: picked.minute, second: picked.second));
+  }
+
+  Future<void> _extraTime(LivePeriodNames names) async {
+    final l10n = AppLocalizations.of(context);
+    final extra = _match.rules.extraTime;
+    if (widget.busy || extra == null) return;
+    final ok = await confirmLive(
+      context,
+      title: l10n.liveConfirmExtraTimeTitle,
+      message: l10n.liveConfirmExtraTimeBody(
+        extra.count,
+        extra.minutes,
+        _fullTime(names) ?? 0,
+      ),
+      confirmLabel: l10n.liveExtraTime,
+    );
+    if (!ok || !mounted) return;
+    await _run(_c.startExtraTime);
+  }
+
+  Future<void> _shootout() async {
+    final l10n = AppLocalizations.of(context);
+    if (widget.busy) return;
+    final ok = await confirmLive(
+      context,
+      title: l10n.liveConfirmShootoutTitle,
+      message: l10n.liveConfirmShootoutBody,
+      confirmLabel: l10n.liveConfirmShootoutLabel,
+    );
+    if (!ok || !mounted) return;
+    await widget.run(_c.startShootout, errorTitle: l10n.liveShootoutError);
+  }
+
+  String _nextLabel(AppLocalizations l10n, LivePeriodNames names) {
+    if (names.part.isEmpty) return l10n.liveResume;
+    // In de verlenging heet het naar de verlenging (zoals de PWA).
+    if (_inExtraTime(names)) {
+      return _clock.currentPeriod == _regular(names)
+          ? l10n.liveStartExtraTime
+          : l10n.liveStartExtraNext(names.part);
+    }
+    return l10n.liveStartNext(_clock.currentPeriod + 1, names.part);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +288,10 @@ class _LiveClockControlsState extends State<LiveClockControls> {
     final minute = clock.minuteAt(now);
     final stoppage = clock.stoppageAt(now);
     final boundary = clock.periodEnd;
-    final hasNextPart = clock.currentPeriod < names.count;
+    final hasNextPart = clock.currentPeriod < _totalParts(names);
     final overrun = clock.running && hasNextPart && stoppage > 0;
     final overdue = overrun && stoppage > liveStoppageGrace;
-    final fullTime = names.fullTime;
+    final fullTime = _fullTime(names);
     final overtime = clock.inPlay && fullTime != null && minute > fullTime + 30;
     final startsAt = _match.event.startsAt;
     final kickoffPassed =
@@ -310,26 +389,39 @@ class _LiveClockControlsState extends State<LiveClockControls> {
               color: t.raised,
               borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),
             ),
-            child: Row(
+            // Wrap: bij grote tekst (of een lange knop als "Start 2e helft
+            // verlenging") zakt de knop onder het minuutveld.
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 8,
               children: [
-                Expanded(
-                  child: Text(
-                    names.part.isEmpty
-                        ? l10n.liveFromMinute
-                        : l10n.liveNextFrom(
-                            clock.currentPeriod + 1,
-                            names.part,
-                          ),
-                    style: TextStyle(fontSize: 12, color: t.muted),
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        names.part.isEmpty
+                            ? l10n.liveFromMinute
+                            : _inExtraTime(names)
+                            ? l10n.liveExtraTimeFrom
+                            : l10n.liveNextFrom(
+                                clock.currentPeriod + 1,
+                                names.part,
+                              ),
+                        style: TextStyle(fontSize: 12, color: t.muted),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    LiveMinuteField(
+                      key: const ValueKey('live-next-minute'),
+                      value: _nextMinute ?? _defaultNext(names),
+                      width: 64,
+                      onChanged: (v) => setState(() => _nextMinute = v),
+                    ),
+                  ],
                 ),
-                LiveMinuteField(
-                  key: const ValueKey('live-next-minute'),
-                  value: _nextMinute ?? _defaultNext(names),
-                  width: 64,
-                  onChanged: (v) => setState(() => _nextMinute = v),
-                ),
-                const SizedBox(width: 8),
                 AppButtonBase(
                   key: const ValueKey('live-next'),
                   label: _nextLabel(l10n, names),
@@ -354,6 +446,22 @@ class _LiveClockControlsState extends State<LiveClockControls> {
           background: overtime ? StatusColors.red600 : StatusColors.red50,
           foreground: overtime ? Colors.white : StatusColors.red700,
           onPressed: busy ? null : _stop,
+        ),
+        // Een correctie, geen handeling die bij elke wedstrijd hoort: een
+        // tekstknop, geen volle knop.
+        Center(
+          child: TextButton(
+            key: const ValueKey('live-clock-set'),
+            onPressed: busy ? null : _setClock,
+            child: Text(
+              l10n.liveClockSet,
+              style: TextStyle(
+                fontSize: 12,
+                color: t.muted,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
         ),
         if (misfire)
           Center(
@@ -404,19 +512,24 @@ class _LiveClockControlsState extends State<LiveClockControls> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AppButtonBase(
-                  key: const ValueKey('live-reopen'),
-                  label: l10n.liveReopen,
-                  icon: const Icon(
-                    PhosphorIconsBold.arrowCounterClockwise,
-                    size: 16,
+                // Niet tijdens de strafschoppen: die horen bij een
+                // afgefloten wedstrijd (de server heropent dan ook niet).
+                // Eerst de serie wissen.
+                if (clock.shootout == null) ...[
+                  AppButtonBase(
+                    key: const ValueKey('live-reopen'),
+                    label: l10n.liveReopen,
+                    icon: const Icon(
+                      PhosphorIconsBold.arrowCounterClockwise,
+                      size: 16,
+                    ),
+                    background: t.sunken,
+                    foreground: t.inkSoft,
+                    horizontalPadding: 12,
+                    onPressed: busy ? null : () => _run(_c.reopen),
                   ),
-                  background: t.sunken,
-                  foreground: t.inkSoft,
-                  horizontalPadding: 12,
-                  onPressed: busy ? null : () => _run(_c.reopen),
-                ),
-                const SizedBox(width: 8),
+                  const SizedBox(width: 8),
+                ],
                 if (_match.hasEntries)
                   // Eén knop voor VoiceOver: het label hoort bij de tikbare
                   // knop zelf (die heeft alleen een icoon).
@@ -453,6 +566,72 @@ class _LiveClockControlsState extends State<LiveClockControls> {
           ],
         ),
       );
+      if (_match.canDecide(isCup: widget.isCup)) {
+        sections.add(
+          Column(
+            key: const ValueKey('live-decide'),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.liveDecidePrompt,
+                style: TextStyle(fontSize: 12, color: t.muted),
+              ),
+              const SizedBox(height: 8),
+              // Wrap: bij grote tekst onder elkaar in plaats van afgekapt.
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final buttons = [
+                    if (_match.canStartExtraTime(isCup: widget.isCup))
+                      AppButtonBase(
+                        key: const ValueKey('live-extra-time'),
+                        label: l10n.liveExtraTime,
+                        icon: const Icon(PhosphorIconsDuotone.timer, size: 16),
+                        background: t.sunken,
+                        foreground: t.inkSoft,
+                        expand: true,
+                        onPressed: busy ? null : () => _extraTime(names),
+                      ),
+                    AppButtonBase(
+                      key: const ValueKey('live-shootout-start'),
+                      label: l10n.liveShootout,
+                      icon: const Icon(
+                        PhosphorIconsDuotone.soccerBall,
+                        size: 16,
+                      ),
+                      background: StatusColors.emerald700,
+                      foreground: Colors.white,
+                      expand: true,
+                      onPressed: busy ? null : _shootout,
+                    ),
+                  ];
+                  final stacked =
+                      MediaQuery.textScalerOf(context).scale(14) > 20 ||
+                      constraints.maxWidth < 280;
+                  if (stacked) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (var i = 0; i < buttons.length; i++) ...[
+                          if (i > 0) const SizedBox(height: 8),
+                          buttons[i],
+                        ],
+                      ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      for (var i = 0; i < buttons.length; i++) ...[
+                        if (i > 0) const SizedBox(width: 8),
+                        Expanded(child: buttons[i]),
+                      ],
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      }
     }
 
     return Padding(
@@ -699,6 +878,85 @@ class _DurationSheetState extends State<_DurationSheet> {
           label: l10n.liveSave,
           expand: true,
           onPressed: () => Navigator.of(context).pop(_minutes),
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+/// De klok gelijkzetten tijdens de wedstrijd, op minuut én seconde
+/// (`ClockSheet` in de PWA). Voorgevuld met waar de klok nu staat, zodat
+/// een kleine correctie één getal is; daarna tikt het veld niet mee.
+class _ClockSheet extends StatefulWidget {
+  const _ClockSheet({required this.seconds, required this.running});
+
+  /// Waar de klok nu staat, in seconden.
+  final int seconds;
+  final bool running;
+
+  @override
+  State<_ClockSheet> createState() => _ClockSheetState();
+}
+
+class _ClockSheetState extends State<_ClockSheet> {
+  late int _minute = (widget.seconds ~/ 60).clamp(0, 120);
+  late int _second = widget.seconds % 60;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    final time = '$_minute:${_second.toString().padLeft(2, '0')}';
+    return Column(
+      key: const ValueKey('live-clock-sheet'),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          widget.running
+              ? l10n.liveClockSetBodyRunning
+              : l10n.liveClockSetBodyPaused,
+          style: TextStyle(fontSize: 14, color: t.inkSoft),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            LiveMinuteField(
+              key: const ValueKey('live-clock-minute'),
+              value: _minute,
+              width: 96,
+              label: l10n.liveClockMinutes,
+              onChanged: (v) => setState(() => _minute = v),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                ':',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: t.muted,
+                ),
+              ),
+            ),
+            LiveMinuteField(
+              key: const ValueKey('live-clock-second'),
+              value: _second,
+              max: 59,
+              width: 96,
+              label: l10n.liveClockSeconds,
+              onChanged: (v) => setState(() => _second = v),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        PrimaryButton(
+          key: const ValueKey('live-clock-save'),
+          label: l10n.liveClockSetTo(time),
+          expand: true,
+          onPressed: () =>
+              Navigator.of(context).pop((minute: _minute, second: _second)),
         ),
         const SizedBox(height: 8),
       ],

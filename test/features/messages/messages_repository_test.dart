@@ -59,6 +59,16 @@ void main() {
     ]);
     expect(overview.linkLabel('/team'), 'Teamgenoten');
     expect(overview.linkLabel('/onbekend'), isNull);
+    expect(overview.spectatorsCount, 0);
+  });
+
+  test('GET leest spectators_count', () async {
+    http.on(
+      'GET /teams/3/messages',
+      200,
+      MessagesFixtures.overview(spectators: 4),
+    );
+    expect((await repository.fetch(3)).spectatorsCount, 4);
   });
 
   test('placeholders met accolades blijven enkel', () async {
@@ -82,18 +92,29 @@ void main() {
       const MessageDraft(title: ' Bal mee ', body: 'Iedereen ', url: '  '),
     );
 
-    expect(http.requests.single.body, {'title': 'Bal mee', 'body': 'Iedereen'});
+    // Toeschouwers standaard niet.
+    expect(http.requests.single.body, {
+      'title': 'Bal mee',
+      'body': 'Iedereen',
+      'include_spectators': false,
+    });
     expect(sent.id, 32);
     expect(sent.link, '/agenda');
 
     await repository.send(
       3,
-      const MessageDraft(title: 'A', body: 'B', url: '/agenda'),
+      const MessageDraft(
+        title: 'A',
+        body: 'B',
+        url: '/agenda',
+        includeSpectators: true,
+      ),
     );
     expect(http.requests.last.body, {
       'title': 'A',
       'body': 'B',
       'url': '/agenda',
+      'include_spectators': true,
     });
   });
 

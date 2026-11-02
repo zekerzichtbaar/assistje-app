@@ -112,8 +112,15 @@ class DutiesController extends AsyncNotifier<DutiesOverview> {
     return _write(() => _repository.reorderGroups(teamId, ids));
   }
 
-  Future<Object?> storeAssignments(DutyAssignmentDraft draft) =>
-      _write(() => _repository.storeAssignments(teamId, draft));
+  /// Beurten inplannen. Geeft `(fout, melding)` terug; de melding is die van
+  /// de server (bv. `"3 mensen ingedeeld."` bij één-of-meer).
+  Future<(Object?, String?)> storeAssignments(DutyAssignmentDraft draft) async {
+    String? message;
+    final error = await _write(() async {
+      message = (await _repository.storeAssignments(teamId, draft)).message;
+    });
+    return (error, message);
+  }
 
   /// Verdeelt een wedstrijddienst. Geeft `(fout, melding)` terug.
   Future<(Object?, String?)> autoAssign() async {

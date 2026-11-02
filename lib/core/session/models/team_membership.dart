@@ -31,6 +31,10 @@ abstract class TeamMembership with _$TeamMembership {
     /// Volledig `SportProfile::toArray()`; typering volgt in een latere slice.
     @Default(<String, dynamic>{}) Map<String, dynamic> sport,
     @Default(false) bool hasPoule,
+
+    /// Of het team diensten heeft (minstens één diensttype). Spelers en
+    /// toeschouwers zien dan Diensten (`/diensten`) in het Meer-scherm.
+    @Default(false) bool hasDuties,
     @Default(false) bool onboardingOpen,
     @Default(0) int unreadNotificationsCount,
   }) = _TeamMembership;

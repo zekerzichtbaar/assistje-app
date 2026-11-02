@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SavingsPotSummary {
 
- int get id; String get name; int get amountCents; int? get goalCents; int get months; int get memberCount; int get savedCents;
+ int get id; String get name; int get amountCents; int? get goalCents; int get months; int get memberCount; int get savedCents;/// Afvinklijst zonder geld: de voortgang is [checkedCount].
+ bool get withoutAmount;/// Aantal afgevinkte cellen (terugbetaald telt niet).
+ int get checkedCount;
 /// Create a copy of SavingsPotSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +30,16 @@ $SavingsPotSummaryCopyWith<SavingsPotSummary> get copyWith => _$SavingsPotSummar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsPotSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.savedCents, savedCents) || other.savedCents == savedCents));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsPotSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.savedCents, savedCents) || other.savedCents == savedCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.checkedCount, checkedCount) || other.checkedCount == checkedCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,memberCount,savedCents);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,memberCount,savedCents,withoutAmount,checkedCount);
 
 @override
 String toString() {
-  return 'SavingsPotSummary(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, memberCount: $memberCount, savedCents: $savedCents)';
+  return 'SavingsPotSummary(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, memberCount: $memberCount, savedCents: $savedCents, withoutAmount: $withoutAmount, checkedCount: $checkedCount)';
 }
 
 
@@ -48,7 +50,7 @@ abstract mixin class $SavingsPotSummaryCopyWith<$Res>  {
   factory $SavingsPotSummaryCopyWith(SavingsPotSummary value, $Res Function(SavingsPotSummary) _then) = _$SavingsPotSummaryCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, int amountCents, int? goalCents, int months, int memberCount, int savedCents
+ int id, String name, int amountCents, int? goalCents, int months, int memberCount, int savedCents, bool withoutAmount, int checkedCount
 });
 
 
@@ -65,7 +67,7 @@ class _$SavingsPotSummaryCopyWithImpl<$Res>
 
 /// Create a copy of SavingsPotSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? memberCount = null,Object? savedCents = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? memberCount = null,Object? savedCents = null,Object? withoutAmount = null,Object? checkedCount = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,6 +76,8 @@ as int,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: 
 as int?,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,memberCount: null == memberCount ? _self.memberCount : memberCount // ignore: cast_nullable_to_non_nullable
 as int,savedCents: null == savedCents ? _self.savedCents : savedCents // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,checkedCount: null == checkedCount ? _self.checkedCount : checkedCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -159,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents,  bool withoutAmount,  int checkedCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SavingsPotSummary() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents,_that.withoutAmount,_that.checkedCount);case _:
   return orElse();
 
 }
@@ -180,10 +184,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents,  bool withoutAmount,  int checkedCount)  $default,) {final _that = this;
 switch (_that) {
 case _SavingsPotSummary():
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents,_that.withoutAmount,_that.checkedCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +204,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  int memberCount,  int savedCents,  bool withoutAmount,  int checkedCount)?  $default,) {final _that = this;
 switch (_that) {
 case _SavingsPotSummary() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.memberCount,_that.savedCents,_that.withoutAmount,_that.checkedCount);case _:
   return null;
 
 }
@@ -215,7 +219,7 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 @JsonSerializable()
 
 class _SavingsPotSummary extends SavingsPotSummary {
-  const _SavingsPotSummary({required this.id, this.name = '', this.amountCents = 0, this.goalCents, this.months = 1, this.memberCount = 0, this.savedCents = 0}): super._();
+  const _SavingsPotSummary({required this.id, this.name = '', this.amountCents = 0, this.goalCents, this.months = 1, this.memberCount = 0, this.savedCents = 0, this.withoutAmount = false, this.checkedCount = 0}): super._();
   factory _SavingsPotSummary.fromJson(Map<String, dynamic> json) => _$SavingsPotSummaryFromJson(json);
 
 @override final  int id;
@@ -225,6 +229,10 @@ class _SavingsPotSummary extends SavingsPotSummary {
 @override@JsonKey() final  int months;
 @override@JsonKey() final  int memberCount;
 @override@JsonKey() final  int savedCents;
+/// Afvinklijst zonder geld: de voortgang is [checkedCount].
+@override@JsonKey() final  bool withoutAmount;
+/// Aantal afgevinkte cellen (terugbetaald telt niet).
+@override@JsonKey() final  int checkedCount;
 
 /// Create a copy of SavingsPotSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsPotSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.savedCents, savedCents) || other.savedCents == savedCents));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsPotSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.savedCents, savedCents) || other.savedCents == savedCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.checkedCount, checkedCount) || other.checkedCount == checkedCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,memberCount,savedCents);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,memberCount,savedCents,withoutAmount,checkedCount);
 
 @override
 String toString() {
-  return 'SavingsPotSummary(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, memberCount: $memberCount, savedCents: $savedCents)';
+  return 'SavingsPotSummary(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, memberCount: $memberCount, savedCents: $savedCents, withoutAmount: $withoutAmount, checkedCount: $checkedCount)';
 }
 
 
@@ -259,7 +267,7 @@ abstract mixin class _$SavingsPotSummaryCopyWith<$Res> implements $SavingsPotSum
   factory _$SavingsPotSummaryCopyWith(_SavingsPotSummary value, $Res Function(_SavingsPotSummary) _then) = __$SavingsPotSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, int amountCents, int? goalCents, int months, int memberCount, int savedCents
+ int id, String name, int amountCents, int? goalCents, int months, int memberCount, int savedCents, bool withoutAmount, int checkedCount
 });
 
 
@@ -276,7 +284,7 @@ class __$SavingsPotSummaryCopyWithImpl<$Res>
 
 /// Create a copy of SavingsPotSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? memberCount = null,Object? savedCents = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? memberCount = null,Object? savedCents = null,Object? withoutAmount = null,Object? checkedCount = null,}) {
   return _then(_SavingsPotSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -285,6 +293,8 @@ as int,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: 
 as int?,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,memberCount: null == memberCount ? _self.memberCount : memberCount // ignore: cast_nullable_to_non_nullable
 as int,savedCents: null == savedCents ? _self.savedCents : savedCents // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,checkedCount: null == checkedCount ? _self.checkedCount : checkedCount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -840,7 +850,8 @@ as bool,
 /// @nodoc
 mixin _$SavingsPot {
 
- int get id; String get name; int get amountCents; int? get goalCents; int get months; DateTime? get startsOn;@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope get scope; bool get oneOff; SavingsEvent? get event; int? get actualCostCents; DateTime? get settledOn;
+ int get id; String get name; int get amountCents;/// Afvinklijst zonder geld: geen bedrag, geen doel, geen afrekening.
+ bool get withoutAmount; int? get goalCents; int get months; DateTime? get startsOn;@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope get scope; bool get oneOff; SavingsEvent? get event; int? get actualCostCents; DateTime? get settledOn;
 /// Create a copy of SavingsPot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -853,16 +864,16 @@ $SavingsPotCopyWith<SavingsPot> get copyWith => _$SavingsPotCopyWithImpl<Savings
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.event, event) || other.event == event)&&(identical(other.actualCostCents, actualCostCents) || other.actualCostCents == actualCostCents)&&(identical(other.settledOn, settledOn) || other.settledOn == settledOn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.event, event) || other.event == event)&&(identical(other.actualCostCents, actualCostCents) || other.actualCostCents == actualCostCents)&&(identical(other.settledOn, settledOn) || other.settledOn == settledOn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,startsOn,scope,oneOff,event,actualCostCents,settledOn);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,withoutAmount,goalCents,months,startsOn,scope,oneOff,event,actualCostCents,settledOn);
 
 @override
 String toString() {
-  return 'SavingsPot(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, startsOn: $startsOn, scope: $scope, oneOff: $oneOff, event: $event, actualCostCents: $actualCostCents, settledOn: $settledOn)';
+  return 'SavingsPot(id: $id, name: $name, amountCents: $amountCents, withoutAmount: $withoutAmount, goalCents: $goalCents, months: $months, startsOn: $startsOn, scope: $scope, oneOff: $oneOff, event: $event, actualCostCents: $actualCostCents, settledOn: $settledOn)';
 }
 
 
@@ -873,7 +884,7 @@ abstract mixin class $SavingsPotCopyWith<$Res>  {
   factory $SavingsPotCopyWith(SavingsPot value, $Res Function(SavingsPot) _then) = _$SavingsPotCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, int amountCents, int? goalCents, int months, DateTime? startsOn,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool oneOff, SavingsEvent? event, int? actualCostCents, DateTime? settledOn
+ int id, String name, int amountCents, bool withoutAmount, int? goalCents, int months, DateTime? startsOn,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool oneOff, SavingsEvent? event, int? actualCostCents, DateTime? settledOn
 });
 
 
@@ -890,12 +901,13 @@ class _$SavingsPotCopyWithImpl<$Res>
 
 /// Create a copy of SavingsPot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? startsOn = freezed,Object? scope = null,Object? oneOff = null,Object? event = freezed,Object? actualCostCents = freezed,Object? settledOn = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? withoutAmount = null,Object? goalCents = freezed,Object? months = null,Object? startsOn = freezed,Object? scope = null,Object? oneOff = null,Object? event = freezed,Object? actualCostCents = freezed,Object? settledOn = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
-as int,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: cast_nullable_to_non_nullable
 as int?,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,startsOn: freezed == startsOn ? _self.startsOn : startsOn // ignore: cast_nullable_to_non_nullable
 as DateTime?,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
@@ -1000,10 +1012,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool withoutAmount,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SavingsPot() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
   return orElse();
 
 }
@@ -1021,10 +1033,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  int amountCents,  bool withoutAmount,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)  $default,) {final _that = this;
 switch (_that) {
 case _SavingsPot():
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1041,10 +1053,10 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  int amountCents,  bool withoutAmount,  int? goalCents,  int months,  DateTime? startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool oneOff,  SavingsEvent? event,  int? actualCostCents,  DateTime? settledOn)?  $default,) {final _that = this;
 switch (_that) {
 case _SavingsPot() when $default != null:
-return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
+return $default(_that.id,_that.name,_that.amountCents,_that.withoutAmount,_that.goalCents,_that.months,_that.startsOn,_that.scope,_that.oneOff,_that.event,_that.actualCostCents,_that.settledOn);case _:
   return null;
 
 }
@@ -1056,12 +1068,14 @@ return $default(_that.id,_that.name,_that.amountCents,_that.goalCents,_that.mont
 @JsonSerializable()
 
 class _SavingsPot extends SavingsPot {
-  const _SavingsPot({required this.id, this.name = '', this.amountCents = 0, this.goalCents, this.months = 1, this.startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown) this.scope = SavingsScope.all, this.oneOff = false, this.event, this.actualCostCents, this.settledOn}): super._();
+  const _SavingsPot({required this.id, this.name = '', this.amountCents = 0, this.withoutAmount = false, this.goalCents, this.months = 1, this.startsOn, @JsonKey(unknownEnumValue: SavingsScope.unknown) this.scope = SavingsScope.all, this.oneOff = false, this.event, this.actualCostCents, this.settledOn}): super._();
   factory _SavingsPot.fromJson(Map<String, dynamic> json) => _$SavingsPotFromJson(json);
 
 @override final  int id;
 @override@JsonKey() final  String name;
 @override@JsonKey() final  int amountCents;
+/// Afvinklijst zonder geld: geen bedrag, geen doel, geen afrekening.
+@override@JsonKey() final  bool withoutAmount;
 @override final  int? goalCents;
 @override@JsonKey() final  int months;
 @override final  DateTime? startsOn;
@@ -1084,16 +1098,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.event, event) || other.event == event)&&(identical(other.actualCostCents, actualCostCents) || other.actualCostCents == actualCostCents)&&(identical(other.settledOn, settledOn) || other.settledOn == settledOn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsPot&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.amountCents, amountCents) || other.amountCents == amountCents)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.goalCents, goalCents) || other.goalCents == goalCents)&&(identical(other.months, months) || other.months == months)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.oneOff, oneOff) || other.oneOff == oneOff)&&(identical(other.event, event) || other.event == event)&&(identical(other.actualCostCents, actualCostCents) || other.actualCostCents == actualCostCents)&&(identical(other.settledOn, settledOn) || other.settledOn == settledOn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,amountCents,goalCents,months,startsOn,scope,oneOff,event,actualCostCents,settledOn);
+int get hashCode => Object.hash(runtimeType,id,name,amountCents,withoutAmount,goalCents,months,startsOn,scope,oneOff,event,actualCostCents,settledOn);
 
 @override
 String toString() {
-  return 'SavingsPot(id: $id, name: $name, amountCents: $amountCents, goalCents: $goalCents, months: $months, startsOn: $startsOn, scope: $scope, oneOff: $oneOff, event: $event, actualCostCents: $actualCostCents, settledOn: $settledOn)';
+  return 'SavingsPot(id: $id, name: $name, amountCents: $amountCents, withoutAmount: $withoutAmount, goalCents: $goalCents, months: $months, startsOn: $startsOn, scope: $scope, oneOff: $oneOff, event: $event, actualCostCents: $actualCostCents, settledOn: $settledOn)';
 }
 
 
@@ -1104,7 +1118,7 @@ abstract mixin class _$SavingsPotCopyWith<$Res> implements $SavingsPotCopyWith<$
   factory _$SavingsPotCopyWith(_SavingsPot value, $Res Function(_SavingsPot) _then) = __$SavingsPotCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, int amountCents, int? goalCents, int months, DateTime? startsOn,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool oneOff, SavingsEvent? event, int? actualCostCents, DateTime? settledOn
+ int id, String name, int amountCents, bool withoutAmount, int? goalCents, int months, DateTime? startsOn,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool oneOff, SavingsEvent? event, int? actualCostCents, DateTime? settledOn
 });
 
 
@@ -1121,12 +1135,13 @@ class __$SavingsPotCopyWithImpl<$Res>
 
 /// Create a copy of SavingsPot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? goalCents = freezed,Object? months = null,Object? startsOn = freezed,Object? scope = null,Object? oneOff = null,Object? event = freezed,Object? actualCostCents = freezed,Object? settledOn = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? amountCents = null,Object? withoutAmount = null,Object? goalCents = freezed,Object? months = null,Object? startsOn = freezed,Object? scope = null,Object? oneOff = null,Object? event = freezed,Object? actualCostCents = freezed,Object? settledOn = freezed,}) {
   return _then(_SavingsPot(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amountCents: null == amountCents ? _self.amountCents : amountCents // ignore: cast_nullable_to_non_nullable
-as int,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: cast_nullable_to_non_nullable
+as int,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,goalCents: freezed == goalCents ? _self.goalCents : goalCents // ignore: cast_nullable_to_non_nullable
 as int?,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,startsOn: freezed == startsOn ? _self.startsOn : startsOn // ignore: cast_nullable_to_non_nullable
 as DateTime?,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
@@ -2841,7 +2856,8 @@ as List<SavingsStaffOption>,
 /// @nodoc
 mixin _$SavingsFormValues {
 
- int get id; String get name;@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope get scope; bool get includeGuests; num get amount; num? get goal; String get startMonth; int get months; List<String> get members; int? get eventId;
+ int get id; String get name;@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope get scope; bool get includeGuests;/// Afvinklijst zonder geld; [amount] is dan `null`.
+ bool get withoutAmount; num? get amount; num? get goal; String get startMonth; int get months; List<String> get members; int? get eventId;
 /// Create a copy of SavingsFormValues
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2854,16 +2870,16 @@ $SavingsFormValuesCopyWith<SavingsFormValues> get copyWith => _$SavingsFormValue
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsFormValues&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.includeGuests, includeGuests) || other.includeGuests == includeGuests)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.startMonth, startMonth) || other.startMonth == startMonth)&&(identical(other.months, months) || other.months == months)&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.eventId, eventId) || other.eventId == eventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SavingsFormValues&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.includeGuests, includeGuests) || other.includeGuests == includeGuests)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.startMonth, startMonth) || other.startMonth == startMonth)&&(identical(other.months, months) || other.months == months)&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.eventId, eventId) || other.eventId == eventId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,scope,includeGuests,amount,goal,startMonth,months,const DeepCollectionEquality().hash(members),eventId);
+int get hashCode => Object.hash(runtimeType,id,name,scope,includeGuests,withoutAmount,amount,goal,startMonth,months,const DeepCollectionEquality().hash(members),eventId);
 
 @override
 String toString() {
-  return 'SavingsFormValues(id: $id, name: $name, scope: $scope, includeGuests: $includeGuests, amount: $amount, goal: $goal, startMonth: $startMonth, months: $months, members: $members, eventId: $eventId)';
+  return 'SavingsFormValues(id: $id, name: $name, scope: $scope, includeGuests: $includeGuests, withoutAmount: $withoutAmount, amount: $amount, goal: $goal, startMonth: $startMonth, months: $months, members: $members, eventId: $eventId)';
 }
 
 
@@ -2874,7 +2890,7 @@ abstract mixin class $SavingsFormValuesCopyWith<$Res>  {
   factory $SavingsFormValuesCopyWith(SavingsFormValues value, $Res Function(SavingsFormValues) _then) = _$SavingsFormValuesCopyWithImpl;
 @useResult
 $Res call({
- int id, String name,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool includeGuests, num amount, num? goal, String startMonth, int months, List<String> members, int? eventId
+ int id, String name,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool includeGuests, bool withoutAmount, num? amount, num? goal, String startMonth, int months, List<String> members, int? eventId
 });
 
 
@@ -2891,14 +2907,15 @@ class _$SavingsFormValuesCopyWithImpl<$Res>
 
 /// Create a copy of SavingsFormValues
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? scope = null,Object? includeGuests = null,Object? amount = null,Object? goal = freezed,Object? startMonth = null,Object? months = null,Object? members = null,Object? eventId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? scope = null,Object? includeGuests = null,Object? withoutAmount = null,Object? amount = freezed,Object? goal = freezed,Object? startMonth = null,Object? months = null,Object? members = null,Object? eventId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
 as SavingsScope,includeGuests: null == includeGuests ? _self.includeGuests : includeGuests // ignore: cast_nullable_to_non_nullable
-as bool,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as num,goal: freezed == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
+as bool,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as num?,goal: freezed == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
 as num?,startMonth: null == startMonth ? _self.startMonth : startMonth // ignore: cast_nullable_to_non_nullable
 as String,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
@@ -2988,10 +3005,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  num amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  bool withoutAmount,  num? amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SavingsFormValues() when $default != null:
-return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
+return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.withoutAmount,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
   return orElse();
 
 }
@@ -3009,10 +3026,10 @@ return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  num amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  bool withoutAmount,  num? amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)  $default,) {final _that = this;
 switch (_that) {
 case _SavingsFormValues():
-return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
+return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.withoutAmount,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -3029,10 +3046,10 @@ return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  num amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(unknownEnumValue: SavingsScope.unknown)  SavingsScope scope,  bool includeGuests,  bool withoutAmount,  num? amount,  num? goal,  String startMonth,  int months,  List<String> members,  int? eventId)?  $default,) {final _that = this;
 switch (_that) {
 case _SavingsFormValues() when $default != null:
-return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
+return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.withoutAmount,_that.amount,_that.goal,_that.startMonth,_that.months,_that.members,_that.eventId);case _:
   return null;
 
 }
@@ -3044,14 +3061,16 @@ return $default(_that.id,_that.name,_that.scope,_that.includeGuests,_that.amount
 @JsonSerializable()
 
 class _SavingsFormValues implements SavingsFormValues {
-  const _SavingsFormValues({required this.id, this.name = '', @JsonKey(unknownEnumValue: SavingsScope.unknown) this.scope = SavingsScope.all, this.includeGuests = false, this.amount = 0, this.goal, this.startMonth = '', this.months = 1, final  List<String> members = const <String>[], this.eventId}): _members = members;
+  const _SavingsFormValues({required this.id, this.name = '', @JsonKey(unknownEnumValue: SavingsScope.unknown) this.scope = SavingsScope.all, this.includeGuests = false, this.withoutAmount = false, this.amount, this.goal, this.startMonth = '', this.months = 1, final  List<String> members = const <String>[], this.eventId}): _members = members;
   factory _SavingsFormValues.fromJson(Map<String, dynamic> json) => _$SavingsFormValuesFromJson(json);
 
 @override final  int id;
 @override@JsonKey() final  String name;
 @override@JsonKey(unknownEnumValue: SavingsScope.unknown) final  SavingsScope scope;
 @override@JsonKey() final  bool includeGuests;
-@override@JsonKey() final  num amount;
+/// Afvinklijst zonder geld; [amount] is dan `null`.
+@override@JsonKey() final  bool withoutAmount;
+@override final  num? amount;
 @override final  num? goal;
 @override@JsonKey() final  String startMonth;
 @override@JsonKey() final  int months;
@@ -3077,16 +3096,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsFormValues&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.includeGuests, includeGuests) || other.includeGuests == includeGuests)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.startMonth, startMonth) || other.startMonth == startMonth)&&(identical(other.months, months) || other.months == months)&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.eventId, eventId) || other.eventId == eventId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SavingsFormValues&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.scope, scope) || other.scope == scope)&&(identical(other.includeGuests, includeGuests) || other.includeGuests == includeGuests)&&(identical(other.withoutAmount, withoutAmount) || other.withoutAmount == withoutAmount)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.goal, goal) || other.goal == goal)&&(identical(other.startMonth, startMonth) || other.startMonth == startMonth)&&(identical(other.months, months) || other.months == months)&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.eventId, eventId) || other.eventId == eventId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,scope,includeGuests,amount,goal,startMonth,months,const DeepCollectionEquality().hash(_members),eventId);
+int get hashCode => Object.hash(runtimeType,id,name,scope,includeGuests,withoutAmount,amount,goal,startMonth,months,const DeepCollectionEquality().hash(_members),eventId);
 
 @override
 String toString() {
-  return 'SavingsFormValues(id: $id, name: $name, scope: $scope, includeGuests: $includeGuests, amount: $amount, goal: $goal, startMonth: $startMonth, months: $months, members: $members, eventId: $eventId)';
+  return 'SavingsFormValues(id: $id, name: $name, scope: $scope, includeGuests: $includeGuests, withoutAmount: $withoutAmount, amount: $amount, goal: $goal, startMonth: $startMonth, months: $months, members: $members, eventId: $eventId)';
 }
 
 
@@ -3097,7 +3116,7 @@ abstract mixin class _$SavingsFormValuesCopyWith<$Res> implements $SavingsFormVa
   factory _$SavingsFormValuesCopyWith(_SavingsFormValues value, $Res Function(_SavingsFormValues) _then) = __$SavingsFormValuesCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool includeGuests, num amount, num? goal, String startMonth, int months, List<String> members, int? eventId
+ int id, String name,@JsonKey(unknownEnumValue: SavingsScope.unknown) SavingsScope scope, bool includeGuests, bool withoutAmount, num? amount, num? goal, String startMonth, int months, List<String> members, int? eventId
 });
 
 
@@ -3114,14 +3133,15 @@ class __$SavingsFormValuesCopyWithImpl<$Res>
 
 /// Create a copy of SavingsFormValues
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? scope = null,Object? includeGuests = null,Object? amount = null,Object? goal = freezed,Object? startMonth = null,Object? months = null,Object? members = null,Object? eventId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? scope = null,Object? includeGuests = null,Object? withoutAmount = null,Object? amount = freezed,Object? goal = freezed,Object? startMonth = null,Object? months = null,Object? members = null,Object? eventId = freezed,}) {
   return _then(_SavingsFormValues(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
 as SavingsScope,includeGuests: null == includeGuests ? _self.includeGuests : includeGuests // ignore: cast_nullable_to_non_nullable
-as bool,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as num,goal: freezed == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
+as bool,withoutAmount: null == withoutAmount ? _self.withoutAmount : withoutAmount // ignore: cast_nullable_to_non_nullable
+as bool,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as num?,goal: freezed == goal ? _self.goal : goal // ignore: cast_nullable_to_non_nullable
 as num?,startMonth: null == startMonth ? _self.startMonth : startMonth // ignore: cast_nullable_to_non_nullable
 as String,months: null == months ? _self.months : months // ignore: cast_nullable_to_non_nullable
 as int,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable

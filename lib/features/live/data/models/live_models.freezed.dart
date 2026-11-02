@@ -16,8 +16,15 @@ T _$identity<T>(T value) => value;
 mixin _$LiveClock {
 
  bool get isLive; bool get running; DateTime? get startedAt; int get accumulatedSeconds; DateTime? get endedAt; int get period;/// Minuten waarop de delen eindigen (`[45, 90]`); leeg bij een sport die
-/// niet op tijd speelt.
- List<int> get periodEnds;
+/// niet op tijd speelt. Bij een verlenging lopen ze door
+/// (`[45, 90, 105, 120]`).
+ List<int> get periodEnds;/// Hoeveel delen de reguliere speeltijd telt; `0` als de server het niet
+/// meestuurt (dan geldt `rules.periods.count`). Een deel daarboven is
+/// verlenging.
+ int get regularPeriods;/// Is de verlenging gestart?
+ bool get extraTime;/// De strafschoppenserie, of `null` als er geen is.
+ LiveShootout? get shootout;/// Wat er achter de uitslag hoort: `n.v.` of `4–3 n.s.` (thuis–uit).
+ String? get resultSuffix;
 /// Create a copy of LiveClock
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +37,16 @@ $LiveClockCopyWith<LiveClock> get copyWith => _$LiveClockCopyWithImpl<LiveClock>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveClock&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other.periodEnds, periodEnds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveClock&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other.periodEnds, periodEnds)&&(identical(other.regularPeriods, regularPeriods) || other.regularPeriods == regularPeriods)&&(identical(other.extraTime, extraTime) || other.extraTime == extraTime)&&(identical(other.shootout, shootout) || other.shootout == shootout)&&(identical(other.resultSuffix, resultSuffix) || other.resultSuffix == resultSuffix));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(periodEnds));
+int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(periodEnds),regularPeriods,extraTime,shootout,resultSuffix);
 
 @override
 String toString() {
-  return 'LiveClock(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds)';
+  return 'LiveClock(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds, regularPeriods: $regularPeriods, extraTime: $extraTime, shootout: $shootout, resultSuffix: $resultSuffix)';
 }
 
 
@@ -50,11 +57,11 @@ abstract mixin class $LiveClockCopyWith<$Res>  {
   factory $LiveClockCopyWith(LiveClock value, $Res Function(LiveClock) _then) = _$LiveClockCopyWithImpl;
 @useResult
 $Res call({
- bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds
+ bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds, int regularPeriods, bool extraTime, LiveShootout? shootout, String? resultSuffix
 });
 
 
-
+$LiveShootoutCopyWith<$Res>? get shootout;
 
 }
 /// @nodoc
@@ -67,7 +74,7 @@ class _$LiveClockCopyWithImpl<$Res>
 
 /// Create a copy of LiveClock
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,Object? regularPeriods = null,Object? extraTime = null,Object? shootout = freezed,Object? resultSuffix = freezed,}) {
   return _then(_self.copyWith(
 isLive: null == isLive ? _self.isLive : isLive // ignore: cast_nullable_to_non_nullable
 as bool,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
@@ -76,10 +83,26 @@ as DateTime?,accumulatedSeconds: null == accumulatedSeconds ? _self.accumulatedS
 as int,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as int,periodEnds: null == periodEnds ? _self.periodEnds : periodEnds // ignore: cast_nullable_to_non_nullable
-as List<int>,
+as List<int>,regularPeriods: null == regularPeriods ? _self.regularPeriods : regularPeriods // ignore: cast_nullable_to_non_nullable
+as int,extraTime: null == extraTime ? _self.extraTime : extraTime // ignore: cast_nullable_to_non_nullable
+as bool,shootout: freezed == shootout ? _self.shootout : shootout // ignore: cast_nullable_to_non_nullable
+as LiveShootout?,resultSuffix: freezed == resultSuffix ? _self.resultSuffix : resultSuffix // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
+/// Create a copy of LiveClock
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LiveShootoutCopyWith<$Res>? get shootout {
+    if (_self.shootout == null) {
+    return null;
+  }
 
+  return $LiveShootoutCopyWith<$Res>(_self.shootout!, (value) {
+    return _then(_self.copyWith(shootout: value));
+  });
+}
 }
 
 
@@ -161,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  int regularPeriods,  bool extraTime,  LiveShootout? shootout,  String? resultSuffix)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveClock() when $default != null:
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.regularPeriods,_that.extraTime,_that.shootout,_that.resultSuffix);case _:
   return orElse();
 
 }
@@ -182,10 +205,10 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  int regularPeriods,  bool extraTime,  LiveShootout? shootout,  String? resultSuffix)  $default,) {final _that = this;
 switch (_that) {
 case _LiveClock():
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.regularPeriods,_that.extraTime,_that.shootout,_that.resultSuffix);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +225,10 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLive,  bool running,  DateTime? startedAt,  int accumulatedSeconds,  DateTime? endedAt,  int period,  List<int> periodEnds,  int regularPeriods,  bool extraTime,  LiveShootout? shootout,  String? resultSuffix)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveClock() when $default != null:
-return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds);case _:
+return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeconds,_that.endedAt,_that.period,_that.periodEnds,_that.regularPeriods,_that.extraTime,_that.shootout,_that.resultSuffix);case _:
   return null;
 
 }
@@ -217,7 +240,7 @@ return $default(_that.isLive,_that.running,_that.startedAt,_that.accumulatedSeco
 @JsonSerializable()
 
 class _LiveClock extends LiveClock {
-  const _LiveClock({this.isLive = false, this.running = false, this.startedAt, this.accumulatedSeconds = 0, this.endedAt, this.period = 1, final  List<int> periodEnds = const <int>[]}): _periodEnds = periodEnds,super._();
+  const _LiveClock({this.isLive = false, this.running = false, this.startedAt, this.accumulatedSeconds = 0, this.endedAt, this.period = 1, final  List<int> periodEnds = const <int>[], this.regularPeriods = 0, this.extraTime = false, this.shootout, this.resultSuffix}): _periodEnds = periodEnds,super._();
   factory _LiveClock.fromJson(Map<String, dynamic> json) => _$LiveClockFromJson(json);
 
 @override@JsonKey() final  bool isLive;
@@ -227,16 +250,28 @@ class _LiveClock extends LiveClock {
 @override final  DateTime? endedAt;
 @override@JsonKey() final  int period;
 /// Minuten waarop de delen eindigen (`[45, 90]`); leeg bij een sport die
-/// niet op tijd speelt.
+/// niet op tijd speelt. Bij een verlenging lopen ze door
+/// (`[45, 90, 105, 120]`).
  final  List<int> _periodEnds;
 /// Minuten waarop de delen eindigen (`[45, 90]`); leeg bij een sport die
-/// niet op tijd speelt.
+/// niet op tijd speelt. Bij een verlenging lopen ze door
+/// (`[45, 90, 105, 120]`).
 @override@JsonKey() List<int> get periodEnds {
   if (_periodEnds is EqualUnmodifiableListView) return _periodEnds;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_periodEnds);
 }
 
+/// Hoeveel delen de reguliere speeltijd telt; `0` als de server het niet
+/// meestuurt (dan geldt `rules.periods.count`). Een deel daarboven is
+/// verlenging.
+@override@JsonKey() final  int regularPeriods;
+/// Is de verlenging gestart?
+@override@JsonKey() final  bool extraTime;
+/// De strafschoppenserie, of `null` als er geen is.
+@override final  LiveShootout? shootout;
+/// Wat er achter de uitslag hoort: `n.v.` of `4–3 n.s.` (thuis–uit).
+@override final  String? resultSuffix;
 
 /// Create a copy of LiveClock
 /// with the given fields replaced by the non-null parameter values.
@@ -251,16 +286,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveClock&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other._periodEnds, _periodEnds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveClock&&(identical(other.isLive, isLive) || other.isLive == isLive)&&(identical(other.running, running) || other.running == running)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt)&&(identical(other.accumulatedSeconds, accumulatedSeconds) || other.accumulatedSeconds == accumulatedSeconds)&&(identical(other.endedAt, endedAt) || other.endedAt == endedAt)&&(identical(other.period, period) || other.period == period)&&const DeepCollectionEquality().equals(other._periodEnds, _periodEnds)&&(identical(other.regularPeriods, regularPeriods) || other.regularPeriods == regularPeriods)&&(identical(other.extraTime, extraTime) || other.extraTime == extraTime)&&(identical(other.shootout, shootout) || other.shootout == shootout)&&(identical(other.resultSuffix, resultSuffix) || other.resultSuffix == resultSuffix));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(_periodEnds));
+int get hashCode => Object.hash(runtimeType,isLive,running,startedAt,accumulatedSeconds,endedAt,period,const DeepCollectionEquality().hash(_periodEnds),regularPeriods,extraTime,shootout,resultSuffix);
 
 @override
 String toString() {
-  return 'LiveClock(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds)';
+  return 'LiveClock(isLive: $isLive, running: $running, startedAt: $startedAt, accumulatedSeconds: $accumulatedSeconds, endedAt: $endedAt, period: $period, periodEnds: $periodEnds, regularPeriods: $regularPeriods, extraTime: $extraTime, shootout: $shootout, resultSuffix: $resultSuffix)';
 }
 
 
@@ -271,11 +306,11 @@ abstract mixin class _$LiveClockCopyWith<$Res> implements $LiveClockCopyWith<$Re
   factory _$LiveClockCopyWith(_LiveClock value, $Res Function(_LiveClock) _then) = __$LiveClockCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds
+ bool isLive, bool running, DateTime? startedAt, int accumulatedSeconds, DateTime? endedAt, int period, List<int> periodEnds, int regularPeriods, bool extraTime, LiveShootout? shootout, String? resultSuffix
 });
 
 
-
+@override $LiveShootoutCopyWith<$Res>? get shootout;
 
 }
 /// @nodoc
@@ -288,7 +323,7 @@ class __$LiveClockCopyWithImpl<$Res>
 
 /// Create a copy of LiveClock
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLive = null,Object? running = null,Object? startedAt = freezed,Object? accumulatedSeconds = null,Object? endedAt = freezed,Object? period = null,Object? periodEnds = null,Object? regularPeriods = null,Object? extraTime = null,Object? shootout = freezed,Object? resultSuffix = freezed,}) {
   return _then(_LiveClock(
 isLive: null == isLive ? _self.isLive : isLive // ignore: cast_nullable_to_non_nullable
 as bool,running: null == running ? _self.running : running // ignore: cast_nullable_to_non_nullable
@@ -297,7 +332,570 @@ as DateTime?,accumulatedSeconds: null == accumulatedSeconds ? _self.accumulatedS
 as int,endedAt: freezed == endedAt ? _self.endedAt : endedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as int,periodEnds: null == periodEnds ? _self._periodEnds : periodEnds // ignore: cast_nullable_to_non_nullable
-as List<int>,
+as List<int>,regularPeriods: null == regularPeriods ? _self.regularPeriods : regularPeriods // ignore: cast_nullable_to_non_nullable
+as int,extraTime: null == extraTime ? _self.extraTime : extraTime // ignore: cast_nullable_to_non_nullable
+as bool,shootout: freezed == shootout ? _self.shootout : shootout // ignore: cast_nullable_to_non_nullable
+as LiveShootout?,resultSuffix: freezed == resultSuffix ? _self.resultSuffix : resultSuffix // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+/// Create a copy of LiveClock
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LiveShootoutCopyWith<$Res>? get shootout {
+    if (_self.shootout == null) {
+    return null;
+  }
+
+  return $LiveShootoutCopyWith<$Res>(_self.shootout!, (value) {
+    return _then(_self.copyWith(shootout: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$LiveShootoutKick {
+
+ bool get scored; String? get player;
+/// Create a copy of LiveShootoutKick
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiveShootoutKickCopyWith<LiveShootoutKick> get copyWith => _$LiveShootoutKickCopyWithImpl<LiveShootoutKick>(this as LiveShootoutKick, _$identity);
+
+  /// Serializes this LiveShootoutKick to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveShootoutKick&&(identical(other.scored, scored) || other.scored == scored)&&(identical(other.player, player) || other.player == player));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,scored,player);
+
+@override
+String toString() {
+  return 'LiveShootoutKick(scored: $scored, player: $player)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LiveShootoutKickCopyWith<$Res>  {
+  factory $LiveShootoutKickCopyWith(LiveShootoutKick value, $Res Function(LiveShootoutKick) _then) = _$LiveShootoutKickCopyWithImpl;
+@useResult
+$Res call({
+ bool scored, String? player
+});
+
+
+
+
+}
+/// @nodoc
+class _$LiveShootoutKickCopyWithImpl<$Res>
+    implements $LiveShootoutKickCopyWith<$Res> {
+  _$LiveShootoutKickCopyWithImpl(this._self, this._then);
+
+  final LiveShootoutKick _self;
+  final $Res Function(LiveShootoutKick) _then;
+
+/// Create a copy of LiveShootoutKick
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? scored = null,Object? player = freezed,}) {
+  return _then(_self.copyWith(
+scored: null == scored ? _self.scored : scored // ignore: cast_nullable_to_non_nullable
+as bool,player: freezed == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LiveShootoutKick].
+extension LiveShootoutKickPatterns on LiveShootoutKick {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiveShootoutKick value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiveShootoutKick() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiveShootoutKick value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiveShootoutKick():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiveShootoutKick value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiveShootoutKick() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool scored,  String? player)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiveShootoutKick() when $default != null:
+return $default(_that.scored,_that.player);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool scored,  String? player)  $default,) {final _that = this;
+switch (_that) {
+case _LiveShootoutKick():
+return $default(_that.scored,_that.player);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool scored,  String? player)?  $default,) {final _that = this;
+switch (_that) {
+case _LiveShootoutKick() when $default != null:
+return $default(_that.scored,_that.player);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LiveShootoutKick implements LiveShootoutKick {
+  const _LiveShootoutKick({this.scored = false, this.player});
+  factory _LiveShootoutKick.fromJson(Map<String, dynamic> json) => _$LiveShootoutKickFromJson(json);
+
+@override@JsonKey() final  bool scored;
+@override final  String? player;
+
+/// Create a copy of LiveShootoutKick
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiveShootoutKickCopyWith<_LiveShootoutKick> get copyWith => __$LiveShootoutKickCopyWithImpl<_LiveShootoutKick>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LiveShootoutKickToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveShootoutKick&&(identical(other.scored, scored) || other.scored == scored)&&(identical(other.player, player) || other.player == player));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,scored,player);
+
+@override
+String toString() {
+  return 'LiveShootoutKick(scored: $scored, player: $player)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiveShootoutKickCopyWith<$Res> implements $LiveShootoutKickCopyWith<$Res> {
+  factory _$LiveShootoutKickCopyWith(_LiveShootoutKick value, $Res Function(_LiveShootoutKick) _then) = __$LiveShootoutKickCopyWithImpl;
+@override @useResult
+$Res call({
+ bool scored, String? player
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiveShootoutKickCopyWithImpl<$Res>
+    implements _$LiveShootoutKickCopyWith<$Res> {
+  __$LiveShootoutKickCopyWithImpl(this._self, this._then);
+
+  final _LiveShootoutKick _self;
+  final $Res Function(_LiveShootoutKick) _then;
+
+/// Create a copy of LiveShootoutKick
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? scored = null,Object? player = freezed,}) {
+  return _then(_LiveShootoutKick(
+scored: null == scored ? _self.scored : scored // ignore: cast_nullable_to_non_nullable
+as bool,player: freezed == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$LiveShootout {
+
+ List<LiveShootoutKick> get us; List<LiveShootoutKick> get opp; String? get winner;
+/// Create a copy of LiveShootout
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiveShootoutCopyWith<LiveShootout> get copyWith => _$LiveShootoutCopyWithImpl<LiveShootout>(this as LiveShootout, _$identity);
+
+  /// Serializes this LiveShootout to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveShootout&&const DeepCollectionEquality().equals(other.us, us)&&const DeepCollectionEquality().equals(other.opp, opp)&&(identical(other.winner, winner) || other.winner == winner));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(us),const DeepCollectionEquality().hash(opp),winner);
+
+@override
+String toString() {
+  return 'LiveShootout(us: $us, opp: $opp, winner: $winner)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LiveShootoutCopyWith<$Res>  {
+  factory $LiveShootoutCopyWith(LiveShootout value, $Res Function(LiveShootout) _then) = _$LiveShootoutCopyWithImpl;
+@useResult
+$Res call({
+ List<LiveShootoutKick> us, List<LiveShootoutKick> opp, String? winner
+});
+
+
+
+
+}
+/// @nodoc
+class _$LiveShootoutCopyWithImpl<$Res>
+    implements $LiveShootoutCopyWith<$Res> {
+  _$LiveShootoutCopyWithImpl(this._self, this._then);
+
+  final LiveShootout _self;
+  final $Res Function(LiveShootout) _then;
+
+/// Create a copy of LiveShootout
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? us = null,Object? opp = null,Object? winner = freezed,}) {
+  return _then(_self.copyWith(
+us: null == us ? _self.us : us // ignore: cast_nullable_to_non_nullable
+as List<LiveShootoutKick>,opp: null == opp ? _self.opp : opp // ignore: cast_nullable_to_non_nullable
+as List<LiveShootoutKick>,winner: freezed == winner ? _self.winner : winner // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LiveShootout].
+extension LiveShootoutPatterns on LiveShootout {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiveShootout value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiveShootout() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiveShootout value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiveShootout():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiveShootout value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiveShootout() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<LiveShootoutKick> us,  List<LiveShootoutKick> opp,  String? winner)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiveShootout() when $default != null:
+return $default(_that.us,_that.opp,_that.winner);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<LiveShootoutKick> us,  List<LiveShootoutKick> opp,  String? winner)  $default,) {final _that = this;
+switch (_that) {
+case _LiveShootout():
+return $default(_that.us,_that.opp,_that.winner);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<LiveShootoutKick> us,  List<LiveShootoutKick> opp,  String? winner)?  $default,) {final _that = this;
+switch (_that) {
+case _LiveShootout() when $default != null:
+return $default(_that.us,_that.opp,_that.winner);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LiveShootout extends LiveShootout {
+  const _LiveShootout({final  List<LiveShootoutKick> us = const <LiveShootoutKick>[], final  List<LiveShootoutKick> opp = const <LiveShootoutKick>[], this.winner}): _us = us,_opp = opp,super._();
+  factory _LiveShootout.fromJson(Map<String, dynamic> json) => _$LiveShootoutFromJson(json);
+
+ final  List<LiveShootoutKick> _us;
+@override@JsonKey() List<LiveShootoutKick> get us {
+  if (_us is EqualUnmodifiableListView) return _us;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_us);
+}
+
+ final  List<LiveShootoutKick> _opp;
+@override@JsonKey() List<LiveShootoutKick> get opp {
+  if (_opp is EqualUnmodifiableListView) return _opp;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_opp);
+}
+
+@override final  String? winner;
+
+/// Create a copy of LiveShootout
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiveShootoutCopyWith<_LiveShootout> get copyWith => __$LiveShootoutCopyWithImpl<_LiveShootout>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LiveShootoutToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveShootout&&const DeepCollectionEquality().equals(other._us, _us)&&const DeepCollectionEquality().equals(other._opp, _opp)&&(identical(other.winner, winner) || other.winner == winner));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_us),const DeepCollectionEquality().hash(_opp),winner);
+
+@override
+String toString() {
+  return 'LiveShootout(us: $us, opp: $opp, winner: $winner)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiveShootoutCopyWith<$Res> implements $LiveShootoutCopyWith<$Res> {
+  factory _$LiveShootoutCopyWith(_LiveShootout value, $Res Function(_LiveShootout) _then) = __$LiveShootoutCopyWithImpl;
+@override @useResult
+$Res call({
+ List<LiveShootoutKick> us, List<LiveShootoutKick> opp, String? winner
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiveShootoutCopyWithImpl<$Res>
+    implements _$LiveShootoutCopyWith<$Res> {
+  __$LiveShootoutCopyWithImpl(this._self, this._then);
+
+  final _LiveShootout _self;
+  final $Res Function(_LiveShootout) _then;
+
+/// Create a copy of LiveShootout
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? us = null,Object? opp = null,Object? winner = freezed,}) {
+  return _then(_LiveShootout(
+us: null == us ? _self._us : us // ignore: cast_nullable_to_non_nullable
+as List<LiveShootoutKick>,opp: null == opp ? _self._opp : opp // ignore: cast_nullable_to_non_nullable
+as List<LiveShootoutKick>,winner: freezed == winner ? _self.winner : winner // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -1433,9 +2031,277 @@ as String,
 
 
 /// @nodoc
+mixin _$LiveExtraTime {
+
+ int get count; int get minutes;
+/// Create a copy of LiveExtraTime
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiveExtraTimeCopyWith<LiveExtraTime> get copyWith => _$LiveExtraTimeCopyWithImpl<LiveExtraTime>(this as LiveExtraTime, _$identity);
+
+  /// Serializes this LiveExtraTime to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveExtraTime&&(identical(other.count, count) || other.count == count)&&(identical(other.minutes, minutes) || other.minutes == minutes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,count,minutes);
+
+@override
+String toString() {
+  return 'LiveExtraTime(count: $count, minutes: $minutes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $LiveExtraTimeCopyWith<$Res>  {
+  factory $LiveExtraTimeCopyWith(LiveExtraTime value, $Res Function(LiveExtraTime) _then) = _$LiveExtraTimeCopyWithImpl;
+@useResult
+$Res call({
+ int count, int minutes
+});
+
+
+
+
+}
+/// @nodoc
+class _$LiveExtraTimeCopyWithImpl<$Res>
+    implements $LiveExtraTimeCopyWith<$Res> {
+  _$LiveExtraTimeCopyWithImpl(this._self, this._then);
+
+  final LiveExtraTime _self;
+  final $Res Function(LiveExtraTime) _then;
+
+/// Create a copy of LiveExtraTime
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? count = null,Object? minutes = null,}) {
+  return _then(_self.copyWith(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,minutes: null == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [LiveExtraTime].
+extension LiveExtraTimePatterns on LiveExtraTime {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiveExtraTime value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiveExtraTime() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiveExtraTime value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiveExtraTime():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiveExtraTime value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiveExtraTime() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int count,  int minutes)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiveExtraTime() when $default != null:
+return $default(_that.count,_that.minutes);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int count,  int minutes)  $default,) {final _that = this;
+switch (_that) {
+case _LiveExtraTime():
+return $default(_that.count,_that.minutes);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int count,  int minutes)?  $default,) {final _that = this;
+switch (_that) {
+case _LiveExtraTime() when $default != null:
+return $default(_that.count,_that.minutes);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _LiveExtraTime implements LiveExtraTime {
+  const _LiveExtraTime({this.count = 2, this.minutes = 15});
+  factory _LiveExtraTime.fromJson(Map<String, dynamic> json) => _$LiveExtraTimeFromJson(json);
+
+@override@JsonKey() final  int count;
+@override@JsonKey() final  int minutes;
+
+/// Create a copy of LiveExtraTime
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiveExtraTimeCopyWith<_LiveExtraTime> get copyWith => __$LiveExtraTimeCopyWithImpl<_LiveExtraTime>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$LiveExtraTimeToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveExtraTime&&(identical(other.count, count) || other.count == count)&&(identical(other.minutes, minutes) || other.minutes == minutes));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,count,minutes);
+
+@override
+String toString() {
+  return 'LiveExtraTime(count: $count, minutes: $minutes)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiveExtraTimeCopyWith<$Res> implements $LiveExtraTimeCopyWith<$Res> {
+  factory _$LiveExtraTimeCopyWith(_LiveExtraTime value, $Res Function(_LiveExtraTime) _then) = __$LiveExtraTimeCopyWithImpl;
+@override @useResult
+$Res call({
+ int count, int minutes
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiveExtraTimeCopyWithImpl<$Res>
+    implements _$LiveExtraTimeCopyWith<$Res> {
+  __$LiveExtraTimeCopyWithImpl(this._self, this._then);
+
+  final _LiveExtraTime _self;
+  final $Res Function(_LiveExtraTime) _then;
+
+/// Create a copy of LiveExtraTime
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? count = null,Object? minutes = null,}) {
+  return _then(_LiveExtraTime(
+count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,minutes: null == minutes ? _self.minutes : minutes // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$LiveRules {
 
- String get scoreModel; bool get tracksScorers; LivePeriods? get periods; List<LiveTypeOption> get cardTypes; List<LiveTypeOption> get momentTypes;
+ String get scoreModel; bool get tracksScorers; LivePeriods? get periods; List<LiveTypeOption> get cardTypes; List<LiveTypeOption> get momentTypes;/// De verlenging bij een gelijke beker, of `null` (sport kent die niet).
+ LiveExtraTime? get extraTime;/// Beslist de sport een gelijke beker met strafschoppen?
+ bool get hasShootout;
 /// Create a copy of LiveRules
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1448,16 +2314,16 @@ $LiveRulesCopyWith<LiveRules> get copyWith => _$LiveRulesCopyWithImpl<LiveRules>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveRules&&(identical(other.scoreModel, scoreModel) || other.scoreModel == scoreModel)&&(identical(other.tracksScorers, tracksScorers) || other.tracksScorers == tracksScorers)&&(identical(other.periods, periods) || other.periods == periods)&&const DeepCollectionEquality().equals(other.cardTypes, cardTypes)&&const DeepCollectionEquality().equals(other.momentTypes, momentTypes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveRules&&(identical(other.scoreModel, scoreModel) || other.scoreModel == scoreModel)&&(identical(other.tracksScorers, tracksScorers) || other.tracksScorers == tracksScorers)&&(identical(other.periods, periods) || other.periods == periods)&&const DeepCollectionEquality().equals(other.cardTypes, cardTypes)&&const DeepCollectionEquality().equals(other.momentTypes, momentTypes)&&(identical(other.extraTime, extraTime) || other.extraTime == extraTime)&&(identical(other.hasShootout, hasShootout) || other.hasShootout == hasShootout));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scoreModel,tracksScorers,periods,const DeepCollectionEquality().hash(cardTypes),const DeepCollectionEquality().hash(momentTypes));
+int get hashCode => Object.hash(runtimeType,scoreModel,tracksScorers,periods,const DeepCollectionEquality().hash(cardTypes),const DeepCollectionEquality().hash(momentTypes),extraTime,hasShootout);
 
 @override
 String toString() {
-  return 'LiveRules(scoreModel: $scoreModel, tracksScorers: $tracksScorers, periods: $periods, cardTypes: $cardTypes, momentTypes: $momentTypes)';
+  return 'LiveRules(scoreModel: $scoreModel, tracksScorers: $tracksScorers, periods: $periods, cardTypes: $cardTypes, momentTypes: $momentTypes, extraTime: $extraTime, hasShootout: $hasShootout)';
 }
 
 
@@ -1468,11 +2334,11 @@ abstract mixin class $LiveRulesCopyWith<$Res>  {
   factory $LiveRulesCopyWith(LiveRules value, $Res Function(LiveRules) _then) = _$LiveRulesCopyWithImpl;
 @useResult
 $Res call({
- String scoreModel, bool tracksScorers, LivePeriods? periods, List<LiveTypeOption> cardTypes, List<LiveTypeOption> momentTypes
+ String scoreModel, bool tracksScorers, LivePeriods? periods, List<LiveTypeOption> cardTypes, List<LiveTypeOption> momentTypes, LiveExtraTime? extraTime, bool hasShootout
 });
 
 
-$LivePeriodsCopyWith<$Res>? get periods;
+$LivePeriodsCopyWith<$Res>? get periods;$LiveExtraTimeCopyWith<$Res>? get extraTime;
 
 }
 /// @nodoc
@@ -1485,14 +2351,16 @@ class _$LiveRulesCopyWithImpl<$Res>
 
 /// Create a copy of LiveRules
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scoreModel = null,Object? tracksScorers = null,Object? periods = freezed,Object? cardTypes = null,Object? momentTypes = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? scoreModel = null,Object? tracksScorers = null,Object? periods = freezed,Object? cardTypes = null,Object? momentTypes = null,Object? extraTime = freezed,Object? hasShootout = null,}) {
   return _then(_self.copyWith(
 scoreModel: null == scoreModel ? _self.scoreModel : scoreModel // ignore: cast_nullable_to_non_nullable
 as String,tracksScorers: null == tracksScorers ? _self.tracksScorers : tracksScorers // ignore: cast_nullable_to_non_nullable
 as bool,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
 as LivePeriods?,cardTypes: null == cardTypes ? _self.cardTypes : cardTypes // ignore: cast_nullable_to_non_nullable
 as List<LiveTypeOption>,momentTypes: null == momentTypes ? _self.momentTypes : momentTypes // ignore: cast_nullable_to_non_nullable
-as List<LiveTypeOption>,
+as List<LiveTypeOption>,extraTime: freezed == extraTime ? _self.extraTime : extraTime // ignore: cast_nullable_to_non_nullable
+as LiveExtraTime?,hasShootout: null == hasShootout ? _self.hasShootout : hasShootout // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of LiveRules
@@ -1506,6 +2374,18 @@ $LivePeriodsCopyWith<$Res>? get periods {
 
   return $LivePeriodsCopyWith<$Res>(_self.periods!, (value) {
     return _then(_self.copyWith(periods: value));
+  });
+}/// Create a copy of LiveRules
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LiveExtraTimeCopyWith<$Res>? get extraTime {
+    if (_self.extraTime == null) {
+    return null;
+  }
+
+  return $LiveExtraTimeCopyWith<$Res>(_self.extraTime!, (value) {
+    return _then(_self.copyWith(extraTime: value));
   });
 }
 }
@@ -1589,10 +2469,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes,  LiveExtraTime? extraTime,  bool hasShootout)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveRules() when $default != null:
-return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes);case _:
+return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes,_that.extraTime,_that.hasShootout);case _:
   return orElse();
 
 }
@@ -1610,10 +2490,10 @@ return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTyp
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes,  LiveExtraTime? extraTime,  bool hasShootout)  $default,) {final _that = this;
 switch (_that) {
 case _LiveRules():
-return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes);case _:
+return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes,_that.extraTime,_that.hasShootout);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1630,10 +2510,10 @@ return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTyp
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String scoreModel,  bool tracksScorers,  LivePeriods? periods,  List<LiveTypeOption> cardTypes,  List<LiveTypeOption> momentTypes,  LiveExtraTime? extraTime,  bool hasShootout)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveRules() when $default != null:
-return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes);case _:
+return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTypes,_that.momentTypes,_that.extraTime,_that.hasShootout);case _:
   return null;
 
 }
@@ -1645,7 +2525,7 @@ return $default(_that.scoreModel,_that.tracksScorers,_that.periods,_that.cardTyp
 @JsonSerializable()
 
 class _LiveRules implements LiveRules {
-  const _LiveRules({this.scoreModel = 'goals', this.tracksScorers = false, this.periods, final  List<LiveTypeOption> cardTypes = const <LiveTypeOption>[], final  List<LiveTypeOption> momentTypes = const <LiveTypeOption>[]}): _cardTypes = cardTypes,_momentTypes = momentTypes;
+  const _LiveRules({this.scoreModel = 'goals', this.tracksScorers = false, this.periods, final  List<LiveTypeOption> cardTypes = const <LiveTypeOption>[], final  List<LiveTypeOption> momentTypes = const <LiveTypeOption>[], this.extraTime, this.hasShootout = false}): _cardTypes = cardTypes,_momentTypes = momentTypes;
   factory _LiveRules.fromJson(Map<String, dynamic> json) => _$LiveRulesFromJson(json);
 
 @override@JsonKey() final  String scoreModel;
@@ -1665,6 +2545,10 @@ class _LiveRules implements LiveRules {
   return EqualUnmodifiableListView(_momentTypes);
 }
 
+/// De verlenging bij een gelijke beker, of `null` (sport kent die niet).
+@override final  LiveExtraTime? extraTime;
+/// Beslist de sport een gelijke beker met strafschoppen?
+@override@JsonKey() final  bool hasShootout;
 
 /// Create a copy of LiveRules
 /// with the given fields replaced by the non-null parameter values.
@@ -1679,16 +2563,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveRules&&(identical(other.scoreModel, scoreModel) || other.scoreModel == scoreModel)&&(identical(other.tracksScorers, tracksScorers) || other.tracksScorers == tracksScorers)&&(identical(other.periods, periods) || other.periods == periods)&&const DeepCollectionEquality().equals(other._cardTypes, _cardTypes)&&const DeepCollectionEquality().equals(other._momentTypes, _momentTypes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveRules&&(identical(other.scoreModel, scoreModel) || other.scoreModel == scoreModel)&&(identical(other.tracksScorers, tracksScorers) || other.tracksScorers == tracksScorers)&&(identical(other.periods, periods) || other.periods == periods)&&const DeepCollectionEquality().equals(other._cardTypes, _cardTypes)&&const DeepCollectionEquality().equals(other._momentTypes, _momentTypes)&&(identical(other.extraTime, extraTime) || other.extraTime == extraTime)&&(identical(other.hasShootout, hasShootout) || other.hasShootout == hasShootout));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scoreModel,tracksScorers,periods,const DeepCollectionEquality().hash(_cardTypes),const DeepCollectionEquality().hash(_momentTypes));
+int get hashCode => Object.hash(runtimeType,scoreModel,tracksScorers,periods,const DeepCollectionEquality().hash(_cardTypes),const DeepCollectionEquality().hash(_momentTypes),extraTime,hasShootout);
 
 @override
 String toString() {
-  return 'LiveRules(scoreModel: $scoreModel, tracksScorers: $tracksScorers, periods: $periods, cardTypes: $cardTypes, momentTypes: $momentTypes)';
+  return 'LiveRules(scoreModel: $scoreModel, tracksScorers: $tracksScorers, periods: $periods, cardTypes: $cardTypes, momentTypes: $momentTypes, extraTime: $extraTime, hasShootout: $hasShootout)';
 }
 
 
@@ -1699,11 +2583,11 @@ abstract mixin class _$LiveRulesCopyWith<$Res> implements $LiveRulesCopyWith<$Re
   factory _$LiveRulesCopyWith(_LiveRules value, $Res Function(_LiveRules) _then) = __$LiveRulesCopyWithImpl;
 @override @useResult
 $Res call({
- String scoreModel, bool tracksScorers, LivePeriods? periods, List<LiveTypeOption> cardTypes, List<LiveTypeOption> momentTypes
+ String scoreModel, bool tracksScorers, LivePeriods? periods, List<LiveTypeOption> cardTypes, List<LiveTypeOption> momentTypes, LiveExtraTime? extraTime, bool hasShootout
 });
 
 
-@override $LivePeriodsCopyWith<$Res>? get periods;
+@override $LivePeriodsCopyWith<$Res>? get periods;@override $LiveExtraTimeCopyWith<$Res>? get extraTime;
 
 }
 /// @nodoc
@@ -1716,14 +2600,16 @@ class __$LiveRulesCopyWithImpl<$Res>
 
 /// Create a copy of LiveRules
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scoreModel = null,Object? tracksScorers = null,Object? periods = freezed,Object? cardTypes = null,Object? momentTypes = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? scoreModel = null,Object? tracksScorers = null,Object? periods = freezed,Object? cardTypes = null,Object? momentTypes = null,Object? extraTime = freezed,Object? hasShootout = null,}) {
   return _then(_LiveRules(
 scoreModel: null == scoreModel ? _self.scoreModel : scoreModel // ignore: cast_nullable_to_non_nullable
 as String,tracksScorers: null == tracksScorers ? _self.tracksScorers : tracksScorers // ignore: cast_nullable_to_non_nullable
 as bool,periods: freezed == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
 as LivePeriods?,cardTypes: null == cardTypes ? _self._cardTypes : cardTypes // ignore: cast_nullable_to_non_nullable
 as List<LiveTypeOption>,momentTypes: null == momentTypes ? _self._momentTypes : momentTypes // ignore: cast_nullable_to_non_nullable
-as List<LiveTypeOption>,
+as List<LiveTypeOption>,extraTime: freezed == extraTime ? _self.extraTime : extraTime // ignore: cast_nullable_to_non_nullable
+as LiveExtraTime?,hasShootout: null == hasShootout ? _self.hasShootout : hasShootout // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -1738,6 +2624,18 @@ $LivePeriodsCopyWith<$Res>? get periods {
 
   return $LivePeriodsCopyWith<$Res>(_self.periods!, (value) {
     return _then(_self.copyWith(periods: value));
+  });
+}/// Create a copy of LiveRules
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LiveExtraTimeCopyWith<$Res>? get extraTime {
+    if (_self.extraTime == null) {
+    return null;
+  }
+
+  return $LiveExtraTimeCopyWith<$Res>(_self.extraTime!, (value) {
+    return _then(_self.copyWith(extraTime: value));
   });
 }
 }
@@ -2589,7 +3487,8 @@ as int,
 /// @nodoc
 mixin _$LiveMoment {
 
- int get id; String get itemKey; int get minute; String get type; String get label; String? get player; int get createdAt;
+ int get id; String get itemKey; int get minute; String get type; String get label;/// `us` of `opp`; bij `opp` is [player] de naam van de tegenstander.
+ String get side; String? get player; int get createdAt;
 /// Create a copy of LiveMoment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2602,16 +3501,16 @@ $LiveMomentCopyWith<LiveMoment> get copyWith => _$LiveMomentCopyWithImpl<LiveMom
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveMoment&&(identical(other.id, id) || other.id == id)&&(identical(other.itemKey, itemKey) || other.itemKey == itemKey)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.player, player) || other.player == player)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiveMoment&&(identical(other.id, id) || other.id == id)&&(identical(other.itemKey, itemKey) || other.itemKey == itemKey)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.side, side) || other.side == side)&&(identical(other.player, player) || other.player == player)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,itemKey,minute,type,label,player,createdAt);
+int get hashCode => Object.hash(runtimeType,id,itemKey,minute,type,label,side,player,createdAt);
 
 @override
 String toString() {
-  return 'LiveMoment(id: $id, itemKey: $itemKey, minute: $minute, type: $type, label: $label, player: $player, createdAt: $createdAt)';
+  return 'LiveMoment(id: $id, itemKey: $itemKey, minute: $minute, type: $type, label: $label, side: $side, player: $player, createdAt: $createdAt)';
 }
 
 
@@ -2622,7 +3521,7 @@ abstract mixin class $LiveMomentCopyWith<$Res>  {
   factory $LiveMomentCopyWith(LiveMoment value, $Res Function(LiveMoment) _then) = _$LiveMomentCopyWithImpl;
 @useResult
 $Res call({
- int id, String itemKey, int minute, String type, String label, String? player, int createdAt
+ int id, String itemKey, int minute, String type, String label, String side, String? player, int createdAt
 });
 
 
@@ -2639,13 +3538,14 @@ class _$LiveMomentCopyWithImpl<$Res>
 
 /// Create a copy of LiveMoment
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? itemKey = null,Object? minute = null,Object? type = null,Object? label = null,Object? player = freezed,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? itemKey = null,Object? minute = null,Object? type = null,Object? label = null,Object? side = null,Object? player = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,itemKey: null == itemKey ? _self.itemKey : itemKey // ignore: cast_nullable_to_non_nullable
 as String,minute: null == minute ? _self.minute : minute // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,side: null == side ? _self.side : side // ignore: cast_nullable_to_non_nullable
 as String,player: freezed == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as int,
@@ -2733,10 +3633,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String itemKey,  int minute,  String type,  String label,  String? player,  int createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String itemKey,  int minute,  String type,  String label,  String side,  String? player,  int createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LiveMoment() when $default != null:
-return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.player,_that.createdAt);case _:
+return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.side,_that.player,_that.createdAt);case _:
   return orElse();
 
 }
@@ -2754,10 +3654,10 @@ return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String itemKey,  int minute,  String type,  String label,  String? player,  int createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String itemKey,  int minute,  String type,  String label,  String side,  String? player,  int createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _LiveMoment():
-return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.player,_that.createdAt);case _:
+return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.side,_that.player,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2774,10 +3674,10 @@ return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String itemKey,  int minute,  String type,  String label,  String? player,  int createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String itemKey,  int minute,  String type,  String label,  String side,  String? player,  int createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _LiveMoment() when $default != null:
-return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.player,_that.createdAt);case _:
+return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that.side,_that.player,_that.createdAt);case _:
   return null;
 
 }
@@ -2788,8 +3688,8 @@ return $default(_that.id,_that.itemKey,_that.minute,_that.type,_that.label,_that
 /// @nodoc
 @JsonSerializable()
 
-class _LiveMoment implements LiveMoment {
-  const _LiveMoment({required this.id, required this.itemKey, this.minute = 0, this.type = '', this.label = '', this.player, this.createdAt = 0});
+class _LiveMoment extends LiveMoment {
+  const _LiveMoment({required this.id, required this.itemKey, this.minute = 0, this.type = '', this.label = '', this.side = 'us', this.player, this.createdAt = 0}): super._();
   factory _LiveMoment.fromJson(Map<String, dynamic> json) => _$LiveMomentFromJson(json);
 
 @override final  int id;
@@ -2797,6 +3697,8 @@ class _LiveMoment implements LiveMoment {
 @override@JsonKey() final  int minute;
 @override@JsonKey() final  String type;
 @override@JsonKey() final  String label;
+/// `us` of `opp`; bij `opp` is [player] de naam van de tegenstander.
+@override@JsonKey() final  String side;
 @override final  String? player;
 @override@JsonKey() final  int createdAt;
 
@@ -2813,16 +3715,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveMoment&&(identical(other.id, id) || other.id == id)&&(identical(other.itemKey, itemKey) || other.itemKey == itemKey)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.player, player) || other.player == player)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiveMoment&&(identical(other.id, id) || other.id == id)&&(identical(other.itemKey, itemKey) || other.itemKey == itemKey)&&(identical(other.minute, minute) || other.minute == minute)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.side, side) || other.side == side)&&(identical(other.player, player) || other.player == player)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,itemKey,minute,type,label,player,createdAt);
+int get hashCode => Object.hash(runtimeType,id,itemKey,minute,type,label,side,player,createdAt);
 
 @override
 String toString() {
-  return 'LiveMoment(id: $id, itemKey: $itemKey, minute: $minute, type: $type, label: $label, player: $player, createdAt: $createdAt)';
+  return 'LiveMoment(id: $id, itemKey: $itemKey, minute: $minute, type: $type, label: $label, side: $side, player: $player, createdAt: $createdAt)';
 }
 
 
@@ -2833,7 +3735,7 @@ abstract mixin class _$LiveMomentCopyWith<$Res> implements $LiveMomentCopyWith<$
   factory _$LiveMomentCopyWith(_LiveMoment value, $Res Function(_LiveMoment) _then) = __$LiveMomentCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String itemKey, int minute, String type, String label, String? player, int createdAt
+ int id, String itemKey, int minute, String type, String label, String side, String? player, int createdAt
 });
 
 
@@ -2850,13 +3752,14 @@ class __$LiveMomentCopyWithImpl<$Res>
 
 /// Create a copy of LiveMoment
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? itemKey = null,Object? minute = null,Object? type = null,Object? label = null,Object? player = freezed,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? itemKey = null,Object? minute = null,Object? type = null,Object? label = null,Object? side = null,Object? player = freezed,Object? createdAt = null,}) {
   return _then(_LiveMoment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,itemKey: null == itemKey ? _self.itemKey : itemKey // ignore: cast_nullable_to_non_nullable
 as String,minute: null == minute ? _self.minute : minute // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
+as String,side: null == side ? _self.side : side // ignore: cast_nullable_to_non_nullable
 as String,player: freezed == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as int,

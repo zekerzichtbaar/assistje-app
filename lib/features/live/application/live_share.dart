@@ -26,7 +26,11 @@ String? liveShareMessage(
       ? '$home - $away'.trim()
       : teamName;
   if (event.live.isEnded) {
-    final score = '${event.homeScore ?? 0} - ${event.awayScore ?? 0}';
+    // Een gewonnen 2-2 hoort niet als gelijkspel te lezen (zoals de PWA).
+    final suffix = event.live.resultSuffix;
+    final score =
+        '${event.homeScore ?? 0} - ${event.awayScore ?? 0}'
+        '${suffix == null || suffix.isEmpty ? '' : ' ($suffix)'}';
     return l10n.liveShareEndedMessage(who, score, url);
   }
   return l10n.liveShareLiveMessage(who, url);

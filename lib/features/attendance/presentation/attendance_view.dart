@@ -274,7 +274,9 @@ class _AttendanceViewState extends ConsumerState<AttendanceView> {
         ),
       EventResponsesCard(
         counts: attendance.counts,
+        playerCounts: attendance.playerCounts,
         guestsPresent: attendance.guestsPresent,
+        staffPresent: attendance.staffPresent,
       ),
       if (editable && attendance.rows.isNotEmpty)
         Padding(

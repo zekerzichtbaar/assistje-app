@@ -243,4 +243,61 @@ void main() {
     expect(options.single.id, 88);
     expect(http.requests.single.method, 'DELETE');
   });
+
+  group('staf bij een activiteit', () {
+    EventAttendance build(String type) => EventAttendance.fromJson(
+      AttendanceFixtures.attendance(
+            type: type,
+            rows: [
+              AttendanceFixtures.row(
+                playerId: 1,
+                name: 'Kees',
+                status: 'present',
+              ),
+              AttendanceFixtures.row(
+                kind: 'staff',
+                userId: 51,
+                name: 'Trainer Tom',
+                status: 'present',
+              ),
+              // Een trainer in de spelerslijst (positie TR) telt als staf.
+              AttendanceFixtures.row(
+                playerId: 2,
+                name: 'Speler-trainer',
+                position: 'TR',
+                status: 'present',
+              ),
+              AttendanceFixtures.row(
+                kind: 'staff',
+                userId: 52,
+                name: 'Leider Lies',
+                status: 'absent',
+              ),
+              AttendanceFixtures.row(
+                playerId: 88,
+                name: 'Gerrit Gast',
+                isGuest: true,
+                status: 'present',
+              ),
+            ],
+          )['data']
+          as Map<String, dynamic>,
+    );
+
+    test('activiteit: aanwezige staf en TR tellen mee', () {
+      final a = build('activity');
+      expect(a.staffPresent, 2);
+      // Balk en legenda: alleen spelers.
+      expect(a.playerCounts.present, 1);
+      expect(a.playerCounts.absent, 0);
+      // De breuk blijft mét staf, zonder gasten.
+      expect(a.counts.present, 3);
+      expect(a.counts.absent, 1);
+    });
+
+    test('training of wedstrijd: staf telt niet mee', () {
+      expect(build('training').staffPresent, 0);
+      expect(build('match').staffPresent, 0);
+    });
+  });
 }

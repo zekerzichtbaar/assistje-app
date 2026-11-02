@@ -22,19 +22,25 @@ const bodyMaxLength = 1000;
 
 /// Nieuw bericht schrijven en (na bevestiging) versturen, zoals het formulier
 /// op `Trainer/Messages/Index` in de PWA. [onSend] doet het verzoek en geeft
-/// de fout terug; bij succes sluit de sheet met `true`.
+/// de fout terug; bij succes sluit de sheet met `true`. Met
+/// [spectatorsCount] > 0 staat er een schakelaar "Ook naar toeschouwers"
+/// (standaard uit).
 Future<bool?> showComposeSheet(
   BuildContext context, {
   required List<LinkTargetGroup> linkTargets,
   required Future<Object?> Function(MessageDraft draft) onSend,
+  int spectatorsCount = 0,
 }) {
   final l10n = AppLocalizations.of(context);
   return showAppSheet<bool>(
     context: context,
     title: l10n.messagesComposeSheetTitle,
     scrollable: true,
-    builder: (context) =>
-        ComposeMessageForm(linkTargets: linkTargets, onSend: onSend),
+    builder: (context) => ComposeMessageForm(
+      linkTargets: linkTargets,
+      spectatorsCount: spectatorsCount,
+      onSend: onSend,
+    ),
   );
 }
 
@@ -43,9 +49,11 @@ class ComposeMessageForm extends StatefulWidget {
     super.key,
     required this.linkTargets,
     required this.onSend,
+    this.spectatorsCount = 0,
   });
 
   final List<LinkTargetGroup> linkTargets;
+  final int spectatorsCount;
   final Future<Object?> Function(MessageDraft draft) onSend;
 
   @override
@@ -57,6 +65,7 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
   final _body = TextEditingController();
   final _ownUrl = TextEditingController();
   String _choice = _noLink;
+  bool _includeSpectators = false;
   bool _busy = false;
   bool _tried = false;
   Object? _error;
@@ -75,11 +84,16 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
     final value => value,
   };
 
+  /// Alleen aan te zetten als het team toeschouwers heeft.
+  bool get _withSpectators => _includeSpectators && widget.spectatorsCount > 0;
+
   Future<bool> _confirm() async {
     final l10n = AppLocalizations.of(context);
     return showConfirmDialog(
       context,
-      message: l10n.messagesSendConfirm,
+      message: _withSpectators
+          ? l10n.messagesSendConfirmWithSpectators
+          : l10n.messagesSendConfirm,
       confirmLabel: l10n.messagesSendConfirmOk,
       cancelLabel: l10n.messagesCancel,
       cancelKey: const ValueKey('messages-confirm-cancel'),
@@ -98,7 +112,12 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
       _error = null;
     });
     final error = await widget.onSend(
-      MessageDraft(title: _title.text, body: _body.text, url: _url),
+      MessageDraft(
+        title: _title.text,
+        body: _body.text,
+        url: _url,
+        includeSpectators: _withSpectators,
+      ),
     );
     if (!mounted) return;
     if (error == null) {
@@ -236,10 +255,22 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
             ),
           ),
         ],
+        if (widget.spectatorsCount > 0) ...[
+          const SizedBox(height: 12),
+          _SpectatorsSwitch(
+            count: widget.spectatorsCount,
+            value: _includeSpectators,
+            onChanged: _busy
+                ? null
+                : (value) => setState(() => _includeSpectators = value),
+          ),
+        ],
         const SizedBox(height: 16),
         PrimaryButton(
           key: const ValueKey('messages-compose-send'),
-          label: l10n.messagesSend,
+          label: _withSpectators
+              ? l10n.messagesSendWithSpectators
+              : l10n.messagesSend,
           icon: const Icon(PhosphorIconsDuotone.paperPlaneTilt, size: 16),
           expand: true,
           loading: _busy,
@@ -254,6 +285,69 @@ class _ComposeMessageFormState extends State<ComposeMessageForm> {
         ),
         const SizedBox(height: 8),
       ],
+    );
+  }
+}
+
+/// "Ook naar toeschouwers" met het aantal eronder; de hele rij is tikbaar.
+class _SpectatorsSwitch extends StatelessWidget {
+  const _SpectatorsSwitch({
+    required this.count,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final int count;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    final onChanged = this.onChanged;
+    return MergeSemantics(
+      child: InkWell(
+        onTap: onChanged == null ? null : () => onChanged(!value),
+        borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.messagesIncludeSpectators,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: t.inkSoft,
+                      ),
+                    ),
+                    Text(
+                      l10n.messagesSpectatorsCount(count),
+                      style: TextStyle(fontSize: 12, color: t.muted),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Switch.adaptive(
+                key: const ValueKey('messages-compose-spectators'),
+                value: value,
+                onChanged: onChanged == null
+                    ? null
+                    : (v) {
+                        unawaited(Haptics.selection());
+                        onChanged(v);
+                      },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

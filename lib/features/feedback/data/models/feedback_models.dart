@@ -23,11 +23,15 @@ enum FeedbackKind {
 enum FeedbackStatus {
   received,
   inProgress,
-  resolved;
+  resolved,
+
+  /// "Niet nu": gesloten zonder dat het gebouwd wordt.
+  declined;
 
   static FeedbackStatus parse(String? raw) => switch (raw) {
     'in_progress' => inProgress,
     'resolved' => resolved,
+    'declined' => declined,
     _ => received,
   };
 }

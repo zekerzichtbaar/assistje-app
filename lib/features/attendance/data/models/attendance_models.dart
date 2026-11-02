@@ -123,6 +123,23 @@ abstract class EventAttendance with _$EventAttendance {
   int get guestsPresent =>
       guests.where((r) => r.status == AttendanceStatus.present).length;
 
+  /// Balk en legenda: alleen spelers (geen gasten, geen staf of trainer).
+  AttendanceCounts get playerCounts =>
+      _tally(rows.where((r) => !r.isGuest && !r.isStaff && r.position != 'TR'));
+
+  /// Aanwezige staf die bij een activiteit in 'Aanwezig' meetelt, net als op
+  /// de detailpagina; bij andere events 0.
+  int get staffPresent => event.type == 'activity'
+      ? rows
+            .where(
+              (r) =>
+                  !r.isGuest &&
+                  (r.isStaff || r.position == 'TR') &&
+                  r.status == AttendanceStatus.present,
+            )
+            .length
+      : 0;
+
   /// Met [row] op [status] gezet (optimistisch).
   EventAttendance withStatus(AttendanceRow row, AttendanceStatus status) =>
       copyWith(

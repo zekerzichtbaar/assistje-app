@@ -8,6 +8,7 @@
   "feedbackStatusNew": "Verstuurd",
   "feedbackStatusInProgress": "Opgepakt",
   "feedbackStatusResolved": "Opgelost",
+  "feedbackStatusDeclined": "Niet nu",
   "feedbackResolvedOn": "opgelost {date}",
   "@feedbackResolvedOn": {
     "placeholders": {

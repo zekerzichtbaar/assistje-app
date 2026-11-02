@@ -123,5 +123,36 @@
         "type": "String"
       }
     }
+  },
+  "dutiesMultiHint": "Eén of meer personen per datum: vink aan wie er staat.",
+  "dutiesMultiHintMatch": "Eén of meer personen per wedstrijd: vink aan wie er staat.",
+  "dutiesFormWhoMultiCount": "{count, plural, =0{Niemand gekozen} =1{1 gekozen} other{{count} gekozen}}",
+  "@dutiesFormWhoMultiCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dutyOverviewMineTitle": "Jouw beurten",
+  "dutyOverviewMineEmpty": "Je staat nergens op ingepland.",
+  "dutyOverviewEmptyTitle": "Nog geen diensten",
+  "dutyOverviewEmpty": "Er staan nog geen diensten gepland.",
+  "dutyOverviewPlanned": "Gepland",
+  "dutyOverviewGroups": "Groepen",
+  "dutyOverviewNothingPlanned": "Nog niets gepland.",
+  "dutyOverviewNobody": "Nog niemand",
+  "dutyOverviewNoMembers": "Nog niemand ingedeeld",
+  "dutyOverviewMore": "En nog {count} — zie de agenda",
+  "@dutyOverviewMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dutyOverviewMine": "Jij",
+  "@dutyOverviewMine": {
+    "description": "Badge bij een beurt of groep waar jij in staat"
   }
 }

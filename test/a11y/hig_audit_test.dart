@@ -10,6 +10,9 @@
 // Schermafbeeldingen (met de echte fonts) komen in `$HIG_SHOTS_DIR` als die
 // omgevingsvariabele gezet is:
 //   HIG_SHOTS_DIR=/tmp/shots flutter test test/a11y/hig_audit_test.dart
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import '../features/agreements/agreements_fixtures.dart';
 import '../features/attendance/attendance_fixtures.dart';
 import '../features/duties/duties_fixtures.dart';
@@ -153,6 +156,17 @@ final _screens = <AuditScreen>[
     setup: (h) => h.on('GET /teams/3/duties', 200, DutiesFixtures.individual()),
   ),
   AuditScreen(
+    '/duties',
+    label: 'een-of-meer',
+    setup: (h) => h.on('GET /teams/3/duties', 200, DutiesFixtures.multi()),
+  ),
+  AuditScreen(
+    '/diensten',
+    trainer: false,
+    setup: (h) =>
+        h.on('GET /teams/3/duty-overview', 200, DutiesFixtures.overview()),
+  ),
+  AuditScreen(
     '/fines',
     trainer: false,
     setup: (h) => h.on('GET /teams/3/fines', 200, FinesFixtures.overview()),
@@ -160,6 +174,42 @@ final _screens = <AuditScreen>[
   AuditScreen(
     '/savings',
     setup: (h) => h.on('GET /teams/3/savings', 200, SavingsFixtures.overview()),
+  ),
+  // Spaarpot zonder bedrag (afvinklijst): overzicht met vinkjes en het
+  // detail zonder geld en zonder afrekening.
+  AuditScreen(
+    '/savings',
+    label: 'afvinklijst',
+    setup: (h) => h
+      ..on(
+        'GET /teams/3/savings',
+        200,
+        SavingsFixtures.overview(
+          canManage: true,
+          pots: [SavingsFixtures.checklistRow()..['id'] = 12],
+        ),
+      )
+      ..on('GET /teams/3/savings/12', 200, SavingsFixtures.checklistDetail()),
+    open: (t) => auditTap(t, find.byKey(const ValueKey('savings-pot-12'))),
+  ),
+  // Het formulier met de schakelaar "Zonder bedrag" aan.
+  AuditScreen(
+    '/savings',
+    label: 'afvinklijst-formulier',
+    setup: (h) => h
+      ..on(
+        'GET /teams/3/savings',
+        200,
+        SavingsFixtures.overview(canManage: true),
+      )
+      ..on('GET /teams/3/savings/create', 200, SavingsFixtures.createOptions()),
+    open: (t) async {
+      await auditTap(t, find.byKey(const ValueKey('savings-new')));
+      await auditTap(
+        t,
+        find.byKey(const ValueKey('savings-form-without-amount')),
+      );
+    },
   ),
   AuditScreen(
     '/wheel',

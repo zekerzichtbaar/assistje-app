@@ -15,6 +15,8 @@ _SavingsPotSummary _$SavingsPotSummaryFromJson(Map<String, dynamic> json) =>
       months: (json['months'] as num?)?.toInt() ?? 1,
       memberCount: (json['member_count'] as num?)?.toInt() ?? 0,
       savedCents: (json['saved_cents'] as num?)?.toInt() ?? 0,
+      withoutAmount: json['without_amount'] as bool? ?? false,
+      checkedCount: (json['checked_count'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$SavingsPotSummaryToJson(_SavingsPotSummary instance) =>
@@ -26,6 +28,8 @@ Map<String, dynamic> _$SavingsPotSummaryToJson(_SavingsPotSummary instance) =>
       'months': instance.months,
       'member_count': instance.memberCount,
       'saved_cents': instance.savedCents,
+      'without_amount': instance.withoutAmount,
+      'checked_count': instance.checkedCount,
     };
 
 _SavingsOverview _$SavingsOverviewFromJson(Map<String, dynamic> json) =>
@@ -68,6 +72,7 @@ _SavingsPot _$SavingsPotFromJson(Map<String, dynamic> json) => _SavingsPot(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String? ?? '',
   amountCents: (json['amount_cents'] as num?)?.toInt() ?? 0,
+  withoutAmount: json['without_amount'] as bool? ?? false,
   goalCents: (json['goal_cents'] as num?)?.toInt(),
   months: (json['months'] as num?)?.toInt() ?? 1,
   startsOn: json['starts_on'] == null
@@ -95,6 +100,7 @@ Map<String, dynamic> _$SavingsPotToJson(_SavingsPot instance) =>
       'id': instance.id,
       'name': instance.name,
       'amount_cents': instance.amountCents,
+      'without_amount': instance.withoutAmount,
       'goal_cents': instance.goalCents,
       'months': instance.months,
       'starts_on': instance.startsOn?.toIso8601String(),
@@ -262,7 +268,8 @@ _SavingsFormValues _$SavingsFormValuesFromJson(Map<String, dynamic> json) =>
           ) ??
           SavingsScope.all,
       includeGuests: json['include_guests'] as bool? ?? false,
-      amount: json['amount'] as num? ?? 0,
+      withoutAmount: json['without_amount'] as bool? ?? false,
+      amount: json['amount'] as num?,
       goal: json['goal'] as num?,
       startMonth: json['start_month'] as String? ?? '',
       months: (json['months'] as num?)?.toInt() ?? 1,
@@ -280,6 +287,7 @@ Map<String, dynamic> _$SavingsFormValuesToJson(_SavingsFormValues instance) =>
       'name': instance.name,
       'scope': _$SavingsScopeEnumMap[instance.scope]!,
       'include_guests': instance.includeGuests,
+      'without_amount': instance.withoutAmount,
       'amount': instance.amount,
       'goal': instance.goal,
       'start_month': instance.startMonth,

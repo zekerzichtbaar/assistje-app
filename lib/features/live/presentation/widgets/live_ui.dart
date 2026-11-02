@@ -60,6 +60,17 @@ class LivePeriodNames {
   int? get fullTime => minutes == null ? null : count * minutes!;
 }
 
+/// De uitslag-toevoeging voluit: `n.v.` → "na verlenging", `4–3 n.s.` →
+/// "4–3 na strafschoppen" (zoals het scorebord in de PWA); `null` zonder.
+String? liveResultSuffixText(AppLocalizations l10n, String? suffix) {
+  if (suffix == null || suffix.trim().isEmpty) return null;
+  if (suffix == 'n.v.') return l10n.liveAfterExtraTime;
+  if (suffix.endsWith(' n.s.')) {
+    return l10n.liveAfterShootout(suffix.substring(0, suffix.length - 5));
+  }
+  return suffix;
+}
+
 /// Kleur van een kaart, op de soort uit de API (geel, rood, groen); een
 /// onbekende soort wordt grijs.
 Color liveCardColor(String type) => switch (type) {

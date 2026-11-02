@@ -69,6 +69,28 @@ enum GuestAttendance {
   String get apiValue => name;
 }
 
+/// Wie de "De 0 gehouden"-boete krijgt (`guests.clean_sheet_fines_to`).
+/// Staf die erbij was krijgt hem altijd; de keuze is hoe ver het bij de
+/// spelers gaat. Telt alleen met [GuestSettings.staffInFines] aan; uit rekent
+/// de server altijd met [sideline].
+enum CleanSheetFinesTo {
+  /// Alleen de staf.
+  staff,
+
+  /// Staf plus wie "niet spelend" antwoordde (standaard).
+  sideline,
+
+  /// Ook wie niet spelend was of zich had afgemeld.
+  @JsonValue('not_playing')
+  notPlaying;
+
+  String get apiValue => switch (this) {
+    staff => 'staff',
+    sideline => 'sideline',
+    notPlaying => 'not_playing',
+  };
+}
+
 /// Groepen in `duty_types[].pool`.
 abstract final class DutyPool {
   static const players = 'players';
@@ -145,6 +167,9 @@ abstract class DutyTypeSetting with _$DutyTypeSetting {
     @JsonKey(unknownEnumValue: DutyScope.free)
     @Default(DutyScope.free)
     DutyScope scope,
+
+    /// Alleen bij uitwedstrijden (rijden); zegt niets bij [DutyScope.free].
+    @JsonKey(fromJson: _bool) @Default(false) bool awayOnly,
     @JsonKey(fromJson: _bool) @Default(false) bool autoRotate,
     @JsonKey(unknownEnumValue: DutyOnUnavailable.reassign)
     DutyOnUnavailable? onUnavailable,
@@ -203,6 +228,9 @@ abstract class GuestSettings with _$GuestSettings {
     @JsonKey(fromJson: _bool) @Default(false) bool inFines,
     @JsonKey(fromJson: _bool) @Default(false) bool inStats,
     @JsonKey(fromJson: _bool) @Default(false) bool staffInFines,
+    @JsonKey(unknownEnumValue: CleanSheetFinesTo.sideline)
+    @Default(CleanSheetFinesTo.sideline)
+    CleanSheetFinesTo cleanSheetFinesTo,
   }) = _GuestSettings;
 
   factory GuestSettings.fromJson(Map<String, dynamic> json) =>
@@ -374,18 +402,21 @@ class GuestUpdate {
     this.inFines,
     this.inStats,
     this.staffInFines,
+    this.cleanSheetFinesTo,
   });
 
   final GuestAttendance? attendance;
   final bool? inFines;
   final bool? inStats;
   final bool? staffInFines;
+  final CleanSheetFinesTo? cleanSheetFinesTo;
 
   Map<String, dynamic> toJson() => {
     'guest_attendance': ?attendance?.apiValue,
     'guest_in_fines': ?inFines,
     'guest_in_stats': ?inStats,
     'staff_in_fines': ?staffInFines,
+    'clean_sheet_fines_to': ?cleanSheetFinesTo?.apiValue,
   };
 
   /// [current] met deze wijziging erop (voor de optimistische weergave).
@@ -394,6 +425,7 @@ class GuestUpdate {
     inFines: inFines ?? current.inFines,
     inStats: inStats ?? current.inStats,
     staffInFines: staffInFines ?? current.staffInFines,
+    cleanSheetFinesTo: cleanSheetFinesTo ?? current.cleanSheetFinesTo,
   );
 }
 
@@ -404,6 +436,7 @@ class DutyTypeInput {
     this.icon,
     this.mode = DutyMode.group,
     this.scope = DutyScope.free,
+    this.awayOnly = false,
     this.autoRotate = false,
     this.onUnavailable = DutyOnUnavailable.reassign,
     this.pool = const [DutyPool.players],
@@ -416,6 +449,7 @@ class DutyTypeInput {
     icon: type.icon,
     mode: type.mode,
     scope: type.scope,
+    awayOnly: type.awayOnly,
     autoRotate: type.autoRotate,
     onUnavailable: type.onUnavailable ?? DutyOnUnavailable.reassign,
     pool: type.pool.isEmpty ? const [DutyPool.players] : type.pool,
@@ -426,6 +460,10 @@ class DutyTypeInput {
   final String? icon;
   final DutyMode mode;
   final DutyScope scope;
+
+  /// Alleen bij uitwedstrijden; gaat bij [DutyScope.free] altijd als `false`
+  /// mee (de server dwingt hetzelfde af).
+  final bool awayOnly;
   final bool autoRotate;
   final DutyOnUnavailable onUnavailable;
   final List<String> pool;
@@ -440,6 +478,7 @@ class DutyTypeInput {
     'icon': (icon == null || icon!.isEmpty) ? null : icon,
     'mode': mode.apiValue,
     'scope': scope.apiValue,
+    'away_only': scope == DutyScope.match && awayOnly,
     'auto_rotate': rotates && autoRotate,
     'on_unavailable': rotates
         ? onUnavailable.apiValue

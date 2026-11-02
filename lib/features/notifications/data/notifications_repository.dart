@@ -80,6 +80,12 @@ class NotificationsRepository {
     await _api.delete('/teams/$teamId/notifications/$id');
   }
 
+  /// `DELETE teams/{team}/notifications` (204) — de hele inbox van dit team;
+  /// meldingen van je andere teams blijven staan.
+  Future<void> deleteAll(int teamId) async {
+    await _api.delete('/teams/$teamId/notifications');
+  }
+
   static int? _unreadCount(Map<String, dynamic> body) {
     final meta = body['meta'];
     if (meta is! Map<String, dynamic>) return null;

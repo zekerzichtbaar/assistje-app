@@ -44,8 +44,16 @@
       }
     }
   },
-  "eventDetailGuestsPresent": "{count, plural, =1{+1 gast aanwezig} other{+{count} gasten aanwezig}}",
+  "eventDetailGuestsPresent": "{count, plural, =1{1 gast} other{{count} gasten}}",
   "@eventDetailGuestsPresent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventDetailStaffPresent": "{count} staf",
+  "@eventDetailStaffPresent": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -207,5 +215,20 @@
   "eventSavingsRefund": "Je bent afgemeld — je krijgt je inleg terug.",
   "eventSavingsIPaid": "Jij hebt betaald.",
   "eventSavingsNotPaid": "Jij hebt nog niet betaald.",
+  "eventSavingsChecklistTitle": "Afvinklijst",
+  "eventSavingsChecked": "{checked} van {total} afgevinkt",
+  "@eventSavingsChecked": {
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "eventSavingsCancelledChecklist": "Afgelast.",
+  "eventSavingsIChecked": "Jij bent afgevinkt.",
+  "eventSavingsNotChecked": "Jij bent nog niet afgevinkt.",
   "eventSavingsCreated": "Pot aangemaakt"
 }

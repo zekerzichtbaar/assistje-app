@@ -44,14 +44,24 @@ class LiveScoreboard extends StatelessWidget {
       status = l10n.liveStatusNotStarted;
     }
 
+    // Een deel voorbij de reguliere speeltijd heet naar de verlenging.
+    final extra = clock.extraPeriod(names.count);
     String? sub;
     if (clock.isPaused) {
       sub = names.breakLabel;
+    } else if (inPlay && extra != null) {
+      sub = l10n.liveExtraPeriod(extra);
     } else if (inPlay && names.count > 1 && names.part.isNotEmpty) {
       sub = l10n.livePeriodOrdinal(clock.currentPeriod, names.part);
     } else if (clock.isEnded) {
-      sub = l10n.liveEnded;
+      sub = clock.shootoutOpen ? l10n.liveShootout : l10n.liveEnded;
     }
+
+    // Na verlenging of strafschoppen zegt de stand alleen niet genoeg: een
+    // gewonnen 2-2 hoort niet als gelijkspel te lezen.
+    final suffix = inPlay
+        ? null
+        : liveResultSuffixText(l10n, clock.resultSuffix);
 
     final scoreStyle = TextStyle(
       fontSize: 34,
@@ -212,6 +222,20 @@ class LiveScoreboard extends StatelessWidget {
               ],
             ),
           ),
+          if (suffix != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Text(
+                suffix,
+                key: const ValueKey('live-result-suffix'),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: t.muted,
+                ),
+              ),
+            ),
           if (event.sets.isNotEmpty)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),

@@ -264,6 +264,56 @@ void main() {
     );
   });
 
+  testWidgets('bij de 0: alleen met staf in de boetes, slaat meteen op', (
+    tester,
+  ) async {
+    Map<String, dynamic> guests(String to) => {
+      'attendance': 'training',
+      'in_fines': false,
+      'in_stats': true,
+      'staff_in_fines': true,
+      'clean_sheet_fines_to': to,
+    };
+    final (_, http) = await _open(
+      tester,
+      setup: (http) => http
+        ..on(
+          'PATCH /teams/3/settings/guests',
+          200,
+          SettingsFixtures.response(
+            SettingsFixtures.settings(guests: guests('sideline')),
+          ),
+        ),
+    );
+    await _tab(tester, 'Functies');
+    // Staf krijgt geen boetes: geen keuze.
+    expect(_key('settings-clean-sheet'), findsNothing);
+
+    await _tap(tester, _key('settings-staff-in-fines'));
+    expect(http.requestsTo('PATCH /teams/3/settings/guests').last.body, {
+      'staff_in_fines': true,
+    });
+    expect(_key('settings-clean-sheet'), findsOneWidget);
+    expect(find.text('Bij de 0'), findsOneWidget);
+    expect(find.text('Ook wie "niet spelend" antwoordde.'), findsOneWidget);
+
+    http.on(
+      'PATCH /teams/3/settings/guests',
+      200,
+      SettingsFixtures.response(
+        SettingsFixtures.settings(guests: guests('not_playing')),
+      ),
+    );
+    await _tap(tester, _key('settings-clean-sheet-not_playing'));
+    expect(http.requestsTo('PATCH /teams/3/settings/guests').last.body, {
+      'clean_sheet_fines_to': 'not_playing',
+    });
+    expect(
+      find.text('Ook wie niet spelend was of zich had afgemeld.'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('deadlines: wekelijks opslaan', (tester) async {
     final (_, http) = await _open(
       tester,
@@ -326,6 +376,7 @@ void main() {
                 'id': 31,
                 'name': 'Rijden',
                 'icon': 'Car',
+                'away_only': true,
                 'auto_rotate': false,
               },
             ],
@@ -349,8 +400,13 @@ void main() {
     await tester.enterText(_key('settings-duty-name'), 'Rijden');
     await _tap(tester, _key('settings-duty-icon-Car'));
     await _tap(tester, _key('settings-duty-mode-individual'));
+    // "Alleen uitwedstrijden" alleen bij een wedstrijd.
+    expect(_key('settings-duty-away-only'), findsNothing);
     await _tap(tester, _key('settings-duty-scope-match'));
     expect(_key('settings-duty-auto-rotate'), findsOneWidget);
+    expect(_switchValue(tester, 'settings-duty-away-only'), isFalse);
+    await _tap(tester, _key('settings-duty-away-only'));
+    expect(_switchValue(tester, 'settings-duty-away-only'), isTrue);
     await _tap(tester, _key('settings-duty-guests'));
     await _tap(tester, _key('settings-duty-submit'));
 
@@ -359,6 +415,7 @@ void main() {
       'icon': 'Car',
       'mode': 'individual',
       'scope': 'match',
+      'away_only': true,
       'auto_rotate': false,
       'on_unavailable': 'reassign',
       'pool': ['players', 'guests'],
@@ -366,6 +423,21 @@ void main() {
     });
     expect(_key('settings-duty-form'), findsNothing);
     expect(_key('settings-duty-31'), findsOneWidget);
+    // Badge in de lijst: alleen uit.
+    expect(
+      find.descendant(
+        of: _key('settings-duty-31'),
+        matching: find.text('Bij uitwedstrijd'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: _key('settings-duty-12'),
+        matching: find.text('Bij wedstrijd'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Diensttype toegevoegd'), findsOneWidget);
     await _settleToast(tester);
   });

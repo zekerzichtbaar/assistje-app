@@ -56,7 +56,7 @@ class DoorScaffold extends StatelessWidget {
   }
 }
 
-/// Brede schuine banen, zoals een gemaaid veld.
+/// Brede rechte banen, zoals een gemaaid veld.
 class _MowingStripesPainter extends CustomPainter {
   const _MowingStripesPainter();
 
@@ -65,15 +65,8 @@ class _MowingStripesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = DoorColors.stripe;
-    final span = size.width + size.height;
-    for (var x = -size.height; x < span; x += _band * 2) {
-      final path = Path()
-        ..moveTo(x, 0)
-        ..lineTo(x + _band, 0)
-        ..lineTo(x + _band + size.height * 0.4, size.height)
-        ..lineTo(x + size.height * 0.4, size.height)
-        ..close();
-      canvas.drawPath(path, paint);
+    for (var x = _band; x < size.width; x += _band * 2) {
+      canvas.drawRect(Rect.fromLTWH(x, 0, _band, size.height), paint);
     }
   }
 

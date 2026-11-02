@@ -119,6 +119,7 @@ class _DutyTypeFormState extends State<DutyTypeForm> {
   late String? _icon = widget.initial.icon;
   late DutyMode _mode = widget.initial.mode;
   late DutyScope _scope = widget.initial.scope;
+  late bool _awayOnly = widget.initial.awayOnly;
   late bool _autoRotate = widget.initial.autoRotate;
   late DutyOnUnavailable _onUnavailable = widget.initial.onUnavailable;
   late List<String> _pool = [...widget.initial.pool];
@@ -196,6 +197,7 @@ class _DutyTypeFormState extends State<DutyTypeForm> {
         icon: _icon,
         mode: _mode,
         scope: _scope,
+        awayOnly: _awayOnly,
         autoRotate: _autoRotate,
         onUnavailable: _onUnavailable,
         pool: _pool,
@@ -324,6 +326,18 @@ class _DutyTypeFormState extends State<DutyTypeForm> {
           selected: _scope == DutyScope.match,
           onTap: () => _setScope(DutyScope.match),
         ),
+        // Alleen bij een wedstrijd; bij losse datums gaat hij als `false` mee.
+        if (_scope == DutyScope.match) ...[
+          const SizedBox(height: 8),
+          SettingsToggleRow(
+            switchKey: const ValueKey('settings-duty-away-only'),
+            inset: true,
+            title: l10n.settingsDutyAwayOnly,
+            subtitle: l10n.settingsDutyAwayOnlyHint,
+            value: _awayOnly,
+            onChanged: (v) => setState(() => _awayOnly = v),
+          ),
+        ],
         if (_rotates) ...[
           gap,
           SettingsFieldLabel(l10n.settingsDutyTurn),

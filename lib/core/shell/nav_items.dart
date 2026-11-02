@@ -9,6 +9,7 @@ enum NavItem {
   players(AppRoutes.players),
   team(AppRoutes.team),
   duties(AppRoutes.duties),
+  dutyOverview(AppRoutes.dutyOverview),
   stats(AppRoutes.stats),
   hallOfFame(AppRoutes.hallOfFame),
   poule(AppRoutes.poule),
@@ -49,8 +50,9 @@ List<NavItem> buildTabItems(TeamMembership m) => [
 ///   [savings] Spaarpot, [wheel] Radje, [messages] Berichten,
 ///   [agreements] Afspraken, Instellingen, Feedback;
 /// - speler/toeschouwer: Agenda, Team (niet voor de penningmeester),
-///   [stats] Statistieken + Ranking, [poule] Poule, Boetepot en Spaarpot (niet
-///   voor toeschouwers), Radje, Afspraken, Feedback.
+///   Diensten (alleen als het team diensten heeft, `has_duties`), [stats]
+///   Statistieken + Ranking, [poule] Poule, Boetepot en Spaarpot (niet voor
+///   toeschouwers), Radje, Afspraken, Feedback.
 List<NavItem> buildMenuItems(TeamMembership m) {
   final stats = m.hasFeature('stats');
 
@@ -76,6 +78,9 @@ List<NavItem> buildMenuItems(TeamMembership m) {
   return [
     NavItem.agenda,
     if (!isTreasurer) NavItem.team,
+    // Wat er gepland staat en wie in welke groep zit; plannen blijft bij de
+    // trainer op /duties.
+    if (m.hasDuties) NavItem.dutyOverview,
     if (stats) ...[NavItem.stats, NavItem.hallOfFame],
     if (m.hasPoule) NavItem.poule,
     if (m.hasFeature('fines') && !m.isSpectator) NavItem.fines,
@@ -142,7 +147,9 @@ String parentPath(TeamMembership? m, String path) {
   if (segments.length == 2 && segments.first == 'profile') {
     return AppRoutes.profile;
   }
-  if (path == AppRoutes.profile) return AppRoutes.more;
+  if (path == AppRoutes.profile || path == AppRoutes.dutyOverview) {
+    return AppRoutes.more;
+  }
   return AppRoutes.home;
 }
 

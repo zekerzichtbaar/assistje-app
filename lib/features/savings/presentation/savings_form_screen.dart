@@ -124,6 +124,7 @@ class _SavingsFormState extends State<_SavingsForm> {
   late final TextEditingController _months;
   late SavingsScope _scope;
   late bool _includeGuests;
+  late bool _withoutAmount;
   late String _startMonth;
   late Set<String> _members;
   int? _eventId;
@@ -159,8 +160,11 @@ class _SavingsFormState extends State<_SavingsForm> {
     }
     _name = TextEditingController(text: pot?.name ?? preset?.title ?? '');
     _amount = TextEditingController(
-      text: pot == null ? '' : centsToInput((pot.amount * 100).round()),
+      text: pot?.amount == null
+          ? ''
+          : centsToInput((pot!.amount! * 100).round()),
     );
+    _withoutAmount = pot?.withoutAmount ?? false;
     final goal = pot?.goal;
     _goal = TextEditingController(
       text: goal == null ? '' : centsToInput((goal * 100).round()),
@@ -253,8 +257,11 @@ class _SavingsFormState extends State<_SavingsForm> {
     final name = _name.text.trim();
     final amount = _amountCents;
     final months = _monthsValue;
-    final goal = _goalCents;
-    if (name.isEmpty || amount == null || months == null || goal == -1) {
+    final goal = _withoutAmount ? null : _goalCents;
+    if (name.isEmpty ||
+        (!_withoutAmount && amount == null) ||
+        months == null ||
+        goal == -1) {
       unawaited(Haptics.error());
       return;
     }
@@ -267,7 +274,8 @@ class _SavingsFormState extends State<_SavingsForm> {
         name: name,
         scope: _scope,
         includeGuests: _includeGuests,
-        amountCents: amount,
+        withoutAmount: _withoutAmount,
+        amountCents: _withoutAmount ? null : amount,
         goalCents: goal,
         startMonth: _startMonth,
         months: months,
@@ -354,6 +362,26 @@ class _SavingsFormState extends State<_SavingsForm> {
       ],
     );
 
+    final monthsField = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.savingsFormMonths, style: label),
+        const SizedBox(height: 4),
+        TextField(
+          key: const ValueKey('savings-form-months'),
+          controller: _months,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(
+            errorText: _tried && _monthsValue == null
+                ? l10n.savingsFormMonthsInvalid
+                : null,
+          ),
+        ),
+        fieldError('months'),
+      ],
+    );
+
     return ListView(
       key: const ValueKey('savings-form'),
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
@@ -421,35 +449,66 @@ class _SavingsFormState extends State<_SavingsForm> {
                 fieldError('event_id'),
               ],
               const SizedBox(height: 16),
-              if (oneOff)
-                amountField
+              // Zonder bedrag wordt de pot een afvinklijst: dezelfde lijst,
+              // zonder geld. Bv. wie zijn krat bier al inleverde na zijn
+              // verjaardag.
+              AppCard(
+                color: t.raised,
+                radius: AssistjeTokens.radiusXl,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.savingsFormWithoutAmount,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: t.ink,
+                            ),
+                          ),
+                          Text(
+                            l10n.savingsFormWithoutAmountInfo,
+                            style: TextStyle(fontSize: 12, color: t.muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Semantics(
+                      label: l10n.savingsFormWithoutAmount,
+                      child: Switch.adaptive(
+                        key: const ValueKey('savings-form-without-amount'),
+                        value: _withoutAmount,
+                        onChanged: _busy
+                            ? null
+                            : (on) {
+                                Haptics.selection();
+                                setState(() => _withoutAmount = on);
+                              },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (!(oneOff && _withoutAmount)) const SizedBox(height: 16),
+              if (oneOff) ...[
+                if (!_withoutAmount) amountField,
+              ] else if (_withoutAmount)
+                monthsField
               else
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: amountField),
                     const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(l10n.savingsFormMonths, style: label),
-                          const SizedBox(height: 4),
-                          TextField(
-                            key: const ValueKey('savings-form-months'),
-                            controller: _months,
-                            keyboardType: TextInputType.number,
-                            onChanged: (_) => setState(() {}),
-                            decoration: InputDecoration(
-                              errorText: _tried && _monthsValue == null
-                                  ? l10n.savingsFormMonthsInvalid
-                                  : null,
-                            ),
-                          ),
-                          fieldError('months'),
-                        ],
-                      ),
-                    ),
+                    Expanded(child: monthsField),
                   ],
                 ),
               const SizedBox(height: 16),
@@ -464,25 +523,28 @@ class _SavingsFormState extends State<_SavingsForm> {
                 onChanged: (ym) => setState(() => _startMonth = ym),
               ),
               fieldError('start_month'),
-              const SizedBox(height: 16),
-              Text(l10n.savingsFormGoal, style: label),
-              const SizedBox(height: 4),
-              TextField(
-                key: const ValueKey('savings-form-goal'),
-                controller: _goal,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+              // Een afvinklijst heeft geen doelbedrag.
+              if (!_withoutAmount) ...[
+                const SizedBox(height: 16),
+                Text(l10n.savingsFormGoal, style: label),
+                const SizedBox(height: 4),
+                TextField(
+                  key: const ValueKey('savings-form-goal'),
+                  controller: _goal,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    prefixText: '€ ',
+                    hintText: '—',
+                    errorText: _tried && _goalCents == -1
+                        ? l10n.savingsFormGoalInvalid
+                        : null,
+                  ),
                 ),
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  prefixText: '€ ',
-                  hintText: '—',
-                  errorText: _tried && _goalCents == -1
-                      ? l10n.savingsFormGoalInvalid
-                      : null,
-                ),
-              ),
-              fieldError('goal'),
+                fieldError('goal'),
+              ],
             ],
           ),
         ),
@@ -569,9 +631,14 @@ class _SavingsFormState extends State<_SavingsForm> {
                 _InfoBox(
                   key: const ValueKey('savings-form-scope-info'),
                   text: switch (scope) {
-                    SavingsScope.event => l10n.savingsFormEventInfo(
-                      linked?.title ?? l10n.savingsFormEventFallback,
-                    ),
+                    SavingsScope.event =>
+                      _withoutAmount
+                          ? l10n.savingsFormEventInfoWithoutAmount(
+                              linked?.title ?? l10n.savingsFormEventFallback,
+                            )
+                          : l10n.savingsFormEventInfo(
+                              linked?.title ?? l10n.savingsFormEventFallback,
+                            ),
                     SavingsScope.allStaff => l10n.savingsFormAllStaffInfo,
                     _ => l10n.savingsFormAllInfo,
                   },
@@ -606,13 +673,16 @@ class _SavingsFormState extends State<_SavingsForm> {
                             ],
                           ),
                         ),
-                        Switch.adaptive(
-                          key: const ValueKey('savings-form-guests'),
-                          value: _includeGuests,
-                          onChanged: (on) {
-                            Haptics.selection();
-                            setState(() => _includeGuests = on);
-                          },
+                        Semantics(
+                          label: l10n.savingsFormGuests,
+                          child: Switch.adaptive(
+                            key: const ValueKey('savings-form-guests'),
+                            value: _includeGuests,
+                            onChanged: (on) {
+                              Haptics.selection();
+                              setState(() => _includeGuests = on);
+                            },
+                          ),
                         ),
                       ],
                     ),
