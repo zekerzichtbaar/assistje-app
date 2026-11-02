@@ -9,8 +9,12 @@ Laravel-app (`vogels3`). Noordster en beslissingen: `docs/slides/native-app/OVER
 flutter pub get
 dart run tool/l10n.dart   # verplicht na een verse clone: maakt lib/l10n/app_nl.arb + generated/
 flutter run --dart-define-from-file=env/dev.json   # lokale vogels3
+flutter run --dart-define-from-file=env/staging.json  # staging-API
 flutter run --dart-define-from-file=env/prod.json  # productie-API
 ```
+
+`env/staging.json` wijst naar `https://staging.assistje.nl/api/v1`. Dat is nog
+een placeholder: de staging-site moet nog worden aangemaakt.
 
 ## Kwaliteit
 
@@ -19,6 +23,85 @@ flutter analyze   # moet 0 issues geven
 flutter test
 dart run build_runner build --delete-conflicting-outputs   # freezed/json codegen
 ```
+
+## CI
+
+`.github/workflows/ci.yml` draait bij elke push naar `main`, bij pull requests en
+met de hand (*Run workflow*):
+
+- **test** (ubuntu): `flutter pub get` → `dart run tool/l10n.dart` (de l10n is
+  gitignored build-output; de freezed/json-codegen staat wél in git, dus geen
+  `build_runner`) → `dart format --set-exit-if-changed` → `flutter analyze` →
+  `flutter test`. Flutter staat vast op 3.41.x.
+- **ios-build** (macOS, alleen push naar `main` en PR's):
+  `flutter build ios --no-codesign --dart-define-from-file=env/prod.json`. De
+  clubiconen (`tool/app_icons.dart`) worden in CI niet gemaakt.
+- **api-contract**: checkt elke API-aanroep in `lib/` tegen de v1-routes van
+  vogels3 (zie hieronder). Optioneel: zonder het repo-secret `VOGELS3_TOKEN`
+  (een token met leestoegang op `zekerzichtbaar/vogels3`) slaat de job zichzelf
+  over. De vogels3-ref komt uit de input `vogels3_ref` (handmatige run), anders
+  de repo-variabele `VOGELS3_REF`, anders `feat/mobile-api`. Zet `VOGELS3_REF`
+  op `prod-deploy` zodra de API daar staat.
+
+### API-contractcheck
+
+```sh
+dart run tool/api_contract.dart --api-repo ../vogels3            # route:list, of parsen
+dart run tool/api_contract.dart --api-repo ../vogels3 --parse    # altijd parsen (geen php nodig)
+dart run tool/api_contract.dart --api-repo ../vogels3 --verbose  # elke aanroep tonen
+```
+
+Scant `lib/` statisch op `ApiClient`/`Dio`-aanroepen (methode + pad; padhelpers
+als `_base(teamId)`, lokale `path`-variabelen en stringparameters als
+`_clock(…, 'stop')` worden opgelost; `tool/api_contract_scan.dart`) en vergelijkt
+ze met de routes van vogels3: `php artisan route:list --json --path=api/v1` als
+die checkout `vendor/` heeft, anders geparst uit `routes/api.php` +
+`routes/api/v1/**/*.php`. Exit-code 1 bij een aanroep zonder route. Een
+volledig dynamisch pad (een absolute URL uit een API-antwoord) wordt
+overgeslagen. Nieuwe aanroep? Houd hem statisch leesbaar (stringliteral of
+padhelper), dan controleert de check hem mee.
+
+## End-to-end tests
+
+`integration_test/` draait de echte app op een iOS-simulator tegen een echte,
+lokale vogels3 met een verse seed (`php artisan assistje:e2e`):
+
+```sh
+dart run tool/e2e.dart --api-repo ../vogels3              # alle flows
+dart run tool/e2e.dart --api-repo ../vogels3 rsvp shoot   # filter op bestandsnaam
+dart run tool/e2e.dart --api-repo ../vogels3 --device <udid> --port 8001
+```
+
+Wat de runner doet:
+
+1. Start vogels3 op `127.0.0.1:8000` met de PHP-server van `artisan serve`
+   (direct, want `artisan serve` filtert omgevingsvariabelen). De lokale `.env`
+   van vogels3 speelt geen rol: verse `APP_KEY`, sqlite in een tijdelijke map,
+   `MAIL_MAILER=log`, `QUEUE_CONNECTION=sync`, `APP_TIMEZONE=Europe/Amsterdam`.
+   Draait er al iets op de poort, dan stopt hij (of gebruik `--reuse-server`:
+   dan geen migratie en draait de seed met jouw eigen `.env`).
+2. `php artisan migrate:fresh --force` + `php artisan assistje:e2e` → JSON
+   (team, gebruikers, event-ids; `integration_test/support/fixture.dart`).
+3. Per testbestand een verse inlogcode voor de rol uit de kopregel
+   `// e2e-rol: trainer|player|spectator` (`assistje:e2e --code-for=<rol>`,
+   zet ook de throttles terug), dan `flutter test <bestand> -d <udid>
+   --dart-define-from-file=.dart_tool/e2e/<bestand>.json` met `API_BASE_URL`,
+   `E2E_FIXTURE` en `E2E_LOGIN`.
+4. Simulator: een opgestarte iPhone, anders wordt "iPhone 16" (of de eerste
+   iPhone) opgestart.
+
+Flows (één bestand per flow, gedeelde helpers in `integration_test/support/`):
+inloggen (`login`), aan-/afmelden (`rsvp`), beker met verlenging +
+strafschoppen (`cup_shootout`), meerdere mensen op één dienst (`duty_multi`),
+afvinklijst-spaarpot (`savings_checklist`), teambericht zonder toeschouwers
+(`team_message`), toeschouwer → Diensten (`spectator_duties`).
+
+Afspraken: elke test start uitgelogd (`startApp` leegt Keychain en
+SharedPreferences) en logt via het echte inlogscherm in. Geen `pumpAndSettle`
+(de live-klok tikt door): `waitFor`/`waitUntil` pompen in echte tijd tot een
+finder iets vindt. Ids altijd uit de fixture, nooit hard. Zoek op bestaande
+`ValueKey`s; voeg alleen een key toe in `lib/` als er echt geen unieke tekst
+of key is.
 
 ## Opbouw
 

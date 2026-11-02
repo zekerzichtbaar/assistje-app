@@ -1,0 +1,97 @@
+# CI voor de Assistje-app. Zie README → "CI".
+#
+# - test:         l10n genereren, formaat, analyze, unit-/widgettests.
+# - ios-build:    `flutter build ios --no-codesign` tegen env/prod.json
+#                 (zonder clubiconen; die maakt tool/app_icons.dart vóór een
+#                 release).
+# - api-contract: checkt elke API-aanroep in lib/ tegen de v1-routes van
+#                 vogels3. Optioneel: draait alleen als het secret
+#                 VOGELS3_TOKEN bestaat (leestoegang op zekerzichtbaar/vogels3).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      vogels3_ref:
+        description: "vogels3-branch/tag voor de contractcheck"
+        required: false
+        default: ""
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.41.x"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get
+      # lib/l10n/app_nl.arb + lib/l10n/generated/ zijn gitignored build-output.
+      # freezed/json-codegen (*.freezed.dart, *.g.dart) staat wél in git.
+      - run: dart run tool/l10n.dart
+      - run: dart format --output=none --set-exit-if-changed lib test tool integration_test
+      - run: flutter analyze
+      - run: flutter test
+
+  ios-build:
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get
+      - run: dart run tool/l10n.dart
+      - run: flutter build ios --no-codesign --dart-define-from-file=env/prod.json
+
+  api-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VOGELS3_TOKEN: ${{ secrets.VOGELS3_TOKEN }}
+      # Volgorde: handmatige input → repo-variabele → feat/mobile-api.
+      # Na de merge in vogels3: zet de repo-variabele VOGELS3_REF op prod-deploy.
+      VOGELS3_REF: ${{ inputs.vogels3_ref || vars.VOGELS3_REF || 'feat/mobile-api' }}
+    steps:
+      - name: Overslaan zonder VOGELS3_TOKEN
+        if: env.VOGELS3_TOKEN == ''
+        run: echo "::notice::Secret VOGELS3_TOKEN ontbreekt; API-contractcheck overgeslagen."
+      - uses: actions/checkout@v4
+        if: env.VOGELS3_TOKEN != ''
+      - uses: actions/checkout@v4
+        if: env.VOGELS3_TOKEN != ''
+        with:
+          repository: zekerzichtbaar/vogels3
+          ref: ${{ env.VOGELS3_REF }}
+          token: ${{ env.VOGELS3_TOKEN }}
+          path: .vogels3
+          sparse-checkout: |
+            routes
+      - uses: subosito/flutter-action@v2
+        if: env.VOGELS3_TOKEN != ''
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - if: env.VOGELS3_TOKEN != ''
+        run: flutter pub get
+      # Geen composer/vendor in CI: het script parset dan routes/api/v1/**.
+      - if: env.VOGELS3_TOKEN != ''
+        run: dart run tool/api_contract.dart --api-repo .vogels3 --parse
