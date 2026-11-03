@@ -32,15 +32,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
-      - run: flutter pub get
       # lib/l10n/app_nl.arb + lib/l10n/generated/ zijn gitignored build-output.
+      # Eerst samenvoegen (alleen dart:io, nog geen packages nodig): `pub get`
+      # genereert de l10n meteen (`generate: true`) en zoekt dan app_nl.arb.
       # freezed/json-codegen (*.freezed.dart, *.g.dart) staat wél in git.
+      - run: dart tool/l10n.dart --no-gen
+      - run: flutter pub get
       - run: dart run tool/l10n.dart
       - run: dart format --output=none --set-exit-if-changed lib test tool integration_test
       - run: flutter analyze
@@ -51,12 +54,13 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+      - run: dart tool/l10n.dart --no-gen
       - run: flutter pub get
       - run: dart run tool/l10n.dart
       - run: flutter build ios --no-codesign --dart-define-from-file=env/prod.json
@@ -73,9 +77,9 @@ jobs:
       - name: Overslaan zonder VOGELS3_TOKEN
         if: env.VOGELS3_TOKEN == ''
         run: echo "::notice::Secret VOGELS3_TOKEN ontbreekt; API-contractcheck overgeslagen."
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: env.VOGELS3_TOKEN != ''
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: env.VOGELS3_TOKEN != ''
         with:
           repository: zekerzichtbaar/vogels3
