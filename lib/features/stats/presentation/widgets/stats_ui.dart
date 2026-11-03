@@ -171,77 +171,30 @@ class SeasonPickerButton extends StatelessWidget {
   String _label(AppLocalizations l10n, SeasonOption season) =>
       season.isActive ? season.label : l10n.statsSeasonClosed(season.label);
 
-  Future<void> _open(BuildContext context) async {
-    unawaited(Haptics.light());
-    final l10n = AppLocalizations.of(context);
-    final chosen = await showAppSheet<int>(
-      context: context,
-      title: l10n.statsSeasonPickerTitle,
-      scrollable: true,
-      builder: (sheetContext) {
-        final t = AssistjeTokens.of(sheetContext);
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final season in seasons)
-              ListTile(
-                key: ValueKey('$keyPrefix-season-${season.id}'),
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  _label(l10n, season),
-                  style: TextStyle(
-                    fontWeight: season.id == selectedId
-                        ? FontWeight.w700
-                        : FontWeight.w500,
-                    color: t.ink,
-                  ),
-                ),
-                trailing: season.id == selectedId
-                    ? Icon(PhosphorIconsBold.check, color: t.primary, size: 18)
-                    : null,
-                onTap: () => Navigator.of(sheetContext).pop(season.id),
-              ),
-            const SizedBox(height: 12),
-          ],
-        );
-      },
-    );
-    if (chosen != null && chosen != selectedId) onSelected(chosen);
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final t = AssistjeTokens.of(context);
     SeasonOption? selected;
     for (final s in seasons) {
       if (s.id == selectedId) selected = s;
     }
     final label = selected == null ? '' : _label(l10n, selected);
-    return AppCard(
+    return AppOptionPicker<int>(
       key: ValueKey('$keyPrefix-season-picker'),
-      // 12 pt boven/onder: samen ≥ 44 pt tikvlak.
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      onTap: enabled ? () => _open(context) : null,
-      child: Row(
-        children: [
-          Icon(PhosphorIconsDuotone.calendarBlank, size: 18, color: t.muted),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              l10n.statsSeasonButton(label),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: t.ink,
-              ),
-            ),
+      icon: PhosphorIconsDuotone.calendarBlank,
+      buttonLabel: l10n.statsSeasonButton(label),
+      sheetTitle: l10n.statsSeasonPickerTitle,
+      enabled: enabled,
+      selected: selectedId,
+      onSelected: onSelected,
+      options: [
+        for (final season in seasons)
+          AppPickerOption(
+            value: season.id,
+            label: _label(l10n, season),
+            key: ValueKey('$keyPrefix-season-${season.id}'),
           ),
-          Icon(PhosphorIconsBold.caretDown, size: 14, color: t.muted),
-        ],
-      ),
+      ],
     );
   }
 }

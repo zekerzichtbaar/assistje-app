@@ -137,11 +137,11 @@ Future<void> _run(List<String> args) async {
         [
           '-S',
           '127.0.0.1:$port',
-          '-t',
-          'public',
-          'vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php',
+          // Zoals `artisan serve`: vanuit public/, want server.php laadt
+          // `getcwd()/index.php`.
+          '$apiRepo/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php',
         ],
-        workingDirectory: apiRepo,
+        workingDirectory: '$apiRepo/public',
         environment: {...env, 'PHP_CLI_SERVER_WORKERS': '4'},
       );
       serverLog = File('${tmp.path}/server.log').openWrite();
@@ -297,13 +297,16 @@ Future<Map<String, Object?>> _freshLogin(
   return {'email': user['email'], 'code': user['code']};
 }
 
-Future<bool> _isUp(String baseUrl) async {
+/// Antwoordt er iets op [baseUrl]? Met [healthy] alleen als `/up` 200 geeft
+/// (een PHP-fout komt ook als antwoord terug).
+Future<bool> _isUp(String baseUrl, {bool healthy = false}) async {
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 1);
   try {
     final request = await client.getUrl(Uri.parse('$baseUrl/up'));
     final response = await request.close();
-    await response.drain<void>();
-    return true;
+    final body = await response.transform(utf8.decoder).join();
+    return !healthy ||
+        (response.statusCode == 200 && !body.contains('Fatal error'));
   } on Object {
     return false;
   } finally {
@@ -313,7 +316,7 @@ Future<bool> _isUp(String baseUrl) async {
 
 Future<bool> _waitUp(String baseUrl) async {
   for (var i = 0; i < 60; i++) {
-    if (await _isUp(baseUrl)) return true;
+    if (await _isUp(baseUrl, healthy: true)) return true;
     await Future<void>.delayed(const Duration(milliseconds: 500));
   }
   return false;

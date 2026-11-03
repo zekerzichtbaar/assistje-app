@@ -1,0 +1,135 @@
+# Assistje Android → Google Play. Zie README → "Release (Android)".
+#
+#   cd android && bundle exec fastlane internal            # bouwen + interne test
+#   cd android && bundle exec fastlane release             # bouwen + productie (concept)
+#   cd android && bundle exec fastlane release submit:true # … en direct uitrollen
+#   cd android && bundle exec fastlane build               # alleen .aab
+#   cd android && bundle exec fastlane images              # storebeelden (nl-NL)
+#
+# Opties (alle lanes): icons:false (sla tool/app_icons.dart over),
+#                      build_number:<n> (anders hoogste versionCode op Play + 1).
+#
+# Vereist: android/key.properties (uploadsleutel) en, voor upload, een
+# Play-serviceaccount. De allereerste .aab moet via de Play Console met de hand.
+
+opt_out_usage
+default_platform(:android)
+
+ROOT = File.expand_path("../..", __dir__)
+BUILD_DIR = File.join(ROOT, "build", "fastlane")
+AAB = File.join(ROOT, "build", "app", "outputs", "bundle", "release", "app-release.aab")
+
+platform :android do
+  desc "Bouw een release-.aab en zet hem op de interne test"
+  lane :internal do |options|
+    build(options)
+    upload("internal", "completed")
+  end
+
+  desc "Bouw een release-.aab en zet hem op productie (concept)"
+  desc "Met submit:true wordt hij meteen uitgerold (na beoordeling door Google)."
+  lane :release do |options|
+    build(options)
+    upload("production", options[:submit].to_s == "true" ? "completed" : "draft")
+  end
+
+  desc "Zet icoon, featuregraphic en telefoonscreenshots uit docs/store op de"
+  desc "Play-vermelding (nl-NL). Vervangt de huidige beelden; tekst en releases"
+  desc "blijven ongemoeid. Genereren: docs/store/README.md."
+  lane :images do
+    require_play_key!
+    store = File.join(ROOT, "docs", "store", "android")
+    dir = File.join(BUILD_DIR, "play", "nl-NL", "images")
+    FileUtils.rm_rf(File.join(BUILD_DIR, "play"))
+    FileUtils.mkdir_p(File.join(dir, "phoneScreenshots"))
+    FileUtils.cp(File.join(store, "icon-512.png"), File.join(dir, "icon.png"))
+    FileUtils.cp(File.join(store, "feature-graphic-1024x500.png"), File.join(dir, "featureGraphic.png"))
+    shots = Dir[File.join(store, "phone", "*.png")].sort
+    UI.user_error!("Geen screenshots in #{store}/phone") if shots.empty?
+    shots.each { |f| FileUtils.cp(f, File.join(dir, "phoneScreenshots")) }
+
+    # Supply wil een track met een release, ook als alleen de vermelding
+    # verandert; de beelden zelf horen bij de app, niet bij de track.
+    upload_to_play_store(
+      track: "internal",
+      metadata_path: File.join(BUILD_DIR, "play"),
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      sync_image_upload: true
+    )
+  end
+
+  desc "Alleen bouwen (.aab in build/app/outputs/bundle/release/)"
+  lane :build do |options|
+    key_props = File.join(ROOT, "android", "key.properties")
+    UI.user_error!("android/key.properties ontbreekt — zie README → Release (Android)") unless File.exist?(key_props)
+
+    version, pubspec_build = pubspec_version
+    build_number = (options[:build_number] || next_build_number(pubspec_build)).to_i
+    UI.message("Versie #{version} (#{build_number})")
+
+    Dir.chdir(ROOT) do
+      sh("dart", "tool/l10n.dart", "--no-gen")
+      sh("flutter", "pub", "get")
+      sh("dart", "run", "tool/l10n.dart")
+      # Clubwapens als app-icoon (module android/club_icons).
+      sh("dart", "run", "tool/app_icons.dart") unless options[:icons].to_s == "false"
+      defines = write_dart_defines("#{version}+#{build_number}")
+      sh("flutter", "build", "appbundle", "--release",
+         "--build-name=#{version}", "--build-number=#{build_number}",
+         "--dart-define-from-file=#{defines}")
+    end
+  end
+end
+
+def upload(track, status)
+  require_play_key!
+  upload_to_play_store(
+    track: track,
+    release_status: status,
+    aab: AAB,
+    skip_upload_metadata: true,
+    skip_upload_changelogs: true,
+    skip_upload_images: true,
+    skip_upload_screenshots: true
+  )
+end
+
+def require_play_key!
+  path = ENV["PLAY_JSON_KEY_PATH"].to_s
+  UI.user_error!("PLAY_JSON_KEY_PATH ontbreekt — zie android/fastlane/.env.example") if path.empty?
+  UI.user_error!("PLAY_JSON_KEY_PATH bestaat niet: #{path}") unless File.exist?(path)
+end
+
+# Hoogste van: buildnummer in pubspec, hoogste versionCode op Play + 1.
+# Zonder serviceaccount alleen de pubspec.
+def next_build_number(pubspec_build)
+  return pubspec_build if ENV["PLAY_JSON_KEY_PATH"].to_s.empty?
+  codes = %w[internal alpha beta production].flat_map do |track|
+    google_play_track_version_codes(track: track)
+  rescue StandardError
+    []
+  end
+  [codes.map(&:to_i).max.to_i + 1, pubspec_build].max
+end
+
+def pubspec_version
+  line = File.read(File.join(ROOT, "pubspec.yaml"))[/^version:\s*(\S+)/, 1]
+  UI.user_error!("Geen version: in pubspec.yaml") unless line
+  name, build = line.split("+")
+  [name, build.to_i]
+end
+
+# env/prod.json met APP_VERSION op de echte versie+build, in build/fastlane/.
+def write_dart_defines(app_version)
+  source = File.join(ROOT, ENV.fetch("DART_DEFINES_FILE", "env/prod.json"))
+  defines = JSON.parse(File.read(source)).merge("APP_VERSION" => app_version)
+  FileUtils.mkdir_p(BUILD_DIR)
+  path = File.join(BUILD_DIR, "dart_defines.json")
+  File.write(path, JSON.pretty_generate(defines))
+  path
+end

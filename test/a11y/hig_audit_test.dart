@@ -10,6 +10,12 @@
 // Schermafbeeldingen (met de echte fonts) komen in `$HIG_SHOTS_DIR` als die
 // omgevingsvariabele gezet is:
 //   HIG_SHOTS_DIR=/tmp/shots flutter test test/a11y/hig_audit_test.dart
+// Getagd `a11y`: de contrastmeting leest pixels en klopt alleen met de
+// macOS-rasterisatie (op Linux meet hij randpixels van glyphs). CI draait
+// deze suite daarom in de macOS-job `a11y`; zie README → "CI".
+@Tags(['a11y'])
+library;
+
 import 'package:assistje/core/app_icon/app_icon_service.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -67,11 +73,11 @@ final _screens = <AuditScreen>[
     trainer: false,
     setup: (h) => h.on('GET /teams/3/profile', 200, ProfileFixtures.profile()),
   ),
-  // Android: clublogo als snelkoppeling op het beginscherm (AppIconCard).
+  // Android: clublogo als app-icoon (AppIconCard).
   AuditScreen(
     '/profile',
     trainer: false,
-    label: 'android-snelkoppeling',
+    label: 'android-app-icoon',
     platform: TargetPlatform.android,
     // Na het scrollen naar de kaart schuiven de weekdagpillen erboven half
     // onder de vervagende kop; de meting pakt dan de vervaging, niet de pil
@@ -89,7 +95,7 @@ final _screens = <AuditScreen>[
       await pumpAuditFrames(t);
     },
     setup: (h) {
-      _fakeShortcutChannel();
+      _fakeAppIconChannel();
       final membership = ApiFixtures.membership(
         features: auditFeatures,
         hasPoule: true,
@@ -97,16 +103,7 @@ final _screens = <AuditScreen>[
       (membership['team'] as Map<String, dynamic>)['club_id'] = 12;
       h
         ..on('GET /me', 200, ApiFixtures.meResponse(teams: [membership]))
-        ..on('GET /teams/3/profile', 200, ProfileFixtures.profile())
-        ..on('GET /app-icons', 200, {
-          'data': [
-            {
-              'club_id': 12,
-              'name': 'Vogels',
-              'logo_url': 'https://assistje.nl/storage/clubs/12.png',
-            },
-          ],
-        });
+        ..on('GET /teams/3/profile', 200, ProfileFixtures.profile());
     },
   ),
   AuditScreen(
@@ -300,19 +297,14 @@ final _screens = <AuditScreen>[
 
 void main() => registerAudit(_screens);
 
-/// Android-kant van `nl.assistje.app/app_icon`: vastzetten kan.
-void _fakeShortcutChannel() {
+/// Android-kant van `nl.assistje.app/app_icon`: het wapen zit in de build.
+void _fakeAppIconChannel() {
   const channel = MethodChannel(AppIconService.channelName);
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
         channel,
         (call) async => call.method == 'status'
-            ? {
-                'supported': true,
-                'current': null,
-                'available': true,
-                'mode': 'shortcut',
-              }
+            ? {'supported': true, 'current': null, 'available': true}
             : null,
       );
   addTearDown(

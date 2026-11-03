@@ -1,6 +1,9 @@
 # CI voor de Assistje-app. Zie README → "CI".
 #
-# - test:         l10n genereren, formaat, analyze, unit-/widgettests.
+# - test:         l10n genereren, formaat, analyze, unit-/widgettests
+#                 (zonder de a11y-audit).
+# - a11y:         HIG-/contrastaudit (test/a11y) op macOS: de contrastmeting
+#                 leest pixels en is gekalibreerd op de macOS-rasterisatie.
 # - ios-build:    `flutter build ios --no-codesign` tegen env/prod.json
 #                 (zonder clubiconen; die maakt tool/app_icons.dart vóór een
 #                 release).
@@ -47,7 +50,22 @@ jobs:
       - run: dart run tool/l10n.dart
       - run: dart format --output=none --set-exit-if-changed lib test tool integration_test
       - run: flutter analyze
-      - run: flutter test
+      - run: flutter test --exclude-tags a11y
+
+  a11y:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: dart tool/l10n.dart --no-gen
+      - run: flutter pub get
+      - run: dart run tool/l10n.dart
+      - run: flutter test --tags a11y
 
   ios-build:
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')

@@ -130,7 +130,7 @@
   },
   "profileTeamLeaveFailed": "Verlaten mislukt",
   "profileAppIconTitle": "App-icoon",
-  "profileAppIconBody": "Gebruik het clublogo van {team} als icoon op je beginscherm.",
+  "profileAppIconBody": "Je app-icoon wordt het clublogo van {team}, en wisselt mee als je van team wisselt.",
   "@profileAppIconBody": {
     "placeholders": {
       "team": {
@@ -138,13 +138,5 @@
       }
     }
   },
-  "profileAppIconLabel": "Clublogo als app-icoon",
-  "profileAppIconFailed": "App-icoon wisselen mislukt",
-  "profileAppIconShortcutBody": "Je krijgt een Assistje-icoon met het clubwapen op je beginscherm. Het gewone icoon blijft in je apps staan.",
-  "profileAppIconPin": "Zet op beginscherm",
-  "profileAppIconPinUpdate": "Icoon bijwerken",
-  "profileAppIconPinRequested": "Bijna klaar",
-  "profileAppIconPinRequestedBody": "Bevestig in het venster van je telefoon om het icoon op je beginscherm te zetten.",
-  "profileAppIconPinUpdated": "Icoon op je beginscherm bijgewerkt",
-  "profileAppIconPinFailed": "Icoon op beginscherm zetten mislukt"
+  "profileAppIconLabel": "Clublogo als app-icoon"
 }

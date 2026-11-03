@@ -32,7 +32,11 @@ met de hand (*Run workflow*):
 - **test** (ubuntu): `flutter pub get` → `dart run tool/l10n.dart` (de l10n is
   gitignored build-output; de freezed/json-codegen staat wél in git, dus geen
   `build_runner`) → `dart format --set-exit-if-changed` → `flutter analyze` →
-  `flutter test`. Flutter staat vast op 3.41.x.
+  `flutter test --exclude-tags a11y`. Flutter staat vast op 3.41.x.
+- **a11y** (macOS): `flutter test --tags a11y`, de HIG-audit uit `test/a11y/`.
+  Die draait op macOS omdat `textContrastGuideline` pixels meet: op Linux
+  rasteriseren glyphs anders en meet hij randpixels i.p.v. de tekstkleur
+  (schijnbaar contrast van 1.2–4.4 op tekst die op macOS ruim 4.5:1 haalt).
 - **ios-build** (macOS, alleen push naar `main` en PR's):
   `flutter build ios --no-codesign --dart-define-from-file=env/prod.json`. De
   clubiconen (`tool/app_icons.dart`) worden in CI niet gemaakt.
@@ -151,34 +155,42 @@ Teamkleur-logica (`lib/core/theme/team_color.dart`) is een 1-op-1 port van
 
 ## App-iconen (standaard + clubwapens)
 
-- Standaardicoon: het Assistje-mascotje (bron: vogels3 `public/img/assistje-logo.svg`).
-- Clubwapens: iOS kan alleen wisselen naar iconen die in de build zitten. Draai
-  daarom **vóór elke iOS-release**:
+- Standaardicoon: het Assistje-mascotje op het lijnveld van assistje.nl (#61F6A9 met maaistroken; bron: vogels3 `public/img/assistje-logo.svg`), gegenereerd met `test/store`; zie `docs/store/README.md`.
+- Clubwapens: iOS en Android kunnen alleen wisselen naar iconen die in de
+  build zitten. Draai daarom **vóór elke release** (de fastlane-lanes van
+  beide platformen doen het zelf; `icons:false` slaat het over):
 
   ```sh
   dart run tool/app_icons.dart          # haalt GET /api/v1/app-icons op (env/prod.json)
   ```
 
-  Dat schrijft per club `ios/Runner/Assets.xcassets/ClubIcon-<clubId>.appiconset`
-  (gitignored; alleen beginschermformaten als palet-PNG, ± 3 KB per stuk).
+  Dat schrijft per club (alles gitignored, palet-PNG):
+  - iOS: `ios/Runner/Assets.xcassets/ClubIcon-<clubId>.appiconset`
+    (alleen beginschermformaten);
+  - Android: in de module `android/club_icons` een uitgeschakelde
+    `activity-alias` `ClubIcon<clubId>` met een adaptief icoon (wapen op wit,
+    160 px WebP; ±12 MB voor alle clubs). `settings.gradle.kts` neemt de module alleen mee als hij bestaat;
+    zonder bouwt de app met alleen het standaardicoon.
+
   Ongewijzigde logo's worden overgeslagen; een onleesbaar logo is een
   waarschuwing, geen fout. `--clean` haalt ze weer weg, `--api <url>` kiest
   een andere bron.
-- In de app: Profiel → kaart *App-icoon*, alleen als de club van je team een
-  logo heeft. Eén kanaal `nl.assistje.app/app_icon`
-  (`lib/core/app_icon/`), twee manieren (`mode` in het `status`-antwoord):
-  - **iOS = alternatief icoon** (`alternate`): een schakelaar wisselt het
-    app-icoon naar het wapen, alleen als dat in de build zit. Native kant:
-    `AppIconChannel` in `ios/Runner/AppDelegate.swift`.
-  - **Android = vastgezette snelkoppeling** (`shortcut`): een
-    `activity-alias` per club is voor ~4100 clubs onwerkbaar (manifest,
-    herstart, weggevallen snelkoppelingen). De knop *Zet op beginscherm*
-    downloadt het logo (`logo_url` uit `GET /api/v1/app-icons`, alleen
-    PNG/JPEG/WebP; een SVG-logo → geen kaart) en zet een snelkoppeling
-    `club-<clubId>` met dat logo op wit (adaptief icoon) op het beginscherm;
-    het gewone icoon blijft. Staat hij er al, dan werkt de knop het logo bij.
-    Er zit niets in de build, dus geen `tool/app_icons.dart` nodig voor
-    Android. Native kant: `android/app/src/main/kotlin/nl/assistje/app/AppIconChannel.kt`.
+- **Automatisch:** `appIconSyncProvider` (`lib/core/app_icon/`, actief in
+  `AssistjeApp`) zet na inloggen en bij een teamwissel het wapen van de club
+  van het actieve team, en na uitloggen het standaardicoon. Alleen als het
+  icoon echt anders moet (iOS toont bij elke wissel een systeemmelding), en
+  niet zolang `/me` nog laadt. Profiel → *App-icoon* zet het uit
+  (`club_app_icon_enabled` in shared_preferences). Een club zonder wapen in de
+  build houdt het standaardicoon.
+- Native kant, één kanaal `nl.assistje.app/app_icon` (`status`, `set`):
+  - **iOS:** `setAlternateIconName`, `AppIconChannel` in
+    `ios/Runner/AppDelegate.swift`.
+  - **Android:** de launcher-ingang is de alias `DefaultIcon`
+    (AndroidManifest.xml), niet `MainActivity`. `AppIconChannel.kt` zet
+    precies één alias aan, pas als de app naar de achtergrond gaat
+    (`MainActivity.onStop`): een wissel op de voorgrond kan de app op sommige
+    toestellen afsluiten. Sommige launchers halen na een wissel het icoon van
+    het beginscherm; in de app-lijst staat het altijd.
 
 ## Copy (l10n)
 
@@ -214,7 +226,59 @@ Elk nog niet gebouwd scherm heeft al een eigen stub
 - draait codegen alleen voor de eigen map:
   `dart run build_runner build --delete-conflicting-outputs --build-filter="lib/features/<x>/**"`.
 
+## Release (iOS)
+
+Fastlane in `ios/` bouwt een App Store-build tegen `env/prod.json` en zet hem
+op TestFlight of in App Store Connect.
+
+Eenmalig:
+
+```sh
+cd ios
+bundle install                         # fastlane in ios/vendor/bundle
+cp fastlane/.env.example fastlane/.env # Team ID + App Store Connect API-sleutel
+```
+
+De API-sleutel (.p8, rol **Admin**) staat buiten de repo; Xcode gebruikt hem
+via `-allowProvisioningUpdates` om automatisch het distributiecertificaat en
+het App Store-profiel te beheren. De app moet al bestaan in App Store Connect
+(bundle-id `nl.assistje.app`).
+
+Releasen:
+
+```sh
+cd ios
+bundle exec fastlane beta                 # bouwen + TestFlight
+bundle exec fastlane release              # bouwen + koppelen aan de versie in App Store Connect
+bundle exec fastlane release submit:true  # … en indienen ter beoordeling
+bundle exec fastlane build                # alleen IPA in build/fastlane/
+```
+
+Elke lane: l10n samenvoegen → `pub get` → clubiconen (`tool/app_icons.dart`;
+`icons:false` slaat over) → `flutter build ios --config-only` → archiveren en
+exporteren met gym. Versie = `version:` uit `pubspec.yaml`; buildnummer = de
+laatste TestFlight-build + 1 (of hoger als de pubspec dat zegt; `build_number:<n>`
+forceert). `APP_VERSION` gaat automatisch mee als `versie+build`.
+`release` uploadt geen metadata of screenshots; die beheer je in App Store Connect.
+
 ## Release (Android)
+
+**Met fastlane** (`android/fastlane/`, net als iOS):
+
+```sh
+cd android
+bundle install                         # fastlane in android/vendor/bundle
+cp fastlane/.env.example fastlane/.env # pad naar de Play-serviceaccount-JSON
+bundle exec fastlane internal             # bouwen + interne test
+bundle exec fastlane release              # bouwen + productie (concept)
+bundle exec fastlane release submit:true  # … en uitrollen
+bundle exec fastlane build                # alleen de .aab
+```
+
+Vereist `android/key.properties` (hieronder) en een JDK 17 + Android SDK op het
+pad. Het buildnummer wordt de hoogste versionCode op Play + 1. De allereerste
+`.aab` moet met de hand via de Play Console; daarna werkt de API.
+
 
 Google Play-eisen, Data safety, store-teksten en graphics:
 `docs/store/google-play.md` (graphics in `docs/store/android/`).

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/app_icon/app_icon_service.dart';
 import 'core/deep_links/deep_link_handler.dart';
 import 'core/push/push_controller.dart';
 import 'core/router/app_router.dart';
@@ -19,6 +20,8 @@ class AssistjeApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Houdt de teamkleur gelijk aan het actieve team.
     ref.watch(teamColorSyncProvider);
+    // App-icoon = clubwapen van het actieve team (standaardicoon na uitloggen).
+    ref.watch(appIconSyncProvider);
     // Universal/App Links en push-tikken → het juiste scherm.
     ref.watch(deepLinkHandlerProvider);
     // Push: aanmelden na inloggen, voorgrondmeldingen, tikken (inert zonder

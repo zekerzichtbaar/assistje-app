@@ -1,0 +1,3 @@
+# Waarden komen uit android/fastlane/.env (zie .env.example).
+package_name(ENV.fetch("PACKAGE_NAME", "nl.assistje.app"))
+json_key_file(ENV["PLAY_JSON_KEY_PATH"]) if ENV["PLAY_JSON_KEY_PATH"]

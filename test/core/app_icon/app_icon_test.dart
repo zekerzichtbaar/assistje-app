@@ -1,133 +1,90 @@
-import 'package:assistje/core/api/api_client.dart';
+import 'dart:async';
+
 import 'package:assistje/core/app_icon/app_icon_service.dart';
-import 'package:assistje/core/app_icon/club_logo_repository.dart';
+import 'package:assistje/core/auth/auth_controller.dart';
+import 'package:assistje/core/session/models/me.dart';
 import 'package:assistje/core/session/models/team_membership.dart';
 import 'package:assistje/core/session/session_providers.dart';
 import 'package:assistje/core/theme/app_theme.dart';
+import 'package:assistje/core/theme/theme_providers.dart';
 import 'package:assistje/features/profile/presentation/widgets/app_settings.dart';
 import 'package:assistje/l10n/generated/app_localizations.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../helpers/api_fixtures.dart';
-import '../../helpers/fake_http_adapter.dart';
 
 const _channel = MethodChannel(AppIconService.channelName);
 
-/// Nep-native kant. iOS (`mode: alternate`): houdt het huidige icoon bij en
-/// weet welke er in de build zitten. Android (`mode: shortcut`): houdt de
-/// vastgezette snelkoppelingen bij; [pinError] laat `pinShortcut` falen.
-List<MethodCall> _fakeNative({
-  Set<String> bundled = const {'ClubIcon-12'},
-  bool supported = true,
-  String? mode,
-  Set<String>? pinned,
-  PlatformException? pinError,
-}) {
-  final calls = <MethodCall>[];
-  final shortcuts = pinned ?? <String>{};
-  String? current;
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(_channel, (call) async {
-        calls.add(call);
-        final args = call.arguments as Map?;
-        final name = args?['name'] as String?;
-        switch (call.method) {
-          case 'status':
-            if (mode == 'shortcut') {
+/// Nep-native kant (iOS en Android gedragen zich hetzelfde): houdt het
+/// huidige icoon bij en weet welke er in de build zitten.
+class _FakeNative {
+  _FakeNative({this.supported = true, this.current}) {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(_channel, (call) async {
+          calls.add(call);
+          final name = (call.arguments as Map?)?['name'] as String?;
+          switch (call.method) {
+            case 'status':
               return {
                 'supported': supported,
-                'current': shortcuts.contains(name) ? name : null,
-                'available': true,
-                'mode': 'shortcut',
+                'current': current,
+                'available': bundled.contains(name),
               };
-            }
-            return {
-              'supported': supported,
-              'current': current,
-              'available': bundled.contains(name),
-              'mode': ?mode,
-            };
-          case 'set':
-            current = name;
-            return null;
-          case 'pinShortcut':
-            if (pinError != null) throw pinError;
-            return shortcuts.add(args!['id'] as String)
-                ? 'requested'
-                : 'updated';
-        }
-        return null;
-      });
-  addTearDown(
-    () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(_channel, null),
-  );
-  return calls;
-}
-
-/// Clublogo's zonder netwerk.
-class _FakeLogos extends ClubLogoRepository {
-  _FakeLogos(this.logos) : super(ApiClient(Dio()), Dio());
-
-  final Map<int, String> logos;
-  final downloads = <String>[];
-
-  @override
-  Future<String?> logoUrl(int clubId) async => logos[clubId];
-
-  @override
-  Future<Uint8List> download(String url) async {
-    downloads.add(url);
-    return Uint8List.fromList([1, 2, 3]);
+            case 'set':
+              current = name;
+              return null;
+          }
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(_channel, null),
+    );
   }
+
+  static const bundled = {'ClubIcon-12', 'ClubIcon-13'};
+  final bool supported;
+  String? current;
+  final calls = <MethodCall>[];
+
+  List<Object?> get sets => [
+    for (final c in calls)
+      if (c.method == 'set') (c.arguments as Map)['name'],
+  ];
 }
 
-TeamMembership _membership({int? clubId}) {
-  final json = ApiFixtures.membership();
+class _FakeAuth extends AuthController {
+  _FakeAuth(this.initial);
+
+  final AuthStatus initial;
+
+  @override
+  AuthStatus build() => initial;
+
+  // ignore: use_setters_to_change_properties
+  void set(AuthStatus status) => state = status;
+}
+
+Map<String, dynamic> _membership({required int teamId, int? clubId}) {
+  final json = ApiFixtures.membership(teamId: teamId, name: 'Team $teamId');
   (json['team'] as Map<String, dynamic>)['club_id'] = clubId;
-  return TeamMembership.fromJson(json);
+  return json;
 }
 
-Future<void> _pumpCard(
-  WidgetTester tester,
-  TeamMembership membership, {
-  ClubLogoRepository? logos,
-}) async {
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: [
-        currentMembershipProvider.overrideWithValue(membership),
-        clubLogoRepositoryProvider.overrideWithValue(
-          logos ?? _FakeLogos(const {}),
-        ),
-      ],
-      child: MaterialApp(
-        theme: AppTheme.light('#006837'),
-        locale: const Locale('nl'),
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: const Scaffold(body: AppIconCard()),
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-}
+Me _me(List<Map<String, dynamic>> teams) => Me.fromJson(
+  ApiFixtures.meResponse(teams: teams)['data'] as Map<String, dynamic>,
+);
 
-/// Laat de toast (4 s) verlopen, zodat er geen timer blijft hangen.
-Future<void> _dismissToast(WidgetTester tester) async {
-  await tester.pump(const Duration(seconds: 5));
-  await tester.pumpAndSettle();
+Future<void> _settle() async {
+  for (var i = 0; i < 10; i++) {
+    await Future<void>.delayed(Duration.zero);
+  }
 }
 
 void main() {
@@ -137,239 +94,207 @@ void main() {
     setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS);
     tearDown(() => debugDefaultTargetPlatformOverride = null);
 
-    test('clubicoon in de build: naam en of het actief is', () async {
-      _fakeNative(mode: 'alternate');
+    test('wapen in de build: naam en of het staat', () async {
+      _FakeNative(current: 'ClubIcon-12');
       final state = await const AppIconService().clubIcon(12);
       expect(state?.name, 'ClubIcon-12');
-      expect(state?.active, isFalse);
-      expect(state?.mode, AppIconMode.alternate);
-    });
-
-    test('oudere iOS-build zonder `mode`: alternate', () async {
-      _fakeNative();
-      final state = await const AppIconService().clubIcon(12);
-      expect(state?.mode, AppIconMode.alternate);
-    });
-
-    test('niet in de build of toestel kan het niet: null', () async {
-      _fakeNative();
-      expect(await const AppIconService().clubIcon(99), isNull);
-      _fakeNative(supported: false);
-      expect(await const AppIconService().clubIcon(12), isNull);
-    });
-
-    test('Android: snelkoppeling met id club-<clubId>', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final calls = _fakeNative(mode: 'shortcut', pinned: {'club-12'});
-      final state = await const AppIconService().clubIcon(12);
-      expect(calls.single.arguments, {'name': 'club-12'});
-      expect(state?.name, 'club-12');
-      expect(state?.mode, AppIconMode.shortcut);
       expect(state?.active, isTrue);
       expect((await const AppIconService().clubIcon(13))?.active, isFalse);
     });
 
-    test('Android: launcher zonder vastzetten → null', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      _fakeNative(mode: 'shortcut', supported: false);
+    test('niet in de build of toestel kan het niet: null', () async {
+      _FakeNative();
+      expect(await const AppIconService().clubIcon(99), isNull);
+      _FakeNative(supported: false);
       expect(await const AppIconService().clubIcon(12), isNull);
     });
 
-    test('Android: pinShortcut geeft requested, daarna updated', () async {
+    test('Android: hetzelfde kanaal en dezelfde namen', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final calls = _fakeNative(mode: 'shortcut');
-      final png = Uint8List.fromList([1, 2, 3]);
-      const service = AppIconService();
-      expect(
-        await service.pinShortcut(id: 'club-12', label: 'Vogels 3', png: png),
-        PinShortcutResult.requested,
-      );
-      expect(
-        await service.pinShortcut(id: 'club-12', label: 'Vogels 3', png: png),
-        PinShortcutResult.updated,
-      );
-      expect(calls.first.arguments, {
-        'id': 'club-12',
-        'label': 'Vogels 3',
-        'png': png,
-      });
+      final native = _FakeNative();
+      await const AppIconService().apply('ClubIcon-12');
+      expect(native.sets, ['ClubIcon-12']);
     });
 
-    test('andere platformen: geen kanaal en geen icoon', () async {
-      final calls = _fakeNative();
+    test('apply: alleen wisselen als het nodig is', () async {
+      final native = _FakeNative(current: 'ClubIcon-12');
+      const service = AppIconService();
+      await service.apply('ClubIcon-12');
+      expect(native.sets, isEmpty);
+      await service.apply('ClubIcon-13');
+      await service.apply(null);
+      // Niet in de build → standaardicoon (staat al).
+      await service.apply('ClubIcon-99');
+      expect(native.sets, ['ClubIcon-13', null]);
+    });
+
+    test('andere platformen: geen kanaal', () async {
+      final native = _FakeNative();
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       expect(await const AppIconService().clubIcon(12), isNull);
-      expect(calls, isEmpty);
+      await const AppIconService().apply('ClubIcon-12');
+      expect(native.calls, isEmpty);
     });
   });
 
-  group('ClubLogoRepository', () {
-    test('logo uit /app-icons, zonder SVG, één keer opgehaald', () async {
-      final http = FakeHttpAdapter()
-        ..on('GET /app-icons', 200, {
-          'data': [
-            {'club_id': 12, 'logo_url': 'https://assistje.nl/storage/12.png'},
-            {'club_id': 13, 'logo_url': 'https://assistje.nl/storage/13.SVG'},
-            {'club_id': 14, 'logo_url': null},
-          ],
-        });
-      final dio = Dio(BaseOptions(baseUrl: 'https://assistje.nl/api/v1/'))
-        ..httpClientAdapter = http;
-      final repo = ClubLogoRepository(ApiClient(dio), dio);
+  group('appIconSyncProvider', () {
+    setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS);
+    tearDown(() => debugDefaultTargetPlatformOverride = null);
 
-      expect(await repo.logoUrl(12), 'https://assistje.nl/storage/12.png');
-      expect(await repo.logoUrl(13), isNull);
-      expect(await repo.logoUrl(14), isNull);
-      expect(await repo.logoUrl(99), isNull);
-      expect(http.requestsTo('GET /app-icons'), hasLength(1));
-    });
+    late _FakeNative native;
+    late Completer<Me?> me;
 
-    test('API-fout: null, en later opnieuw proberen', () async {
-      final http = FakeHttpAdapter()..on('GET /app-icons', 500);
-      final dio = Dio(BaseOptions(baseUrl: 'https://assistje.nl/api/v1/'))
-        ..httpClientAdapter = http;
-      final repo = ClubLogoRepository(ApiClient(dio), dio);
-
-      expect(await repo.logoUrl(12), isNull);
-      http.on('GET /app-icons', 200, {
-        'data': [
-          {'club_id': 12, 'logo_url': 'https://assistje.nl/storage/12.png'},
+    Future<ProviderContainer> start({
+      AuthStatus auth = AuthStatus.signedIn,
+      Map<String, Object> prefs = const {},
+      String? current,
+      bool meLoaded = true,
+      List<Map<String, dynamic>>? teams,
+    }) async {
+      SharedPreferences.setMockInitialValues(prefs);
+      final shared = await SharedPreferences.getInstance();
+      native = _FakeNative(current: current);
+      me = Completer<Me?>();
+      if (meLoaded) {
+        me.complete(_me(teams ?? [_membership(teamId: 3, clubId: 12)]));
+      }
+      final container = ProviderContainer(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(shared),
+          authControllerProvider.overrideWith(() => _FakeAuth(auth)),
+          meProvider.overrideWith((ref) => me.future),
         ],
-      });
-      expect(await repo.logoUrl(12), 'https://assistje.nl/storage/12.png');
+      );
+      addTearDown(container.dispose);
+      // Zoals `AssistjeApp`.
+      container.listen(appIconSyncProvider, (_, _) {});
+      await _settle();
+      return container;
+    }
+
+    test('ingelogd: het wapen van de club van het team', () async {
+      await start();
+      expect(native.sets, ['ClubIcon-12']);
+    });
+
+    test('staat al: geen wissel (geen iOS-melding)', () async {
+      await start(current: 'ClubIcon-12');
+      expect(native.sets, isEmpty);
+    });
+
+    test('koude start: niets zolang inloggen of /me nog loopt', () async {
+      await start(auth: AuthStatus.unknown);
+      expect(native.calls, isEmpty);
+
+      await start(meLoaded: false, current: 'ClubIcon-12');
+      expect(native.calls, isEmpty);
+      me.complete(_me([_membership(teamId: 3, clubId: 12)]));
+      await _settle();
+      expect(native.sets, isEmpty);
+    });
+
+    test('teamwissel: het wapen van de nieuwe club', () async {
+      final container = await start(
+        teams: [
+          _membership(teamId: 3, clubId: 12),
+          _membership(teamId: 9, clubId: 13),
+        ],
+      );
+      await container.read(currentTeamIdProvider.notifier).select(9);
+      await _settle();
+      expect(native.sets, ['ClubIcon-12', 'ClubIcon-13']);
+    });
+
+    test('team zonder club: standaardicoon', () async {
+      await start(current: 'ClubIcon-12', teams: [_membership(teamId: 3)]);
+      expect(native.sets, [null]);
+    });
+
+    test('uitloggen: terug naar het standaardicoon', () async {
+      final container = await start();
+      (container.read(authControllerProvider.notifier) as _FakeAuth).set(
+        AuthStatus.signedOut,
+      );
+      await _settle();
+      expect(native.sets, ['ClubIcon-12', null]);
+    });
+
+    test('schakelaar uit: standaardicoon, en weer aan: wapen', () async {
+      final container = await start(
+        prefs: {ClubAppIconEnabledNotifier.storageKey: false},
+        current: 'ClubIcon-12',
+      );
+      expect(native.sets, [null]);
+      await container
+          .read(clubAppIconEnabledProvider.notifier)
+          .set(enabled: true);
+      await _settle();
+      expect(native.sets, [null, 'ClubIcon-12']);
     });
   });
 
-  group('AppIconCard (iOS)', () {
-    final ios = TargetPlatformVariant.only(TargetPlatform.iOS);
-
-    testWidgets('aanzetten zet het clubicoon, uitzetten het standaardicoon', (
-      tester,
-    ) async {
-      final calls = _fakeNative(mode: 'alternate');
-      await _pumpCard(tester, _membership(clubId: 12));
-
-      expect(find.text('App-icoon'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('profile-app-icon-switch')));
+  group('AppIconCard', () {
+    Future<SharedPreferences> pumpCard(
+      WidgetTester tester, {
+      int? clubId = 12,
+    }) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            currentMembershipProvider.overrideWithValue(
+              TeamMembership.fromJson(_membership(teamId: 3, clubId: clubId)),
+            ),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light('#006837'),
+            locale: const Locale('nl'),
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: const Scaffold(body: AppIconCard()),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
-      expect(calls.last.method, 'status');
-      expect(calls.where((c) => c.method == 'set').single.arguments, {
-        'name': 'ClubIcon-12',
-      });
-
-      await tester.tap(find.byKey(const ValueKey('profile-app-icon-switch')));
-      await tester.pumpAndSettle();
-      expect(calls.where((c) => c.method == 'set').last.arguments, {
-        'name': null,
-      });
-    }, variant: ios);
-
-    testWidgets('geen club of wapen niet in de build: geen kaart', (
-      tester,
-    ) async {
-      _fakeNative(mode: 'alternate');
-      await _pumpCard(tester, _membership());
-      expect(find.byKey(const ValueKey('profile-app-icon')), findsNothing);
-
-      await _pumpCard(tester, _membership(clubId: 99));
-      expect(find.byKey(const ValueKey('profile-app-icon')), findsNothing);
-    }, variant: ios);
-  });
-
-  group('AppIconCard (Android)', () {
-    final android = TargetPlatformVariant.only(TargetPlatform.android);
-    const logo = 'https://assistje.nl/storage/clubs/12.png';
-
-    testWidgets('logo-voorbeeld en knop zet de snelkoppeling neer', (
-      tester,
-    ) async {
-      final calls = _fakeNative(mode: 'shortcut');
-      final logos = _FakeLogos(const {12: logo});
-      await _pumpCard(tester, _membership(clubId: 12), logos: logos);
-
-      expect(
-        find.byKey(const ValueKey('profile-app-icon-switch')),
-        findsNothing,
-      );
-      expect(
-        find.textContaining('Het gewone icoon blijft in je apps staan'),
-        findsOneWidget,
-      );
-      final preview = tester.widget<Image>(
-        find.byKey(const ValueKey('profile-app-icon-logo')),
-      );
-      expect((preview.image as NetworkImage).url, logo);
-
-      await tester.tap(find.text('Zet op beginscherm'));
-      await tester.pumpAndSettle();
-      expect(logos.downloads, [logo]);
-      final pin = calls.singleWhere((c) => c.method == 'pinShortcut');
-      expect(pin.arguments, {
-        'id': 'club-12',
-        'label': 'Vogels 3',
-        'png': Uint8List.fromList([1, 2, 3]),
-      });
-      expect(find.text('Bijna klaar'), findsOneWidget);
-      // Staat er nu: de knop werkt hem voortaan bij.
-      expect(find.text('Icoon bijwerken'), findsOneWidget);
-      await _dismissToast(tester);
-    }, variant: android);
-
-    testWidgets('staat er al: bijwerken', (tester) async {
-      _fakeNative(mode: 'shortcut', pinned: {'club-12'});
-      await _pumpCard(
-        tester,
-        _membership(clubId: 12),
-        logos: _FakeLogos(const {12: logo}),
-      );
-
-      await tester.tap(find.text('Icoon bijwerken'));
-      await tester.pumpAndSettle();
-      expect(find.text('Icoon op je beginscherm bijgewerkt'), findsOneWidget);
-      await _dismissToast(tester);
-    }, variant: android);
-
-    testWidgets('mislukt: fouttoast', (tester) async {
-      _fakeNative(
-        mode: 'shortcut',
-        pinError: PlatformException(code: 'bad_image'),
-      );
-      await _pumpCard(
-        tester,
-        _membership(clubId: 12),
-        logos: _FakeLogos(const {12: logo}),
-      );
-
-      await tester.tap(find.text('Zet op beginscherm'));
-      await tester.pumpAndSettle();
-      expect(find.text('Icoon op beginscherm zetten mislukt'), findsOneWidget);
-      expect(find.text('Zet op beginscherm'), findsOneWidget);
-      await _dismissToast(tester);
-    }, variant: android);
+      return prefs;
+    }
 
     testWidgets(
-      'geen logo, geen club of launcher kan het niet: geen kaart',
+      'standaard aan; uitzetten wordt bewaard',
       (tester) async {
-        _fakeNative(mode: 'shortcut');
-        await _pumpCard(tester, _membership(clubId: 12));
+        _FakeNative();
+        final prefs = await pumpCard(tester);
+
+        expect(find.text('App-icoon'), findsOneWidget);
+        final toggle = find.byKey(const ValueKey('profile-app-icon-switch'));
+        expect(tester.widget<Switch>(toggle).value, isTrue);
+
+        await tester.tap(toggle);
+        await tester.pumpAndSettle();
+        expect(tester.widget<Switch>(toggle).value, isFalse);
+        expect(prefs.getBool(ClubAppIconEnabledNotifier.storageKey), isFalse);
+      },
+      variant: TargetPlatformVariant.only(TargetPlatform.android),
+    );
+
+    testWidgets(
+      'geen club of wapen niet in de build: geen kaart',
+      (tester) async {
+        _FakeNative();
+        await pumpCard(tester, clubId: null);
         expect(find.byKey(const ValueKey('profile-app-icon')), findsNothing);
 
-        await _pumpCard(
-          tester,
-          _membership(),
-          logos: _FakeLogos(const {12: logo}),
-        );
-        expect(find.byKey(const ValueKey('profile-app-icon')), findsNothing);
-
-        _fakeNative(mode: 'shortcut', supported: false);
-        await _pumpCard(
-          tester,
-          _membership(clubId: 12),
-          logos: _FakeLogos(const {12: logo}),
-        );
+        await pumpCard(tester, clubId: 99);
         expect(find.byKey(const ValueKey('profile-app-icon')), findsNothing);
       },
-      variant: android,
+      variant: TargetPlatformVariant.only(TargetPlatform.iOS),
     );
   });
 }

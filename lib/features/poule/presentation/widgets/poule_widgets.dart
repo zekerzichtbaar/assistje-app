@@ -270,10 +270,8 @@ class _MatchRow extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Flexible(
-                      child: Text(
+                      child: _TeamName(
                         match.home,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.end,
                         style: side(own: match.homeIsOwn),
                       ),
@@ -307,10 +305,9 @@ class _MatchRow extends StatelessWidget {
                     PouleLogo(team: match.away, url: match.awayLogo),
                     const SizedBox(width: 8),
                     Flexible(
-                      child: Text(
+                      child: _TeamName(
                         match.away,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
                         style: side(own: match.awayIsOwn),
                       ),
                     ),
@@ -319,7 +316,7 @@ class _MatchRow extends StatelessWidget {
               ),
             ],
           ),
-          if (note != null && note.isNotEmpty && note != 'Gepland')
+          if (note != null && !isDefaultPouleStatus(note))
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(note, style: TextStyle(fontSize: 12, color: t.muted)),
@@ -333,6 +330,70 @@ class _MatchRow extends StatelessWidget {
       onTap: () => onOpenEvent(eventId),
       borderRadius: BorderRadius.circular(AssistjeTokens.radius2xl),
       child: row,
+    );
+  }
+}
+
+/// De status die Sportlink bij elke nog te spelen wedstrijd meegeeft. In het
+/// programma is dat de standaard en zegt het niets; alleen een afwijking
+/// (Afgelast, Gestaakt, …) hoort onder de aanvangstijd.
+bool isDefaultPouleStatus(String status) =>
+    switch (status.trim().toLowerCase()) {
+      '' || 'gepland' || 'te spelen' => true,
+      _ => false,
+    };
+
+/// Een teamnaam die alleen op spaties afbreekt ("Hooglanderveen 2" nooit als
+/// "Hooglanderve-en 2"): past het langste woord niet in de breedte, dan
+/// krimpt de letter tot [_minFontSize]; pas daarna kapt hij af met "…".
+class _TeamName extends StatelessWidget {
+  const _TeamName(this.name, {required this.style, required this.textAlign});
+
+  static const _minFontSize = 11.0;
+
+  final String name;
+  final TextStyle style;
+  final TextAlign textAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    final scaler = MediaQuery.textScalerOf(context);
+    final direction = Directionality.of(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final base = style.fontSize ?? 14;
+        var size = base;
+        if (constraints.hasBoundedWidth) {
+          double widest(double fontSize) {
+            var max = 0.0;
+            for (final word in name.split(RegExp(r'\s+'))) {
+              final painter = TextPainter(
+                text: TextSpan(
+                  text: word,
+                  style: style.copyWith(fontSize: fontSize),
+                ),
+                textDirection: direction,
+                textScaler: scaler,
+                maxLines: 1,
+              )..layout();
+              if (painter.width > max) max = painter.width;
+              painter.dispose();
+            }
+            return max;
+          }
+
+          while (size > _minFontSize && widest(size) > constraints.maxWidth) {
+            size -= 0.5;
+          }
+        }
+        return Text(
+          name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: textAlign,
+          style: style.copyWith(fontSize: size),
+        );
+      },
     );
   }
 }

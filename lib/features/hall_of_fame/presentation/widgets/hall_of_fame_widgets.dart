@@ -65,7 +65,7 @@ class HofCard extends StatelessWidget {
 }
 
 /// Een ranglijst (`Podium` in de PWA): plek, avatar, naam en de waarde.
-class HofPodium extends StatelessWidget {
+class HofPodium extends StatefulWidget {
   const HofPodium({
     super.key,
     required this.title,
@@ -77,6 +77,9 @@ class HofPodium extends StatelessWidget {
     this.subvalueOf,
   });
 
+  /// Zoveel plekken staan er ingeklapt; de rest achter "Alle N tonen".
+  static const previewCount = 3;
+
   final String title;
   final IconData icon;
   final List<HofLeader> rows;
@@ -86,12 +89,32 @@ class HofPodium extends StatelessWidget {
   final OpenPlayer onOpenPlayer;
 
   @override
+  State<HofPodium> createState() => _HofPodiumState();
+}
+
+/// Ingeklapt: alleen het podium (top 3). Zo past de hele Ranking op een paar
+/// schermen in plaats van een lange lijst per ranglijst; uitklappen kan per
+/// kaart, in place.
+class _HofPodiumState extends State<HofPodium> {
+  bool _expanded = false;
+
+  String get _keyBase {
+    final key = widget.key;
+    return key is ValueKey<String> ? key.value : 'hof-podium';
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
+    final rows = widget.rows;
+    final collapsible = rows.length > HofPodium.previewCount;
+    final visible = collapsible && !_expanded
+        ? rows.take(HofPodium.previewCount).toList()
+        : rows;
     return HofCard(
-      title: title,
-      icon: icon,
+      title: widget.title,
+      icon: widget.icon,
       iconColor: StatusColors.amber500,
       child: rows.isEmpty
           ? Padding(
@@ -102,22 +125,91 @@ class HofPodium extends StatelessWidget {
               ),
             )
           : Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Column(
-                children: [
-                  for (var i = 0; i < rows.length; i++)
-                    _PodiumRow(
-                      key: ValueKey('hof-leader-${rows[i].playerId}'),
-                      rank: i + 1,
-                      row: rows[i],
-                      value: valueOf(rows[i]),
-                      unit: unit,
-                      subvalue: subvalueOf?.call(rows[i]),
-                      onTap: () => onOpenPlayer(rows[i].playerId),
-                    ),
-                ],
+              padding: EdgeInsets.only(bottom: collapsible ? 0 : 8),
+              child: AnimatedSize(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.topCenter,
+                child: Column(
+                  children: [
+                    for (var i = 0; i < visible.length; i++)
+                      _PodiumRow(
+                        key: ValueKey('hof-leader-${visible[i].playerId}'),
+                        rank: i + 1,
+                        row: visible[i],
+                        value: widget.valueOf(visible[i]),
+                        unit: widget.unit,
+                        subvalue: widget.subvalueOf?.call(visible[i]),
+                        onTap: () => widget.onOpenPlayer(visible[i].playerId),
+                      ),
+                    if (collapsible)
+                      _ExpandToggle(
+                        key: ValueKey('$_keyBase-toggle'),
+                        expanded: _expanded,
+                        label: _expanded
+                            ? l10n.hallOfFameShowLess
+                            : l10n.hallOfFameShowAll(rows.length),
+                        onTap: () {
+                          unawaited(Haptics.selection());
+                          setState(() => _expanded = !_expanded);
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
+    );
+  }
+}
+
+class _ExpandToggle extends StatelessWidget {
+  const _ExpandToggle({
+    super.key,
+    required this.expanded,
+    required this.label,
+    required this.onTap,
+  });
+
+  final bool expanded;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AssistjeTokens.of(context);
+    return Semantics(
+      button: true,
+      expanded: expanded,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          // ≥ 44 pt tikvlak.
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: t.primary,
+                ),
+              ),
+              const SizedBox(width: 6),
+              AnimatedRotation(
+                turns: expanded ? 0.5 : 0,
+                duration: const Duration(milliseconds: 220),
+                child: Icon(
+                  PhosphorIconsBold.caretDown,
+                  size: 13,
+                  color: t.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

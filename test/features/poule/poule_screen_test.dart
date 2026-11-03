@@ -66,6 +66,43 @@ void main() {
     expect(container.read(routerProvider).state.uri.path, '/events/812');
   });
 
+  testWidgets(
+    'programma: standaardstatus "Te spelen" verborgen, afwijking niet',
+    (tester) async {
+      await _open(
+        tester,
+        setup: (http) => http.on(
+          _poule,
+          200,
+          PouleFixtures.poule(
+            fixtures: [
+              {
+                'date': '2026-10-17',
+                'matches': [
+                  {
+                    ...PouleFixtures.fixture(),
+                    'home': 'Hooglanderveen 2',
+                    'status': 'Te spelen',
+                  },
+                  {
+                    ...PouleFixtures.fixture(),
+                    'time': '14:30',
+                    'status': 'Afgelast',
+                  },
+                ],
+              },
+            ],
+          ),
+        ),
+      );
+
+      await _tap(tester, find.text('Programma'));
+      expect(find.text('Hooglanderveen 2'), findsOneWidget);
+      expect(find.text('Te spelen'), findsNothing);
+      expect(find.text('Afgelast'), findsOneWidget);
+    },
+  );
+
   testWidgets('geen poulecode (404) → lege staat', (tester) async {
     await _open(
       tester,

@@ -91,4 +91,6 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    // Per club een activity-alias met het wapen (AppIconChannel.kt).
+    findProject(":club_icons")?.let { implementation(it) }
 }

@@ -24,6 +24,15 @@
       }
     }
   },
+  "statsSortPickerTitle": "Sorteren op",
+  "statsSortButton": "Sorteren: {label}",
+  "@statsSortButton": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
   "statsSortOverview": "Overzicht",
   "statsSortAttendanceMatch": "Aanwez. wedstr.",
   "statsSortAttendanceTraining": "Aanwez. training",
@@ -111,6 +120,25 @@
   "hallOfFameTabMilestones": "Mijlpalen",
   "hallOfFameTabTraining": "Trainen",
   "hallOfFameWholeSeason": "Heel seizoen",
+  "hallOfFamePeriodPickerTitle": "Kies periode",
+  "hallOfFamePeriodButton": "Periode: {label}",
+  "@hallOfFamePeriodButton": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "hallOfFameShowAll": "Alle {count} tonen",
+  "@hallOfFameShowAll": {
+    "description": "Ranglijst ingeklapt tot de top 3: knop om alles te tonen",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hallOfFameShowLess": "Minder tonen",
   "hallOfFamePeriodClosed": "{name} (afgesloten)",
   "@hallOfFamePeriodClosed": {
     "placeholders": {

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Voorgrond van het adaptieve app-icoon: het Assistje-mascotje (bron:
-     vogels3 public/img/assistje-logo.svg), gecentreerd binnen de veilige zone
-     van 66 dp. Achtergrond: @color/ic_launcher_background (wit). -->
+     vogels3 public/img/assistje-logo.svg, zwarte contour zoals op
+     assistje.nl), gecentreerd op het grasveld van
+     @drawable/ic_launcher_background. Hoogte 0,68 × het zichtbare vlak van
+     72 dp, als het iOS-icoon (AppIconArt in test/store/store_frames.dart). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <group
-        android:translateX="34.374"
-        android:translateY="29.200"
-        android:scaleX="0.62"
-        android:scaleY="0.62">
+        android:translateX="34.599"
+        android:translateY="29.519"
+        android:scaleX="0.6128"
+        android:scaleY="0.6128">
         <path
             android:fillColor="#FFFFFF"
             android:pathData="M53.75 66.25L55 56.25L56.25 45L59.375 43.75L62.5 38.125L59.375 31.875L55 31.25L52.5 23.125L45.625 16.875H30H20L13.125 20.625L8.75 29.375L3.75 31.875L1.25 38.125L3.125 43.75L7.34375 46.7188L6.875 52.5L8.75 63.125L13.125 71.25L21.25 77.5L32.5 79.375L44.375 75.625L53.75 66.25Z" />

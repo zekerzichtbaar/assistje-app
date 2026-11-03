@@ -207,21 +207,24 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: SingleChildScrollView(
+                child: AppOptionPicker<SettingsTab>(
                   key: const ValueKey('settings-tabs'),
-                  scrollDirection: Axis.horizontal,
-                  child: AppTabPills<SettingsTab>(
-                    darkTrack: true,
-                    selected: _tab,
-                    onChanged: (tab) {
-                      unawaited(Haptics.selection());
-                      setState(() => _tab = tab);
-                    },
-                    tabs: [
-                      for (final tab in SettingsTab.values)
-                        AppTabPill(value: tab, label: _tabLabel(tab)),
-                    ],
-                  ),
+                  icon: _tabIcon(_tab),
+                  buttonLabel: _tabLabel(_tab),
+                  sheetTitle: widget.title,
+                  selected: _tab,
+                  onSelected: (tab) {
+                    unawaited(Haptics.selection());
+                    setState(() => _tab = tab);
+                  },
+                  options: [
+                    for (final tab in SettingsTab.values)
+                      AppPickerOption(
+                        value: tab,
+                        label: _tabLabel(tab),
+                        key: ValueKey('settings-tab-option-${tab.name}'),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -230,6 +233,14 @@ class _SettingsViewState extends ConsumerState<SettingsView> {
       ),
     );
   }
+
+  static IconData _tabIcon(SettingsTab tab) => switch (tab) {
+    SettingsTab.team => PhosphorIconsDuotone.usersThree,
+    SettingsTab.season => PhosphorIconsDuotone.calendarBlank,
+    SettingsTab.rsvp => PhosphorIconsDuotone.alarm,
+    SettingsTab.features => PhosphorIconsDuotone.toggleRight,
+    SettingsTab.types => PhosphorIconsDuotone.broom,
+  };
 
   String _tabLabel(SettingsTab tab) => switch (tab) {
     SettingsTab.team => _l10n.settingsTabTeam,

@@ -1,0 +1,166 @@
+# Assistje iOS → TestFlight / App Store. Zie README → "Release (iOS)".
+#
+#   cd ios && bundle exec fastlane beta                # bouwen + TestFlight
+#   cd ios && bundle exec fastlane release             # bouwen + App Store (niet indienen)
+#   cd ios && bundle exec fastlane release submit:true # … en indienen ter beoordeling
+#   cd ios && bundle exec fastlane images              # storebeelden (nl-NL)
+#
+# Opties (alle lanes): icons:false (sla tool/app_icons.dart over),
+#                      build_number:<n> (anders laatste TestFlight-build + 1).
+
+opt_out_usage
+default_platform(:ios)
+
+ROOT = File.expand_path("../..", __dir__)
+IOS = File.join(ROOT, "ios")
+BUILD_DIR = File.join(ROOT, "build", "fastlane")
+
+platform :ios do
+  desc "Bouw een App Store-build en zet hem op TestFlight"
+  lane :beta do |options|
+    build(options)
+    upload_to_testflight(
+      api_key: asc_api_key,
+      ipa: lane_context[SharedValues::IPA_OUTPUT_PATH],
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Bouw een App Store-build en zet hem bij de versie in App Store Connect"
+  desc "Met submit:true wordt de versie ook ingediend ter beoordeling."
+  lane :release do |options|
+    build(options)
+    submit = options[:submit].to_s == "true"
+    upload_to_app_store(
+      api_key: asc_api_key,
+      ipa: lane_context[SharedValues::IPA_OUTPUT_PATH],
+      skip_metadata: true,
+      skip_screenshots: true,
+      run_precheck_before_submit: false,
+      force: true, # geen HTML-preview/bevestiging
+      submit_for_review: submit,
+      automatic_release: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false
+      }
+    )
+  end
+
+  desc "Zet de screenshots uit docs/store (iPhone 6.9\", 6.3\", iPad 13\") bij de"
+  desc "versie in App Store Connect (nl-NL). Vervangt de huidige screenshots;"
+  desc "geen build, geen tekst, niet indienen. Genereren: docs/store/README.md."
+  lane :images do
+    %w[ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH].each do |key|
+      UI.user_error!("#{key} ontbreekt — zie ios/fastlane/.env.example") if ENV[key].to_s.empty?
+    end
+    store = File.join(ROOT, "docs", "store", "ios")
+    root = File.join(BUILD_DIR, "screenshots")
+    dir = File.join(root, "nl-NL")
+    FileUtils.rm_rf(root)
+    FileUtils.mkdir_p(dir)
+    # deliver herkent het toestel aan de afmetingen; de naam houdt de volgorde.
+    %w[iphone-6.9 iphone-6.3 ipad-13].each do |device|
+      shots = Dir[File.join(store, device, "*.png")].sort
+      UI.user_error!("Geen screenshots in #{store}/#{device}") if shots.empty?
+      shots.each { |f| FileUtils.cp(f, File.join(dir, "#{device}-#{File.basename(f)}")) }
+    end
+
+    version, = pubspec_version
+    upload_to_app_store(
+      api_key: asc_api_key,
+      app_version: version,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: false,
+      screenshots_path: root,
+      overwrite_screenshots: true,
+      run_precheck_before_submit: false,
+      force: true,
+      submit_for_review: false
+    )
+  end
+
+  desc "Alleen bouwen (IPA in build/fastlane/), zonder upload"
+  lane :build do |options|
+    %w[APPLE_TEAM_ID ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH].each do |key|
+      UI.user_error!("#{key} ontbreekt — zie ios/fastlane/.env.example") if ENV[key].to_s.empty?
+    end
+    UI.user_error!("ASC_KEY_PATH bestaat niet: #{ENV['ASC_KEY_PATH']}") unless File.exist?(ENV["ASC_KEY_PATH"])
+
+    version, pubspec_build = pubspec_version
+    build_number = (options[:build_number] || next_build_number(pubspec_build)).to_i
+    UI.message("Versie #{version} (#{build_number})")
+
+    Dir.chdir(ROOT) do
+      sh("dart", "tool/l10n.dart", "--no-gen")
+      sh("flutter", "pub", "get")
+      sh("dart", "run", "tool/l10n.dart")
+      sh("dart", "run", "tool/app_icons.dart") unless options[:icons].to_s == "false"
+
+      defines = write_dart_defines("#{version}+#{build_number}")
+      # Alleen de Xcode-config genereren (Generated.xcconfig met dart-defines,
+      # versie en buildnummer); archiveren + signeren doet gym hieronder, dus
+      # --no-codesign (slaat alleen Flutters certificaatcheck over).
+      sh("flutter", "build", "ios", "--release", "--config-only", "--no-codesign",
+         "--build-name=#{version}", "--build-number=#{build_number}",
+         "--dart-define-from-file=#{defines}")
+    end
+
+    auth = [
+      "-allowProvisioningUpdates",
+      "-authenticationKeyPath", ENV["ASC_KEY_PATH"],
+      "-authenticationKeyID", ENV["ASC_KEY_ID"],
+      "-authenticationKeyIssuerID", ENV["ASC_ISSUER_ID"]
+    ].map { |a| a.shellescape }.join(" ")
+
+    # Xcode's IPA-export roept /usr/bin/rsync aan, die als "remote" weer `rsync`
+    # uit PATH start; een Homebrew-rsync (3.x) daar breekt dat ("Copy failed").
+    ENV["PATH"] = "/usr/bin:#{ENV['PATH']}"
+
+    build_app(
+      workspace: File.join(IOS, "Runner.xcworkspace"),
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      export_team_id: ENV["APPLE_TEAM_ID"],
+      export_options: { signingStyle: "automatic", teamID: ENV["APPLE_TEAM_ID"] },
+      xcargs: "#{auth} DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID'].shellescape}",
+      export_xcargs: auth,
+      output_directory: BUILD_DIR,
+      output_name: "Assistje-#{version}-#{build_number}.ipa",
+      clean: true
+    )
+  end
+end
+
+def asc_api_key
+  @asc_api_key ||= app_store_connect_api_key(
+    key_id: ENV["ASC_KEY_ID"],
+    issuer_id: ENV["ASC_ISSUER_ID"],
+    key_filepath: ENV["ASC_KEY_PATH"]
+  )
+end
+
+# Hoogste van: buildnummer in pubspec, laatste TestFlight-build + 1.
+def next_build_number(pubspec_build)
+  latest = latest_testflight_build_number(api_key: asc_api_key, initial_build_number: 0)
+  [latest.to_i + 1, pubspec_build].max
+end
+
+def pubspec_version
+  line = File.read(File.join(ROOT, "pubspec.yaml"))[/^version:\s*(\S+)/, 1]
+  UI.user_error!("Geen version: in pubspec.yaml") unless line
+  name, build = line.split("+")
+  [name, build.to_i]
+end
+
+# env/prod.json met APP_VERSION op de echte versie+build, in build/fastlane/.
+def write_dart_defines(app_version)
+  source = File.join(ROOT, ENV.fetch("DART_DEFINES_FILE", "env/prod.json"))
+  defines = JSON.parse(File.read(source)).merge("APP_VERSION" => app_version)
+  FileUtils.mkdir_p(BUILD_DIR)
+  path = File.join(BUILD_DIR, "dart_defines.json")
+  File.write(path, JSON.pretty_generate(defines))
+  path
+end

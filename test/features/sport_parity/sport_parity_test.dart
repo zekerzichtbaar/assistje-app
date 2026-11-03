@@ -169,6 +169,7 @@ void main() {
         await pumpUntilFound(tester, _key('stats-screen'));
         await tester.pumpAndSettle();
 
+        await _tap(tester, _key('stats-sort-picker'));
         final scorers = sport['tracks_scorers'] == true;
         expect(
           _key('stats-sort-goals'),

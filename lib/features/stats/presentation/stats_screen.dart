@@ -236,26 +236,24 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
       SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: SingleChildScrollView(
-            key: const ValueKey('stats-sorts'),
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final option in sorts)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: AppPill(
-                      key: ValueKey('stats-sort-${option.name}'),
-                      label: _sortLabel(l10n, profile, option),
-                      selected: option == sort,
-                      onTap: () {
-                        unawaited(Haptics.selection());
-                        setState(() => _sort = option);
-                      },
-                    ),
-                  ),
-              ],
-            ),
+          child: AppOptionPicker<StatsSort>(
+            key: const ValueKey('stats-sort-picker'),
+            icon: PhosphorIconsDuotone.sortDescending,
+            buttonLabel: l10n.statsSortButton(_sortLabel(l10n, profile, sort)),
+            sheetTitle: l10n.statsSortPickerTitle,
+            selected: sort,
+            onSelected: (option) {
+              unawaited(Haptics.selection());
+              setState(() => _sort = option);
+            },
+            options: [
+              for (final option in sorts)
+                AppPickerOption(
+                  value: option,
+                  label: _sortLabel(l10n, profile, option),
+                  key: ValueKey('stats-sort-${option.name}'),
+                ),
+            ],
           ),
         ),
       ),

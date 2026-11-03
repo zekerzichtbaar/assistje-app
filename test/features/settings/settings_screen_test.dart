@@ -43,10 +43,19 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> _tab(WidgetTester tester, String label) => _tap(
-  tester,
-  find.descendant(of: _key('settings-tabs'), matching: find.text(label)),
-);
+const _tabNames = {
+  'Team': 'team',
+  'Seizoen': 'season',
+  'Deadlines': 'rsvp',
+  'Functies': 'features',
+  'Diensten': 'types',
+};
+
+/// Opent de sectiekiezer en kiest [label].
+Future<void> _tab(WidgetTester tester, String label) async {
+  await _tap(tester, _key('settings-tabs'));
+  await _tap(tester, _key('settings-tab-option-${_tabNames[label]}'));
+}
 
 /// Laat een toast uitlopen (4 s) zodat er geen timer blijft hangen.
 Future<void> _settleToast(WidgetTester tester) async {
@@ -62,18 +71,22 @@ void main() {
     await _open(tester);
 
     expect(currentTitle(tester), 'Instellingen');
-    for (final label in [
-      'Team',
-      'Seizoen',
-      'Deadlines',
-      'Functies',
-      'Diensten',
-    ]) {
+    // De kiezer toont de huidige sectie; de sheet alle vijf.
+    expect(
+      find.descendant(of: _key('settings-tabs'), matching: find.text('Team')),
+      findsOneWidget,
+    );
+    await _tap(tester, _key('settings-tabs'));
+    for (final label in _tabNames.keys) {
       expect(
-        find.descendant(of: _key('settings-tabs'), matching: find.text(label)),
+        find.descendant(
+          of: _key('settings-tab-option-${_tabNames[label]}'),
+          matching: find.text(label),
+        ),
         findsOneWidget,
       );
     }
+    await _tap(tester, _key('settings-tab-option-team'));
     expect(
       tester.widget<TextField>(_key('settings-team-name')).controller!.text,
       'Vogels 3',

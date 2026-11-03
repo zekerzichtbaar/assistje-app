@@ -70,7 +70,8 @@ void main() {
     // Kaarten: Sam geel, Joris rood.
     expect(find.byKey(const ValueKey('stats-yellow-14')), findsOneWidget);
     expect(find.byKey(const ValueKey('stats-red-22')), findsOneWidget);
-    // Sorteerkeuzes volgen de sport.
+    // Sorteerkeuzes volgen de sport (in de sheet achter de sorteerknop).
+    await _tap(tester, find.byKey(const ValueKey('stats-sort-picker')));
     expect(find.byKey(const ValueKey('stats-sort-goals')), findsOneWidget);
     expect(
       find.byKey(const ValueKey('stats-sort-flagMinutes')),
@@ -107,6 +108,7 @@ void main() {
     expect(_tile('matches', 14), findsOneWidget);
     expect(find.byKey(const ValueKey('stats-yellow-14')), findsNothing);
     expect(find.byKey(const ValueKey('stats-red-22')), findsNothing);
+    await _tap(tester, find.byKey(const ValueKey('stats-sort-picker')));
     expect(find.byKey(const ValueKey('stats-sort-goals')), findsNothing);
     expect(find.byKey(const ValueKey('stats-sort-minutes')), findsNothing);
     expect(
@@ -136,6 +138,7 @@ void main() {
         tester.getTopLeft(find.byKey(ValueKey('stats-row-$id'))).dy;
     expect(top(14), lessThan(top(22)));
 
+    await _tap(tester, find.byKey(const ValueKey('stats-sort-picker')));
     await _tap(tester, find.byKey(const ValueKey('stats-sort-assists')));
 
     expect(top(22), lessThan(top(14)));
@@ -171,6 +174,7 @@ void main() {
 
     double top(int id) =>
         tester.getTopLeft(find.byKey(ValueKey('stats-row-$id'))).dy;
+    await _tap(tester, find.byKey(const ValueKey('stats-sort-picker')));
     final sort = find.byKey(const ValueKey('stats-sort-minutesPerMatch'));
     expect(find.text('Min. per wedstrijd'), findsOneWidget);
     await _tap(tester, sort);

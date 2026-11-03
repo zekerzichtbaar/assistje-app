@@ -1,0 +1,3 @@
+# Waarden komen uit ios/fastlane/.env (zie .env.example).
+app_identifier(ENV.fetch("APP_IDENTIFIER", "nl.assistje.app"))
+team_id(ENV["APPLE_TEAM_ID"]) if ENV["APPLE_TEAM_ID"]

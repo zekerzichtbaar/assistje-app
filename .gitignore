@@ -51,3 +51,19 @@ app.*.map.json
 
 # Clubwapens als app-icoon: gegenereerd door tool/app_icons.dart (voor elke release).
 ios/Runner/Assets.xcassets/ClubIcon-*.appiconset/
+android/club_icons/
+
+# fastlane (ios/fastlane): geheimen en output
+ios/fastlane/.env
+ios/fastlane/report.xml
+ios/fastlane/README.md
+ios/vendor/
+ios/.bundle/
+*.p8
+
+# fastlane (android/fastlane): geheimen en output
+android/fastlane/.env
+android/fastlane/report.xml
+android/fastlane/README.md
+android/vendor/
+android/.bundle/

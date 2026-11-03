@@ -307,38 +307,35 @@ class _HallOfFameScreenState extends ConsumerState<HallOfFameScreen> {
 
     return [
       if (hof.periods.isNotEmpty)
-        SingleChildScrollView(
-          key: const ValueKey('hof-periods'),
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: AppPill(
-                  key: const ValueKey('hof-period-all'),
-                  label: l10n.hallOfFameWholeSeason,
-                  selected: period == null,
-                  onTap: state.switching
-                      ? null
-                      : () => _selectPeriod(teamId, null),
-                ),
-              ),
-              for (final p in hof.periods)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: AppPill(
-                    key: ValueKey('hof-period-${p.id}'),
-                    label: p.isClosed
-                        ? l10n.hallOfFamePeriodClosed(p.name)
-                        : p.name,
-                    selected: p.id == period?.id,
-                    onTap: state.switching
-                        ? null
-                        : () => _selectPeriod(teamId, p.id),
-                  ),
-                ),
-            ],
+        AppOptionPicker<int?>(
+          key: const ValueKey('hof-period-picker'),
+          icon: PhosphorIconsDuotone.flagCheckered,
+          buttonLabel: l10n.hallOfFamePeriodButton(
+            period == null
+                ? l10n.hallOfFameWholeSeason
+                : (period.isClosed
+                      ? l10n.hallOfFamePeriodClosed(period.name)
+                      : period.name),
           ),
+          sheetTitle: l10n.hallOfFamePeriodPickerTitle,
+          enabled: !state.switching,
+          selected: period?.id,
+          onSelected: (id) => _selectPeriod(teamId, id),
+          options: [
+            AppPickerOption(
+              value: null,
+              label: l10n.hallOfFameWholeSeason,
+              key: const ValueKey('hof-period-all'),
+            ),
+            for (final p in hof.periods)
+              AppPickerOption(
+                value: p.id,
+                label: p.isClosed
+                    ? l10n.hallOfFamePeriodClosed(p.name)
+                    : p.name,
+                key: ValueKey('hof-period-${p.id}'),
+              ),
+          ],
         ),
       if (seasonTitles.isNotEmpty)
         HofTitlesCard(

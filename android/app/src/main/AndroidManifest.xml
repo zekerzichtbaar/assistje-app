@@ -38,6 +38,10 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- De launcher-ingang voor debug/profile: de Flutter-tool zoekt een
+                 echte <activity> met MAIN/LAUNCHER (flutter run/test). De
+                 release-build haalt hem weg en gebruikt de alias DefaultIcon
+                 hieronder (src/release/AndroidManifest.xml). -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -74,6 +78,24 @@
                 <data android:pathPrefix="/aanmelden/" />
             </intent-filter>
         </activity>
+        <!-- De launcher-ingang van de release-build. Een alias, zodat het
+             app-icoon kan wisselen: de gegenereerde module android/club_icons
+             (tool/app_icons.dart) voegt per club een uitgeschakelde alias
+             ClubIcon<clubId> toe met het clubwapen; AppIconChannel.kt zet er
+             één aan en deze uit. Hier uit; src/release zet hem aan (en haalt
+             de ingang van MainActivity weg). Moet ná MainActivity staan
+             (targetActivity). -->
+        <activity-alias
+            android:name=".DefaultIcon"
+            android:targetActivity=".MainActivity"
+            android:icon="@mipmap/ic_launcher"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
         <!-- FCM-meldingen op de achtergrond in hetzelfde kanaal als de
              voorgrondmeldingen (lib/core/push/local_notifier.dart,
              pushChannelId). -->

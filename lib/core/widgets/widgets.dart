@@ -5,6 +5,7 @@ export 'app_avatar.dart';
 export 'app_buttons.dart';
 export 'app_card.dart';
 export 'app_dialog.dart';
+export 'app_option_picker.dart';
 export 'app_pickers.dart';
 export 'app_pill.dart';
 export 'app_refresh.dart';

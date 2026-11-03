@@ -1,38 +1,33 @@
 package nl.assistje.app
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
-import androidx.core.content.pm.ShortcutInfoCompat
-import androidx.core.content.pm.ShortcutManagerCompat
-import androidx.core.graphics.drawable.IconCompat
+import android.content.pm.PackageManager
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import kotlin.math.sqrt
 
 /**
- * Het clubwapen op het beginscherm (`nl.assistje.app/app_icon`, Dart:
- * `lib/core/app_icon/app_icon_service.dart`).
+ * Het app-icoon wisselen tussen het standaardicoon en een clubwapen
+ * (`nl.assistje.app/app_icon`, Dart: `lib/core/app_icon/app_icon_service.dart`).
  *
- * iOS wisselt het app-icoon zelf (alternatieve iconen in de build,
- * AppDelegate.swift). Op Android kan dat alleen met een `activity-alias` per
- * icoon in de manifest: voor ~4100 clubs onwerkbaar, en een wissel herstart de
- * app en haalt bestaande snelkoppelingen weg. Daarom hier een vastgezette
- * snelkoppeling (pinned shortcut) met het clublogo, gemaakt uit het logo dat
- * de app downloadt: er zit niets in de build, dus het werkt voor elke club. Het
- * gewone icoon blijft in de app-lade staan.
+ * Android kent alleen de iconen van de launcher-ingangen in de manifest. Elk
+ * icoon is daarom een `activity-alias` naar [MainActivity]: `DefaultIcon` en
+ * per club een uitgeschakelde `ClubIcon<clubId>` (gegenereerde module
+ * `android/club_icons`, `tool/app_icons.dart`). In de release-build is
+ * `DefaultIcon` de launcher-ingang (src/release/AndroidManifest.xml) en staat
+ * er precies één alias aan. In debug/profile blijft `MainActivity` zelf de
+ * ingang (de Flutter-tool heeft die nodig) en komt een clubicoon ernaast.
+ * [MainActivity] zelf wordt nooit uitgezet: dan vallen alle aliassen weg.
  *
- * - `status {name}` → `{supported, current, available, mode: "shortcut"}`;
- *   `current` is [name] als die snelkoppeling al op het beginscherm staat.
- * - `pinShortcut {id, label, png}` → `"requested"` (de launcher vraagt de
- *   gebruiker om bevestiging) of `"updated"` (stond er al; nieuw logo).
- * - `set` (iOS) bestaat hier niet.
+ * Een wissel terwijl de app op de voorgrond staat kan hem op sommige
+ * toestellen afsluiten; `set` onthoudt daarom alleen het nieuwe icoon en
+ * [applyPending] (vanuit [MainActivity.onStop]) voert hem uit.
+ *
+ * - `status {name?}` → `{supported, current, available}`; `current` is het
+ *   icoon dat staat (of klaarstaat), `null` = standaardicoon.
+ * - `set {name}` → `null`; `name: null` = standaardicoon.
  */
 class AppIconChannel(private val context: Context) : MethodChannel.MethodCallHandler {
     fun register(messenger: BinaryMessenger) {
@@ -45,97 +40,94 @@ class AppIconChannel(private val context: Context) : MethodChannel.MethodCallHan
                 val name = call.argument<String>("name")
                 result.success(
                     mapOf(
-                        "supported" to ShortcutManagerCompat.isRequestPinShortcutSupported(context),
-                        "current" to name?.takeIf { isPinned(it) },
-                        "available" to true,
-                        "mode" to "shortcut",
+                        "supported" to true,
+                        "current" to currentName(),
+                        "available" to (name != null && exists(aliasFor(name))),
                     ),
                 )
             }
-            "pinShortcut" -> pinShortcut(call, result)
+            "set" -> {
+                val name = call.argument<String>("name")
+                if (name != null && !exists(aliasFor(name))) {
+                    result.error("unknown_icon", "Icoon $name zit niet in deze build.", null)
+                    return
+                }
+                pending = if (name == enabledClubName()) null else Target(name)
+                result.success(null)
+            }
             else -> result.notImplemented()
         }
     }
 
-    private fun pinShortcut(call: MethodCall, result: MethodChannel.Result) {
-        val id = call.argument<String>("id")
-        val label = call.argument<String>("label")
-        val png = call.argument<ByteArray>("png")
-        if (id.isNullOrEmpty() || label.isNullOrEmpty() || png == null) {
-            result.error("bad_args", "id, label en png zijn verplicht.", null)
-            return
+    /** Zet het klaarstaande icoon; de app staat dan op de achtergrond. */
+    fun applyPending() {
+        val target = pending ?: return
+        pending = null
+        val clubs = launcherComponents().filter { it.startsWith(CLUB_PREFIX) }
+        // Eerst de nieuwe aan, dan de rest uit: nooit zonder launcher-ingang.
+        if (target.name == null) {
+            // Manifeststand: aan in release, uit in debug/profile.
+            setState(DEFAULT_ALIAS, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT)
+            clubs.forEach { setState(it, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) }
+        } else {
+            val alias = aliasFor(target.name)
+            setState(alias, PackageManager.COMPONENT_ENABLED_STATE_ENABLED)
+            clubs.filter { it != alias }
+                .forEach { setState(it, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) }
+            setState(DEFAULT_ALIAS, PackageManager.COMPONENT_ENABLED_STATE_DISABLED)
         }
-        // PNG, JPEG, WebP en GIF; een SVG-logo laat de Dart-kant al weg.
-        val logo = BitmapFactory.decodeByteArray(png, 0, png.size)
-        if (logo == null) {
-            result.error("bad_image", "Het clublogo is geen leesbare afbeelding.", null)
-            return
-        }
+    }
 
-        val launch = Intent(context, MainActivity::class.java)
-            .setAction(Intent.ACTION_MAIN)
+    private fun setState(alias: String, state: Int) =
+        context.packageManager.setComponentEnabledSetting(
+            component(alias),
+            state,
+            PackageManager.DONT_KILL_APP,
+        )
+
+    private fun currentName(): String? = pending?.let { return it.name } ?: enabledClubName()
+
+    /** Het clubicoon dat nu aan staat, `null` = standaardicoon. */
+    private fun enabledClubName(): String? =
+        launcherComponents().firstNotNullOfOrNull(::nameFor)
+
+    /** De launcher-ingangen die nu aan staan (één binder-aanroep). */
+    private fun launcherComponents(): List<String> {
+        val intent = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_LAUNCHER)
-        val shortcut = ShortcutInfoCompat.Builder(context, id)
-            .setShortLabel(label)
-            .setLongLabel(label)
-            .setIcon(IconCompat.createWithAdaptiveBitmap(adaptiveIcon(logo)))
-            .setIntent(launch)
-            .build()
-
-        try {
-            if (isPinned(id)) {
-                // Staat er al: alleen het icoon (en de naam) bijwerken.
-                ShortcutManagerCompat.updateShortcuts(context, listOf(shortcut))
-                result.success("updated")
-            } else if (ShortcutManagerCompat.requestPinShortcut(context, shortcut, null)) {
-                result.success("requested")
-            } else {
-                result.error("unsupported", "Deze launcher kan geen snelkoppeling vastzetten.", null)
-            }
-        } catch (e: IllegalStateException) {
-            // Bijv. een vastzetverzoek terwijl de app op de achtergrond staat.
-            result.error("failed", e.message, null)
-        }
+            .setPackage(context.packageName)
+        return context.packageManager.queryIntentActivities(intent, 0)
+            .map { it.activityInfo.name }
     }
 
-    private fun isPinned(id: String): Boolean =
-        ShortcutManagerCompat.getShortcuts(context, ShortcutManagerCompat.FLAG_MATCH_PINNED)
-            .any { it.id == id }
-
-    /**
-     * Logo gecentreerd op wit, op een adaptief-icooncanvas (108 dp, hier
-     * 4 px per dp). De launcher maskeert alles buiten de veilige zone (cirkel
-     * van 66 dp), dus het logo past met zijn diagonaal in die cirkel.
-     */
-    private fun adaptiveIcon(logo: Bitmap): Bitmap {
-        val canvasSize = ICON_PX
-        val safe = canvasSize * SAFE_ZONE
-        val scale = safe / sqrt((logo.width * logo.width + logo.height * logo.height).toFloat())
-        val w = logo.width * scale
-        val h = logo.height * scale
-        val left = (canvasSize - w) / 2f
-        val top = (canvasSize - h) / 2f
-
-        val icon = Bitmap.createBitmap(canvasSize, canvasSize, Bitmap.Config.ARGB_8888)
-        Canvas(icon).apply {
-            drawColor(Color.WHITE)
-            drawBitmap(
-                logo,
-                null,
-                RectF(left, top, left + w, top + h),
-                Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG),
-            )
-        }
-        return icon
+    private fun exists(alias: String): Boolean = try {
+        context.packageManager.getActivityInfo(
+            component(alias),
+            PackageManager.MATCH_DISABLED_COMPONENTS,
+        )
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
     }
+
+    private fun component(alias: String) = ComponentName(context.packageName, alias)
 
     private companion object {
         const val NAME = "nl.assistje.app/app_icon"
+        const val DEFAULT_ALIAS = "nl.assistje.app.DefaultIcon"
+        const val CLUB_PREFIX = "nl.assistje.app.ClubIcon"
+        const val DART_PREFIX = "ClubIcon-"
 
-        /** 108 dp × 4 (xxxhdpi). */
-        const val ICON_PX = 432
+        /** Het icoon dat klaarstaat; `name == null` = standaardicoon. */
+        data class Target(val name: String?)
 
-        /** Veilige zone van een adaptief icoon: 66 van 108 dp. */
-        const val SAFE_ZONE = 66f / 108f
+        /** Overleeft een nieuwe FlutterEngine; weg als het proces stopt. */
+        var pending: Target? = null
+
+        /** `ClubIcon-12` → `nl.assistje.app.ClubIcon12`. */
+        fun aliasFor(name: String) = CLUB_PREFIX + name.removePrefix(DART_PREFIX)
+
+        fun nameFor(alias: String): String? =
+            if (alias.startsWith(CLUB_PREFIX)) DART_PREFIX + alias.removePrefix(CLUB_PREFIX) else null
     }
 }

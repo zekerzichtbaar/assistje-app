@@ -1,6 +1,12 @@
 // HIG-audit van de sheets en bevestigingsdialogen (groep B: boetes, spaarpot,
 // berichten, spelersbeheer, profiel, seizoenen, instellingen, stats,
 // teamlink, feedback, ranking). Zelfde controles als hig_audit_test.dart.
+// Getagd `a11y`: de contrastmeting leest pixels en klopt alleen met de
+// macOS-rasterisatie (op Linux meet hij randpixels van glyphs). CI draait
+// deze suite daarom in de macOS-job `a11y`; zie README → "CI".
+@Tags(['a11y'])
+library;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -230,12 +236,13 @@ final _sheets = <AuditScreen>[
     setup: (h) =>
         h.on('GET /teams/3/settings', 200, SettingsFixtures.response()),
     open: (t) async {
-      final tab = find.descendant(
-        of: find.byKey(const ValueKey('settings-tabs')),
-        matching: find.text('Diensten'),
+      final picker = find.byKey(const ValueKey('settings-tabs'));
+      if (picker.evaluate().isEmpty) return;
+      await auditTap(t, picker);
+      await auditTap(
+        t,
+        find.byKey(const ValueKey('settings-tab-option-types')),
       );
-      if (tab.evaluate().isEmpty) return;
-      await auditTap(t, tab);
       await _taps(['settings-duty-add'])(t);
     },
   ),
@@ -246,12 +253,13 @@ final _sheets = <AuditScreen>[
     setup: (h) =>
         h.on('GET /teams/3/settings', 200, SettingsFixtures.response()),
     open: (t) async {
-      final tab = find.descendant(
-        of: find.byKey(const ValueKey('settings-tabs')),
-        matching: find.text('Diensten'),
+      final picker = find.byKey(const ValueKey('settings-tabs'));
+      if (picker.evaluate().isEmpty) return;
+      await auditTap(t, picker);
+      await auditTap(
+        t,
+        find.byKey(const ValueKey('settings-tab-option-types')),
       );
-      if (tab.evaluate().isEmpty) return;
-      await auditTap(t, tab);
       await _taps(['settings-duty-12'])(t);
     },
   ),

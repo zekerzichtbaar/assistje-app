@@ -163,20 +163,19 @@ niet heeft.)
 | --- | --- | --- |
 | App-icoon | 512×512, 32-bit PNG, ≤ 1 MB | `docs/store/android/icon-512.png` |
 | Feature graphic | 1024×500, JPEG of 24-bit PNG (geen alfa) | `docs/store/android/feature-graphic-1024x500.png` |
-| Telefoon-screenshots | 2–8 stuks, 16:9 of 9:16, 320–3840 px; ≥ 4 van ≥ 1080 px voor aanbevelingen | **nog maken** (bv. agenda, eventdetail, opstelling, live, stats) |
+| Telefoon-screenshots | 2–8 stuks, 16:9 of 9:16, 320–3840 px; ≥ 4 van ≥ 1080 px voor aanbevelingen | `docs/store/android/phone/01…07-*.png` (7 × 1080×1920) |
 | Tablet-screenshots (7"/10") | optioneel, alleen als je tablets wilt aanbevelen | — |
 
-Schermafbeeldingen kun je maken met de HIG-audit (`HIG_SHOTS_DIR=… flutter
-test test/a11y/`), maar die gebruiken iOS-gedrag en nepdata: maak de echte op
-een Android-toestel met een demoteam.
+Alles wordt gegenereerd uit de echte app (Android-gedrag, demoteam). Zie
+`docs/store/README.md` voor het opnieuw maken en de ontwerpkeuzes.
 
-## Clubwapen als snelkoppeling
+## Clubwapen als app-icoon
 
-Op Android is er geen wisselbaar app-icoon (een `activity-alias` per club
-is voor ~4100 clubs onwerkbaar). De app zet in plaats daarvan op verzoek een
-**vastgezette snelkoppeling** met het clublogo op het beginscherm
-(`AppIconChannel.kt`); het gewone icoon blijft. Daar is geen toestemming of
-verklaring voor nodig. Het logo komt van `GET /api/v1/app-icons` (publiek).
+Het app-icoon wisselt automatisch naar het wapen van de club van het actieve
+team: per club een uitgeschakelde `activity-alias` met het wapen in de build
+(module `android/club_icons`, `tool/app_icons.dart`), waarvan
+`AppIconChannel.kt` er één aanzet. Daar is geen toestemming of verklaring voor
+nodig. Zie README → *App-iconen*.
 
 ## App Links
 

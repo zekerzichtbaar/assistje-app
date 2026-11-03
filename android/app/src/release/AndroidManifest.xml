@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- Release: één wisselbare launcher-ingang (README → App-iconen). De
+         ingang van MainActivity (alleen voor de Flutter-tool, zie
+         src/main/AndroidManifest.xml) gaat weg; de alias DefaultIcon (of een
+         clubalias, AppIconChannel.kt) is de launcher-ingang. -->
+    <application>
+        <activity android:name=".MainActivity">
+            <intent-filter tools:node="remove">
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name=".DefaultIcon"
+            android:enabled="true"
+            tools:replace="android:enabled" />
+    </application>
+</manifest>

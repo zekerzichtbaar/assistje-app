@@ -1,6 +1,12 @@
 // HIG-audit van de sheets en dialogen (groep A: agenda, aanwezigheid, event,
 // opstelling, live, verslag, diensten, programma, trainingsteams, vakanties,
 // afspraken). Zelfde controles als hig_audit_test.dart, met de sheet open.
+// Getagd `a11y`: de contrastmeting leest pixels en klopt alleen met de
+// macOS-rasterisatie (op Linux meet hij randpixels van glyphs). CI draait
+// deze suite daarom in de macOS-job `a11y`; zie README → "CI".
+@Tags(['a11y'])
+library;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 

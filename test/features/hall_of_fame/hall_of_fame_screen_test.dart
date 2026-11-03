@@ -93,6 +93,42 @@ void main() {
     expect(find.text('Lotte'), findsOneWidget);
   });
 
+  testWidgets('lange ranglijst: top 3, de rest achter "Alle N tonen"', (
+    tester,
+  ) async {
+    await _open(
+      tester,
+      data: HallOfFameFixtures.data({
+        'top_scorers': [
+          for (var i = 1; i <= 6; i++)
+            {
+              'player_id': 100 + i,
+              'name': 'Speler $i',
+              'goals': 10 - i,
+              'avatar_url': null,
+            },
+        ],
+      }),
+    );
+
+    Finder leader(int id) => find.descendant(
+      of: _key('hof-top-scorers'),
+      matching: _key('hof-leader-$id'),
+    );
+    expect(leader(103), findsOneWidget);
+    expect(leader(104), findsNothing);
+    expect(find.text('Alle 6 tonen'), findsOneWidget);
+    // Korte lijsten (één man) krijgen geen knop.
+    expect(_key('hof-top-flaggers-toggle'), findsNothing);
+
+    await _tap(tester, _key('hof-top-scorers-toggle'));
+    expect(leader(106), findsOneWidget);
+    expect(find.text('Minder tonen'), findsOneWidget);
+
+    await _tap(tester, _key('hof-top-scorers-toggle'));
+    expect(leader(104), findsNothing);
+  });
+
   testWidgets('tik op een ranglijstspeler opent /players/:id', (tester) async {
     final (container, _) = await _open(tester);
 
@@ -131,7 +167,6 @@ void main() {
     expect(_key('hof-award-1-top_scorer'), findsOneWidget);
     expect(_key('hof-badge-player-14'), findsOneWidget);
     expect(find.text('🥇 Hattrick hero'), findsOneWidget);
-    expect(find.text('Blok 0 (afgesloten)'), findsOneWidget);
 
     // Gedeelde titel: lijst van houders.
     await _tap(tester, _key('hof-title-now-iron_man'));
@@ -147,6 +182,8 @@ void main() {
         'period_awards': <Object>[],
       }),
     });
+    await _tap(tester, _key('hof-period-picker'));
+    expect(find.text('Blok 0 (afgesloten)'), findsOneWidget);
     await _tap(tester, _key('hof-period-2'));
 
     expect(http.requestsTo(_hof).last.options.uri.queryParameters, {

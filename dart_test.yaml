@@ -1,0 +1,6 @@
+tags:
+  # HIG-/contrastaudit (test/a11y). In CI alleen op macOS; zie README → "CI".
+  a11y:
+  # Storebeelden + app-icoon genereren (test/store); slaat zichzelf over
+  # zonder STORE_OUT. Zie docs/store/README.md.
+  store:

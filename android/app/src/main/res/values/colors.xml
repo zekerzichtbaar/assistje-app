@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FFFFFF</color>
     <!-- Startscherm en vensterachtergrond: als de iOS-LaunchBackground
          (Assets.xcassets) en `sunken` in de app (assistje_tokens.dart). -->
     <color name="launch_background">#F3F4F6</color>
