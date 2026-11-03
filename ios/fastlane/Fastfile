@@ -126,7 +126,8 @@ platform :ios do
       export_team_id: ENV["APPLE_TEAM_ID"],
       export_options: { signingStyle: "automatic", teamID: ENV["APPLE_TEAM_ID"] },
       xcargs: "#{auth} DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID'].shellescape}",
-      export_xcargs: auth,
+      # Geen export_xcargs: gym geeft xcargs ook aan -exportArchive mee, en
+      # dubbele -authenticationKeyPath laat xcodebuild weigeren.
       output_directory: BUILD_DIR,
       output_name: "Assistje-#{version}-#{build_number}.ipa",
       clean: true
