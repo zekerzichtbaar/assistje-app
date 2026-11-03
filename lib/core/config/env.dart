@@ -4,7 +4,7 @@ abstract final class Env {
   /// Basis-URL van de JSON-API, inclusief `/api/v1`.
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://assistje.nl/api/v1',
+    defaultValue: 'https://login.assistje.nl/api/v1',
   );
 
   /// Appversie die bij push-aanmelding meegaat (`app_version`), gelijk aan

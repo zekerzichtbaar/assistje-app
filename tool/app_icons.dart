@@ -48,7 +48,7 @@ Future<void> main(List<String> args) async {
   }
 
   final api =
-      _option(args, '--api') ?? _apiFromEnv() ?? 'https://assistje.nl/api/v1';
+      _option(args, '--api') ?? _apiFromEnv() ?? 'https://login.assistje.nl/api/v1';
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 20);
   try {
     final clubs = await _fetchList(client, '$api/app-icons');
