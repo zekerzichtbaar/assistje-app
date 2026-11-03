@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,9 +7,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Uploadsleutel voor Google Play (README → "Release (Android)"). Staat niet in
+// git: android/key.properties + het .jks-bestand. Zonder dat bestand tekent de
+// release-build met de debugsleutel, zodat CI en lokale builds blijven werken;
+// zo'n build kan niet naar Play.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("key.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val hasUploadKey = keystoreProperties.getProperty("storeFile") != null
+
 android {
     namespace = "nl.assistje.app"
-    compileSdk = flutter.compileSdkVersion
+    // Google Play: nieuwe apps en updates moeten sinds 31 augustus 2026
+    // API 36 (Android 16) targeten. Vast, niet via flutter.*, zodat een
+    // Flutter-update dit niet stilletjes verschuift.
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -22,21 +37,50 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "nl.assistje.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // De app is alleen Nederlands: geen vertaalde resources uit
+    // bibliotheken (AndroidX, Play Services) in de bundle.
+    androidResources {
+        localeFilters += listOf("nl")
+        // Per-app-taal (Android 13+): res/xml/locales_config.xml.
+        generateLocaleConfig = false
+    }
+
+    signingConfigs {
+        if (hasUploadKey) {
+            create("upload") {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasUploadKey) {
+                signingConfigs.getByName("upload")
+            } else {
+                logger.warn(
+                    "w: android/key.properties ontbreekt: de release-build wordt met de " +
+                        "DEBUGSLEUTEL getekend en kan niet naar Google Play (README → Release (Android)).",
+                )
+                signingConfigs.getByName("debug")
+            }
+            // R8: code verkleinen/obfusceren en ongebruikte resources weg.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

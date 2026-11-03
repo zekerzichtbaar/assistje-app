@@ -45,6 +45,7 @@ class AuditScreen {
     this.open,
     this.label,
     this.contrastFalsePositives = const [],
+    this.platform = TargetPlatform.iOS,
   });
 
   final String path;
@@ -57,6 +58,10 @@ class AuditScreen {
   /// histogram-heuristiek van `textContrastGuideline` pakt dan bv. de rand
   /// van een invoerveld i.p.v. de tekst). Alleen met een reden bij het geval.
   final List<String> contrastFalsePositives;
+
+  /// Platformgedrag (standaard iOS); Android voor schermen die daar anders
+  /// zijn (bv. de clubicoon-kaart op het profiel).
+  final TargetPlatform platform;
 }
 
 /// Haalt contrastbevindingen voor [labels] uit [reason] (één blok per
@@ -144,7 +149,7 @@ void registerAudit(List<AuditScreen> screens) {
             '${device.name}-${scale.key}${screen.path.replaceAll('/', '_')}'
             '${screen.label == null ? '' : '+${screen.label}'}';
         testWidgets(name, (tester) async {
-          debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+          debugDefaultTargetPlatformOverride = screen.platform;
           tester.view
             ..physicalSize = device.size * device.ratio
             ..devicePixelRatio = device.ratio

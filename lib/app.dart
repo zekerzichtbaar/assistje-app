@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,11 +47,36 @@ class AssistjeApp extends ConsumerWidget {
       // Dynamic Type zoals iOS: koppen groeien minder dan broodtekst.
       builder: (context, child) {
         final mq = MediaQuery.of(context);
-        return MediaQuery(
-          data: mq.copyWith(textScaler: AppTextScaler.from(mq.textScaler)),
-          child: child!,
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: systemBarsStyle(Theme.of(context).brightness),
+          child: MediaQuery(
+            data: mq.copyWith(textScaler: AppTextScaler.from(mq.textScaler)),
+            child: child!,
+          ),
         );
       },
     );
   }
+}
+
+/// Status- en navigatiebalk bij het thema van de app (niet van het toestel:
+/// de gebruiker kan licht/donker zelf kiezen). Android 15+ tekent de app
+/// altijd edge-to-edge: de balken zijn doorzichtig en alleen de iconen
+/// wisselen van kleur. Schermen met een `AppBar` zetten hun eigen stijl.
+SystemUiOverlayStyle systemBarsStyle(Brightness brightness) {
+  final dark = brightness == Brightness.dark;
+  return SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    // Android: icoonkleur; iOS: `statusBarBrightness` is de achtergrond.
+    statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+    statusBarBrightness: brightness,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarDividerColor: Colors.transparent,
+    systemNavigationBarIconBrightness: dark
+        ? Brightness.light
+        : Brightness.dark,
+    // Knoppennavigatie: het systeem legt zelf een doorschijnende laag onder
+    // de knoppen, zodat ze leesbaar blijven boven de inhoud.
+    systemNavigationBarContrastEnforced: true,
+  );
 }

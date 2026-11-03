@@ -35,8 +35,9 @@ class FlutterLocalNotifier implements LocalNotifier {
   Future<void> initialize(void Function(Map<String, String> data) onTap) async {
     await _plugin.initialize(
       settings: const InitializationSettings(
-        // Placeholder-icoon; Android wil een monochroom drawable.
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        // Wit silhouet (android/app/src/main/res/drawable); hetzelfde als
+        // FCM's default_notification_icon in de AndroidManifest.
+        android: AndroidInitializationSettings('@drawable/ic_stat_assistje'),
         // Geen toestemmingsvraag hier: die stelt PushController na het
         // inloggen (via Firebase).
         iOS: DarwinInitializationSettings(
@@ -81,6 +82,8 @@ class FlutterLocalNotifier implements LocalNotifier {
         channelDescription: _l10n.pushChannelDescription,
         importance: Importance.high,
         priority: Priority.high,
+        // Standaardteamkleur, als default_notification_color (colors.xml).
+        color: const Color(0xFF006837),
       ),
       iOS: const DarwinNotificationDetails(),
     ),

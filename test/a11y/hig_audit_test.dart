@@ -10,6 +10,8 @@
 // Schermafbeeldingen (met de echte fonts) komen in `$HIG_SHOTS_DIR` als die
 // omgevingsvariabele gezet is:
 //   HIG_SHOTS_DIR=/tmp/shots flutter test test/a11y/hig_audit_test.dart
+import 'package:assistje/core/app_icon/app_icon_service.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -64,6 +66,48 @@ final _screens = <AuditScreen>[
     '/profile',
     trainer: false,
     setup: (h) => h.on('GET /teams/3/profile', 200, ProfileFixtures.profile()),
+  ),
+  // Android: clublogo als snelkoppeling op het beginscherm (AppIconCard).
+  AuditScreen(
+    '/profile',
+    trainer: false,
+    label: 'android-snelkoppeling',
+    platform: TargetPlatform.android,
+    // Na het scrollen naar de kaart schuiven de weekdagpillen erboven half
+    // onder de vervagende kop; de meting pakt dan de vervaging, niet de pil
+    // (die op /profile zonder scrollen wél gemeten wordt).
+    contrastFalsePositives: const ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'],
+    open: (t) async {
+      final card = find.byKey(const ValueKey('profile-app-icon'));
+      await t.scrollUntilVisible(
+        card,
+        200,
+        scrollable: find.byType(Scrollable).hitTestable().first,
+        maxScrolls: 40,
+      );
+      await Scrollable.ensureVisible(t.element(card), alignment: 0.5);
+      await pumpAuditFrames(t);
+    },
+    setup: (h) {
+      _fakeShortcutChannel();
+      final membership = ApiFixtures.membership(
+        features: auditFeatures,
+        hasPoule: true,
+      );
+      (membership['team'] as Map<String, dynamic>)['club_id'] = 12;
+      h
+        ..on('GET /me', 200, ApiFixtures.meResponse(teams: [membership]))
+        ..on('GET /teams/3/profile', 200, ProfileFixtures.profile())
+        ..on('GET /app-icons', 200, {
+          'data': [
+            {
+              'club_id': 12,
+              'name': 'Vogels',
+              'logo_url': 'https://assistje.nl/storage/clubs/12.png',
+            },
+          ],
+        });
+    },
   ),
   AuditScreen(
     '/notifications',
@@ -255,3 +299,24 @@ final _screens = <AuditScreen>[
 ];
 
 void main() => registerAudit(_screens);
+
+/// Android-kant van `nl.assistje.app/app_icon`: vastzetten kan.
+void _fakeShortcutChannel() {
+  const channel = MethodChannel(AppIconService.channelName);
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+        channel,
+        (call) async => call.method == 'status'
+            ? {
+                'supported': true,
+                'current': null,
+                'available': true,
+                'mode': 'shortcut',
+              }
+            : null,
+      );
+  addTearDown(
+    () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null),
+  );
+}

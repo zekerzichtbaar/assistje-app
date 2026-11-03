@@ -1,11 +1,25 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Push (Android 13+ vraagt toestemming; PushController doet dat na het
          inloggen). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Verder alleen wat Firebase Messaging meebrengt (INTERNET, WAKE_LOCK,
+         ACCESS_NETWORK_STATE, c2dm RECEIVE) en VIBRATE (meldingen). Foto's en
+         bestanden kiezen gaat via de systeemkiezer: geen opslagtoestemming.
+         Lijst en Data safety: docs/store/google-play.md. -->
+    <!-- Geen back-up en geen overzetten naar een nieuw toestel: zie
+         res/xml/data_extraction_rules.xml. Voorspellend terug (Android 13+):
+         go_router en Flutter verwerken het terug-gebaar zelf; de app heeft
+         geen PopScope-blokkades. -->
     <application
         android:label="Assistje"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:localeConfig="@xml/locales_config"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="33">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -65,6 +79,14 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="assistje_default" />
+        <!-- Meldingsicoon en -kleur voor FCM-meldingen op de achtergrond
+             (dezelfde als voor voorgrondmeldingen, local_notifier.dart). -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_assistje" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/notification_color" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

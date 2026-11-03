@@ -38,6 +38,8 @@ enum AppIconChannel {
           "supported": app.supportsAlternateIcons,
           "current": app.alternateIconName as Any,
           "available": name.map(isBundled) ?? false,
+          // Android: "shortcut" (vastgezette snelkoppeling, AppIconChannel.kt).
+          "mode": "alternate",
         ])
       case "set":
         let name = (call.arguments as? [String: Any])?["name"] as? String

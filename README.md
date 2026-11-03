@@ -36,6 +36,14 @@ met de hand (*Run workflow*):
 - **ios-build** (macOS, alleen push naar `main` en PR's):
   `flutter build ios --no-codesign --dart-define-from-file=env/prod.json`. De
   clubiconen (`tool/app_icons.dart`) worden in CI niet gemaakt.
+- **android-build** (ubuntu, alleen push naar `main` en PR's): JDK 17 →
+  dezelfde l10n-stappen als **test** → `flutter build appbundle --release
+  --dart-define-from-file=env/prod.json`. Met de repo-secrets
+  `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`,
+  `ANDROID_KEY_PASSWORD` en `ANDROID_KEY_ALIAS` schrijft de job eerst
+  `android/key.properties` + de keystore en uploadt hij de getekende `.aab`
+  als artefact (`app-release-aab`); zonder secrets bouwt hij met de
+  debugsleutel (alleen een bouwcheck). Zie *Release (Android)*.
 - **api-contract**: checkt elke API-aanroep in `lib/` tegen de v1-routes van
   vogels3 (zie hieronder). Optioneel: zonder het repo-secret `VOGELS3_TOKEN`
   (een token met leestoegang op `zekerzichtbaar/vogels3`) slaat de job zichzelf
@@ -156,9 +164,21 @@ Teamkleur-logica (`lib/core/theme/team_color.dart`) is een 1-op-1 port van
   Ongewijzigde logo's worden overgeslagen; een onleesbaar logo is een
   waarschuwing, geen fout. `--clean` haalt ze weer weg, `--api <url>` kiest
   een andere bron.
-- In de app: Profiel → kaart *App-icoon* (alleen iOS, alleen als het wapen van
-  de club van je team in de build zit). Native kant: `AppIconChannel` in
-  `ios/Runner/AppDelegate.swift`.
+- In de app: Profiel → kaart *App-icoon*, alleen als de club van je team een
+  logo heeft. Eén kanaal `nl.assistje.app/app_icon`
+  (`lib/core/app_icon/`), twee manieren (`mode` in het `status`-antwoord):
+  - **iOS = alternatief icoon** (`alternate`): een schakelaar wisselt het
+    app-icoon naar het wapen, alleen als dat in de build zit. Native kant:
+    `AppIconChannel` in `ios/Runner/AppDelegate.swift`.
+  - **Android = vastgezette snelkoppeling** (`shortcut`): een
+    `activity-alias` per club is voor ~4100 clubs onwerkbaar (manifest,
+    herstart, weggevallen snelkoppelingen). De knop *Zet op beginscherm*
+    downloadt het logo (`logo_url` uit `GET /api/v1/app-icons`, alleen
+    PNG/JPEG/WebP; een SVG-logo → geen kaart) en zet een snelkoppeling
+    `club-<clubId>` met dat logo op wit (adaptief icoon) op het beginscherm;
+    het gewone icoon blijft. Staat hij er al, dan werkt de knop het logo bij.
+    Er zit niets in de build, dus geen `tool/app_icons.dart` nodig voor
+    Android. Native kant: `android/app/src/main/kotlin/nl/assistje/app/AppIconChannel.kt`.
 
 ## Copy (l10n)
 
@@ -193,6 +213,67 @@ Elk nog niet gebouwd scherm heeft al een eigen stub
   de `setup:`-hook van `pumpSignedIn`;
 - draait codegen alleen voor de eigen map:
   `dart run build_runner build --delete-conflicting-outputs --build-filter="lib/features/<x>/**"`.
+
+## Release (Android)
+
+Google Play-eisen, Data safety, store-teksten en graphics:
+`docs/store/google-play.md` (graphics in `docs/store/android/`).
+
+**Uploadsleutel (eenmalig).** Play App Signing beheert de echte
+app-sleutel; jij tekent met een *uploadsleutel*. Maak die buiten de repo en
+bewaar hem (en de wachtwoorden) in de wachtwoordkluis:
+
+```sh
+keytool -genkey -v -keystore ~/keys/assistje-upload.jks -storetype JKS \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+Dan `android/key.properties` (gitignored, net als `*.jks`/`*.keystore`):
+
+```properties
+storePassword=…
+keyPassword=…
+keyAlias=upload
+storeFile=/Users/<jij>/keys/assistje-upload.jks
+```
+
+`storeFile` mag absoluut zijn of relatief aan `android/`. Zonder
+`key.properties` tekent `android/app/build.gradle.kts` de release-build met
+de debugsleutel en meldt Gradle `w: android/key.properties ontbreekt …`: zo'n
+build kan niet naar Play.
+
+**Bouwen:**
+
+```sh
+flutter build appbundle --release --dart-define-from-file=env/prod.json
+# → build/app/outputs/bundle/release/app-release.aab
+```
+
+Versie = `version:` uit `pubspec.yaml` (`1.0.0+1` → versionName `1.0.0`,
+versionCode `1`); elke upload naar Play heeft een hoger buildnummer nodig
+(`--build-number=<n>` kan ook).
+
+De release-build: `targetSdk`/`compileSdk` 36 (Play-eis sinds 31 aug 2026),
+`minSdk` 24, R8 (`isMinifyEnabled` + `isShrinkResources`,
+`android/app/proguard-rules.pro`), alleen Nederlandse resources, geen
+back-up van app-gegevens (het versleutelde inlogtoken is na een restore
+onleesbaar), voorspellend terug aan, 16 KB-pagina's (controle:
+`zipalign -c -P 16 -v 4 <apk>`).
+
+**Eerste upload in de Play Console:** app aanmaken (`nl.assistje.app`) →
+*Play App Signing* aanzetten (standaard) en de `.aab` uploaden naar *Interne
+test* → daarna de SHA-256 van de **app-ondertekeningssleutel** (*App-integriteit*)
+plus die van de uploadsleutel in vogels3 `ANDROID_SHA256_FINGERPRINTS`
+zetten, anders werken de App Links (`assetlinks.json`) niet.
+
+**CI-secrets** (voor een getekende `.aab` als artefact van **android-build**):
+
+```sh
+base64 -i ~/keys/assistje-upload.jks | pbcopy   # → ANDROID_KEYSTORE_BASE64
+```
+
+plus `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_PASSWORD` en
+`ANDROID_KEY_ALIAS` (`upload`).
 
 ## Push
 

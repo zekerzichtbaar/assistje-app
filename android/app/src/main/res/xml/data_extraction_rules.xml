@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 12+: geen cloudback-up en geen overzetten naar een nieuw toestel.
+     flutter_secure_storage versleutelt het inlogtoken met een sleutel uit de
+     Android Keystore; die gaat niet mee, dus teruggezette gegevens zijn
+     onleesbaar (uitgelogd, of een crash bij het lezen). Al het andere staat op
+     de server: na inloggen is alles terug. android:allowBackup="false" dekt
+     Android 11 en ouder; dit bestand ook het overzetten op Android 12+ (dat
+     negeert allowBackup). -->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" path="." />
+    </device-transfer>
+</data-extraction-rules>
