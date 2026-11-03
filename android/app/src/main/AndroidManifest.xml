@@ -9,8 +9,9 @@
          Lijst en Data safety: docs/store/google-play.md. -->
     <!-- Geen back-up en geen overzetten naar een nieuw toestel: zie
          res/xml/data_extraction_rules.xml. Voorspellend terug (Android 13+):
-         go_router en Flutter verwerken het terug-gebaar zelf; de app heeft
-         geen PopScope-blokkades. -->
+         go_router en Flutter verwerken het terug-gebaar zelf. Eén PopScope in
+         AppShell: zonder iets om te poppen (na een deep link) gaat terug naar
+         het ouderscherm, net als de terugpil; op een tabwortel sluit het. -->
     <application
         android:label="Assistje"
         android:name="${applicationName}"

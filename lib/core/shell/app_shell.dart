@@ -51,61 +51,72 @@ class AppShell extends ConsumerWidget {
       listenable: router.routerDelegate,
       builder: (context, _) {
         final path = _currentPath(router);
+        // Systeem-terug (knop en Android-gebaar) doet hetzelfde als de
+        // terugpil: na een deep link valt er niets te poppen en zou Android
+        // de app sluiten; dan naar [parentPath]. Alleen op een tabwortel
+        // mag terug de app verlaten.
+        //
         // Pills en tabbalk liggen buiten de Scaffolds van de schermen:
         // zonder Material-voorouder krijgt hun tekst geen DefaultTextStyle
         // (gele debug-onderstreping).
-        return Material(
-          type: MaterialType.transparency,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Positioned.fill(child: child),
-              // Effen veilige zone + zachte fade achter de pills.
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: IgnorePointer(
-                  child: Column(
-                    children: [
-                      Container(height: padding.top, color: background),
-                      Container(
-                        height: 64,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              background,
-                              background.withValues(alpha: 0.85),
-                              background.withValues(alpha: 0),
-                            ],
+        return PopScope<Object?>(
+          canPop: isTabRoot(path) || router.canPop(),
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) back();
+          },
+          child: Material(
+            type: MaterialType.transparency,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Positioned.fill(child: child),
+                // Effen veilige zone + zachte fade achter de pills.
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: IgnorePointer(
+                    child: Column(
+                      children: [
+                        Container(height: padding.top, color: background),
+                        Container(
+                          height: 64,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                background,
+                                background.withValues(alpha: 0.85),
+                                background.withValues(alpha: 0),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: padding.top + ShellInsets.pillTopGap,
-                left: padding.left + 12,
-                child: HomeBackPill(
-                  team: membership?.team,
-                  showBack: !isTabRoot(path),
-                  onHome: () => router.go(AppRoutes.home),
-                  onBack: back,
+                Positioned(
+                  top: padding.top + ShellInsets.pillTopGap,
+                  left: padding.left + 12,
+                  child: HomeBackPill(
+                    team: membership?.team,
+                    showBack: !isTabRoot(path),
+                    onHome: () => router.go(AppRoutes.home),
+                    onBack: back,
+                  ),
                 ),
-              ),
-              Positioned(
-                top: padding.top + ShellInsets.pillTopGap,
-                right: padding.right + 12,
-                child: BellPill(
-                  unread: membership?.unreadNotificationsCount ?? 0,
-                  onBell: openNotifications,
+                Positioned(
+                  top: padding.top + ShellInsets.pillTopGap,
+                  right: padding.right + 12,
+                  child: BellPill(
+                    unread: membership?.unreadNotificationsCount ?? 0,
+                    onBell: openNotifications,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

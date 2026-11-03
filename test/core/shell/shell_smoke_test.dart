@@ -161,6 +161,27 @@ void main() {
     },
   );
 
+  testWidgets(
+    'systeem-terug na een deep link gaat naar de ouder, niet de app uit',
+    (tester) async {
+      final (container, _) = await pumpSignedIn(tester, teams: [player]);
+      final router = container.read(routerProvider);
+
+      // Zoals DeepLinkHandler: go(), dus niets om te poppen.
+      router.go('/events/7');
+      await tester.pumpAndSettle();
+      expect(router.canPop(), isFalse);
+
+      // true = de app heeft terug zelf afgehandeld (Android sluit niet).
+      expect(await tester.binding.handlePopRoute(), isTrue);
+      await tester.pumpAndSettle();
+      expect(router.state.uri.path, '/agenda');
+
+      // Op een tabwortel mag terug de app wel verlaten.
+      expect(await tester.binding.handlePopRoute(), isFalse);
+    },
+  );
+
   testWidgets('uitloggen via de Meer-tab', (tester) async {
     final (_, backend) = await pumpSignedIn(tester, teams: [player]);
     backend.http.on('POST /auth/logout', 204);
