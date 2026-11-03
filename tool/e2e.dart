@@ -85,15 +85,29 @@ Future<void> _run(List<String> args) async {
   final baseUrl = 'http://127.0.0.1:$port';
   final env = reuseServer ? <String, String>{} : _backendEnv(tmp, baseUrl);
   Process? server;
+  // Gesloten in cleanup().
+  // ignore: close_sinks
   IOSink? serverLog;
+  var keepTmp = false;
 
   Future<void> cleanup() async {
-    server?.kill();
-    await server?.exitCode.timeout(
-      const Duration(seconds: 5),
-      onTimeout: () => 0,
-    );
-    await serverLog?.close();
+    final running = server;
+    if (running != null) {
+      // Met PHP_CLI_SERVER_WORKERS blijven de workers anders draaien.
+      await Process.run('pkill', ['-TERM', '-P', '${running.pid}']);
+      running.kill();
+      await running.exitCode.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => 0,
+      );
+    }
+    final log = serverLog;
+    serverLog = null;
+    await log?.close();
+    if (keepTmp) {
+      _log('Serverlog en database bewaard in ${tmp.path}');
+      return;
+    }
     try {
       tmp.deleteSync(recursive: true);
     } on FileSystemException {
@@ -175,9 +189,9 @@ Future<void> _run(List<String> args) async {
       failed.isEmpty
           ? 'e2e: alle ${tests.length} tests geslaagd.'
           : 'e2e: ${failed.length}/${tests.length} gefaald: ${failed.join(', ')}'
-                '\nServerlog: ${tmp.path}/server.log (wordt opgeruimd; '
-                'draai opnieuw met één test om hem te bekijken).',
+                '\nServerlog: ${tmp.path}/server.log',
     );
+    keepTmp = failed.isNotEmpty;
     exitCode = failed.isEmpty ? 0 : 1;
   } finally {
     await cleanup();
