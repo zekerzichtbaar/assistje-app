@@ -139,5 +139,7 @@
     }
   },
   "profileAppIconDefault": "Assistje",
-  "profileAppIconClub": "Clublogo"
+  "profileAppIconClub": "Clublogo",
+  "profilePrivacyTitle": "Privacybeleid",
+  "profilePrivacyBody": "Welke gegevens Assistje bewaart en wat je rechten zijn."
 }

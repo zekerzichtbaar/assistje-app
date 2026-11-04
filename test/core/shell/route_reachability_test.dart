@@ -546,6 +546,8 @@ void main() {
       expect(find.byKey(const ValueKey('profile-vacations')), findsNothing);
       expect(find.byKey(const ValueKey('profile-standing')), findsNothing);
       expect(find.byKey(const ValueKey('profile-notifications')), findsOne);
+      // Apple 5.1.1 / Google Play: privacybeleid vindbaar in de app.
+      expect(find.byKey(const ValueKey('profile-privacy')), findsOne);
     });
 
     testWidgets('toeschouwer zonder spelersprofiel: geen vakanties/vaste '

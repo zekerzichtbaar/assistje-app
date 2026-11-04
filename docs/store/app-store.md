@@ -37,8 +37,8 @@ lopen.
 
 **Ondersteunings-URL:** `https://assistje.nl` (verplicht)
 **Marketing-URL:** `https://assistje.nl` (optioneel)
-**Privacybeleid-URL:** verplicht, bestaat nog niet. Zie `google-play.md` →
-*Privacybeleid*.
+**Privacybeleid-URL:** `https://assistje.nl/privacy` (ook in de app: Profiel →
+Privacybeleid).
 
 ## Categorie en leeftijd
 
@@ -68,15 +68,16 @@ diagnostiek, gebruiksgegevens en analytics.
 ## App Review
 
 - **Inloggen:** zonder wachtwoord, met een code per e-mail. Apple kan die
-  e-mail niet ontvangen. **Nog te doen:** een reviewaccount met een vaste
-  code of een demo-login op een demoteam, en die gegevens invullen bij *App
-  Review Information → Sign-in required*. Zonder dit wordt de app vrijwel
-  zeker afgewezen (Guideline 2.1).
+  e-mail niet ontvangen. Daarvoor is er een reviewaccount met een vaste
+  code: vogels3 `APP_REVIEW_EMAIL` + `APP_REVIEW_CODE` (`.env` op productie),
+  als trainer in het demoteam `demo-voetbal` (de uurlijkse `demo:reset`
+  koppelt het steeds opnieuw). Vul adres en code in bij *App Review
+  Information → Sign-in required* (Guideline 2.1).
 - **Notities voor de reviewer** (voorbeeld):
 
   > Assistje is een teamapp voor amateursportteams. Log in met
   > review@assistje.nl en code ######. Het account zit in het demoteam
-  > "FC Dijkzicht 1" met wedstrijden, een opstelling en statistieken.
+  > "Assistje" met wedstrijden, een opstelling en statistieken.
   > Pushmeldingen worden na het inloggen gevraagd.
 
 - **Account verwijderen in de app:** bestaat (Guideline 5.1.1(v)): Profiel →

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/app_icon/app_icon_service.dart';
 import '../../../../core/auth/auth_controller.dart';
@@ -229,6 +230,39 @@ class NotificationsLinkCard extends StatelessWidget {
             ),
           ),
           Icon(PhosphorIconsRegular.caretRight, size: 18, color: t.muted),
+        ],
+      ),
+    );
+  }
+}
+
+/// Het privacybeleid op assistje.nl (Apple 5.1.1 en Google Play willen het
+/// in de app vindbaar).
+class PrivacyLinkCard extends StatelessWidget {
+  const PrivacyLinkCard({super.key});
+
+  static final Uri url = Uri.parse('https://assistje.nl/privacy');
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    return AppCard(
+      key: const ValueKey('profile-privacy'),
+      onTap: () {
+        unawaited(Haptics.light());
+        unawaited(launchUrl(url, mode: LaunchMode.inAppBrowserView));
+      },
+      child: Row(
+        children: [
+          Expanded(
+            child: ProfileCardHeader(
+              icon: PhosphorIconsDuotone.shieldCheck,
+              title: l10n.profilePrivacyTitle,
+              body: l10n.profilePrivacyBody,
+            ),
+          ),
+          Icon(PhosphorIconsRegular.arrowSquareOut, size: 18, color: t.muted),
         ],
       ),
     );

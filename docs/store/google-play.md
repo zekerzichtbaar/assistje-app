@@ -77,19 +77,14 @@ aanvragen zonder de app.
   bevestiging) → `DELETE /api/v1/profile`. Aanwezigheid en statistieken blijven
   onder een geanonimiseerd profiel bij het team staan; vermeld dat in het
   formulier als "sommige gegevens blijven bewaard (geanonimiseerd)".
-- **Web: bestaat alleen ingelogd** (`https://assistje.nl/profile`,
-  `DELETE /profile` in vogels3). Play wil een openbaar vindbare URL die uitlegt
-  hoe het werkt. **Nog te doen:** een openbare pagina, bv.
-  `https://assistje.nl/account-verwijderen`, met de stappen (inloggen →
-  Profiel → Verwijderen) en een e-mailadres voor een verzoek zonder in te
-  loggen. Die URL vul je in bij *Data safety → Gegevensverwijdering*.
+- **Web, zonder in te loggen:** `https://login.assistje.nl/account-verwijderen`
+  (vogels3; ook genoemd in het privacybeleid). Die URL vul je in bij *Data safety → Gegevensverwijdering*.
 
 ## Privacybeleid
 
-**Nog te doen (blokkerend):** Play wil een openbare URL naar een privacybeleid
-(store-vermelding én in de app vindbaar). Er is er nu geen in vogels3 of in de
-app. Maak bv. `https://assistje.nl/privacy` en zet een link in de app
-(Profiel/Meer).
+`https://assistje.nl/privacy` (vogels3). In de app: Profiel → Privacybeleid
+(`PrivacyLinkCard`). Vul de URL in bij de store-vermelding en bij *Data
+safety*.
 
 ## Doelgroep en contentclassificatie
 
