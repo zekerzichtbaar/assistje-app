@@ -26,18 +26,51 @@ String pouleDayLabel(AppLocalizations l10n, String? date) {
 String pouleUpdatedLabel(DateTime fetchedAt) =>
     DateFormat('d MMM, HH:mm', 'nl').format(fetchedAt.toLocal());
 
-/// Een clublogo (rond, met initialen als het logo ontbreekt of faalt).
+/// Een clublogo uit Sportlink: rond, met initialen als het logo ontbreekt of
+/// faalt. Clubbadges zijn gemaakt voor een witte achtergrond en lopen vaak tot
+/// de rand van het plaatje. Daarom staan ze heel (`contain`) op een witte
+/// cirkel, met wat lucht eromheen, in plaats van bijgesneden (`cover`).
 class PouleLogo extends StatelessWidget {
-  const PouleLogo({super.key, required this.team, this.url, this.size = 24});
+  const PouleLogo({super.key, required this.team, this.url, this.size = 28});
 
   final String team;
   final String? url;
   final double size;
 
   @override
-  Widget build(BuildContext context) => ExcludeSemantics(
-    child: AppAvatar(name: team, imageUrl: url, size: size),
-  );
+  Widget build(BuildContext context) {
+    final src = url;
+    if (src == null || src.isEmpty) {
+      return ExcludeSemantics(
+        child: AppAvatar(name: team, size: size),
+      );
+    }
+    final t = AssistjeTokens.of(context);
+    final fallback = AppAvatar(name: team, size: size);
+    return ExcludeSemantics(
+      child: Container(
+        width: size,
+        height: size,
+        padding: EdgeInsets.all(size * 0.16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: AssistjeTokens.shadowSm,
+          border: Border.all(
+            color: t.ink.withValues(alpha: 0.1),
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+        ),
+        child: Image.network(
+          src,
+          fit: BoxFit.contain,
+          excludeFromSemantics: true,
+          errorBuilder: (context, error, stack) =>
+              OverflowBox(maxWidth: size, maxHeight: size, child: fallback),
+        ),
+      ),
+    );
+  }
 }
 
 /// De stand als tabel: positie, logo + ploeg, gespeeld, doelsaldo, punten.

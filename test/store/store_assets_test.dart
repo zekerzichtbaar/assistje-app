@@ -473,4 +473,61 @@ void main() {
     );
     tester.view.reset();
   });
+
+  // App Store-productpagina, "Header" (21:9, 3840 × 1646, zonder alfa). Op
+  // 2× gerenderd: logisch 1920 × 823.
+  testWidgets('App Store-header', skip: skip != null, (tester) async {
+    final iphone = _targets.first;
+    final screens = [
+      await _renderApp(tester, iphone, '/stats'),
+      await _renderApp(tester, iphone, '/agenda'),
+      await _renderApp(tester, iphone, '/events/412/live'),
+    ];
+    _setView(tester, const Size(1920, 823), 2);
+    await tester.pumpWidget(
+      _canvas(
+        HeaderArt(
+          screens: screens,
+          screenSize: iphone.screen,
+          topInset: iphone.top,
+          lightStatusBar: const [false, false, false],
+        ),
+      ),
+    );
+    await tester.pump();
+    await _write(
+      tester,
+      await _capture(tester, 2),
+      '$_out/ios/header-3840x1646.png',
+    );
+    tester.view.reset();
+  });
+
+  // App Store, "Search Results"-asset (3:2, 3840 × 2560). Op 2× gerenderd:
+  // logisch 1920 × 1280.
+  testWidgets('App Store-zoekresultaat', skip: skip != null, (tester) async {
+    final iphone = _targets.first;
+    final screens = [
+      await _renderApp(tester, iphone, '/stats'),
+      await _renderApp(tester, iphone, '/agenda'),
+      await _renderApp(tester, iphone, '/events/412/live'),
+    ];
+    _setView(tester, const Size(1920, 1280), 2);
+    await tester.pumpWidget(
+      _canvas(
+        SearchResultArt(
+          screens: screens,
+          screenSize: iphone.screen,
+          topInset: iphone.top,
+        ),
+      ),
+    );
+    await tester.pump();
+    await _write(
+      tester,
+      await _capture(tester, 2),
+      '$_out/ios/search-results-3840x2560.png',
+    );
+    tester.view.reset();
+  });
 }

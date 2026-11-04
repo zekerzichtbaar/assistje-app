@@ -92,3 +92,8 @@ Alleen de beelden, zonder build of tekst. De huidige beelden worden vervangen:
 
 Het App Store-icoon komt uit de build zelf, dus dat verandert pas bij de
 volgende upload van een build (`fastlane beta` of `release`).
+
+**App Store-header** (`ios/header-3840x1646.png`, 21:9, productpagina vanaf
+iOS 27): fastlane en de gedocumenteerde API kunnen dit nog niet uploaden.
+Sleep het bestand in App Store Connect → *App Previews and Screenshots* →
+*Header*, of upload het via de *Asset Library*.

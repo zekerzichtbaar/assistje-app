@@ -130,7 +130,12 @@ platform :ios do
       # dubbele -authenticationKeyPath laat xcodebuild weigeren.
       output_directory: BUILD_DIR,
       output_name: "Assistje-#{version}-#{build_number}.ipa",
-      clean: true
+      clean: true,
+      # Geen xcpretty: door /usr/bin vooraan in PATH (zie hierboven) start die
+      # onder de systeem-Ruby 2.6 met de bundler-omgeving van fastlane, crasht
+      # direct en breekt via de pipe de archive af. Ruwe uitvoer, in
+      # ~/Library/Logs/gym/Runner-Runner.log.
+      xcodebuild_formatter: ""
     )
   end
 end

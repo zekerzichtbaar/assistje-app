@@ -659,3 +659,137 @@ class FeatureGraphic extends StatelessWidget {
     );
   }
 }
+
+/// Header van de App Store-productpagina (21:9, logisch 1920 × 823). Apple:
+/// één idee, de kern in het midden (randen vallen op smalle schermen weg),
+/// korte tekst. Midden: mascotje en de belofte uit de hero van de site;
+/// links en rechts telefoons die naar buiten wegvallen.
+class HeaderArt extends StatelessWidget {
+  const HeaderArt({
+    super.key,
+    required this.screens,
+    required this.screenSize,
+    required this.topInset,
+    required this.lightStatusBar,
+  });
+
+  /// Schermen links (0) en rechts (2); 1 is gereserveerd.
+  final List<ui.Image> screens;
+  final Size screenSize;
+  final double topInset;
+  final List<bool> lightStatusBar;
+
+  Widget _phone(int i, double angle) => Transform.rotate(
+    angle: angle,
+    child: _Device(
+      kind: DeviceKind.iphone,
+      screen: screens[i],
+      screenSize: screenSize,
+      bezel: 11,
+      topInset: topInset,
+      lightStatusBar: lightStatusBar[i],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      // Geen krijtlijnen: die liepen door de kop.
+      painter: const FieldPainter(color: Brand.field, stripes: 12),
+      child: Stack(
+        children: [
+          Positioned(left: 130, top: 120, width: 360, child: _phone(0, -0.08)),
+          Positioned(right: 130, top: 120, width: 360, child: _phone(2, 0.08)),
+          const Positioned.fill(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(width: 160, height: 202, child: Mascot()),
+                  SizedBox(height: 40),
+                  _Headline(
+                    text: 'Je hele team\nin *één app*',
+                    size: 100,
+                    pill: Brand.yellow,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Search Results"-asset van de App Store (3:2, logisch 1920 × 1280): de
+/// belofte bovenaan, drie telefoons als waaier eronder, alles rond het
+/// midden.
+class SearchResultArt extends StatelessWidget {
+  const SearchResultArt({
+    super.key,
+    required this.screens,
+    required this.screenSize,
+    required this.topInset,
+  });
+
+  /// Links, midden, rechts.
+  final List<ui.Image> screens;
+  final Size screenSize;
+  final double topInset;
+
+  Widget _phone(int i) => _Device(
+    kind: DeviceKind.iphone,
+    screen: screens[i],
+    screenSize: screenSize,
+    bezel: 12,
+    topInset: topInset,
+    lightStatusBar: false,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: const FieldPainter(color: Brand.field, stripes: 12),
+      child: Stack(
+        children: [
+          Positioned(
+            left: 330,
+            top: 560,
+            width: 420,
+            child: Transform.rotate(angle: -0.12, child: _phone(0)),
+          ),
+          Positioned(
+            right: 330,
+            top: 560,
+            width: 420,
+            child: Transform.rotate(angle: 0.12, child: _phone(2)),
+          ),
+          Positioned(
+            left: 1920 / 2 - 230,
+            top: 470,
+            width: 460,
+            child: _phone(1),
+          ),
+          Positioned(
+            right: 1920 / 2 - 350,
+            top: 440,
+            width: 170,
+            height: 214,
+            child: Transform.rotate(angle: 0.2, child: const Mascot()),
+          ),
+          const Positioned(
+            left: 0,
+            right: 0,
+            top: 90,
+            child: _Headline(
+              text: 'Je hele team\nin *één app*',
+              size: 120,
+              pill: Brand.yellow,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
