@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_controller.dart';
@@ -125,18 +126,35 @@ final desiredAppIconProvider = Provider<({String? name})?>((ref) {
 /// Houdt het app-icoon gelijk aan de club van het actieve team: na inloggen
 /// en bij een teamwissel het clubwapen, na uitloggen (of met de schakelaar
 /// uit) het standaardicoon. `AssistjeApp` houdt deze provider actief.
+///
+/// Elke keer dat de app terug naar de voorgrond komt, wordt het nog eens
+/// gecontroleerd: iOS weigert een wissel die te vroeg bij een koude start of
+/// vanuit de achtergrond komt, en zonder herpoging bleef dan het
+/// standaardicoon staan. [AppIconService.apply] wisselt alleen als het nodig
+/// is, dus dit geeft geen extra iOS-meldingen.
 final appIconSyncProvider = Provider<void>((ref) {
   var queue = Future<void>.value();
-  ref.listen<({String? name})?>(desiredAppIconProvider, (previous, next) {
-    if (next == null) return;
+  ({String? name})? desired;
+
+  void sync() {
+    final target = desired;
+    if (target == null) return;
     final service = ref.read(appIconServiceProvider);
     // Na elkaar, zodat een snelle teamwissel geen wissels door elkaar haalt.
-    queue = queue.then((_) => service.apply(next.name)).catchError((
+    queue = queue.then((_) => service.apply(target.name)).catchError((
       Object error,
     ) {
       debugPrint('App-icoon wisselen mislukt: $error');
     });
+  }
+
+  ref.listen<({String? name})?>(desiredAppIconProvider, (previous, next) {
+    desired = next;
+    sync();
   }, fireImmediately: true);
+
+  final lifecycle = AppLifecycleListener(onResume: sync);
+  ref.onDispose(lifecycle.dispose);
 });
 
 /// Het clubicoon van het huidige team, of `null` als dat niet kan.

@@ -37,6 +37,10 @@ class _FakeNative {
                 'available': bundled.contains(name),
               };
             case 'set':
+              if (failNextSet) {
+                failNextSet = false;
+                throw PlatformException(code: 'failed');
+              }
               current = name;
               return null;
           }
@@ -51,6 +55,7 @@ class _FakeNative {
   static const bundled = {'ClubIcon-12', 'ClubIcon-13'};
   final bool supported;
   String? current;
+  bool failNextSet = false;
   final calls = <MethodCall>[];
 
   List<Object?> get sets => [
@@ -219,6 +224,45 @@ void main() {
       expect(native.sets, ['ClubIcon-12', null]);
     });
 
+    test(
+      'wissel mislukt (iOS te vroeg): opnieuw bij terug naar voorgrond',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final shared = await SharedPreferences.getInstance();
+        native = _FakeNative()..failNextSet = true;
+        final container = ProviderContainer(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(shared),
+            authControllerProvider.overrideWith(
+              () => _FakeAuth(AuthStatus.signedIn),
+            ),
+            meProvider.overrideWith(
+              (ref) async => _me([_membership(teamId: 3, clubId: 12)]),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+        container.listen(appIconSyncProvider, (_, _) {});
+        await _settle();
+        expect(native.current, isNull);
+
+        final binding = TestWidgetsFlutterBinding.instance;
+        binding
+          ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+          ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+        await _settle();
+        expect(native.current, 'ClubIcon-12');
+
+        // Staat goed: volgende keer voorgrond geen nieuwe wissel.
+        final before = native.sets.length;
+        binding
+          ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+          ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+        await _settle();
+        expect(native.sets.length, before);
+      },
+    );
+
     test('schakelaar uit: standaardicoon, en weer aan: wapen', () async {
       final container = await start(
         prefs: {ClubAppIconEnabledNotifier.storageKey: false},
@@ -267,19 +311,29 @@ void main() {
     }
 
     testWidgets(
-      'standaard aan; uitzetten wordt bewaard',
+      'standaard clublogo; kiezen voor Assistje wordt bewaard, en terug',
       (tester) async {
         _FakeNative();
         final prefs = await pumpCard(tester);
 
         expect(find.text('App-icoon'), findsOneWidget);
-        final toggle = find.byKey(const ValueKey('profile-app-icon-switch'));
-        expect(tester.widget<Switch>(toggle).value, isTrue);
+        final assistje = find.byKey(const ValueKey('profile-app-icon-default'));
+        final club = find.byKey(const ValueKey('profile-app-icon-club'));
+        bool selected(Finder f) =>
+            isSemantics(isSelected: true).matches(tester.getSemantics(f), {});
+        expect(selected(club), isTrue);
+        expect(selected(assistje), isFalse);
 
-        await tester.tap(toggle);
+        await tester.tap(assistje);
         await tester.pumpAndSettle();
-        expect(tester.widget<Switch>(toggle).value, isFalse);
+        expect(selected(assistje), isTrue);
+        expect(selected(club), isFalse);
         expect(prefs.getBool(ClubAppIconEnabledNotifier.storageKey), isFalse);
+
+        await tester.tap(club);
+        await tester.pumpAndSettle();
+        expect(selected(club), isTrue);
+        expect(prefs.getBool(ClubAppIconEnabledNotifier.storageKey), isTrue);
       },
       variant: TargetPlatformVariant.only(TargetPlatform.android),
     );

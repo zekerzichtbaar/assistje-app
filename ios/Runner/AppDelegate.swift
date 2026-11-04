@@ -47,18 +47,36 @@ enum AppIconChannel {
           result(FlutterError(code: "unknown_icon", message: "Icoon \(name) zit niet in deze build.", details: nil))
           return
         }
-        app.setAlternateIconName(name) { error in
-          DispatchQueue.main.async {
-            if let error {
-              result(FlutterError(code: "failed", message: error.localizedDescription, details: nil))
-            } else {
-              result(nil)
+        whenActive {
+          app.setAlternateIconName(name) { error in
+            DispatchQueue.main.async {
+              if let error {
+                result(FlutterError(code: "failed", message: error.localizedDescription, details: nil))
+              } else {
+                result(nil)
+              }
             }
           }
         }
       default:
         result(FlutterMethodNotImplemented)
       }
+    }
+  }
+
+  /// iOS weigert `setAlternateIconName` als de app niet actief is (tijdens het
+  /// opstarten of op de achtergrond): dan wachten tot hij dat wel is.
+  private static func whenActive(_ action: @escaping () -> Void) {
+    if UIApplication.shared.applicationState == .active {
+      action()
+      return
+    }
+    var token: NSObjectProtocol?
+    token = NotificationCenter.default.addObserver(
+      forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
+    ) { _ in
+      if let token { NotificationCenter.default.removeObserver(token) }
+      action()
     }
   }
 

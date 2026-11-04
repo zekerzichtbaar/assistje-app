@@ -130,7 +130,7 @@
   },
   "profileTeamLeaveFailed": "Verlaten mislukt",
   "profileAppIconTitle": "App-icoon",
-  "profileAppIconBody": "Je app-icoon wordt het clublogo van {team}, en wisselt mee als je van team wisselt.",
+  "profileAppIconBody": "Kies het icoon op je beginscherm. Het clublogo van {team} wisselt mee als je van team wisselt.",
   "@profileAppIconBody": {
     "placeholders": {
       "team": {
@@ -138,5 +138,6 @@
       }
     }
   },
-  "profileAppIconLabel": "Clublogo als app-icoon"
+  "profileAppIconDefault": "Assistje",
+  "profileAppIconClub": "Clublogo"
 }

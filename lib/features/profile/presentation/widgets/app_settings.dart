@@ -255,10 +255,11 @@ class LogoutButton extends ConsumerWidget {
   }
 }
 
-/// Het clublogo als app-icoon, alleen als het wapen van deze club in de
-/// build zit. Staat standaard aan; [appIconSyncProvider] wisselt het icoon
-/// mee met het actieve team (iOS toont na een wissel zelf een melding,
-/// Android wisselt als de app naar de achtergrond gaat).
+/// Kiezen tussen het Assistje-icoon en het clublogo als app-icoon: twee
+/// tegels met een voorbeeld. Alleen als het wapen van deze club in de build
+/// zit. Standaard het clublogo; [appIconSyncProvider] wisselt het icoon mee
+/// met het actieve team (iOS toont na een wissel zelf een melding, Android
+/// wisselt als de app naar de achtergrond gaat).
 class AppIconCard extends ConsumerWidget {
   const AppIconCard({super.key});
 
@@ -268,37 +269,185 @@ class AppIconCard extends ConsumerWidget {
     final team = ref.watch(currentMembershipProvider)?.team;
     if (icon == null || team == null) return const SizedBox.shrink();
     final l10n = AppLocalizations.of(context);
-    final enabled = ref.watch(clubAppIconEnabledProvider);
+    final club = ref.watch(clubAppIconEnabledProvider);
+
+    void choose({required bool club}) {
+      unawaited(Haptics.selection());
+      unawaited(
+        ref.read(clubAppIconEnabledProvider.notifier).set(enabled: club),
+      );
+    }
+
     return AppCard(
       key: const ValueKey('profile-app-icon'),
-      child: MergeSemantics(
-        child: Row(
-          children: [
-            Expanded(
-              child: ProfileCardHeader(
-                icon: PhosphorIconsDuotone.squaresFour,
-                title: l10n.profileAppIconTitle,
-                body: l10n.profileAppIconBody(team.name),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ProfileCardHeader(
+            icon: PhosphorIconsDuotone.squaresFour,
+            title: l10n.profileAppIconTitle,
+            body: l10n.profileAppIconBody(team.name),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: _AppIconOption(
+                  key: const ValueKey('profile-app-icon-default'),
+                  label: l10n.profileAppIconDefault,
+                  selected: !club,
+                  onTap: () => choose(club: false),
+                  preview: Image.asset(
+                    'assets/app_icon/assistje.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _AppIconOption(
+                  key: const ValueKey('profile-app-icon-club'),
+                  label: l10n.profileAppIconClub,
+                  selected: club,
+                  onTap: () => choose(club: true),
+                  preview: _ClubIconPreview(url: team.logoUrl),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Eén keuze: icoonvoorbeeld (afgeronde hoeken zoals op het beginscherm),
+/// label en een rand + vinkje als hij gekozen is.
+class _AppIconOption extends StatelessWidget {
+  const _AppIconOption({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    required this.preview,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final Widget preview;
+
+  static const double _size = 60;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AssistjeTokens.of(context);
+    return Semantics(
+      button: true,
+      selected: selected,
+      inMutuallyExclusiveGroup: true,
+      label: label,
+      excludeSemantics: true,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: selected ? null : onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+            decoration: BoxDecoration(
+              color: selected ? t.primary.withValues(alpha: 0.08) : t.sunken,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: selected ? t.primary : t.line,
+                width: selected ? 2 : 1,
               ),
             ),
-            const SizedBox(width: 12),
-            Semantics(
-              label: l10n.profileAppIconLabel,
-              child: Switch.adaptive(
-                key: const ValueKey('profile-app-icon-switch'),
-                value: enabled,
-                onChanged: (on) {
-                  unawaited(Haptics.selection());
-                  unawaited(
-                    ref
-                        .read(clubAppIconEnabledProvider.notifier)
-                        .set(enabled: on),
-                  );
-                },
-              ),
+            child: Column(
+              children: [
+                Container(
+                  width: _size,
+                  height: _size,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(_size * 0.225),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(_size * 0.225),
+                    child: preview,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      selected
+                          ? PhosphorIconsFill.checkCircle
+                          : PhosphorIconsRegular.circle,
+                      size: 18,
+                      color: selected ? t.primary : t.muted,
+                    ),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: selected
+                              ? FontWeight.w600
+                              : FontWeight.w500,
+                          color: t.ink,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+/// Het clublogo zoals `tool/app_icons.dart` het icoon maakt: gecentreerd op
+/// wit met wat ruimte eromheen.
+class _ClubIconPreview extends StatelessWidget {
+  const _ClubIconPreview({required this.url});
+
+  final String? url;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AssistjeTokens.of(context);
+    final fallback = Icon(
+      PhosphorIconsDuotone.shield,
+      size: 28,
+      color: t.muted,
+    );
+    final url = this.url;
+    return ColoredBox(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(60 * 0.14),
+        child: url == null || url.isEmpty
+            ? Center(child: fallback)
+            : Image.network(
+                url,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) => Center(child: fallback),
+              ),
       ),
     );
   }
