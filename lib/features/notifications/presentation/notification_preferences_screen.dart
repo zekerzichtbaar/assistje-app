@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -137,37 +138,29 @@ class NotificationPreferencesScreen extends ConsumerWidget {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('notification-preferences-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(context, ref),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l10n.screenNotificationPreferences,
-                  key: const Key('placeholder-title'),
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: t.ink,
-                  ),
-                ),
-              ),
-            ),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.screenNotificationPreferences,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('notification-preferences-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(context, ref),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
           ),
-          ...content,
-        ],
+          slivers: [
+            if (prefs != null)
+              SliverReveal(sliver: SliverMainAxisGroup(slivers: content))
+            else
+              ...content,
+          ],
+        ),
       ),
     );
   }

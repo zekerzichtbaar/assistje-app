@@ -771,9 +771,11 @@ void main() {
           for (final id in c.expected) 'event-action-$id',
         ]);
 
-        // Bewerken (→ /schedule) staat er alleen voor de trainer.
-        final edit = find.byKey(const ValueKey('event-trainer-edit'));
-        expect(edit, c.trainerActions ? findsOneWidget : findsNothing);
+        // Bewerken (→ /schedule) staat alleen voor de trainer onder de ⋯
+        // in de topbar.
+        await tester.pump();
+        final more = find.byKey(const Key('shell-actions'));
+        expect(more, c.trainerActions ? findsOneWidget : findsNothing);
 
         final tapId = c.tap;
         if (tapId != null) {
@@ -784,7 +786,8 @@ void main() {
           await _tap(tester, find.byKey(ValueKey('event-action-$tapId')));
           expect(_path(container), target);
         } else if (c.trainerActions) {
-          await _tap(tester, edit);
+          await _tap(tester, more);
+          await _tap(tester, find.byKey(const ValueKey('event-trainer-edit')));
           expect(_path(container), AppRoutes.schedule);
         }
       });

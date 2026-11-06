@@ -244,12 +244,10 @@ class _AccountCardState extends ConsumerState<AccountCard> {
                             shape: BoxShape.circle,
                           ),
                           child: const Center(
-                            child: SizedBox.square(
-                              dimension: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
-                              ),
+                            child: AppSpinner(
+                              size: 22,
+                              strokeWidth: 2.5,
+                              color: Colors.white,
                             ),
                           ),
                         ),

@@ -22,9 +22,7 @@ void main() {
   testBothThemes('toont weekdag, dag, maand en tijd', (tester, dark) async {
     await pumpThemed(
       tester,
-      Center(
-        child: DateTile(date: date, showTime: true, now: DateTime(2025, 10, 2)),
-      ),
+      Center(child: DateTile(date: date, showTime: true)),
       dark: dark,
     );
     expect(find.text('ZA'), findsOneWidget);
@@ -39,12 +37,10 @@ void main() {
     expect(band.color, t.raised);
   });
 
-  testBothThemes('vandaag: band in de teamkleur', (tester, dark) async {
+  testBothThemes('vandaag: geen afwijkende kleur', (tester, dark) async {
     await pumpThemed(
       tester,
-      Center(
-        child: DateTile(date: date, now: DateTime(2025, 10, 11, 8)),
-      ),
+      Center(child: DateTile(date: date)),
       dark: dark,
     );
     expect(find.text('19:30'), findsNothing);
@@ -52,10 +48,7 @@ void main() {
     final band = tester.widget<Container>(
       find.byKey(const ValueKey('date-tile-band')),
     );
-    expect(band.color, t.primary);
-    expect(
-      tester.widget<Text>(find.text('ZA')).style!.color,
-      t.primaryContrast,
-    );
+    expect(band.color, t.raised);
+    expect(tester.widget<Text>(find.text('ZA')).style!.color, t.muted);
   });
 }

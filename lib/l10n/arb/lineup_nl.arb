@@ -61,6 +61,14 @@
       }
     }
   },
+  "lineupTitleVs": "Opstelling tegen {opponent}",
+  "@lineupTitleVs": {
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
   "lineupShare": "Deel met het team",
   "lineupShareAgain": "Opnieuw delen",
   "lineupSharedState": "Gedeeld met het team",

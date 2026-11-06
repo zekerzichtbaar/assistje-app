@@ -188,7 +188,12 @@ class _AgendaScreenState extends ConsumerState<AgendaScreen> {
 
     final List<Widget> content;
     if (state != null) {
-      content = _content(membership, state);
+      // Komt de data binnen na de skeleton, dan fadet hij zacht in.
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(membership, state)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(

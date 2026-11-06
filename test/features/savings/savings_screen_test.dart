@@ -46,6 +46,12 @@ Future<(ProviderContainer, FakeHttpAdapter)> _open(
   return (container, backend.http);
 }
 
+/// Opent het ⋯-menu in de topbar (daar staan de schermacties).
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
@@ -92,7 +98,7 @@ void main() {
     expect(_text(tester, 'savings-pot-3-meta'), '14 · € 40,00/mnd · 11 mnd');
     expect(_text(tester, 'savings-pot-3-saved'), '€ 960,00');
     expect(_text(tester, 'savings-pot-3-goal'), 'van € 4.400,00 · 22%');
-    expect(find.byKey(const ValueKey('savings-new')), findsNothing);
+    expect(find.byKey(const Key('shell-actions')), findsNothing);
 
     await _tap(tester, find.byKey(const ValueKey('savings-pot-3')));
     expect(find.byKey(const ValueKey('savings-pot-screen')), findsOneWidget);
@@ -244,7 +250,7 @@ void main() {
             SavingsFixtures.settledResponse(),
           ),
       );
-      expect(find.byKey(const ValueKey('savings-new')), findsOneWidget);
+      expect(find.byKey(const Key('shell-actions')), findsOneWidget);
       expect(
         _text(tester, 'savings-pot-7-meta'),
         '2 · € 25,00 p.p. · eenmalig',
@@ -378,7 +384,7 @@ void main() {
           }),
       );
 
-      await _tap(tester, find.byKey(const ValueKey('savings-new')));
+      await _openActions(tester);
       expect(find.byKey(const ValueKey('savings-form')), findsOneWidget);
 
       // Leeg: meldingen, geen verzoek.
@@ -453,7 +459,7 @@ void main() {
           }),
       );
 
-      await _tap(tester, find.byKey(const ValueKey('savings-new')));
+      await _openActions(tester);
       await tester.enterText(
         find.byKey(const ValueKey('savings-form-name')),
         'Trainingskamp',
@@ -496,7 +502,7 @@ void main() {
           }),
       );
 
-      await _tap(tester, find.byKey(const ValueKey('savings-new')));
+      await _openActions(tester);
       expect(find.text('Zonder bedrag'), findsOneWidget);
       await _tap(
         tester,

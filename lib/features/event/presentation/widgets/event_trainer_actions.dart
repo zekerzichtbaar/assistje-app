@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/router/app_routes.dart';
-import '../../../../core/theme/assistje_tokens.dart';
+import '../../../../core/shell/shell_bar.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../schedule/application/schedule_controller.dart';
@@ -21,16 +21,24 @@ String scheduleEditPath(int eventId) => '${AppRoutes.schedule}?event=$eventId';
 /// afgelasten of "gaat toch door" (alleen als het event niet van de bond
 /// komt) en verwijderen, met bevestiging bij afgelasten en verwijderen.
 ///
-/// Het scherm toont dit alleen voor een trainer van een niet-demoteam.
+/// Ze staan in de topbar onder de ⋯-knop: dit is de [ShellBar] van het
+/// scherm, met [title] erin. Het scherm gebruikt dit alleen voor een trainer
+/// van een niet-demoteam, en anders een kale [ShellBar].
 class EventTrainerActions extends ConsumerStatefulWidget {
   const EventTrainerActions({
     super.key,
     required this.eventKey,
     required this.event,
+    required this.title,
+    this.titleKey,
+    required this.child,
   });
 
   final EventKey eventKey;
   final EventDetail event;
+  final String title;
+  final Key? titleKey;
+  final Widget child;
 
   @override
   ConsumerState<EventTrainerActions> createState() =>
@@ -121,19 +129,18 @@ class _EventTrainerActionsState extends ConsumerState<EventTrainerActions> {
         false;
     final enabled = !_busy;
 
-    return Wrap(
-      key: const ValueKey('event-trainer-actions'),
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        _TrainerPill(
+    return ShellBar(
+      title: widget.title,
+      titleKey: widget.titleKey,
+      actions: [
+        ShellAction(
           key: const ValueKey('event-trainer-edit'),
           label: l10n.scheduleActionEdit,
           icon: PhosphorIconsDuotone.notePencil,
           onTap: enabled ? _edit : null,
         ),
         if (canCancel)
-          _TrainerPill(
+          ShellAction(
             key: ValueKey(
               cancelled ? 'event-trainer-uncancel' : 'event-trainer-cancel',
             ),
@@ -145,7 +152,7 @@ class _EventTrainerActionsState extends ConsumerState<EventTrainerActions> {
                 : PhosphorIconsDuotone.calendarX,
             onTap: enabled ? _toggleCancel : null,
           ),
-        _TrainerPill(
+        ShellAction(
           key: const ValueKey('event-trainer-delete'),
           label: l10n.scheduleActionDelete,
           icon: PhosphorIconsDuotone.trash,
@@ -153,63 +160,7 @@ class _EventTrainerActionsState extends ConsumerState<EventTrainerActions> {
           onTap: enabled ? _delete : null,
         ),
       ],
-    );
-  }
-}
-
-class _TrainerPill extends StatelessWidget {
-  const _TrainerPill({
-    super.key,
-    required this.label,
-    required this.icon,
-    required this.onTap,
-    this.destructive = false,
-  });
-
-  final String label;
-  final IconData icon;
-  final VoidCallback? onTap;
-  final bool destructive;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = AssistjeTokens.of(context);
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    final fg = destructive
-        ? (dark ? const Color(0xFFF87171) : StatusColors.red600)
-        : t.inkSoft;
-    return Semantics(
-      button: true,
-      child: Material(
-        color: t.surface,
-        shape: StadiumBorder(side: BorderSide(color: t.surfaceHairline)),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: ConstrainedBox(
-            // Tikvlak minstens 44 pt hoog.
-            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  PhosphorIcon(icon, size: 16, color: fg),
-                  const SizedBox(width: 6),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: fg,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      child: widget.child,
     );
   }
 }

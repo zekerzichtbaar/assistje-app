@@ -109,7 +109,7 @@ class EventCard extends StatelessWidget {
     final header = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DateTile(date: start, showTime: true, now: clock),
+        DateTile(date: start, showTime: true),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

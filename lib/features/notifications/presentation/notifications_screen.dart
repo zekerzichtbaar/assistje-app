@@ -9,6 +9,7 @@ import '../../../core/api/api_exception.dart';
 import '../../../core/deep_links/deep_link_mapper.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -19,7 +20,7 @@ import 'widgets/notification_tile.dart';
 
 /// De meldingen-inbox van het actieve team (de bel in de PWA): nieuwste
 /// eerst, zelf bijladen onderaan, tik = gelezen + openen, vegen = weghalen,
-/// "Alles gelezen" en "Alles verwijderen" (prullenbak) bovenaan.
+/// "Alles gelezen" en "Alles verwijderen" onder de ⋯ in de topbar.
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -174,7 +175,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
     final List<Widget> content;
     if (state != null) {
-      content = _content(teamId, state);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(teamId, state)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -195,86 +200,71 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       content = const [SliverToBoxAdapter(child: NotificationsSkeleton())];
     }
 
-    return Scaffold(
-      key: const ValueKey('notifications-screen'),
-      backgroundColor: t.sunken,
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          _onScroll(notification, teamId, state);
-          return false;
-        },
-        child: AppRefresh(
-          onRefresh: () => _refresh(teamId),
-          padding: EdgeInsets.fromLTRB(
-            12,
-            ShellInsets.top(context),
-            12,
-            ShellInsets.bottom(context),
+    // Titel in de topbar; "alles gelezen" en "alles verwijderen" onder de ⋯.
+    final anyUnread =
+        (state?.unreadCount ?? 0) > 0 ||
+        (state?.items.any((n) => !n.read) ?? false);
+    return ShellBar(
+      title: l10n.screenNotifications,
+      titleKey: const Key('placeholder-title'),
+      actions: [
+        if (state != null && anyUnread)
+          ShellAction(
+            key: const ValueKey('notifications-read-all'),
+            icon: PhosphorIconsDuotone.checks,
+            label: l10n.notificationsMarkAllRead,
+            onTap: () => _markAllRead(teamId),
           ),
-          slivers: [_header(teamId, state), ...content],
+        if (state != null && state.items.isNotEmpty)
+          ShellAction(
+            key: const ValueKey('notifications-delete-all'),
+            icon: PhosphorIconsDuotone.trash,
+            label: l10n.notificationsDeleteAll,
+            destructive: true,
+            onTap: () => _deleteAll(teamId),
+          ),
+      ],
+      child: Scaffold(
+        key: const ValueKey('notifications-screen'),
+        backgroundColor: t.sunken,
+        body: NotificationListener<ScrollNotification>(
+          onNotification: (notification) {
+            _onScroll(notification, teamId, state);
+            return false;
+          },
+          child: AppRefresh(
+            onRefresh: () => _refresh(teamId),
+            padding: EdgeInsets.fromLTRB(
+              12,
+              ShellInsets.top(context),
+              12,
+              ShellInsets.bottom(context),
+            ),
+            slivers: [..._unreadLine(state), ...content],
+          ),
         ),
       ),
     );
   }
 
-  Widget _header(int teamId, NotificationsState? state) {
-    final l10n = AppLocalizations.of(context);
-    final t = AssistjeTokens.of(context);
+  /// Onder de topbar: hoeveel er nog ongelezen zijn (alleen als dat er
+  /// zijn).
+  List<Widget> _unreadLine(NotificationsState? state) {
     final unread = state?.unreadCount ?? 0;
-    final anyUnread = unread > 0 || (state?.items.any((n) => !n.read) ?? false);
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.screenNotifications,
-                      key: const Key('placeholder-title'),
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: t.ink,
-                      ),
-                    ),
-                  ),
-                  if (unread > 0)
-                    Text(
-                      l10n.notificationsUnreadCount(unread),
-                      key: const ValueKey('notifications-unread-count'),
-                      style: TextStyle(fontSize: 14, color: t.muted),
-                    ),
-                ],
-              ),
-            ),
-            if (state != null && anyUnread)
-              TextButton(
-                key: const ValueKey('notifications-read-all'),
-                onPressed: () => _markAllRead(teamId),
-                style: TextButton.styleFrom(foregroundColor: t.primary),
-                child: Text(
-                  l10n.notificationsMarkAllRead,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            if (state != null && state.items.isNotEmpty)
-              IconButton(
-                key: const ValueKey('notifications-delete-all'),
-                onPressed: () => _deleteAll(teamId),
-                tooltip: l10n.notificationsDeleteAll,
-                color: t.muted,
-                icon: const Icon(PhosphorIconsDuotone.trash, size: 22),
-              ),
-          ],
+    if (unread == 0) return const [];
+    final t = AssistjeTokens.of(context);
+    return [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+          child: Text(
+            AppLocalizations.of(context).notificationsUnreadCount(unread),
+            key: const ValueKey('notifications-unread-count'),
+            style: TextStyle(fontSize: 14, color: t.muted),
+          ),
         ),
       ),
-    );
+    ];
   }
 
   /// Zelf bijladen zodra de onderkant in zicht komt.

@@ -87,7 +87,11 @@ class _StandingAbsencesScreenState
       final state = async.value;
       if (state != null) {
         showIntro = state.weekdayChoices.isNotEmpty;
-        slivers = _content(teamId, state);
+        slivers = [
+          SliverReveal(
+            sliver: SliverMainAxisGroup(slivers: _content(teamId, state)),
+          ),
+        ];
       } else if (async.hasError) {
         slivers = [
           SliverToBoxAdapter(
@@ -211,11 +215,7 @@ class _DayRow extends StatelessWidget {
           ),
         ),
         trailing: busy
-            ? const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
+            ? const AppSpinner(size: 24)
             : Switch.adaptive(
                 key: ValueKey('standing-switch-$weekday'),
                 value: on,

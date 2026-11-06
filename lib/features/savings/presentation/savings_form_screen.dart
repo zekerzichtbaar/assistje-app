@@ -51,10 +51,12 @@ class SavingsFormScreen extends ConsumerWidget {
 
     final Widget body;
     if (options != null) {
-      body = _SavingsForm(
-        options: options,
-        onSubmit: onSubmit,
-        today: today ?? DateTime.now(),
+      body = Reveal(
+        child: _SavingsForm(
+          options: options,
+          onSubmit: onSubmit,
+          today: today ?? DateTime.now(),
+        ),
       );
     } else if (async.hasError) {
       body = ListView(

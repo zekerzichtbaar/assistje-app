@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/assistje_tokens.dart';
+import 'app_spinner.dart';
 
 /// Hoofdactie: pill in de teamkleur (`PrimaryButton.tsx`).
 ///
@@ -131,13 +132,10 @@ class _AppButtonBaseState extends State<AppButtonBase> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (widget.loading)
-          SizedBox.square(
-            dimension: 16,
-            child: CircularProgressIndicator(
-              key: const ValueKey('app-button-spinner'),
-              strokeWidth: 2,
-              color: fg,
-            ),
+          AppSpinner(
+            key: const ValueKey('app-button-spinner'),
+            size: 16,
+            color: fg,
           )
         else if (widget.icon != null)
           IconTheme.merge(

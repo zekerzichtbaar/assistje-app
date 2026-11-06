@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -83,12 +84,15 @@ class _ScheduleBody extends ConsumerWidget {
 
     final Widget body;
     if (data != null) {
-      body = ScheduleEventForm(
-        key: ValueKey('schedule-form-${data.event?.id}'),
-        data: data,
-        onSubmit: (draft) =>
-            ref.read(scheduleFormControllerProvider(key).notifier).save(draft),
-        onSaved: (result) => _saved(context, result, isEdit: data.isEdit),
+      body = Reveal(
+        child: ScheduleEventForm(
+          key: ValueKey('schedule-form-${data.event?.id}'),
+          data: data,
+          onSubmit: (draft) => ref
+              .read(scheduleFormControllerProvider(key).notifier)
+              .save(draft),
+          onSaved: (result) => _saved(context, result, isEdit: data.isEdit),
+        ),
       );
     } else if (async.hasError) {
       final error = async.error;
@@ -110,37 +114,28 @@ class _ScheduleBody extends ConsumerWidget {
       body = const SkeletonList(key: ValueKey('schedule-loading'), count: 4);
     }
 
-    return Scaffold(
-      key: const ValueKey('schedule-screen'),
-      backgroundColor: t.sunken,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        // Alleen het toetsenbord wegtikken; geen knop voor VoiceOver.
-        excludeFromSemantics: true,
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(
-            16,
-            ShellInsets.top(context),
-            16,
-            ShellInsets.bottom(context),
-          ),
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                isEdit ? l10n.scheduleEditTitle : l10n.scheduleNewTitle,
-                key: const Key('placeholder-title'),
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: t.ink,
-                ),
-              ),
+    // Titel in de topbar; zelfde key als de placeholder (de shell-tests
+    // lezen hem).
+    return ShellBar(
+      title: isEdit ? l10n.scheduleEditTitle : l10n.scheduleNewTitle,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('schedule-screen'),
+        backgroundColor: t.sunken,
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          // Alleen het toetsenbord wegtikken; geen knop voor VoiceOver.
+          excludeFromSemantics: true,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+              16,
+              ShellInsets.top(context),
+              16,
+              ShellInsets.bottom(context),
             ),
-            const SizedBox(height: 16),
-            body,
-          ],
+            children: [body],
+          ),
         ),
       ),
     );

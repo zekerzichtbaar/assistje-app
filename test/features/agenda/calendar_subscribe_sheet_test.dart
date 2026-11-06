@@ -97,7 +97,7 @@ void main() {
   testWidgets('knop staat er met feed, ook voor spelers', (tester) async {
     await _pump(tester, agenda: _agenda());
     expect(find.byKey(const ValueKey('agenda-calendar')), findsOneWidget);
-    expect(find.text('Zet in agenda'), findsOneWidget);
+    expect(find.bySemanticsLabel('In je agenda zetten'), findsOneWidget);
   });
 
   testWidgets('geen agenda_feed_url → geen knop', (tester) async {

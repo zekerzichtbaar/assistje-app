@@ -63,7 +63,7 @@ class _BirthdayCardState extends State<BirthdayCard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DateTile(date: parseDay(b.date), now: widget.now),
+          DateTile(date: parseDay(b.date)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

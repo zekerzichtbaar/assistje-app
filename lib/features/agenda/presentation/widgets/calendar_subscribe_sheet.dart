@@ -12,7 +12,9 @@ import '../../application/calendar_feed.dart';
 import '../../data/models/agenda_models.dart';
 import 'duty_icons.dart';
 
-/// "Zet in agenda" naast de agendatitel: opent [showCalendarSubscribeSheet].
+/// "Zet in agenda" naast de agendatitel: een rond icoonknopje (zoals het
+/// trofee-knopje), zodat alle acties naast de titel passen. Opent
+/// [showCalendarSubscribeSheet].
 class AgendaCalendarButton extends StatelessWidget {
   const AgendaCalendarButton({super.key, required this.data});
 
@@ -22,43 +24,31 @@ class AgendaCalendarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
-    return Semantics(
-      button: true,
-      label: l10n.agendaCalendarButtonLabel,
-      child: Material(
-        color: t.surface,
-        shape: StadiumBorder(side: BorderSide(color: t.line)),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          key: const ValueKey('agenda-calendar'),
-          onTap: () {
-            unawaited(Haptics.light());
-            unawaited(showCalendarSubscribeSheet(context, data: data));
-          },
-          child: ConstrainedBox(
-            // Tikvlak minstens 44×44 pt.
-            constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              child: ExcludeSemantics(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PhosphorIcon(
-                      PhosphorIconsDuotone.calendarPlus,
-                      size: 18,
-                      color: t.ink,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      l10n.agendaCalendarButton,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: t.ink,
-                      ),
-                    ),
-                  ],
+    return Tooltip(
+      message: l10n.agendaCalendarButton,
+      excludeFromSemantics: true,
+      child: Semantics(
+        button: true,
+        label: l10n.agendaCalendarButtonLabel,
+        child: Material(
+          color: t.surface,
+          shape: CircleBorder(side: BorderSide(color: t.line)),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            key: const ValueKey('agenda-calendar'),
+            onTap: () {
+              unawaited(Haptics.light());
+              unawaited(showCalendarSubscribeSheet(context, data: data));
+            },
+            child: ConstrainedBox(
+              // Tikvlak minstens 44×44 pt.
+              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+              child: Padding(
+                padding: const EdgeInsets.all(9),
+                child: PhosphorIcon(
+                  PhosphorIconsDuotone.calendarPlus,
+                  size: 20,
+                  color: t.ink,
                 ),
               ),
             ),

@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -176,7 +177,7 @@ class _LineupViewState extends ConsumerState<LineupView> {
     final teamId = membership.team.id;
     final async = ref.watch(lineupControllerProvider(_key(teamId)));
     final lineup = async.value;
-    if (lineup != null) return _lineup(membership, lineup);
+    if (lineup != null) return Reveal(child: _lineup(membership, lineup));
     if (async.hasError) return _status(_errorState(teamId, async.error));
     return _status(
       const Column(
@@ -192,46 +193,28 @@ class _LineupViewState extends ConsumerState<LineupView> {
     );
   }
 
-  /// Laden en fouten: gewoon scherm met titel.
+  /// Laden en fouten: gewoon scherm, titel in de topbar.
   Widget _status(Widget child) {
     final t = AssistjeTokens.of(context);
-    return Scaffold(
-      key: const ValueKey('lineup-screen'),
-      backgroundColor: t.sunken,
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          ShellInsets.top(context),
-          16,
-          ShellInsets.bottom(context),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-            child: _title(t.ink),
+    return ShellBar(
+      title: AppLocalizations.of(context).screenEventLineup,
+      // Zelfde key als de placeholder (de shell-tests lezen hem).
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('lineup-screen'),
+        backgroundColor: t.sunken,
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            16,
+            ShellInsets.top(context),
+            16,
+            ShellInsets.bottom(context),
           ),
-          child,
-        ],
+          children: [child],
+        ),
       ),
     );
   }
-
-  /// Schermtitel; zelfde key als de placeholder (de shell-tests lezen hem).
-  Widget _title(Color color, {double size = 28}) => Semantics(
-    header: true,
-    child: Text(
-      AppLocalizations.of(context).screenEventLineup,
-      key: const Key('placeholder-title'),
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: TextStyle(
-        fontSize: size,
-        fontWeight: FontWeight.w700,
-        color: color,
-        height: 1.2,
-      ),
-    ),
-  );
 
   Widget _errorState(int teamId, Object? error) {
     final l10n = AppLocalizations.of(context);
@@ -262,6 +245,41 @@ class _LineupViewState extends ConsumerState<LineupView> {
     };
   }
 
+  /// De regel onder de titel: hoe het met delen staat. Zonder herkenbare
+  /// tegenstander (dan heet de titel alleen "Opstelling") de wedstrijd zelf.
+  Widget? _headerLine(
+    Lineup lineup,
+    FieldChrome chrome, {
+    required String? opponent,
+  }) {
+    final l10n = AppLocalizations.of(context);
+    final style = TextStyle(fontSize: 12, color: chrome.subtle);
+    if (lineup.isShared) {
+      final changed = lineup.canEdit && lineup.changedSincePublish;
+      final sharedAt = lineup.publishedAtTime;
+      return Text(
+        changed
+            ? l10n.lineupChangedSinceShare
+            : sharedAt == null
+            ? l10n.lineupSharedState
+            : l10n.lineupSharedAt(formatLineupShared(sharedAt)),
+        key: const ValueKey('lineup-share-status'),
+        maxLines: 2,
+        textAlign: TextAlign.center,
+        style: changed ? style.copyWith(color: StatusColors.amber300) : style,
+      );
+    }
+    if (opponent != null || lineup.event.title.isEmpty) return null;
+    return Text(
+      lineup.event.title,
+      key: const ValueKey('lineup-event-title'),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      style: style,
+    );
+  }
+
   Widget _lineup(TeamMembership membership, Lineup lineup) {
     final l10n = AppLocalizations.of(context);
     final t = AssistjeTokens.of(context);
@@ -289,148 +307,191 @@ class _LineupViewState extends ConsumerState<LineupView> {
         ? (_saving > 0 ? l10n.lineupSaving : l10n.lineupSaved)
         : lineup.formationLabel;
 
-    return Scaffold(
-      key: const ValueKey('lineup-screen'),
-      backgroundColor: chrome.shell,
-      body: Column(
-        children: [
-          // Kop: titel onder de zwevende pills (de vervaging van de shell
-          // achter de pills zou witte tekst onleesbaar maken), daaronder
-          // formatie + stand. Groeit mee met grote tekst.
-          Container(
-            width: double.infinity,
-            color: chrome.header,
-            child: Padding(
+    // Titel wit in de topbar; de groene kop loopt door tot boven in beeld,
+    // achter de pills langs.
+    final opponent = lineupOpponent(lineup.event, membership.team.name);
+    final shared = lineup.isShared;
+    final changed = lineup.changedSincePublish;
+    final canShare =
+        lineup.filled > 0 &&
+        _saving == 0 &&
+        !_publishing &&
+        (!shared || changed);
+
+    return ShellBar(
+      title: opponent == null
+          ? l10n.screenEventLineup
+          : l10n.lineupTitleVs(opponent),
+      // Zelfde key als de placeholder (de shell-tests lezen hem).
+      titleKey: const Key('placeholder-title'),
+      // Delen staat als deelicoon naast de bel (alleen voor wie mag
+      // bewerken); uitgeschakeld zolang er niets (nieuws) te delen is.
+      actions: [
+        if (canEdit)
+          ShellAction(
+            key: const ValueKey('lineup-share'),
+            icon: PhosphorIconsRegular.export,
+            label: _publishing
+                ? l10n.lineupSharing
+                : !shared
+                ? l10n.lineupShare
+                : changed
+                ? l10n.lineupShareAgain
+                : l10n.lineupSharedState,
+            onTap: canShare ? () => _share(teamId, lineup) : null,
+          ),
+      ],
+      background: chrome.header,
+      foreground: Colors.white,
+      child: Scaffold(
+        key: const ValueKey('lineup-screen'),
+        backgroundColor: chrome.shell,
+        body: Column(
+          children: [
+            // Kop: de groene band onder de zwevende pills, met de naam van
+            // de wedstrijd; daaronder formatie + stand. Groeit mee met grote
+            // tekst.
+            Container(
+              width: double.infinity,
+              color: chrome.header,
               padding: EdgeInsets.fromLTRB(
                 16,
                 ShellInsets.top(context) - 8,
                 16,
                 ShellInsets.pillTopGap,
               ),
-              child: Column(
-                children: [
-                  _title(Colors.white, size: 17),
-                  if (lineup.event.title.isNotEmpty)
-                    Text(
-                      lineup.event.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: chrome.subtle),
+              child: _headerLine(lineup, chrome, opponent: opponent),
+            ),
+            // Formatiekiezer over de volle breedte; teller en opslagstatus
+            // staan klein op het veld.
+            if (canEdit && lineup.formations.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                child: _FormationPicker(
+                  formations: lineup.formations,
+                  current: lineup.formation,
+                  chrome: chrome,
+                  onChanged: (key) => _changeFormation(teamId, key),
+                ),
+              ),
+            Expanded(
+              // Het veld is een tekening met vaste maten (tokens, namen):
+              // tekst schaalt daar niet mee; VoiceOver leest de spelers voor.
+              child: MediaQuery.withNoTextScaling(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: LineupField(
+                        painter: painter,
+                        slots: lineup.formationSlots,
+                        assignments: assignments,
+                        captainId: lineup.captainPlayerId,
+                        canEdit: canEdit,
+                        selectedSlot: _selectedSlot,
+                        picking: picking,
+                        onDrop: (code, player) => _drop(teamId, code, player),
+                        onTapSlot: (code) => _tapSlot(teamId, code),
+                        onSelect: _select,
+                        onRemove: (code) => _remove(teamId, code),
+                        onToggleCaptain: (id) => _toggleCaptain(teamId, id),
+                        onBackgroundTap: _clearSelection,
+                      ),
                     ),
+                    // Klein en stil rechtsboven op het gras: hoeveel er
+                    // staan en of het is opgeslagen (kijkers: de formatie).
+                    Positioned(
+                      top: 6,
+                      right: 14,
+                      child: IgnorePointer(
+                        child: _FieldStatus(
+                          filled: l10n.lineupFilled(
+                            lineup.filled,
+                            lineup.formationSlots.length,
+                          ),
+                          status: status,
+                          busy: canEdit && _saving > 0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: t.surface,
+                border: Border(top: BorderSide(color: t.lineSoft)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x0F000000),
+                    blurRadius: 16,
+                    offset: Offset(0, -4),
+                  ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: canEdit && lineup.formations.isNotEmpty
-                      ? _FormationPicker(
-                          formations: lineup.formations,
-                          current: lineup.formation,
-                          chrome: chrome,
-                          onChanged: (key) => _changeFormation(teamId, key),
-                        )
-                      : const SizedBox(height: 44),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  l10n.lineupFilled(
-                    lineup.filled,
-                    lineup.formationSlots.length,
-                  ),
-                  key: const ValueKey('lineup-filled'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontFeatures: [FontFeature.tabularFigures()],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  status,
-                  key: const ValueKey('lineup-status'),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: canEdit && _saving > 0
-                        ? StatusColors.amber300
-                        : chrome.subtle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            // Het veld is een tekening met vaste maten (tokens, namen):
-            // tekst schaalt daar niet mee; VoiceOver leest de spelers voor.
-            child: MediaQuery.withNoTextScaling(
-              child: LineupField(
-                painter: painter,
-                slots: lineup.formationSlots,
-                assignments: assignments,
-                captainId: lineup.captainPlayerId,
-                canEdit: canEdit,
-                selectedSlot: _selectedSlot,
-                picking: picking,
-                onDrop: (code, player) => _drop(teamId, code, player),
-                onTapSlot: (code) => _tapSlot(teamId, code),
-                onSelect: _select,
-                onRemove: (code) => _remove(teamId, code),
-                onToggleCaptain: (id) => _toggleCaptain(teamId, id),
-                onBackgroundTap: _clearSelection,
-              ),
-            ),
-          ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: t.surface,
-              border: Border(top: BorderSide(color: t.lineSoft)),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x0F000000),
-                  blurRadius: 16,
-                  offset: Offset(0, -4),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: ShellInsets.bottom(context)),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  LineupBench(
-                    bench: bench,
-                    poolEmpty: lineup.pool.isEmpty && lineup.filled == 0,
-                    sport: membership.sport,
-                    canEdit: canEdit,
-                    pickedId: _pickedId,
-                    hint: hint,
-                    onPick: _pick,
-                    onDropFromField: (player) =>
-                        _removePlayer(teamId, lineup, player),
-                  ),
-                  if (canEdit)
-                    LineupShareBar(
-                      lineup: lineup,
-                      busy: _publishing,
-                      disabled:
-                          lineup.filled == 0 || _saving > 0 || _publishing,
-                      onShare: () => _share(teamId, lineup),
+              child: Padding(
+                padding: EdgeInsets.only(bottom: ShellInsets.bottom(context)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LineupBench(
+                      bench: bench,
+                      poolEmpty: lineup.pool.isEmpty && lineup.filled == 0,
+                      sport: membership.sport,
+                      canEdit: canEdit,
+                      pickedId: _pickedId,
+                      hint: hint,
+                      onPick: _pick,
+                      onDropFromField: (player) =>
+                          _removePlayer(teamId, lineup, player),
                     ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 /// Formatiekiezer: segmented pills op de kleur van het veld.
+/// Teller en opslagstatus, klein op het veld.
+class _FieldStatus extends StatelessWidget {
+  const _FieldStatus({
+    required this.filled,
+    required this.status,
+    required this.busy,
+  });
+
+  final String filled;
+  final String status;
+  final bool busy;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: 11,
+      color: Colors.white.withValues(alpha: 0.7),
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(filled, key: const ValueKey('lineup-filled'), style: style),
+        Text(' · ', style: style),
+        Text(
+          status,
+          key: const ValueKey('lineup-status'),
+          style: busy ? style.copyWith(color: StatusColors.amber300) : style,
+        ),
+      ],
+    );
+  }
+}
+
 class _FormationPicker extends StatelessWidget {
   const _FormationPicker({
     required this.formations,
@@ -447,6 +508,12 @@ class _FormationPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    Widget chip(FormationOption formation) => _FormationChip(
+      option: formation,
+      active: formation.key == current,
+      chrome: chrome,
+      onTap: () => onChanged(formation.key),
+    );
     return Semantics(
       label: l10n.lineupFormations,
       container: true,
@@ -456,20 +523,24 @@ class _FormationPicker extends StatelessWidget {
           color: chrome.track,
           borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
         ),
-        child: ListView(
-          key: const ValueKey('lineup-formations'),
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          children: [
-            for (final formation in formations)
-              _FormationChip(
-                option: formation,
-                active: formation.key == current,
-                chrome: chrome,
-                onTap: () => onChanged(formation.key),
+        // Past het, dan gelijk verdeeld over de breedte; anders scrollen.
+        child: formations.length <= 4
+            ? Padding(
+                key: const ValueKey('lineup-formations'),
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Row(
+                  children: [
+                    for (final formation in formations)
+                      Expanded(child: chip(formation)),
+                  ],
+                ),
+              )
+            : ListView(
+                key: const ValueKey('lineup-formations'),
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                children: [for (final formation in formations) chip(formation)],
               ),
-          ],
-        ),
       ),
     );
   }
@@ -564,4 +635,27 @@ class _ConfirmShare extends StatelessWidget {
       ],
     );
   }
+}
+
+/// De tegenstander van [teamName] in [event], of `null` als niet duidelijk
+/// is welke kant van de wedstrijd het eigen team is. De API geeft bij de
+/// opstelling geen thuis/uit mee, dus op naam ("Valleivogels 3" in
+/// "VRC 2 - Valleivogels 3"); clubprefixen als "VV " mogen ervoor staan.
+String? lineupOpponent(LineupEvent event, String teamName) {
+  String norm(String v) => v.trim().toLowerCase();
+  final team = norm(teamName);
+  if (team.isEmpty) return null;
+  bool isUs(String? side) {
+    if (side == null || side.trim().isEmpty) return false;
+    final n = norm(side);
+    return n == team || n.endsWith(' $team') || team.endsWith(' $n');
+  }
+
+  final home = event.homeTeam?.trim();
+  final away = event.awayTeam?.trim();
+  final weHome = isUs(home);
+  final weAway = isUs(away);
+  if (weHome == weAway) return null; // geen of beide: onduidelijk
+  final other = weHome ? away : home;
+  return other == null || other.isEmpty ? null : other;
 }

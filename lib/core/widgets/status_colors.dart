@@ -15,6 +15,9 @@ abstract final class StatusColors {
   static const Color emerald600 = Color(0xFF059669);
   static const Color emerald700 = Color(0xFF047857);
 
+  /// Tailwind `green-500`: de "goed"-kleur van de aanwezigheidsbalk (PWA).
+  static const Color green500 = Color(0xFF22C55E);
+
   static const Color red50 = Color(0xFFFEF2F2);
   static const Color red100 = Color(0xFFFEE2E2);
   static const Color red400 = Color(0xFFF87171);

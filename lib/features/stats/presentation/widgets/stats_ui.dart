@@ -206,3 +206,11 @@ String? podiumMedal(int rank) => switch (rank) {
   3 => '🥉',
   _ => null,
 };
+
+/// Kleur van een aanwezigheidsbalk, als `attendanceColor` in de PWA
+/// (`TeamStats.tsx`): groen vanaf 80%, amber vanaf 60%, daaronder rood.
+Color attendanceColor(num pct) {
+  if (pct >= 80) return StatusColors.green500;
+  if (pct >= 60) return StatusColors.amber500;
+  return StatusColors.red500;
+}

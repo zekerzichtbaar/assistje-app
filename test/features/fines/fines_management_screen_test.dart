@@ -41,6 +41,12 @@ Future<FakeHttpAdapter> _open(
   return backend.http;
 }
 
+/// Opent het ⋯-menu in de topbar (daar staan de schermacties).
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
@@ -49,7 +55,7 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 }
 
 Future<void> _manage(WidgetTester tester, String action) async {
-  await _tap(tester, find.byKey(const ValueKey('fines-manage')));
+  await _openActions(tester);
   await _tap(tester, find.byKey(ValueKey(action)));
 }
 
@@ -62,7 +68,7 @@ void main() {
     );
 
     expect(find.byKey(const ValueKey('fines-summary')), findsOneWidget);
-    expect(find.byKey(const ValueKey('fines-manage')), findsNothing);
+    expect(find.byKey(const Key('shell-actions')), findsNothing);
     expect(find.byKey(const ValueKey('fines-close-period')), findsNothing);
     final dates = tester.widget<Text>(
       find.byKey(const ValueKey('fines-period-dates')),
@@ -81,7 +87,7 @@ void main() {
           FinesFixtures.closeResponse(),
         ),
       );
-      expect(find.byKey(const ValueKey('fines-manage')), findsOneWidget);
+      expect(find.byKey(const Key('shell-actions')), findsOneWidget);
 
       await _tap(tester, find.byKey(const ValueKey('fines-close-period')));
       expect(find.textContaining('Periode "Q4 2026" afsluiten?'), findsOne);

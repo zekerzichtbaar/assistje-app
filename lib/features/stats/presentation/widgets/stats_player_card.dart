@@ -84,6 +84,13 @@ class StatsPlayerCard extends StatelessWidget {
               Expanded(
                 child: _Header(row: row, isMe: isMe, medal: medal),
               ),
+              if (row.recentForm.isNotEmpty && !ranked) ...[
+                StatsFormDots(
+                  key: ValueKey('stats-form-${row.playerId}'),
+                  form: row.recentForm,
+                ),
+                const SizedBox(width: 8),
+              ],
               _Cards(row: row, profile: profile),
               if (ranked) ...[
                 const SizedBox(width: 8),
@@ -341,6 +348,54 @@ class _Cards extends StatelessWidget {
   }
 }
 
+/// De recente vorm als stipjes (oud → nieuw): groen aanwezig, rood afwezig,
+/// oranje kijken, grijs geen antwoord. Wedstrijden rond, trainingen een
+/// afgerond vierkantje.
+class StatsFormDots extends StatelessWidget {
+  const StatsFormDots({super.key, required this.form});
+
+  final List<StatsFormEntry> form;
+
+  static const double size = 9;
+
+  String _label(AppLocalizations l10n, String status) => switch (status) {
+    'present' => l10n.eventDetailStatusPresent,
+    'absent' => l10n.eventDetailStatusAbsent,
+    'nonplay' => l10n.eventDetailStatusNonplay,
+    _ => l10n.eventDetailStatusPending,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final summary = form.map((e) => _label(l10n, e.status)).join(', ');
+    return Semantics(
+      label: l10n.statsRecentForm(summary),
+      excludeSemantics: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 3,
+        children: [
+          for (final entry in form)
+            Container(
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                color: AttendanceStatusStyle.of(
+                  context,
+                  AttendanceTone.fromApi(entry.status),
+                ).bar,
+                borderRadius: BorderRadius.circular(
+                  entry.type == 'training' ? 2 : size,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _AttendanceBar extends StatelessWidget {
   const _AttendanceBar({
     required this.icon,
@@ -389,7 +444,7 @@ class _AttendanceBar extends StatelessWidget {
             value: clamped.toDouble(),
             minHeight: 6,
             backgroundColor: t.track,
-            color: t.primary,
+            color: attendanceColor(pct),
           ),
         ),
       ],

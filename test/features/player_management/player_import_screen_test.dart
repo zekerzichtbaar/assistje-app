@@ -91,7 +91,9 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 }
 
 Future<void> _openCsvTab(WidgetTester tester) async {
-  await _tap(tester, _key('pm-add'));
+  // "Toevoegen" staat onder de ⋯ in de topbar.
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
   await _tap(
     tester,
     find.descendant(of: _key('pm-add-tabs'), matching: find.text('CSV')),

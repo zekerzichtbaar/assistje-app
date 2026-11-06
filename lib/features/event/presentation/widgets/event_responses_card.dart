@@ -57,77 +57,97 @@ class EventResponsesCard extends StatelessWidget {
     return EventSectionCard(
       key: const ValueKey('event-responses'),
       title: l10n.eventDetailResponsesTitle,
-      trailing: Text(
-        l10n.eventDetailResponded(counts.responded, total),
+      // "12/16 gereageerd" met het aantal vet; voorgelezen als
+      // "12 van 16 gereageerd".
+      trailing: Semantics(
         key: const ValueKey('event-responded'),
-        style: TextStyle(fontSize: 12, color: t.muted),
+        label: l10n.eventDetailResponded(counts.responded, total),
+        excludeSemantics: true,
+        child: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: '${counts.responded}',
+                style: TextStyle(fontWeight: FontWeight.w700, color: t.ink),
+              ),
+              TextSpan(text: l10n.eventDetailRespondedOf(total)),
+            ],
+          ),
+          style: TextStyle(
+            fontSize: 13,
+            color: t.muted,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-              child: SizedBox(
-                height: 8,
-                child: headsTotal == 0
-                    ? ColoredBox(color: t.line)
-                    : Row(
-                        children: [
-                          for (final s in order)
-                            if (heads[s] > 0)
-                              Expanded(
-                                flex: heads[s],
-                                child: ColoredBox(
-                                  color: eventStatusStyle(context, s).bar,
-                                ),
+            // Losse, afgeronde segmenten met een kier ertussen.
+            SizedBox(
+              height: 10,
+              child: headsTotal == 0
+                  ? _Segment(color: t.line)
+                  : Row(
+                      // Segmenten zonder inhoud: zonder stretch krijgen ze
+                      // hoogte 0 en is de balk onzichtbaar.
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 3,
+                      children: [
+                        for (final s in order)
+                          if (heads[s] > 0)
+                            Expanded(
+                              flex: heads[s],
+                              child: _Segment(
+                                color: eventStatusStyle(context, s).bar,
                               ),
-                        ],
-                      ),
-              ),
+                            ),
+                      ],
+                    ),
             ),
             const SizedBox(height: 12),
-            // Alle vier de antwoorden staan altijd in de legenda, dus ook
-            // als niemand uit de selectie aanwezig is blijft 'Aanwezig' de
-            // plek waar gasten en staf geteld worden.
+            // Alleen antwoorden die voorkomen staan in de legenda. 'Aanwezig'
+            // staat er altijd: daar worden ook gasten en staf geteld.
             Wrap(
-              spacing: 14,
+              spacing: 16,
               runSpacing: 6,
               children: [
                 for (final s in order)
-                  _Legend(
-                    key: ValueKey('event-count-${s.name}'),
-                    color: eventStatusStyle(context, s).bar,
-                    label: eventStatusLabel(l10n, s),
-                    count: s == AttendanceStatus.present
-                        ? heads[s] + extraPresent
-                        : heads[s],
-                    chips: [
-                      if (s == AttendanceStatus.present && staffPresent > 0)
-                        _Chip(
-                          key: const ValueKey('event-count-staff-chip'),
-                          label: l10n.eventDetailStaffPresent(staffPresent),
-                          background: dark
-                              ? StatusColors.indigo500.withValues(alpha: 0.2)
-                              : StatusColors.indigo100,
-                          foreground: dark
-                              ? StatusColors.indigo300
-                              : StatusColors.indigo700,
-                        ),
-                      if (s == AttendanceStatus.present && guestsPresent > 0)
-                        _Chip(
-                          key: const ValueKey('event-count-guests-chip'),
-                          label: l10n.eventDetailGuestsPresent(guestsPresent),
-                          background: dark
-                              ? StatusColors.amber500.withValues(alpha: 0.2)
-                              : StatusColors.amber100,
-                          foreground: dark
-                              ? StatusColors.amber300
-                              : StatusColors.amber800,
-                        ),
-                    ],
-                  ),
+                  if (s == AttendanceStatus.present || heads[s] > 0)
+                    _Legend(
+                      key: ValueKey('event-count-${s.name}'),
+                      color: eventStatusStyle(context, s).bar,
+                      label: eventStatusLabel(l10n, s),
+                      count: s == AttendanceStatus.present
+                          ? heads[s] + extraPresent
+                          : heads[s],
+                      chips: [
+                        if (s == AttendanceStatus.present && staffPresent > 0)
+                          _Chip(
+                            key: const ValueKey('event-count-staff-chip'),
+                            label: l10n.eventDetailStaffPresent(staffPresent),
+                            background: dark
+                                ? StatusColors.indigo500.withValues(alpha: 0.2)
+                                : StatusColors.indigo100,
+                            foreground: dark
+                                ? StatusColors.indigo300
+                                : StatusColors.indigo700,
+                          ),
+                        if (s == AttendanceStatus.present && guestsPresent > 0)
+                          _Chip(
+                            key: const ValueKey('event-count-guests-chip'),
+                            label: l10n.eventDetailGuestsPresent(guestsPresent),
+                            background: dark
+                                ? StatusColors.amber500.withValues(alpha: 0.2)
+                                : StatusColors.amber100,
+                            foreground: dark
+                                ? StatusColors.amber300
+                                : StatusColors.amber800,
+                          ),
+                      ],
+                    ),
               ],
             ),
             if (footer != null) ...[const SizedBox(height: 12), footer!],
@@ -136,6 +156,17 @@ class EventResponsesCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _Segment extends StatelessWidget {
+  const _Segment({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: ShapeDecoration(color: color, shape: const StadiumBorder()),
+  );
 }
 
 class _Legend extends StatelessWidget {
@@ -164,12 +195,12 @@ class _Legend extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(label, style: TextStyle(fontSize: 13, color: t.inkSoft)),
-        const SizedBox(width: 4),
+        Text(label, style: TextStyle(fontSize: 15, color: t.inkSoft)),
+        const SizedBox(width: 6),
         Text(
           '$count',
           style: TextStyle(
-            fontSize: 13,
+            fontSize: 15,
             fontWeight: FontWeight.w700,
             color: t.ink,
             fontFeatures: const [FontFeature.tabularFigures()],

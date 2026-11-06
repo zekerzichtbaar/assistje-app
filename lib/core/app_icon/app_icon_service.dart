@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_controller.dart';
+import '../config/env.dart';
 import '../session/session_providers.dart';
 import '../theme/theme_providers.dart';
 
@@ -43,6 +44,11 @@ class AppIconService {
   final MethodChannel _channel;
 
   static String clubIconName(int clubId) => 'ClubIcon-$clubId';
+
+  /// Het wapen waar het clubicoon van gebakken is, altijd als rasterbeeld
+  /// (vogels3 `docs/api/v1/app-icons.md`).
+  static String clubLogoUrl(int clubId) =>
+      '${Env.apiBaseUrl}/app-icons/$clubId/logo.png';
 
   static bool get _platformSupported =>
       defaultTargetPlatform == TargetPlatform.iOS ||

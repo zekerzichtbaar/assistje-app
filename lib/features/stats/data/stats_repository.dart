@@ -63,10 +63,12 @@ class StatsRepository {
     int teamId, {
     StatsWindow window = StatsWindow.season,
     int? seasonId,
+    int? periodId,
   }) async {
     final query = <String, Object>{
       if (window != StatsWindow.season) 'window': window.query,
       'season': ?seasonId,
+      'period': ?periodId,
     };
     final body = await _api.get(
       '/teams/$teamId/stats',
@@ -86,6 +88,7 @@ class StatsRepository {
     int teamId, {
     StatsWindow window = StatsWindow.season,
     int? seasonId,
+    int? periodId,
   }) async {
     final dio = _dio;
     if (dio == null) {
@@ -94,6 +97,7 @@ class StatsRepository {
     final query = <String, Object>{
       if (window != StatsWindow.season) 'window': window.query,
       'season': ?seasonId,
+      'period': ?periodId,
     };
     try {
       final response = await dio.get<List<int>>(

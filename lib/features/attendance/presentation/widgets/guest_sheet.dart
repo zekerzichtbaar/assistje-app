@@ -157,17 +157,19 @@ class _GuestFormState extends ConsumerState<_GuestForm> {
                   key: const ValueKey('guest-options-empty'),
                   style: TextStyle(fontSize: 13, color: t.muted),
                 )
-              : Column(
-                  key: const ValueKey('guest-options'),
-                  children: [
-                    for (final option in list)
-                      _OptionTile(
-                        option: option,
-                        enabled: !_busy,
-                        onTap: () =>
-                            _run(() => widget.onAddExisting(option.id)),
-                      ),
-                  ],
+              : Reveal(
+                  child: Column(
+                    key: const ValueKey('guest-options'),
+                    children: [
+                      for (final option in list)
+                        _OptionTile(
+                          option: option,
+                          enabled: !_busy,
+                          onTap: () =>
+                              _run(() => widget.onAddExisting(option.id)),
+                        ),
+                    ],
+                  ),
                 ),
           loading: () => const Padding(
             padding: EdgeInsets.symmetric(vertical: 4),

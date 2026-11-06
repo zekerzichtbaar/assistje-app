@@ -147,46 +147,57 @@ class SchedulePickerField extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: BorderRadius.circular(AssistjeTokens.radiusXl),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  14,
-                  value != null && clear != null ? 2 : 12,
-                  value != null && clear != null ? 2 : 14,
-                  value != null && clear != null ? 2 : 12,
-                ),
-                child: Row(
-                  children: [
-                    Icon(icon, size: 20, color: t.muted),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ExcludeSemantics(
-                        child: Text(
-                          value ?? placeholder,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: value == null ? t.muted : t.ink,
+              // Altijd even hoog, met of zonder wisknop (naast elkaar
+              // staande velden lijnen zo uit); groeit mee met grote tekst.
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 48),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    14,
+                    0,
+                    value != null && clear != null ? 2 : 14,
+                    0,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(icon, size: 20, color: t.muted),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ExcludeSemantics(
+                          child: Text(
+                            value ?? placeholder,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: value == null ? t.muted : t.ink,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    if (value != null && clear != null)
-                      IconButton(
-                        key: key is ValueKey<String>
-                            ? ValueKey(
-                                '${(key! as ValueKey<String>).value}-clear',
-                              )
-                            : null,
-                        tooltip: clearLabel,
-                        onPressed: clear,
-                        icon: Icon(
-                          PhosphorIconsRegular.x,
-                          size: 16,
-                          color: t.muted,
+                      if (value != null && clear != null)
+                        IconButton(
+                          key: key is ValueKey<String>
+                              ? ValueKey(
+                                  '${(key! as ValueKey<String>).value}-clear',
+                                )
+                              : null,
+                          tooltip: clearLabel,
+                          onPressed: clear,
+                          // 44 pt: past binnen de 48 pt van het veld.
+                          constraints: const BoxConstraints.tightFor(
+                            width: 44,
+                            height: 44,
+                          ),
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            PhosphorIconsRegular.x,
+                            size: 16,
+                            color: t.muted,
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

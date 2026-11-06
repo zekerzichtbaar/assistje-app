@@ -28,6 +28,12 @@ Future<void> _open(
   await tester.pumpAndSettle();
 }
 
+/// De schermacties staan in de topbar onder de ⋯.
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   group('Meldingen', () {
     testWidgets('lijst: ongelezen gemarkeerd, telling, alles gelezen', (
@@ -75,6 +81,7 @@ void main() {
         '1',
       );
 
+      await _openActions(tester);
       await tester.tap(find.byKey(const ValueKey('notifications-read-all')));
       await tester.pumpAndSettle();
       expect(
@@ -202,6 +209,7 @@ void main() {
       const action = ValueKey('notifications-delete-all');
 
       // Annuleren laat alles staan.
+      await _openActions(tester);
       await tester.tap(find.byKey(action));
       await tester.pumpAndSettle();
       expect(find.text('Alle meldingen verwijderen?'), findsOneWidget);
@@ -212,6 +220,7 @@ void main() {
       expect(api.requestsTo('DELETE /teams/3/notifications'), isEmpty);
       expect(find.text('Melding 0'), findsOneWidget);
 
+      await _openActions(tester);
       await tester.tap(find.byKey(action));
       await tester.pumpAndSettle();
       await tester.tap(
@@ -243,6 +252,7 @@ void main() {
         },
       );
 
+      await _openActions(tester);
       await tester.tap(find.byKey(const ValueKey('notifications-delete-all')));
       await tester.pumpAndSettle();
       await tester.tap(

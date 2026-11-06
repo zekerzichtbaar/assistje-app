@@ -451,11 +451,7 @@ class _AssignListState extends ConsumerState<_AssignList> {
                 ),
               ),
               if (loading)
-                const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
+                const AppSpinner(size: 16)
               else if (selected)
                 const Icon(
                   PhosphorIconsBold.check,

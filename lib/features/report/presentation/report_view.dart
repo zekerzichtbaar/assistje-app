@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -48,7 +49,9 @@ class ReportView extends ConsumerWidget {
           report.event.awayTeam,
         ),
         onRefresh: () => _refresh(context, ref, key),
-        child: _ReportBody(reportKey: key, report: report),
+        child: Reveal(
+          child: _ReportBody(reportKey: key, report: report),
+        ),
       );
     }
     if (async.hasError) {
@@ -121,8 +124,8 @@ class ReportView extends ConsumerWidget {
   }
 }
 
-/// Het scherm rond de inhoud: titel onder de zwevende pills, scrollen, en
-/// (met data) trekken om te verversen.
+/// Het scherm rond de inhoud: titel in de topbar, de wedstrijd als
+/// ondertitel, scrollen, en (met data) trekken om te verversen.
 class _ReportScaffold extends StatelessWidget {
   const _ReportScaffold({required this.child, this.subtitle, this.onRefresh});
 
@@ -140,52 +143,37 @@ class _ReportScaffold extends StatelessWidget {
       16,
       ShellInsets.bottom(context),
     );
-    final header = Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Semantics(
-            header: true,
-            // Zelfde key als de placeholder (de shell-tests lezen hem).
+    final header = (subtitle ?? '').isEmpty
+        ? null
+        : Padding(
+            padding: const EdgeInsets.only(bottom: 12),
             child: Text(
-              l10n.screenEventReport,
-              key: const Key('placeholder-title'),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: t.ink,
-                height: 1.2,
-              ),
-            ),
-          ),
-          if ((subtitle ?? '').isNotEmpty)
-            Text(
               subtitle!,
               key: const ValueKey('report-match'),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 14, color: t.muted),
             ),
-        ],
-      ),
-    );
+          );
     final refresh = onRefresh;
-    return Scaffold(
-      key: const ValueKey('report-screen'),
-      backgroundColor: t.sunken,
-      body: refresh == null
-          ? ListView(padding: padding, children: [header, child])
-          : AppRefresh(
-              onRefresh: refresh,
-              padding: padding,
-              slivers: [
-                SliverToBoxAdapter(child: header),
-                SliverToBoxAdapter(child: child),
-              ],
-            ),
+    return ShellBar(
+      title: l10n.screenEventReport,
+      // Zelfde key als de placeholder (de shell-tests lezen hem).
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('report-screen'),
+        backgroundColor: t.sunken,
+        body: refresh == null
+            ? ListView(padding: padding, children: [?header, child])
+            : AppRefresh(
+                onRefresh: refresh,
+                padding: padding,
+                slivers: [
+                  if (header != null) SliverToBoxAdapter(child: header),
+                  SliverToBoxAdapter(child: child),
+                ],
+              ),
+      ),
     );
   }
 }

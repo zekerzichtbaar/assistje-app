@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/app_spinner.dart';
+
 /// Kleuren van de "deur"-schermen (inloggen, onboarding): grasgroen met
 /// maaistrepen, bijna-zwarte inkt en een gele actieknop (ANALYSIS §6).
 abstract final class DoorColors {
@@ -131,12 +133,10 @@ class DoorButton extends StatelessWidget {
               ],
             ),
             child: busy
-                ? const SizedBox.square(
-                    dimension: 22,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: DoorColors.ink,
-                    ),
+                ? const AppSpinner(
+                    size: 22,
+                    strokeWidth: 2.5,
+                    color: DoorColors.ink,
                   )
                 : Text(
                     label,

@@ -70,7 +70,9 @@ class _PouleScreenState extends ConsumerState<PouleScreen> {
       final async = ref.watch(pouleControllerProvider(teamId));
       poule = async.value;
       if (poule != null) {
-        content = _content(poule);
+        content = [
+          SliverReveal(sliver: SliverMainAxisGroup(slivers: _content(poule))),
+        ];
       } else if (async.error is NotFoundException) {
         content = [_noPoule(l10n)];
       } else if (async.hasError) {

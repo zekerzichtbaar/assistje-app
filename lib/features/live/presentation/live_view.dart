@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -227,20 +228,24 @@ class _LiveViewState extends ConsumerState<LiveView> {
 
     final List<Widget> slivers;
     if (match != null) {
-      slivers = _content(
-        membership,
-        controller,
-        match,
-        isCup: _isCup(key, match),
-      );
+      slivers = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(
+            slivers: _content(
+              membership,
+              controller,
+              match,
+              isCup: _isCup(key, match),
+            ),
+          ),
+        ),
+      ];
     } else if (async.hasError) {
       slivers = [
-        _title(),
         SliverToBoxAdapter(child: _errorState(controller, async.error)),
       ];
     } else {
       slivers = [
-        _title(),
         const SliverToBoxAdapter(
           child: Column(
             key: ValueKey('live-loading'),
@@ -254,21 +259,27 @@ class _LiveViewState extends ConsumerState<LiveView> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('live-screen'),
-      backgroundColor: t.sunken,
-      body: Semantics(
-        label: l10n.screenEventLive,
-        explicitChildNodes: true,
-        child: AppRefresh(
-          onRefresh: () => _retry(controller),
-          padding: EdgeInsets.fromLTRB(
-            12,
-            ShellInsets.top(context),
-            12,
-            ShellInsets.bottom(context),
+    // Titel in de topbar; zelfde key als de placeholder (de shell-tests
+    // lezen hem).
+    return ShellBar(
+      title: l10n.screenEventLive,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('live-screen'),
+        backgroundColor: t.sunken,
+        body: Semantics(
+          label: l10n.screenEventLive,
+          explicitChildNodes: true,
+          child: AppRefresh(
+            onRefresh: () => _retry(controller),
+            padding: EdgeInsets.fromLTRB(
+              12,
+              ShellInsets.top(context),
+              12,
+              ShellInsets.bottom(context),
+            ),
+            slivers: slivers,
           ),
-          slivers: slivers,
         ),
       ),
     );
@@ -282,29 +293,6 @@ class _LiveViewState extends ConsumerState<LiveView> {
     if (!match.canManage || !match.canDecide(isCup: true)) return false;
     final detail = ref.watch(eventDetailControllerProvider(key)).value;
     return detail?.competition == 'cup';
-  }
-
-  /// Schermtitel; zelfde key als de placeholder (de shell-tests lezen hem).
-  Widget _title() {
-    final t = AssistjeTokens.of(context);
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-        child: Semantics(
-          header: true,
-          child: Text(
-            AppLocalizations.of(context).screenEventLive,
-            key: const Key('placeholder-title'),
-            style: TextStyle(
-              fontSize: 26,
-              height: 1.15,
-              fontWeight: FontWeight.w700,
-              color: t.ink,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _errorState(LiveController controller, Object? error) {
@@ -347,7 +335,6 @@ class _LiveViewState extends ConsumerState<LiveView> {
     final feed = buildLiveFeed(match);
     final title = match.event.title;
     return [
-      _title(),
       if (title.isNotEmpty)
         SliverToBoxAdapter(
           child: Padding(

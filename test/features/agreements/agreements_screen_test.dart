@@ -49,6 +49,12 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// De schermacties staan in de topbar onder de ⋯.
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('lid: intro en groepen, geen bewerkknoppen', (tester) async {
     await _open(tester, membership: _player);
@@ -107,7 +113,7 @@ void main() {
         ),
       );
 
-      await _tap(tester, find.byKey(const ValueKey('agreements-add')));
+      await _openActions(tester);
       // Zonder titel: inline melding, geen verzoek.
       await _tap(tester, find.byKey(const ValueKey('agreement-form-save')));
       expect(find.text('Vul de afspraak in.'), findsOneWidget);

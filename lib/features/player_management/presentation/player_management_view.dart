@@ -9,6 +9,7 @@ import '../../../core/api/api_exception.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -202,7 +203,13 @@ class _PlayerManagementViewState extends ConsumerState<PlayerManagementView> {
 
     final List<Widget> content;
     if (state != null) {
-      content = _content(membership, state, sport, readOnly: readOnly);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(
+            slivers: _content(membership, state, sport, readOnly: readOnly),
+          ),
+        ),
+      ];
     } else if (async.hasError) {
       content = [SliverToBoxAdapter(child: _errorState(teamId, async.error))];
     } else {
@@ -220,55 +227,33 @@ class _PlayerManagementViewState extends ConsumerState<PlayerManagementView> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('players-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        widget.title,
-                        // Zelfde key als de placeholder: de shell-tests
-                        // lezen de schermtitel via `placeholder-title`.
-                        key: const Key('placeholder-title'),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: t.ink,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (state != null && !readOnly)
-                    PrimaryButton(
-                      key: const ValueKey('pm-add'),
-                      label: _l10n.pmAdd,
-                      icon: const PhosphorIcon(
-                        PhosphorIconsBold.plus,
-                        size: 16,
-                      ),
-                      onPressed: () => _add(teamId, sport),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar (zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`); toevoegen onder de ⋯.
+    return ShellBar(
+      title: widget.title,
+      titleKey: const Key('placeholder-title'),
+      actions: [
+        if (state != null && !readOnly)
+          ShellAction(
+            key: const ValueKey('pm-add'),
+            label: _l10n.pmAdd,
+            icon: PhosphorIconsDuotone.plus,
+            onTap: () => _add(teamId, sport),
           ),
-          ...content,
-        ],
+      ],
+      child: Scaffold(
+        key: const ValueKey('players-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
+        ),
       ),
     );
   }

@@ -245,7 +245,7 @@ final _screens = <AuditScreen>[
       )
       ..on('GET /teams/3/savings/create', 200, SavingsFixtures.createOptions()),
     open: (t) async {
-      await auditTap(t, find.byKey(const ValueKey('savings-new')));
+      await auditTap(t, find.byKey(const Key('shell-actions')));
       await auditTap(
         t,
         find.byKey(const ValueKey('savings-form-without-amount')),

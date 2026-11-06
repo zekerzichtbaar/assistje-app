@@ -92,7 +92,10 @@ Future<void> openProfile(WidgetTester tester) async {
 
 /// De titel van het zichtbare (placeholder)scherm.
 String? currentTitle(WidgetTester tester) {
-  final finder = find.byKey(const Key('placeholder-title')).hitTestable();
+  // De titel in de topbar vangt geen tikken (IgnorePointer), dus niet
+  // `hitTestable`; verborgen tabtakken vallen af via skipOffstage. Tijdens
+  // een overgang staat de nieuwe titel als laatste.
+  final finder = find.byKey(const Key('placeholder-title'));
   final found = finder.evaluate().toList();
   if (found.isEmpty) return null;
   return (found.last.widget as Text).data;

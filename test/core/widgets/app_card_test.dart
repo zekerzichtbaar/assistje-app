@@ -30,4 +30,28 @@ void main() {
     await tester.tap(find.text('Kaart'));
     expect(taps, 1);
   });
+
+  testWidgets('deukt in onder je vinger, ook op iOS (zonder ripple)', (
+    tester,
+  ) async {
+    await pumpThemed(
+      tester,
+      AppCard(onTap: () {}, child: const Text('Kaart')),
+      dark: false,
+      platform: TargetPlatform.iOS,
+    );
+    double scale() =>
+        tester.widget<AnimatedScale>(find.byType(AnimatedScale)).scale;
+    expect(scale(), 1);
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Kaart')),
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(scale(), AppCard.pressedScale);
+
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(scale(), 1);
+  });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../data/fines_repository.dart';
 import '../data/models/fines_models.dart';
@@ -272,6 +273,7 @@ typedef PersonFinesQuery = ({
 /// De boetes van één speler of staflid in een periode.
 final personFinesProvider = FutureProvider.autoDispose
     .family<PersonFines, PersonFinesQuery>((ref, query) {
+      ref.cacheFor(kScreenCacheDuration);
       final repository = ref.watch(finesRepositoryProvider);
       return query.staff
           ? repository.fetchStaff(

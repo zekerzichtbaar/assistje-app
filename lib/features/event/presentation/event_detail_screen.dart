@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -198,10 +199,13 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
 
     final List<Widget> content;
     if (event != null) {
-      content = _content(membership, event);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(membership, event)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
-        _title(l10n.screenEvent, const Key('placeholder-title')),
         SliverToBoxAdapter(
           child: EmptyState(
             key: const ValueKey('event-error'),
@@ -217,13 +221,10 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
         ),
       ];
     } else {
-      content = [
-        _title(l10n.screenEvent, const Key('placeholder-title')),
-        const SliverToBoxAdapter(child: EventDetailSkeleton()),
-      ];
+      content = [const SliverToBoxAdapter(child: EventDetailSkeleton())];
     }
 
-    return Scaffold(
+    final scaffold = Scaffold(
       key: const ValueKey('event-detail-screen'),
       backgroundColor: t.sunken,
       body: AppRefresh(
@@ -237,28 +238,26 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
         slivers: content,
       ),
     );
-  }
 
-  Widget _title(String text, Key key) {
-    final t = AssistjeTokens.of(context);
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-        child: Semantics(
-          header: true,
-          child: Text(
-            text,
-            key: key,
-            style: TextStyle(
-              fontSize: 26,
-              height: 1.15,
-              fontWeight: FontWeight.w700,
-              color: t.ink,
-            ),
-          ),
-        ),
-      ),
-    );
+    // Titel in de topbar; de beheeracties onder de ⋯. Bewerken, afgelasten
+    // en verwijderen: alleen de trainer, niet in een demoteam (dat mag niet
+    // schrijven).
+    final title = event == null
+        ? l10n.screenEvent
+        : eventDetailTitle(l10n, event);
+    final titleKey = event == null
+        ? const Key('placeholder-title')
+        : const ValueKey('event-detail-title');
+    if (event != null && membership.isTrainer && !membership.team.isDemo) {
+      return EventTrainerActions(
+        eventKey: _key(teamId),
+        event: event,
+        title: title,
+        titleKey: titleKey,
+        child: scaffold,
+      );
+    }
+    return ShellBar(title: title, titleKey: titleKey, child: scaffold);
   }
 
   List<Widget> _content(TeamMembership membership, EventDetail event) {
@@ -270,9 +269,6 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     final motm = event.motm;
     final offers = event.carpoolOffers;
     final isTrainer = membership.isTrainer || event.isTrainer;
-    // Bewerken, afgelasten en verwijderen: alleen de trainer, niet in een
-    // demoteam (dat mag niet schrijven).
-    final manages = membership.isTrainer && !membership.team.isDemo;
 
     final guestsPresent = event.players
         .where((p) => p.isGuest && p.status == AttendanceStatus.present)
@@ -290,7 +286,6 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
         : 0;
 
     final children = <Widget>[
-      if (manages) EventTrainerActions(eventKey: _key(teamId), event: event),
       if (event.isMatch &&
           membership.hasFeature('motm') &&
           motm != null &&
@@ -377,10 +372,6 @@ class _EventDetailScreenState extends ConsumerState<EventDetailScreen> {
     ];
 
     return [
-      _title(
-        eventDetailTitle(l10n, event),
-        const ValueKey('event-detail-title'),
-      ),
       SliverList.separated(
         itemCount: children.length,
         itemBuilder: (context, index) => children[index],

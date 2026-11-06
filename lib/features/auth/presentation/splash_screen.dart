@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/widgets/app_spinner.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import 'widgets/door_scaffold.dart';
 
@@ -52,7 +53,7 @@ class SplashScreen extends ConsumerWidget {
     }
 
     return const DoorScaffold(
-      child: Center(child: CircularProgressIndicator(color: DoorColors.ink)),
+      child: Center(child: AppSpinner(size: 32, color: DoorColors.ink)),
     );
   }
 }

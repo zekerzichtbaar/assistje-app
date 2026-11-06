@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../players/application/player_detail_controller.dart';
 import '../../team/application/roster_controller.dart';
@@ -60,6 +61,8 @@ class PlayerManagementController extends AsyncNotifier<PlayerManagementState> {
   Future<PlayerManagementState> build() async {
     // Een andere gebruiker (uit- en weer inloggen) krijgt een vers overzicht.
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     final data = await ref
         .watch(playerManagementRepositoryProvider)
         .fetch(teamId);

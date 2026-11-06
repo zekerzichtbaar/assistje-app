@@ -487,11 +487,7 @@ class _LogoRow extends StatelessWidget {
             border: Border.all(color: t.line),
           ),
           child: busy
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
+              ? const AppSpinner()
               : url == null
               ? Text(
                   l10n.settingsLogoNone,

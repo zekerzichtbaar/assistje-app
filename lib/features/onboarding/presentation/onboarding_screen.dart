@@ -8,6 +8,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/deep_links/deep_link_mapper.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -116,44 +117,35 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('onboarding-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          16,
-          ShellInsets.top(context),
-          16,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l10n.navOnboarding,
-                  // Zelfde key als de placeholder: de shell-tests lezen de
-                  // schermtitel via `placeholder-title`.
-                  key: const Key('placeholder-title'),
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                    color: t.ink,
-                  ),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.navOnboarding,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('onboarding-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            ShellInsets.top(context),
+            16,
+            ShellInsets.bottom(context),
+          ),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Reveal(
+                // Nieuwe key zodra de data er is: dan fadet hij in.
+                key: ValueKey(onboarding != null),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: body,
                 ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: body,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -83,7 +84,11 @@ class _PlayerDetailScreenState extends ConsumerState<PlayerDetailScreen> {
 
     final List<Widget> content;
     if (detail != null) {
-      content = _content(membership, detail);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(membership, detail)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -104,21 +109,24 @@ class _PlayerDetailScreenState extends ConsumerState<PlayerDetailScreen> {
       content = const [SliverToBoxAdapter(child: PlayerDetailSkeleton())];
     }
 
-    return Scaffold(
-      key: const ValueKey('player-detail-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de titel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.screenPlayer,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('player-detail-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
         ),
-        slivers: [
-          SliverToBoxAdapter(child: RosterScreenTitle(l10n.screenPlayer)),
-          ...content,
-        ],
       ),
     );
   }

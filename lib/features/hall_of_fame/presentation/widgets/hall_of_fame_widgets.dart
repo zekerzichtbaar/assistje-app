@@ -585,42 +585,75 @@ class HofAwardsCard extends StatelessWidget {
                   onTap: winner.playerId == null
                       ? null
                       : () => onOpenPlayer(winner.playerId!),
+                  // Zelfde opbouw als `_TitleRow`: vaste emoji-kolom, titel
+                  // met de stand eronder, rechts de winnaar. Zo staat elke
+                  // kolom recht onder die van de rij erboven.
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        Text(winner.icon),
-                        const SizedBox(width: 8),
-                        Flexible(
+                        SizedBox(
+                          width: 28,
                           child: Text(
-                            winner.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: t.ink,
-                            ),
+                            winner.icon,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 20),
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 12),
                         Expanded(
-                          child: Text(
-                            winner.label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 13, color: t.muted),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                winner.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: t.ink,
+                                ),
+                              ),
+                              if (winner.value != null &&
+                                  winner.value!.isNotEmpty)
+                                Text(
+                                  winner.value!,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: t.muted,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                        if (winner.value != null)
-                          Text(
-                            winner.value!,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: t.muted,
-                            ),
+                        const SizedBox(width: 12),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 128),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AppAvatar(
+                                name: winner.name,
+                                imageUrl: winner.avatarUrl,
+                                size: 32,
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  winner.name.split(' ').first,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: t.inkSoft,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
                       ],
                     ),
                   ),

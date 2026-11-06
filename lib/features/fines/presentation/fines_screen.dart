@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -207,7 +208,11 @@ class _FinesScreenState extends ConsumerState<FinesScreen> {
 
     final List<Widget> content;
     if (state != null) {
-      content = _content(teamId, state);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(teamId, state)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -239,52 +244,33 @@ class _FinesScreenState extends ConsumerState<FinesScreen> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('fines-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        l10n.navFines,
-                        // Zelfde key als de placeholder: de shell-tests lezen
-                        // de schermtitel via `placeholder-title`.
-                        key: const Key('placeholder-title'),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: t.ink,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (state != null && state.overview.canManage)
-                    SecondaryButton(
-                      key: const ValueKey('fines-manage'),
-                      label: l10n.finesManage,
-                      icon: const Icon(PhosphorIconsBold.gearSix, size: 16),
-                      onPressed: () => _manage(teamId, state.overview),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar (zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`); "Beheer" onder de ⋯.
+    return ShellBar(
+      title: l10n.navFines,
+      titleKey: const Key('placeholder-title'),
+      actions: [
+        if (state != null && state.overview.canManage)
+          ShellAction(
+            key: const ValueKey('fines-manage'),
+            label: l10n.finesManage,
+            icon: PhosphorIconsDuotone.gearSix,
+            onTap: () => _manage(teamId, state.overview),
           ),
-          ...content,
-        ],
+      ],
+      child: Scaffold(
+        key: const ValueKey('fines-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
+        ),
       ),
     );
   }

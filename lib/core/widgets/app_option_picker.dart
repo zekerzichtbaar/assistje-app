@@ -14,10 +14,15 @@ class AppPickerOption<T> {
     required this.value,
     required this.label,
     required this.key,
+    this.section,
   });
 
   final T value;
   final String label;
+
+  /// Kopje boven deze keuze (bijv. "Seizoen", "Vorm"); getoond bij de
+  /// eerste keuze van een nieuwe groep.
+  final String? section;
 
   /// Key van de rij in de sheet.
   final Key key;
@@ -57,7 +62,24 @@ class AppOptionPicker<T> extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (final option in options)
+            for (final (i, option) in options.indexed) ...[
+              if (option.section != null &&
+                  (i == 0 || options[i - 1].section != option.section))
+                Padding(
+                  padding: EdgeInsets.only(top: i == 0 ? 0 : 12, bottom: 2),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      option.section!.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.6,
+                        color: t.muted,
+                      ),
+                    ),
+                  ),
+                ),
               ListTile(
                 key: option.key,
                 contentPadding: EdgeInsets.zero,
@@ -76,6 +98,7 @@ class AppOptionPicker<T> extends StatelessWidget {
                     : null,
                 onTap: () => Navigator.of(sheetContext).pop((option.value,)),
               ),
+            ],
             const SizedBox(height: 12),
           ],
         );

@@ -58,8 +58,8 @@ class SavingsCell extends StatelessWidget {
               child: pending
                   ? Padding(
                       padding: EdgeInsets.all(size * 0.25),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                      child: AppSpinner(
+                        size: size * 0.5,
                         color: paid ? Colors.white : t.muted,
                       ),
                     )

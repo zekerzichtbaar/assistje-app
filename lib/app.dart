@@ -11,6 +11,7 @@ import 'core/session/session_providers.dart';
 import 'core/theme/app_text_scaler.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_providers.dart';
+import 'core/widgets/skeleton.dart';
 import 'l10n/generated/app_localizations.dart';
 
 class AssistjeApp extends ConsumerWidget {
@@ -54,7 +55,8 @@ class AssistjeApp extends ConsumerWidget {
           value: systemBarsStyle(Theme.of(context).brightness),
           child: MediaQuery(
             data: mq.copyWith(textScaler: AppTextScaler.from(mq.textScaler)),
-            child: child!,
+            // Eén gedeelde glansgolf voor alle skeletons.
+            child: ShimmerScope(child: child!),
           ),
         );
       },

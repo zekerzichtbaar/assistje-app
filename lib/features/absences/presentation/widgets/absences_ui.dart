@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/api/api_exception.dart';
+import '../../../../core/shell/shell_bar.dart';
 import '../../../../core/shell/shell_insets.dart';
 import '../../../../core/theme/assistje_tokens.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -76,8 +77,9 @@ void showAbsencesSuccess(BuildContext context, String title) {
 }
 
 /// Het geraamte van een afwezigheidsscherm: grijze achtergrond, ruimte voor
-/// de shell-pills, pull-to-refresh en een titel (`placeholder-title`, zodat
-/// de shell-tests hem lezen) met uitleg.
+/// de shell-pills, pull-to-refresh, de titel in de topbar
+/// (`placeholder-title`, zodat de shell-tests hem lezen) en uitleg bovenaan
+/// de inhoud.
 class AbsencesScaffold extends StatelessWidget {
   const AbsencesScaffold({
     super.key,
@@ -95,48 +97,33 @@ class AbsencesScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AssistjeTokens.of(context);
-    return Scaffold(
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: onRefresh,
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      title,
-                      key: const Key('placeholder-title'),
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: t.ink,
-                      ),
-                    ),
-                  ),
-                  if (intro != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      intro!,
-                      style: TextStyle(fontSize: 14, color: t.muted),
-                    ),
-                  ],
-                ],
-              ),
-            ),
+    return ShellBar(
+      title: title,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: onRefresh,
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
           ),
-          ...slivers,
-        ],
+          slivers: [
+            if (intro != null)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                  child: Text(
+                    intro!,
+                    style: TextStyle(fontSize: 14, color: t.muted),
+                  ),
+                ),
+              ),
+            ...slivers,
+          ],
+        ),
       ),
     );
   }

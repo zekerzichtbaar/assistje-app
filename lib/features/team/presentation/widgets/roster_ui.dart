@@ -26,37 +26,6 @@ void showRosterError(BuildContext context, String title, Object? error) {
   );
 }
 
-/// De schermtitel. Zelfde key als de placeholder: de shell-tests lezen de
-/// titel via `placeholder-title`.
-class RosterScreenTitle extends StatelessWidget {
-  const RosterScreenTitle(this.text, {super.key});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = AssistjeTokens.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-      child: Semantics(
-        header: true,
-        child: Text(
-          text,
-          key: const Key('placeholder-title'),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 28,
-            height: 1.15,
-            fontWeight: FontWeight.w700,
-            color: t.ink,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// Klein label in een statuskleur: geblesseerd, vakantie, gast, aanvoerder.
 class RosterBadge extends StatelessWidget {
   const RosterBadge({

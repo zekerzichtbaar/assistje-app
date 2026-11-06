@@ -92,7 +92,13 @@ class _VacationsScreenState extends ConsumerState<VacationsScreen> {
 
     final List<Widget> slivers;
     if (state != null) {
-      slivers = _content(teamId, state, featureOn: featureOn);
+      slivers = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(
+            slivers: _content(teamId, state, featureOn: featureOn),
+          ),
+        ),
+      ];
     } else if (async.hasError) {
       slivers = [
         SliverToBoxAdapter(
@@ -257,14 +263,7 @@ class _VacationTile extends StatelessWidget {
             ),
           ),
           if (removing)
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
+            const Padding(padding: EdgeInsets.all(12), child: AppSpinner())
           else
             IconButton(
               key: ValueKey('vacation-remove-${vacation.id}'),

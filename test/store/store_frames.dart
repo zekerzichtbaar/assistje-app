@@ -182,10 +182,7 @@ class StoreFrame extends StatelessWidget {
                   top: deviceTop - w * 0.07,
                   width: w * (tablet ? 0.15 : 0.24),
                   height: w * (tablet ? 0.19 : 0.3),
-                  child: Transform.rotate(
-                    angle: 0.2,
-                    child: const Mascot(),
-                  ),
+                  child: Transform.rotate(angle: 0.2, child: const Mascot()),
                 ),
             ],
           ),
@@ -231,11 +228,7 @@ class _Label extends StatelessWidget {
 }
 
 class _Headline extends StatelessWidget {
-  const _Headline({
-    required this.text,
-    required this.size,
-    required this.pill,
-  });
+  const _Headline({required this.text, required this.size, required this.pill});
 
   final String text;
   final double size;
@@ -293,20 +286,12 @@ class _Headline extends StatelessWidget {
                 color: pill,
                 borderRadius: BorderRadius.circular(size),
                 border: Border.all(width: size * 0.045),
-                boxShadow: [
-                  BoxShadow(offset: Offset(0, size * 0.07)),
-                ],
+                boxShadow: [BoxShadow(offset: Offset(0, size * 0.07))],
               ),
-              child: Text(
-                parts[i].trim(),
-                style: _style,
-              ),
+              child: Text(parts[i].trim(), style: _style),
             )
           else
-            Text(
-              parts[i],
-              style: _style,
-            ),
+            Text(parts[i], style: _style),
       ],
     );
   }
@@ -560,11 +545,7 @@ class FieldPainter extends CustomPainter {
       final centre = Offset(circleX ?? size.width / 2, y);
       canvas
         ..drawCircle(centre, r, line)
-        ..drawCircle(
-          centre,
-          lineWidth * 1.6,
-          Paint()..color = Brand.line,
-        );
+        ..drawCircle(centre, lineWidth * 1.6, Paint()..color = Brand.line);
     }
   }
 
@@ -616,11 +597,7 @@ class FeatureGraphic extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 96,
-                  height: 120,
-                  child: Mascot(),
-                ),
+                SizedBox(width: 96, height: 120, child: Mascot()),
                 SizedBox(height: 20),
                 FittedBox(
                   fit: BoxFit.scaleDown,

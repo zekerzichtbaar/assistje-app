@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/shell/shell_bar.dart';
 import '../../core/shell/shell_insets.dart';
 import '../../core/theme/assistje_tokens.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -24,34 +25,26 @@ class PlaceholderScreen extends StatelessWidget {
     final tokens = AssistjeTokens.of(context);
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(
-          16,
-          ShellInsets.top(context),
-          16,
-          ShellInsets.bottom(context),
-        ),
-        children: [
-          Semantics(
-            header: true,
-            child: Text(
-              title,
-              key: const Key('placeholder-title'),
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-                color: tokens.ink,
-              ),
+    // Titel in de topbar.
+    return ShellBar(
+      title: title,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        body: ListView(
+          padding: EdgeInsets.fromLTRB(
+            16,
+            ShellInsets.top(context),
+            16,
+            ShellInsets.bottom(context),
+          ),
+          children: [
+            Text(
+              l10n.placeholderBody,
+              style: TextStyle(fontSize: 15, color: tokens.muted),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.placeholderBody,
-            style: TextStyle(fontSize: 15, color: tokens.muted),
-          ),
-          ...children,
-        ],
+            ...children,
+          ],
+        ),
       ),
     );
   }

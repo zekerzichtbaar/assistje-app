@@ -5,6 +5,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/router/app_routes.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -43,7 +44,11 @@ class DutyOverviewScreen extends ConsumerWidget {
 
     final List<Widget> content;
     if (overview != null) {
-      content = _content(context, overview);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(context, overview)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -68,31 +73,24 @@ class DutyOverviewScreen extends ConsumerWidget {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('duty-overview-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(context, ref, teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: ScreenHeader(
-                title: l10n.navDuties,
-                // Zelfde key als de placeholder: de shell-tests lezen de
-                // schermtitel via `placeholder-title`.
-                titleKey: const Key('placeholder-title'),
-              ),
-            ),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.navDuties,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('duty-overview-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(context, ref, teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
           ),
-          ...content,
-        ],
+          slivers: content,
+        ),
       ),
     );
   }

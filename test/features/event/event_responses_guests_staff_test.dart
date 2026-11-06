@@ -55,6 +55,27 @@ EventPlayer _p(
 
 void main() {
   group('EventResponsesCard', () {
+    testWidgets('de balk is zichtbaar: segmenten vullen de hoogte', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        (_) => const EventResponsesCard(
+          counts: AttendanceCounts(present: 16, absent: 11, nonplay: 2),
+        ),
+      );
+      final segments = find.descendant(
+        of: _key('event-responses'),
+        matching: find.byWidgetPredicate(
+          (w) => w is DecoratedBox && w.decoration is ShapeDecoration,
+        ),
+      );
+      expect(segments, findsNWidgets(3));
+      for (final element in segments.evaluate()) {
+        expect(tester.getSize(find.byWidget(element.widget)).height, 10);
+      }
+    });
+
     testWidgets('staf en gasten tellen op in Aanwezig, met chipjes', (
       tester,
     ) async {
@@ -91,7 +112,12 @@ void main() {
         lessThan(tester.getTopLeft(_key('event-count-guests-chip')).dx),
       );
       // De breuk blijft over iedereen die moet reageren.
-      expect(find.text('14 van 16 gereageerd'), findsOneWidget);
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is Semantics && w.properties.label == '14 van 16 gereageerd',
+        ),
+        findsOneWidget,
+      );
     });
 
     testWidgets('zonder staf geen stafchip; meervoud gasten', (tester) async {

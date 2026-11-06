@@ -553,7 +553,7 @@ final _sheets = <AuditScreen>[
       200,
       AgreementsFixtures.overview(canManage: true),
     ),
-    open: _taps(['agreements-add']),
+    open: _taps(['shell-actions']),
   ),
 ];
 

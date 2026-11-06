@@ -50,6 +50,12 @@ Future<(ProviderContainer, FakeHttpAdapter)> _open(
   return (container, backend.http);
 }
 
+/// De beheeracties staan in de topbar onder de ⋯.
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 Finder _inScreen(Finder finder) => find.descendant(
   of: find.byKey(const ValueKey('event-detail-screen')),
   matching: finder,
@@ -94,7 +100,12 @@ void main() {
     expect(find.byKey(const ValueKey('event-motm')), findsNothing);
 
     await _scrollTo(tester, find.byKey(const ValueKey('event-responses')));
-    expect(find.text('12 van 16 gereageerd'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Semantics && w.properties.label == '12 van 16 gereageerd',
+      ),
+      findsOneWidget,
+    );
 
     await _scrollTo(tester, find.byKey(const ValueKey('event-carpool')));
     expect(find.text('Trainer Tom'), findsWidgets);
@@ -370,10 +381,7 @@ void main() {
       tester,
     ) async {
       await _open(tester, membership: trainer, detail: detail);
-      expect(
-        find.byKey(const ValueKey('event-trainer-actions')),
-        findsOneWidget,
-      );
+      await _openActions(tester);
       expect(find.byKey(const ValueKey('event-trainer-edit')), findsOneWidget);
       expect(
         find.byKey(const ValueKey('event-trainer-cancel')),
@@ -394,13 +402,14 @@ void main() {
           'is_trainer': true,
         }),
       );
+      await _openActions(tester);
       expect(find.byKey(const ValueKey('event-trainer-edit')), findsOneWidget);
       expect(find.byKey(const ValueKey('event-trainer-cancel')), findsNothing);
     });
 
     testWidgets('speler ziet geen beheerknoppen', (tester) async {
       await _open(tester, detail: detail);
-      expect(find.byKey(const ValueKey('event-trainer-actions')), findsNothing);
+      expect(find.byKey(const Key('shell-actions')), findsNothing);
     });
 
     testWidgets('demo-trainer ziet geen beheerknoppen', (tester) async {
@@ -409,7 +418,7 @@ void main() {
         'team': {...trainer['team'] as Map<String, dynamic>, 'is_demo': true},
       };
       await _open(tester, membership: demo, detail: detail);
-      expect(find.byKey(const ValueKey('event-trainer-actions')), findsNothing);
+      expect(find.byKey(const Key('shell-actions')), findsNothing);
     });
 
     testWidgets('afgelasten: eerst bevestigen, dan POST en verversen', (
@@ -430,6 +439,8 @@ void main() {
           }),
         ),
       );
+
+      await _openActions(tester);
 
       await tester.tap(find.byKey(const ValueKey('event-trainer-cancel')));
       await tester.pumpAndSettle();
@@ -452,6 +463,7 @@ void main() {
           'cancelled_at': '2099-10-01T10:00:00+02:00',
         }),
       );
+      await _openActions(tester);
       await tester.tap(find.byKey(const ValueKey('event-trainer-cancel')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('schedule-confirm-ok')));
@@ -463,6 +475,7 @@ void main() {
         find.byKey(const ValueKey('event-cancelled-notice')),
         findsOneWidget,
       );
+      await _openActions(tester);
       expect(
         find.byKey(const ValueKey('event-trainer-uncancel')),
         findsOneWidget,
@@ -487,6 +500,8 @@ void main() {
         ),
       );
 
+      await _openActions(tester);
+
       await tester.tap(find.byKey(const ValueKey('event-trainer-uncancel')));
       await tester.pumpAndSettle();
       expect(find.text('Afgelasting intrekken?'), findsOneWidget);
@@ -507,6 +522,8 @@ void main() {
         setup: (http) => http.on(delete, 204),
       );
       final agendaBefore = http.requestsTo(_agenda).length;
+
+      await _openActions(tester);
 
       await tester.tap(find.byKey(const ValueKey('event-trainer-delete')));
       await tester.pumpAndSettle();
@@ -530,6 +547,8 @@ void main() {
         }),
       );
 
+      await _openActions(tester);
+
       await tester.tap(find.byKey(const ValueKey('event-trainer-delete')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('schedule-confirm-ok')));
@@ -549,6 +568,8 @@ void main() {
           'data': {'team_name': 'Vogels 3'},
         }),
       );
+
+      await _openActions(tester);
 
       await tester.tap(find.byKey(const ValueKey('event-trainer-edit')));
       await pumpUntilFound(tester, find.byKey(const ValueKey('schedule-form')));

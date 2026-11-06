@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../app_icon/app_icon_service.dart';
 import '../session/models/team.dart';
 import '../theme/assistje_tokens.dart';
 import '../widgets/status_colors.dart';
-import 'nav_presentation.dart';
+import 'shell_bar.dart';
 import 'shell_insets.dart';
 
 /// Ronde/pilvormige glazen knopachtergrond voor de zwevende pills.
@@ -47,12 +48,16 @@ class HomeBackPill extends StatelessWidget {
   const HomeBackPill({
     super.key,
     required this.team,
+    required this.clubIcon,
     required this.showBack,
     required this.onHome,
     required this.onBack,
   });
 
   final Team? team;
+
+  /// Het clubwapen is het app-icoon (Profiel → *App-icoon*).
+  final bool clubIcon;
   final bool showBack;
   final VoidCallback onHome;
   final VoidCallback onBack;
@@ -107,7 +112,9 @@ class HomeBackPill extends StatelessWidget {
                   onTap: onHome,
                   child: _PillSurface(
                     width: ShellInsets.pillSize,
-                    child: Center(child: _TeamLogo(team: team)),
+                    child: Center(
+                      child: _TeamLogo(team: team, clubIcon: clubIcon),
+                    ),
                   ),
                 ),
               ),
@@ -116,39 +123,41 @@ class HomeBackPill extends StatelessWidget {
   }
 }
 
+/// Hetzelfde beeld als het app-icoon ([desiredAppIconProvider]): met
+/// [clubIcon] aan het clubwapen (zoals `tool/app_icons.dart` het inbakt, op
+/// wit), anders het Assistje-icoon. Het teamlogo zelf is vaak leeg; het
+/// wapen hangt aan de club.
 class _TeamLogo extends StatelessWidget {
-  const _TeamLogo({required this.team});
+  const _TeamLogo({required this.team, required this.clubIcon});
 
   final Team? team;
+  final bool clubIcon;
+
+  static const double _size = 28;
 
   @override
   Widget build(BuildContext context) {
-    final tokens = AssistjeTokens.of(context);
-    final fallback = Container(
-      width: 28,
-      height: 28,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: tokens.primary, shape: BoxShape.circle),
-      // Vaste chrome in een cirkel van 28 pt: schaalt niet mee met grote tekst.
-      child: Text(
-        initials(team?.name ?? 'Assistje'),
-        textScaler: TextScaler.noScaling,
-        style: TextStyle(
-          color: tokens.primaryContrast,
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+    final assistje = Image.asset(
+      'assets/app_icon/assistje.png',
+      width: _size,
+      height: _size,
+      fit: BoxFit.cover,
     );
-    final url = team?.logoUrl;
-    if (url == null || url.isEmpty) return fallback;
+    final clubId = team?.clubId;
+    if (!clubIcon || clubId == null) return ClipOval(child: assistje);
     return ClipOval(
-      child: Image.network(
-        url,
-        width: 28,
-        height: 28,
-        fit: team!.logoFills ? BoxFit.cover : BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => fallback,
+      child: Container(
+        width: _size,
+        height: _size,
+        color: Colors.white,
+        padding: const EdgeInsets.all(3),
+        child: Image.network(
+          AppIconService.clubLogoUrl(clubId),
+          fit: BoxFit.contain,
+          // Geen (leesbaar) wapen: dan is het app-icoon ook het standaardicoon.
+          errorBuilder: (context, error, stackTrace) =>
+              OverflowBox(maxWidth: _size, maxHeight: _size, child: assistje),
+        ),
       ),
     );
   }
@@ -221,6 +230,62 @@ class BellPill extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Rechtsboven, naast de bel: de acties van het scherm onder een ⋯.
+class ActionsPill extends StatelessWidget {
+  const ActionsPill({super.key, required this.onTap, this.single});
+
+  final VoidCallback onTap;
+
+  /// Heeft het scherm maar één actie, dan staat die als eigen knop in de
+  /// balk (met zijn eigen icoon, zoals een iOS-balkknop) in plaats van achter
+  /// een ⋯ met een sheet van één regel. Uitgeschakeld = half doorzichtig.
+  final ShellAction? single;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = AssistjeTokens.of(context);
+    final action = single;
+    final enabled = action == null || action.onTap != null;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final color = action != null && action.destructive
+        ? (dark ? StatusColors.red400 : StatusColors.red600)
+        : tokens.ink;
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: action?.label ?? l10n.shellActions,
+      excludeSemantics: true,
+      child: GestureDetector(
+        key: const Key('shell-actions'),
+        behavior: HitTestBehavior.opaque,
+        onTap: enabled ? onTap : null,
+        child: AnimatedOpacity(
+          opacity: enabled ? 1 : 0.4,
+          duration: const Duration(milliseconds: 150),
+          child: _PillSurface(
+            width: ShellInsets.pillSize,
+            child: Center(
+              child: action == null
+                  ? PhosphorIcon(
+                      PhosphorIconsBold.dotsThree,
+                      size: 22,
+                      color: tokens.ink,
+                    )
+                  // De eigen key van de actie, zodat tests en schermen hem
+                  // net zo vinden als de regel in de sheet.
+                  : KeyedSubtree(
+                      key: action.key,
+                      child: PhosphorIcon(action.icon, size: 22, color: color),
+                    ),
+            ),
           ),
         ),
       ),

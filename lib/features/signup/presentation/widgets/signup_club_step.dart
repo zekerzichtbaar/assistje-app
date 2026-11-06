@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/widgets/app_spinner.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/widgets/door_scaffold.dart';
 import '../../../join/presentation/widgets/join_door.dart';
@@ -318,13 +319,7 @@ class _SignupClubStepState extends ConsumerState<SignupClubStep> {
           suffix: _searching
               ? const Padding(
                   padding: EdgeInsets.all(14),
-                  child: SizedBox.square(
-                    dimension: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: Color(0x800C120D),
-                    ),
-                  ),
+                  child: AppSpinner(strokeWidth: 2.5, color: Color(0x800C120D)),
                 )
               : null,
         ),

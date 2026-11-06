@@ -11,22 +11,14 @@ import '../theme/assistje_tokens.dart';
 /// (gebeurt via `GlobalMaterialLocalizations` in de app; in tests
 /// `initializeDateFormatting('nl')`).
 ///
-/// Vandaag krijgt de weekdagband de teamkleur. Geef [now] mee om "vandaag"
-/// testbaar/expliciet te maken.
+/// Vandaag ziet er bewust hetzelfde uit als andere dagen: een gekleurde band
+/// was te heftig op de kaart.
 class DateTile extends StatelessWidget {
-  const DateTile({
-    super.key,
-    required this.date,
-    this.showTime = false,
-    this.now,
-    this.highlightToday = true,
-  });
+  const DateTile({super.key, required this.date, this.showTime = false});
 
   /// Lokale datum/tijd van het moment.
   final DateTime date;
   final bool showTime;
-  final DateTime? now;
-  final bool highlightToday;
 
   static String _strip(String s) =>
       s.endsWith('.') ? s.substring(0, s.length - 1) : s;
@@ -42,18 +34,9 @@ class DateTile extends StatelessWidget {
   /// "19:30".
   static String timeLabel(DateTime d) => DateFormat.Hm('nl').format(d);
 
-  bool get isToday {
-    final n = now ?? DateTime.now();
-    return n.year == date.year && n.month == date.month && n.day == date.day;
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = AssistjeTokens.of(context);
-    final today = highlightToday && isToday;
-    final bandColor = today ? t.primary : t.raised;
-    final bandText = today ? t.primaryContrast : t.muted;
-    final borderColor = today ? t.primary : t.lineSoft;
 
     return Container(
       width: 56,
@@ -61,7 +44,7 @@ class DateTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: t.surface,
         borderRadius: BorderRadius.circular(AssistjeTokens.radiusLg),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: t.lineSoft),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -69,7 +52,7 @@ class DateTile extends StatelessWidget {
         children: [
           Container(
             key: const ValueKey('date-tile-band'),
-            color: bandColor,
+            color: t.raised,
             padding: const EdgeInsets.symmetric(vertical: 2),
             // Vaste breedte (een kalenderblaadje): bij grote tekst verkleinen
             // in plaats van afbreken.
@@ -82,7 +65,7 @@ class DateTile extends StatelessWidget {
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.4,
-                  color: bandText,
+                  color: t.muted,
                 ),
               ),
             ),

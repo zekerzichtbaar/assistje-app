@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:assistje/core/router/app_router.dart';
+import 'package:assistje/core/shell/floating_pills.dart';
+import 'package:assistje/features/lineup/data/models/lineup_models.dart';
+import 'package:assistje/features/lineup/presentation/lineup_view.dart';
 import 'package:assistje/features/lineup/presentation/widgets/field_painters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +44,10 @@ Future<(ProviderContainer, FakeHttpAdapter)> _open(
 }
 
 Finder _key(String key) => find.byKey(ValueKey(key));
+
+/// Het label van de deelknop (het deelicoon naast de bel).
+String? _shareLabel(WidgetTester tester) =>
+    tester.widget<ActionsPill>(find.byType(ActionsPill)).single?.label;
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
@@ -88,7 +95,7 @@ void main() {
         ),
       );
 
-      expect(currentTitle(tester), 'Opstelling');
+      expect(currentTitle(tester), 'Opstelling tegen SV Merel 2');
       final field = _key('lineup-field-$painterKey');
       expect(field, findsOneWidget);
       expect(tester.widget<CustomPaint>(field).painter.runtimeType, type);
@@ -332,7 +339,7 @@ void main() {
         LineupFixtures.response(publishedAt: '2026-10-11T19:02:11+02:00'),
       ),
     );
-    expect(find.text('Deel met het team'), findsOneWidget);
+    expect(_shareLabel(tester), 'Deel met het team');
 
     await _tap(tester, _key('lineup-share'));
     expect(find.text('Opstelling delen?'), findsOneWidget);
@@ -340,8 +347,9 @@ void main() {
 
     expect(http.requestsTo(LineupFixtures.publish), hasLength(1));
     expect(find.text('Opstelling gedeeld'), findsOneWidget);
-    expect(find.text('Gedeeld met het team'), findsOneWidget);
+    expect(_shareLabel(tester), 'Gedeeld met het team');
     expect(_key('lineup-share-status'), findsOneWidget);
+    expect(find.textContaining('Gedeeld op'), findsOneWidget);
   });
 
   testWidgets('delen annuleren stuurt niets', (tester) async {
@@ -365,7 +373,7 @@ void main() {
 
     expect(find.text('Delen mislukt'), findsOneWidget);
     expect(find.text('Er staat nog niemand in de opstelling.'), findsOneWidget);
-    expect(find.text('Deel met het team'), findsOneWidget);
+    expect(_shareLabel(tester), 'Deel met het team');
   });
 
   testWidgets('aangepast na delen: "Opnieuw delen"', (tester) async {
@@ -376,7 +384,7 @@ void main() {
         changed: true,
       ),
     );
-    expect(find.text('Opnieuw delen'), findsOneWidget);
+    expect(_shareLabel(tester), 'Opnieuw delen');
     expect(
       find.text(
         'Aangepast na het delen. Het team ziet nog de oude opstelling.',
@@ -394,5 +402,28 @@ void main() {
     );
     await _tap(tester, _key('lineup-share'));
     expect(find.text('Opstelling delen?'), findsNothing);
+  });
+
+  group('lineupOpponent', () {
+    LineupEvent match(String? home, String? away) =>
+        LineupEvent(id: 1, homeTeam: home, awayTeam: away);
+
+    test('thuis of uit op naam, ook met clubprefix', () {
+      expect(
+        lineupOpponent(match('VRC 2', 'Valleivogels 3'), 'Valleivogels 3'),
+        'VRC 2',
+      );
+      expect(
+        lineupOpponent(match('VV Vogels 3', 'SV Merel 2'), 'Vogels 3'),
+        'SV Merel 2',
+      );
+    });
+
+    test('onduidelijk: geen tegenstander (titel blijft "Opstelling")', () {
+      expect(lineupOpponent(match('A 1', 'B 2'), 'Vogels 3'), isNull);
+      expect(lineupOpponent(match(null, null), 'Vogels 3'), isNull);
+      // Een "3" mag niet op "Vogels 13" matchen.
+      expect(lineupOpponent(match('Vogels 13', 'B 2'), 'Vogels 3'), isNull);
+    });
   });
 }

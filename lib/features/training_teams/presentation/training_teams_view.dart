@@ -8,6 +8,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -186,7 +187,11 @@ class _TrainingTeamsViewState extends ConsumerState<TrainingTeamsView> {
 
     final List<Widget> content;
     if (data != null) {
-      content = _content(teamId, data, sport);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(teamId, data, sport)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [SliverToBoxAdapter(child: _errorState(teamId, async.error))];
     } else {
@@ -204,52 +209,40 @@ class _TrainingTeamsViewState extends ConsumerState<TrainingTeamsView> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('training-teams-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.screenEventTrainingTeams,
-                      // Zelfde key als de placeholder: de shell-tests lezen
-                      // de schermtitel via `placeholder-title`.
-                      key: const Key('placeholder-title'),
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: t.ink,
-                      ),
-                    ),
-                  ),
-                  if (data != null)
-                    Text(
-                      _eventLabel(data),
-                      key: const ValueKey('training-teams-event-title'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15, color: t.muted),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar; het event blijft als ondertitel boven de inhoud.
+    return ShellBar(
+      title: l10n.screenEventTrainingTeams,
+      // Zelfde key als de placeholder: de shell-tests lezen de schermtitel
+      // via `placeholder-title`.
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('training-teams-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
           ),
-          ...content,
-        ],
+          slivers: [
+            if (data != null)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                  child: Text(
+                    _eventLabel(data),
+                    key: const ValueKey('training-teams-event-title'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 15, color: t.muted),
+                  ),
+                ),
+              ),
+            ...content,
+          ],
+        ),
       ),
     );
   }

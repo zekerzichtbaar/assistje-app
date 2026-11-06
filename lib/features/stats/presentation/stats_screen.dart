@@ -75,6 +75,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
             teamId,
             window: state.window,
             seasonId: state.selectedSeasonId,
+            periodId: state.periodId,
           );
       if (!mounted) return;
       await sharer.share(
@@ -87,6 +88,23 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
     } finally {
       if (mounted) setState(() => _exporting = false);
     }
+  }
+
+  /// Wat de periodekiezer nu toont.
+  String _scopeLabel(AppLocalizations l10n, StatsState state) {
+    final periodId = state.periodId;
+    if (periodId != null) {
+      for (final p in state.stats.periods) {
+        if (p.id == periodId) {
+          return p.isClosed ? l10n.statsPeriodClosed(p.name) : p.name;
+        }
+      }
+    }
+    return switch (state.window) {
+      StatsWindow.season => l10n.statsScopeWholeSeason,
+      StatsWindow.last10 => l10n.statsScopeLast10,
+      StatsWindow.last5 => l10n.statsScopeLast5,
+    };
   }
 
   Rect? _exportOrigin() {
@@ -115,7 +133,13 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
           profile,
           trainingPoints: membership.hasFeature('training_points'),
         );
-        content = _content(teamId, state, profile, sorts);
+        content = [
+          SliverReveal(
+            sliver: SliverMainAxisGroup(
+              slivers: _content(teamId, state, profile, sorts),
+            ),
+          ),
+        ];
         exportButton = Padding(
           key: const ValueKey('stats-export'),
           padding: const EdgeInsets.only(bottom: 12),
@@ -200,34 +224,46 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
             ),
           ),
         ),
+      // Eén periodekiezer, net als bij Ranking: het seizoen of een
+      // badge-periode, en daaronder de vorm (laatste 10/5 wedstrijden).
       SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10),
-          child: AppTabPills<StatsWindow>(
+          child: AppOptionPicker<StatsScope>(
             key: const ValueKey('stats-window'),
-            fullWidth: true,
-            darkTrack: true,
-            selected: state.window,
-            onChanged: state.switching
-                ? (_) {}
-                : (window) {
-                    unawaited(Haptics.selection());
-                    unawaited(
-                      _afterSwitch(_controller(teamId).selectWindow(window)),
-                    );
-                  },
-            tabs: [
-              AppTabPill(
-                value: StatsWindow.season,
-                label: l10n.statsWindowSeason,
+            icon: PhosphorIconsDuotone.flagCheckered,
+            buttonLabel: l10n.statsScopeButton(_scopeLabel(l10n, state)),
+            sheetTitle: l10n.statsScopePickerTitle,
+            enabled: !state.switching,
+            selected: state.scope,
+            onSelected: (scope) => unawaited(
+              _afterSwitch(_controller(teamId).selectScope(scope)),
+            ),
+            options: [
+              AppPickerOption(
+                value: StatsScope.season,
+                label: l10n.statsScopeWholeSeason,
+                section: l10n.statsScopeSectionSeason,
+                key: const ValueKey('stats-scope-season'),
               ),
-              AppTabPill(
-                value: StatsWindow.last10,
-                label: l10n.statsWindowLast10,
+              for (final p in stats.periods)
+                AppPickerOption(
+                  value: StatsScope.period(p.id),
+                  label: p.isClosed ? l10n.statsPeriodClosed(p.name) : p.name,
+                  section: l10n.statsScopeSectionSeason,
+                  key: ValueKey('stats-scope-period-${p.id}'),
+                ),
+              AppPickerOption(
+                value: const StatsScope.window(StatsWindow.last10),
+                label: l10n.statsScopeLast10,
+                section: l10n.statsScopeSectionForm,
+                key: const ValueKey('stats-scope-10'),
               ),
-              AppTabPill(
-                value: StatsWindow.last5,
-                label: l10n.statsWindowLast5,
+              AppPickerOption(
+                value: const StatsScope.window(StatsWindow.last5),
+                label: l10n.statsScopeLast5,
+                section: l10n.statsScopeSectionForm,
+                key: const ValueKey('stats-scope-5'),
               ),
             ],
           ),

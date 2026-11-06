@@ -5,8 +5,20 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'widget_harness.dart';
 
+double _opacity(WidgetTester tester) => tester
+    .widget<FadeTransition>(
+      find
+          .descendant(
+            of: find.byType(Skeleton).first,
+            matching: find.byType(FadeTransition),
+          )
+          .first,
+    )
+    .opacity
+    .value;
+
 void main() {
-  testBothThemes('skeleton-lijst pulseert in de line-kleur', (
+  testBothThemes('skeleton-lijst in de line-kleur, fadet na een tel in', (
     tester,
     dark,
   ) async {
@@ -23,29 +35,63 @@ void main() {
     );
     expect((block.decoration! as BoxDecoration).color, t.line);
 
-    final fade = find
-        .descendant(
-          of: find.byType(Skeleton).first,
-          matching: find.byType(FadeTransition),
-        )
-        .first;
-    final start = tester.widget<FadeTransition>(fade).opacity.value;
-    await tester.pump(const Duration(milliseconds: 1000));
-    final mid = tester.widget<FadeTransition>(fade).opacity.value;
-    expect(start, closeTo(1, 0.01));
-    expect(mid, closeTo(0.5, 0.05));
+    // Snel geladen data geeft geen flits: eerst onzichtbaar.
+    expect(_opacity(tester), 0);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(_opacity(tester), 0);
+    await tester.pumpAndSettle();
+    expect(_opacity(tester), 1);
   });
 
-  testWidgets('staat stil bij minder beweging', (tester) async {
+  testWidgets('zonder ShimmerScope staat hij stil (geen glans)', (
+    tester,
+  ) async {
+    await pumpThemed(tester, const Skeleton(width: 40), dark: false);
+    await tester.pumpAndSettle();
+    expect(tester.hasRunningAnimations, isFalse);
+  });
+
+  testWidgets('één gedeelde glans die alleen loopt met skeletons in beeld', (
+    tester,
+  ) async {
+    final show = ValueNotifier(true);
+    await pumpThemed(
+      tester,
+      ShimmerScope(
+        child: ValueListenableBuilder<bool>(
+          valueListenable: show,
+          builder: (context, on, _) =>
+              on ? const SkeletonList(count: 2) : const SizedBox.shrink(),
+        ),
+      ),
+      dark: false,
+    );
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(tester.hasRunningAnimations, isTrue);
+
+    final scope = ShimmerScope.maybeOf(
+      tester.element(find.byType(SkeletonRow).first),
+    );
+    expect(scope, isNotNull);
+    expect(scope!.progress.status, isNot(AnimationStatus.dismissed));
+
+    show.value = false;
+    await tester.pump();
+    await tester.pumpAndSettle();
+    expect(tester.hasRunningAnimations, isFalse);
+  });
+
+  testWidgets('staat meteen en stil bij minder beweging', (tester) async {
     await pumpThemed(
       tester,
       const MediaQuery(
         data: MediaQueryData(disableAnimations: true),
-        child: Skeleton(width: 40),
+        child: ShimmerScope(child: Skeleton(width: 40)),
       ),
       dark: false,
     );
-    await tester.pumpAndSettle();
+    expect(_opacity(tester), 1);
+    await tester.pump();
     expect(tester.hasRunningAnimations, isFalse);
   });
 }

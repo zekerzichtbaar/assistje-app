@@ -194,7 +194,8 @@ void main() {
   ) async {
     final (_, http) = await _open(tester);
 
-    await _tap(tester, find.text('Laatste 5'));
+    await _tap(tester, find.byKey(const ValueKey('stats-window')));
+    await _tap(tester, find.byKey(const ValueKey('stats-scope-5')));
     expect(http.requestsTo(_stats).last.options.uri.queryParameters, {
       'window': '5',
     });
@@ -205,6 +206,75 @@ void main() {
       'window': '5',
       'season': '3',
     });
+  });
+
+  testWidgets('periodekiezer: badge-periodes onder Seizoen, vorm eronder', (
+    tester,
+  ) async {
+    final (_, http) = await _open(
+      tester,
+      setup: (http) => http.on(
+        _stats,
+        200,
+        StatsFixtures.response({
+          'periods': [
+            {'id': 7, 'name': 'Periode 1', 'is_closed': true},
+            {'id': 8, 'name': 'Periode 2', 'is_closed': false},
+          ],
+        }),
+      ),
+    );
+    expect(find.text('Periode: Heel seizoen'), findsOneWidget);
+
+    await _tap(tester, find.byKey(const ValueKey('stats-window')));
+    expect(find.text('SEIZOEN'), findsOneWidget);
+    expect(find.text('VORM'), findsOneWidget);
+    expect(find.text('Periode 1 (afgesloten)'), findsOneWidget);
+
+    http.on(
+      'GET /teams/3/stats',
+      200,
+      StatsFixtures.response({
+        'period_id': 8,
+        'periods': [
+          {'id': 7, 'name': 'Periode 1', 'is_closed': true},
+          {'id': 8, 'name': 'Periode 2', 'is_closed': false},
+        ],
+      }),
+    );
+    await _tap(tester, find.byKey(const ValueKey('stats-scope-period-8')));
+    expect(http.requestsTo(_stats).last.options.uri.queryParameters, {
+      'period': '8',
+    });
+    expect(find.text('Periode: Periode 2'), findsOneWidget);
+  });
+
+  testWidgets('vorm: een stipje per event, oud naar nieuw', (tester) async {
+    await _open(
+      tester,
+      setup: (http) => http.on(
+        _stats,
+        200,
+        StatsFixtures.response({
+          'rows': [
+            {
+              'player_id': 14,
+              'name': 'Sam',
+              'recent_form': [
+                {'event_id': 1, 'type': 'match', 'status': 'present'},
+                {'event_id': 2, 'type': 'training', 'status': 'absent'},
+                {'event_id': 3, 'type': 'match', 'status': 'pending'},
+              ],
+            },
+          ],
+        }),
+      ),
+    );
+    final dots = find.descendant(
+      of: find.byKey(const ValueKey('stats-form-14')),
+      matching: find.byType(Container),
+    );
+    expect(dots, findsNWidgets(3));
   });
 
   testWidgets('tik op een speler opent /players/:id', (tester) async {

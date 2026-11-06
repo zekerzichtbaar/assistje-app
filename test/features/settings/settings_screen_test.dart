@@ -43,6 +43,12 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// De schermacties staan in de topbar onder de ⋯.
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 const _tabNames = {
   'Team': 'team',
   'Seizoen': 'season',
@@ -402,7 +408,8 @@ void main() {
 
     expect(_key('settings-duty-12'), findsOneWidget);
     expect(_key('settings-duty-13'), findsOneWidget);
-    await _tap(tester, _key('settings-duty-add'));
+    await _openActions(tester);
+    await tester.pumpAndSettle();
     expect(_key('settings-duty-form'), findsOneWidget);
 
     // Lege naam: niets verstuurd.
@@ -466,7 +473,8 @@ void main() {
       }),
     );
     await _tab(tester, 'Diensten');
-    await _tap(tester, _key('settings-duty-add'));
+    await _openActions(tester);
+    await tester.pumpAndSettle();
     await tester.enterText(_key('settings-duty-name'), 'Wassen');
     await _tap(tester, _key('settings-duty-submit'));
 

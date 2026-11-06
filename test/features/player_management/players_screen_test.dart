@@ -34,6 +34,12 @@ Future<(ProviderContainer, FakeHttpAdapter)> _open(
 
 Finder _key(String key) => find.byKey(ValueKey(key));
 
+/// Opent het ⋯-menu in de topbar (daar staat "Toevoegen").
+Future<void> _openActions(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('shell-actions')));
+  await tester.pumpAndSettle();
+}
+
 Future<void> _tap(WidgetTester tester, String key) async {
   await tester.ensureVisible(_key(key));
   await tester.pumpAndSettle();
@@ -54,7 +60,7 @@ void main() {
     await _open(tester);
 
     expect(currentTitle(tester), 'Spelers');
-    expect(_key('pm-add'), findsOneWidget);
+    expect(find.byKey(const Key('shell-actions')), findsOneWidget);
     expect(
       find.descendant(
         of: _key('pm-section-trainers'),
@@ -102,7 +108,7 @@ void main() {
       },
     });
 
-    await _tap(tester, 'pm-add');
+    await _openActions(tester);
     expect(
       find.descendant(of: _key('pm-add-tabs'), matching: find.text('CSV')),
       findsOneWidget,
@@ -140,7 +146,7 @@ void main() {
     final (_, http) = await _open(tester);
     http.on('POST /teams/3/trainers', 201, PmFixtures.data(PmFixtures.anja()));
 
-    await _tap(tester, 'pm-add');
+    await _openActions(tester);
     await tester.tap(find.text('Trainer').last);
     await tester.pumpAndSettle();
     await tester.enterText(_key('pm-add-name'), 'Anja');
@@ -352,7 +358,7 @@ void main() {
     await _open(tester, membership: PmFixtures.trainerMembership(demo: true));
 
     expect(_key('pm-read-only'), findsOneWidget);
-    expect(_key('pm-add'), findsNothing);
+    expect(find.byKey(const Key('shell-actions')), findsNothing);
     expect(_key('pm-trainer-remove-60'), findsNothing);
     expect(_key('pm-spectator-remove-51'), findsNothing);
 
@@ -430,7 +436,7 @@ void main() {
     );
 
     expect(_key('pm-forbidden'), findsOneWidget);
-    expect(_key('pm-add'), findsNothing);
+    expect(find.byKey(const Key('shell-actions')), findsNothing);
   });
 
   testWidgets('laadfout: opnieuw proberen', (tester) async {

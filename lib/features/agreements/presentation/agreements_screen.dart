@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -101,7 +102,11 @@ class _AgreementsScreenState extends ConsumerState<AgreementsScreen> {
 
     final List<Widget> content;
     if (overview != null) {
-      content = _content(teamId, overview);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(teamId, overview)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -135,56 +140,34 @@ class _AgreementsScreenState extends ConsumerState<AgreementsScreen> {
 
     final canManage = overview?.canManage ?? false;
 
-    return Scaffold(
-      key: const ValueKey('agreements-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        l10n.navAgreements,
-                        // Zelfde key als de placeholder: de shell-tests lezen
-                        // de schermtitel via `placeholder-title`.
-                        key: const Key('placeholder-title'),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: t.ink,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (canManage && overview != null)
-                    IconButton.filled(
-                      key: const ValueKey('agreements-add'),
-                      tooltip: l10n.agreementsAdd,
-                      style: IconButton.styleFrom(
-                        backgroundColor: t.primary,
-                        foregroundColor: t.primaryContrast,
-                      ),
-                      icon: const Icon(PhosphorIconsBold.plus, size: 18),
-                      onPressed: () => _openForm(teamId, overview),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar, "nieuwe afspraak" onder de ⋯. Zelfde key als de
+    // placeholder: de shell-tests lezen de schermtitel via
+    // `placeholder-title`.
+    return ShellBar(
+      title: l10n.navAgreements,
+      titleKey: const Key('placeholder-title'),
+      actions: [
+        if (canManage && overview != null)
+          ShellAction(
+            key: const ValueKey('agreements-add'),
+            icon: PhosphorIconsDuotone.plus,
+            label: l10n.agreementsAdd,
+            onTap: () => _openForm(teamId, overview),
           ),
-          ...content,
-        ],
+      ],
+      child: Scaffold(
+        key: const ValueKey('agreements-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
+        ),
       ),
     );
   }

@@ -555,7 +555,8 @@ mixin _$StatsRow {
 
 @asInt int get playerId; String get name;@asIntOrNull int? get shirtNumber; String? get position; String? get avatarUrl;@asDouble double get attendanceRate;@asDouble double get attendanceMatchRate;@asDouble double get attendanceTrainingRate;@asInt int get minutes;@asInt int get goals;@asInt int get assists;@asInt int get yellow;@asInt int get red;@asInt int get matchesPlayed;/// Wedstrijden (met opstelling) waarbij de speler er was of speelde.
 @asInt int get matchesPresent;/// `minutes / matches_present`, afgerond; `0` zonder aanwezige wedstrijd.
-@asInt int get minutesPerMatch;@asInt int get flagMinutes;@asInt int get flagShifts; List<StatsTitle> get titles;@asInt int get trainingPoints;
+@asInt int get minutesPerMatch;@asInt int get flagMinutes;@asInt int get flagShifts; List<StatsTitle> get titles;@asInt int get trainingPoints;/// Antwoord op de laatste 5 wedstrijden en trainingen, oud → nieuw.
+ List<StatsFormEntry> get recentForm;
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -568,16 +569,16 @@ $StatsRowCopyWith<StatsRow> get copyWith => _$StatsRowCopyWithImpl<StatsRow>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other.titles, titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other.titles, titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints)&&const DeepCollectionEquality().equals(other.recentForm, recentForm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(titles),trainingPoints]);
+int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(titles),trainingPoints,const DeepCollectionEquality().hash(recentForm)]);
 
 @override
 String toString() {
-  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
+  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints, recentForm: $recentForm)';
 }
 
 
@@ -588,7 +589,7 @@ abstract mixin class $StatsRowCopyWith<$Res>  {
   factory $StatsRowCopyWith(StatsRow value, $Res Function(StatsRow) _then) = _$StatsRowCopyWithImpl;
 @useResult
 $Res call({
-@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
+@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints, List<StatsFormEntry> recentForm
 });
 
 
@@ -605,7 +606,7 @@ class _$StatsRowCopyWithImpl<$Res>
 
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,Object? recentForm = null,}) {
   return _then(_self.copyWith(
 playerId: null == playerId ? _self.playerId : playerId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -627,7 +628,8 @@ as int,flagMinutes: null == flagMinutes ? _self.flagMinutes : flagMinutes // ign
 as int,flagShifts: null == flagShifts ? _self.flagShifts : flagShifts // ignore: cast_nullable_to_non_nullable
 as int,titles: null == titles ? _self.titles : titles // ignore: cast_nullable_to_non_nullable
 as List<StatsTitle>,trainingPoints: null == trainingPoints ? _self.trainingPoints : trainingPoints // ignore: cast_nullable_to_non_nullable
-as int,
+as int,recentForm: null == recentForm ? _self.recentForm : recentForm // ignore: cast_nullable_to_non_nullable
+as List<StatsFormEntry>,
   ));
 }
 
@@ -712,10 +714,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints,  List<StatsFormEntry> recentForm)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StatsRow() when $default != null:
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints,_that.recentForm);case _:
   return orElse();
 
 }
@@ -733,10 +735,10 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints,  List<StatsFormEntry> recentForm)  $default,) {final _that = this;
 switch (_that) {
 case _StatsRow():
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints,_that.recentForm);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -753,10 +755,10 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asInt  int playerId,  String name, @asIntOrNull  int? shirtNumber,  String? position,  String? avatarUrl, @asDouble  double attendanceRate, @asDouble  double attendanceMatchRate, @asDouble  double attendanceTrainingRate, @asInt  int minutes, @asInt  int goals, @asInt  int assists, @asInt  int yellow, @asInt  int red, @asInt  int matchesPlayed, @asInt  int matchesPresent, @asInt  int minutesPerMatch, @asInt  int flagMinutes, @asInt  int flagShifts,  List<StatsTitle> titles, @asInt  int trainingPoints,  List<StatsFormEntry> recentForm)?  $default,) {final _that = this;
 switch (_that) {
 case _StatsRow() when $default != null:
-return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints);case _:
+return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that.avatarUrl,_that.attendanceRate,_that.attendanceMatchRate,_that.attendanceTrainingRate,_that.minutes,_that.goals,_that.assists,_that.yellow,_that.red,_that.matchesPlayed,_that.matchesPresent,_that.minutesPerMatch,_that.flagMinutes,_that.flagShifts,_that.titles,_that.trainingPoints,_that.recentForm);case _:
   return null;
 
 }
@@ -768,7 +770,7 @@ return $default(_that.playerId,_that.name,_that.shirtNumber,_that.position,_that
 @JsonSerializable()
 
 class _StatsRow implements StatsRow {
-  const _StatsRow({@asInt required this.playerId, this.name = '', @asIntOrNull this.shirtNumber, this.position, this.avatarUrl, @asDouble this.attendanceRate = 0, @asDouble this.attendanceMatchRate = 0, @asDouble this.attendanceTrainingRate = 0, @asInt this.minutes = 0, @asInt this.goals = 0, @asInt this.assists = 0, @asInt this.yellow = 0, @asInt this.red = 0, @asInt this.matchesPlayed = 0, @asInt this.matchesPresent = 0, @asInt this.minutesPerMatch = 0, @asInt this.flagMinutes = 0, @asInt this.flagShifts = 0, final  List<StatsTitle> titles = const <StatsTitle>[], @asInt this.trainingPoints = 0}): _titles = titles;
+  const _StatsRow({@asInt required this.playerId, this.name = '', @asIntOrNull this.shirtNumber, this.position, this.avatarUrl, @asDouble this.attendanceRate = 0, @asDouble this.attendanceMatchRate = 0, @asDouble this.attendanceTrainingRate = 0, @asInt this.minutes = 0, @asInt this.goals = 0, @asInt this.assists = 0, @asInt this.yellow = 0, @asInt this.red = 0, @asInt this.matchesPlayed = 0, @asInt this.matchesPresent = 0, @asInt this.minutesPerMatch = 0, @asInt this.flagMinutes = 0, @asInt this.flagShifts = 0, final  List<StatsTitle> titles = const <StatsTitle>[], @asInt this.trainingPoints = 0, final  List<StatsFormEntry> recentForm = const <StatsFormEntry>[]}): _titles = titles,_recentForm = recentForm;
   factory _StatsRow.fromJson(Map<String, dynamic> json) => _$StatsRowFromJson(json);
 
 @override@asInt final  int playerId;
@@ -799,6 +801,15 @@ class _StatsRow implements StatsRow {
 }
 
 @override@asInt final  int trainingPoints;
+/// Antwoord op de laatste 5 wedstrijden en trainingen, oud → nieuw.
+ final  List<StatsFormEntry> _recentForm;
+/// Antwoord op de laatste 5 wedstrijden en trainingen, oud → nieuw.
+@override@JsonKey() List<StatsFormEntry> get recentForm {
+  if (_recentForm is EqualUnmodifiableListView) return _recentForm;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_recentForm);
+}
+
 
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
@@ -813,16 +824,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other._titles, _titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsRow&&(identical(other.playerId, playerId) || other.playerId == playerId)&&(identical(other.name, name) || other.name == name)&&(identical(other.shirtNumber, shirtNumber) || other.shirtNumber == shirtNumber)&&(identical(other.position, position) || other.position == position)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.attendanceRate, attendanceRate) || other.attendanceRate == attendanceRate)&&(identical(other.attendanceMatchRate, attendanceMatchRate) || other.attendanceMatchRate == attendanceMatchRate)&&(identical(other.attendanceTrainingRate, attendanceTrainingRate) || other.attendanceTrainingRate == attendanceTrainingRate)&&(identical(other.minutes, minutes) || other.minutes == minutes)&&(identical(other.goals, goals) || other.goals == goals)&&(identical(other.assists, assists) || other.assists == assists)&&(identical(other.yellow, yellow) || other.yellow == yellow)&&(identical(other.red, red) || other.red == red)&&(identical(other.matchesPlayed, matchesPlayed) || other.matchesPlayed == matchesPlayed)&&(identical(other.matchesPresent, matchesPresent) || other.matchesPresent == matchesPresent)&&(identical(other.minutesPerMatch, minutesPerMatch) || other.minutesPerMatch == minutesPerMatch)&&(identical(other.flagMinutes, flagMinutes) || other.flagMinutes == flagMinutes)&&(identical(other.flagShifts, flagShifts) || other.flagShifts == flagShifts)&&const DeepCollectionEquality().equals(other._titles, _titles)&&(identical(other.trainingPoints, trainingPoints) || other.trainingPoints == trainingPoints)&&const DeepCollectionEquality().equals(other._recentForm, _recentForm));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(_titles),trainingPoints]);
+int get hashCode => Object.hashAll([runtimeType,playerId,name,shirtNumber,position,avatarUrl,attendanceRate,attendanceMatchRate,attendanceTrainingRate,minutes,goals,assists,yellow,red,matchesPlayed,matchesPresent,minutesPerMatch,flagMinutes,flagShifts,const DeepCollectionEquality().hash(_titles),trainingPoints,const DeepCollectionEquality().hash(_recentForm)]);
 
 @override
 String toString() {
-  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints)';
+  return 'StatsRow(playerId: $playerId, name: $name, shirtNumber: $shirtNumber, position: $position, avatarUrl: $avatarUrl, attendanceRate: $attendanceRate, attendanceMatchRate: $attendanceMatchRate, attendanceTrainingRate: $attendanceTrainingRate, minutes: $minutes, goals: $goals, assists: $assists, yellow: $yellow, red: $red, matchesPlayed: $matchesPlayed, matchesPresent: $matchesPresent, minutesPerMatch: $minutesPerMatch, flagMinutes: $flagMinutes, flagShifts: $flagShifts, titles: $titles, trainingPoints: $trainingPoints, recentForm: $recentForm)';
 }
 
 
@@ -833,7 +844,7 @@ abstract mixin class _$StatsRowCopyWith<$Res> implements $StatsRowCopyWith<$Res>
   factory _$StatsRowCopyWith(_StatsRow value, $Res Function(_StatsRow) _then) = __$StatsRowCopyWithImpl;
 @override @useResult
 $Res call({
-@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints
+@asInt int playerId, String name,@asIntOrNull int? shirtNumber, String? position, String? avatarUrl,@asDouble double attendanceRate,@asDouble double attendanceMatchRate,@asDouble double attendanceTrainingRate,@asInt int minutes,@asInt int goals,@asInt int assists,@asInt int yellow,@asInt int red,@asInt int matchesPlayed,@asInt int matchesPresent,@asInt int minutesPerMatch,@asInt int flagMinutes,@asInt int flagShifts, List<StatsTitle> titles,@asInt int trainingPoints, List<StatsFormEntry> recentForm
 });
 
 
@@ -850,7 +861,7 @@ class __$StatsRowCopyWithImpl<$Res>
 
 /// Create a copy of StatsRow
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? playerId = null,Object? name = null,Object? shirtNumber = freezed,Object? position = freezed,Object? avatarUrl = freezed,Object? attendanceRate = null,Object? attendanceMatchRate = null,Object? attendanceTrainingRate = null,Object? minutes = null,Object? goals = null,Object? assists = null,Object? yellow = null,Object? red = null,Object? matchesPlayed = null,Object? matchesPresent = null,Object? minutesPerMatch = null,Object? flagMinutes = null,Object? flagShifts = null,Object? titles = null,Object? trainingPoints = null,Object? recentForm = null,}) {
   return _then(_StatsRow(
 playerId: null == playerId ? _self.playerId : playerId // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -872,7 +883,550 @@ as int,flagMinutes: null == flagMinutes ? _self.flagMinutes : flagMinutes // ign
 as int,flagShifts: null == flagShifts ? _self.flagShifts : flagShifts // ignore: cast_nullable_to_non_nullable
 as int,titles: null == titles ? _self._titles : titles // ignore: cast_nullable_to_non_nullable
 as List<StatsTitle>,trainingPoints: null == trainingPoints ? _self.trainingPoints : trainingPoints // ignore: cast_nullable_to_non_nullable
-as int,
+as int,recentForm: null == recentForm ? _self._recentForm : recentForm // ignore: cast_nullable_to_non_nullable
+as List<StatsFormEntry>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$StatsFormEntry {
+
+@asIntOrNull int? get eventId;/// `match` of `training`.
+ String get type;/// `present`, `absent`, `nonplay` of `pending`.
+ String get status;
+/// Create a copy of StatsFormEntry
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StatsFormEntryCopyWith<StatsFormEntry> get copyWith => _$StatsFormEntryCopyWithImpl<StatsFormEntry>(this as StatsFormEntry, _$identity);
+
+  /// Serializes this StatsFormEntry to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsFormEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,type,status);
+
+@override
+String toString() {
+  return 'StatsFormEntry(eventId: $eventId, type: $type, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $StatsFormEntryCopyWith<$Res>  {
+  factory $StatsFormEntryCopyWith(StatsFormEntry value, $Res Function(StatsFormEntry) _then) = _$StatsFormEntryCopyWithImpl;
+@useResult
+$Res call({
+@asIntOrNull int? eventId, String type, String status
+});
+
+
+
+
+}
+/// @nodoc
+class _$StatsFormEntryCopyWithImpl<$Res>
+    implements $StatsFormEntryCopyWith<$Res> {
+  _$StatsFormEntryCopyWithImpl(this._self, this._then);
+
+  final StatsFormEntry _self;
+  final $Res Function(StatsFormEntry) _then;
+
+/// Create a copy of StatsFormEntry
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? eventId = freezed,Object? type = null,Object? status = null,}) {
+  return _then(_self.copyWith(
+eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [StatsFormEntry].
+extension StatsFormEntryPatterns on StatsFormEntry {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StatsFormEntry value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StatsFormEntry() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StatsFormEntry value)  $default,){
+final _that = this;
+switch (_that) {
+case _StatsFormEntry():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StatsFormEntry value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StatsFormEntry() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asIntOrNull  int? eventId,  String type,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StatsFormEntry() when $default != null:
+return $default(_that.eventId,_that.type,_that.status);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asIntOrNull  int? eventId,  String type,  String status)  $default,) {final _that = this;
+switch (_that) {
+case _StatsFormEntry():
+return $default(_that.eventId,_that.type,_that.status);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asIntOrNull  int? eventId,  String type,  String status)?  $default,) {final _that = this;
+switch (_that) {
+case _StatsFormEntry() when $default != null:
+return $default(_that.eventId,_that.type,_that.status);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _StatsFormEntry implements StatsFormEntry {
+  const _StatsFormEntry({@asIntOrNull this.eventId, this.type = '', this.status = 'pending'});
+  factory _StatsFormEntry.fromJson(Map<String, dynamic> json) => _$StatsFormEntryFromJson(json);
+
+@override@asIntOrNull final  int? eventId;
+/// `match` of `training`.
+@override@JsonKey() final  String type;
+/// `present`, `absent`, `nonplay` of `pending`.
+@override@JsonKey() final  String status;
+
+/// Create a copy of StatsFormEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StatsFormEntryCopyWith<_StatsFormEntry> get copyWith => __$StatsFormEntryCopyWithImpl<_StatsFormEntry>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$StatsFormEntryToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsFormEntry&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,eventId,type,status);
+
+@override
+String toString() {
+  return 'StatsFormEntry(eventId: $eventId, type: $type, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StatsFormEntryCopyWith<$Res> implements $StatsFormEntryCopyWith<$Res> {
+  factory _$StatsFormEntryCopyWith(_StatsFormEntry value, $Res Function(_StatsFormEntry) _then) = __$StatsFormEntryCopyWithImpl;
+@override @useResult
+$Res call({
+@asIntOrNull int? eventId, String type, String status
+});
+
+
+
+
+}
+/// @nodoc
+class __$StatsFormEntryCopyWithImpl<$Res>
+    implements _$StatsFormEntryCopyWith<$Res> {
+  __$StatsFormEntryCopyWithImpl(this._self, this._then);
+
+  final _StatsFormEntry _self;
+  final $Res Function(_StatsFormEntry) _then;
+
+/// Create a copy of StatsFormEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? eventId = freezed,Object? type = null,Object? status = null,}) {
+  return _then(_StatsFormEntry(
+eventId: freezed == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as int?,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$StatsPeriod {
+
+ int get id; String get name; bool get isClosed;
+/// Create a copy of StatsPeriod
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$StatsPeriodCopyWith<StatsPeriod> get copyWith => _$StatsPeriodCopyWithImpl<StatsPeriod>(this as StatsPeriod, _$identity);
+
+  /// Serializes this StatsPeriod to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatsPeriod&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isClosed, isClosed) || other.isClosed == isClosed));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,isClosed);
+
+@override
+String toString() {
+  return 'StatsPeriod(id: $id, name: $name, isClosed: $isClosed)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $StatsPeriodCopyWith<$Res>  {
+  factory $StatsPeriodCopyWith(StatsPeriod value, $Res Function(StatsPeriod) _then) = _$StatsPeriodCopyWithImpl;
+@useResult
+$Res call({
+ int id, String name, bool isClosed
+});
+
+
+
+
+}
+/// @nodoc
+class _$StatsPeriodCopyWithImpl<$Res>
+    implements $StatsPeriodCopyWith<$Res> {
+  _$StatsPeriodCopyWithImpl(this._self, this._then);
+
+  final StatsPeriod _self;
+  final $Res Function(StatsPeriod) _then;
+
+/// Create a copy of StatsPeriod
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? isClosed = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,isClosed: null == isClosed ? _self.isClosed : isClosed // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [StatsPeriod].
+extension StatsPeriodPatterns on StatsPeriod {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StatsPeriod value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _StatsPeriod() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StatsPeriod value)  $default,){
+final _that = this;
+switch (_that) {
+case _StatsPeriod():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StatsPeriod value)?  $default,){
+final _that = this;
+switch (_that) {
+case _StatsPeriod() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  bool isClosed)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _StatsPeriod() when $default != null:
+return $default(_that.id,_that.name,_that.isClosed);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  bool isClosed)  $default,) {final _that = this;
+switch (_that) {
+case _StatsPeriod():
+return $default(_that.id,_that.name,_that.isClosed);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  bool isClosed)?  $default,) {final _that = this;
+switch (_that) {
+case _StatsPeriod() when $default != null:
+return $default(_that.id,_that.name,_that.isClosed);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _StatsPeriod implements StatsPeriod {
+  const _StatsPeriod({required this.id, this.name = '', this.isClosed = false});
+  factory _StatsPeriod.fromJson(Map<String, dynamic> json) => _$StatsPeriodFromJson(json);
+
+@override final  int id;
+@override@JsonKey() final  String name;
+@override@JsonKey() final  bool isClosed;
+
+/// Create a copy of StatsPeriod
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$StatsPeriodCopyWith<_StatsPeriod> get copyWith => __$StatsPeriodCopyWithImpl<_StatsPeriod>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$StatsPeriodToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatsPeriod&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isClosed, isClosed) || other.isClosed == isClosed));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,isClosed);
+
+@override
+String toString() {
+  return 'StatsPeriod(id: $id, name: $name, isClosed: $isClosed)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$StatsPeriodCopyWith<$Res> implements $StatsPeriodCopyWith<$Res> {
+  factory _$StatsPeriodCopyWith(_StatsPeriod value, $Res Function(_StatsPeriod) _then) = __$StatsPeriodCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String name, bool isClosed
+});
+
+
+
+
+}
+/// @nodoc
+class __$StatsPeriodCopyWithImpl<$Res>
+    implements _$StatsPeriodCopyWith<$Res> {
+  __$StatsPeriodCopyWithImpl(this._self, this._then);
+
+  final _StatsPeriod _self;
+  final $Res Function(_StatsPeriod) _then;
+
+/// Create a copy of StatsPeriod
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? isClosed = null,}) {
+  return _then(_StatsPeriod(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,isClosed: null == isClosed ? _self.isClosed : isClosed // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -884,7 +1438,8 @@ as int,
 mixin _$TeamStats {
 
 /// `season`, `5` of `10` (wat de server werkelijk gebruikte).
-@asStringOrNull String? get window;@asIntOrNull int? get seasonId; List<SeasonOption> get seasons;@asIntOrNull int? get myPlayerId; List<StatsRow> get rows;
+@asStringOrNull String? get window;/// De badge-periodes (leeg als het team ze uit heeft) en de gekozen.
+ List<StatsPeriod> get periods;@asIntOrNull int? get periodId;@asIntOrNull int? get seasonId; List<SeasonOption> get seasons;@asIntOrNull int? get myPlayerId; List<StatsRow> get rows;
 /// Create a copy of TeamStats
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -897,16 +1452,16 @@ $TeamStatsCopyWith<TeamStats> get copyWith => _$TeamStatsCopyWithImpl<TeamStats>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TeamStats&&(identical(other.window, window) || other.window == window)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&const DeepCollectionEquality().equals(other.seasons, seasons)&&(identical(other.myPlayerId, myPlayerId) || other.myPlayerId == myPlayerId)&&const DeepCollectionEquality().equals(other.rows, rows));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TeamStats&&(identical(other.window, window) || other.window == window)&&const DeepCollectionEquality().equals(other.periods, periods)&&(identical(other.periodId, periodId) || other.periodId == periodId)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&const DeepCollectionEquality().equals(other.seasons, seasons)&&(identical(other.myPlayerId, myPlayerId) || other.myPlayerId == myPlayerId)&&const DeepCollectionEquality().equals(other.rows, rows));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,window,seasonId,const DeepCollectionEquality().hash(seasons),myPlayerId,const DeepCollectionEquality().hash(rows));
+int get hashCode => Object.hash(runtimeType,window,const DeepCollectionEquality().hash(periods),periodId,seasonId,const DeepCollectionEquality().hash(seasons),myPlayerId,const DeepCollectionEquality().hash(rows));
 
 @override
 String toString() {
-  return 'TeamStats(window: $window, seasonId: $seasonId, seasons: $seasons, myPlayerId: $myPlayerId, rows: $rows)';
+  return 'TeamStats(window: $window, periods: $periods, periodId: $periodId, seasonId: $seasonId, seasons: $seasons, myPlayerId: $myPlayerId, rows: $rows)';
 }
 
 
@@ -917,7 +1472,7 @@ abstract mixin class $TeamStatsCopyWith<$Res>  {
   factory $TeamStatsCopyWith(TeamStats value, $Res Function(TeamStats) _then) = _$TeamStatsCopyWithImpl;
 @useResult
 $Res call({
-@asStringOrNull String? window,@asIntOrNull int? seasonId, List<SeasonOption> seasons,@asIntOrNull int? myPlayerId, List<StatsRow> rows
+@asStringOrNull String? window, List<StatsPeriod> periods,@asIntOrNull int? periodId,@asIntOrNull int? seasonId, List<SeasonOption> seasons,@asIntOrNull int? myPlayerId, List<StatsRow> rows
 });
 
 
@@ -934,10 +1489,12 @@ class _$TeamStatsCopyWithImpl<$Res>
 
 /// Create a copy of TeamStats
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? window = freezed,Object? seasonId = freezed,Object? seasons = null,Object? myPlayerId = freezed,Object? rows = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? window = freezed,Object? periods = null,Object? periodId = freezed,Object? seasonId = freezed,Object? seasons = null,Object? myPlayerId = freezed,Object? rows = null,}) {
   return _then(_self.copyWith(
 window: freezed == window ? _self.window : window // ignore: cast_nullable_to_non_nullable
-as String?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
+as String?,periods: null == periods ? _self.periods : periods // ignore: cast_nullable_to_non_nullable
+as List<StatsPeriod>,periodId: freezed == periodId ? _self.periodId : periodId // ignore: cast_nullable_to_non_nullable
+as int?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
 as int?,seasons: null == seasons ? _self.seasons : seasons // ignore: cast_nullable_to_non_nullable
 as List<SeasonOption>,myPlayerId: freezed == myPlayerId ? _self.myPlayerId : myPlayerId // ignore: cast_nullable_to_non_nullable
 as int?,rows: null == rows ? _self.rows : rows // ignore: cast_nullable_to_non_nullable
@@ -1026,10 +1583,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asStringOrNull  String? window, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@asStringOrNull  String? window,  List<StatsPeriod> periods, @asIntOrNull  int? periodId, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TeamStats() when $default != null:
-return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
+return $default(_that.window,_that.periods,_that.periodId,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
   return orElse();
 
 }
@@ -1047,10 +1604,10 @@ return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asStringOrNull  String? window, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@asStringOrNull  String? window,  List<StatsPeriod> periods, @asIntOrNull  int? periodId, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)  $default,) {final _that = this;
 switch (_that) {
 case _TeamStats():
-return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
+return $default(_that.window,_that.periods,_that.periodId,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1067,10 +1624,10 @@ return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asStringOrNull  String? window, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@asStringOrNull  String? window,  List<StatsPeriod> periods, @asIntOrNull  int? periodId, @asIntOrNull  int? seasonId,  List<SeasonOption> seasons, @asIntOrNull  int? myPlayerId,  List<StatsRow> rows)?  $default,) {final _that = this;
 switch (_that) {
 case _TeamStats() when $default != null:
-return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
+return $default(_that.window,_that.periods,_that.periodId,_that.seasonId,_that.seasons,_that.myPlayerId,_that.rows);case _:
   return null;
 
 }
@@ -1082,11 +1639,21 @@ return $default(_that.window,_that.seasonId,_that.seasons,_that.myPlayerId,_that
 @JsonSerializable()
 
 class _TeamStats extends TeamStats {
-  const _TeamStats({@asStringOrNull this.window, @asIntOrNull this.seasonId, final  List<SeasonOption> seasons = const <SeasonOption>[], @asIntOrNull this.myPlayerId, final  List<StatsRow> rows = const <StatsRow>[]}): _seasons = seasons,_rows = rows,super._();
+  const _TeamStats({@asStringOrNull this.window, final  List<StatsPeriod> periods = const <StatsPeriod>[], @asIntOrNull this.periodId, @asIntOrNull this.seasonId, final  List<SeasonOption> seasons = const <SeasonOption>[], @asIntOrNull this.myPlayerId, final  List<StatsRow> rows = const <StatsRow>[]}): _periods = periods,_seasons = seasons,_rows = rows,super._();
   factory _TeamStats.fromJson(Map<String, dynamic> json) => _$TeamStatsFromJson(json);
 
 /// `season`, `5` of `10` (wat de server werkelijk gebruikte).
 @override@asStringOrNull final  String? window;
+/// De badge-periodes (leeg als het team ze uit heeft) en de gekozen.
+ final  List<StatsPeriod> _periods;
+/// De badge-periodes (leeg als het team ze uit heeft) en de gekozen.
+@override@JsonKey() List<StatsPeriod> get periods {
+  if (_periods is EqualUnmodifiableListView) return _periods;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_periods);
+}
+
+@override@asIntOrNull final  int? periodId;
 @override@asIntOrNull final  int? seasonId;
  final  List<SeasonOption> _seasons;
 @override@JsonKey() List<SeasonOption> get seasons {
@@ -1117,16 +1684,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TeamStats&&(identical(other.window, window) || other.window == window)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&const DeepCollectionEquality().equals(other._seasons, _seasons)&&(identical(other.myPlayerId, myPlayerId) || other.myPlayerId == myPlayerId)&&const DeepCollectionEquality().equals(other._rows, _rows));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TeamStats&&(identical(other.window, window) || other.window == window)&&const DeepCollectionEquality().equals(other._periods, _periods)&&(identical(other.periodId, periodId) || other.periodId == periodId)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&const DeepCollectionEquality().equals(other._seasons, _seasons)&&(identical(other.myPlayerId, myPlayerId) || other.myPlayerId == myPlayerId)&&const DeepCollectionEquality().equals(other._rows, _rows));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,window,seasonId,const DeepCollectionEquality().hash(_seasons),myPlayerId,const DeepCollectionEquality().hash(_rows));
+int get hashCode => Object.hash(runtimeType,window,const DeepCollectionEquality().hash(_periods),periodId,seasonId,const DeepCollectionEquality().hash(_seasons),myPlayerId,const DeepCollectionEquality().hash(_rows));
 
 @override
 String toString() {
-  return 'TeamStats(window: $window, seasonId: $seasonId, seasons: $seasons, myPlayerId: $myPlayerId, rows: $rows)';
+  return 'TeamStats(window: $window, periods: $periods, periodId: $periodId, seasonId: $seasonId, seasons: $seasons, myPlayerId: $myPlayerId, rows: $rows)';
 }
 
 
@@ -1137,7 +1704,7 @@ abstract mixin class _$TeamStatsCopyWith<$Res> implements $TeamStatsCopyWith<$Re
   factory _$TeamStatsCopyWith(_TeamStats value, $Res Function(_TeamStats) _then) = __$TeamStatsCopyWithImpl;
 @override @useResult
 $Res call({
-@asStringOrNull String? window,@asIntOrNull int? seasonId, List<SeasonOption> seasons,@asIntOrNull int? myPlayerId, List<StatsRow> rows
+@asStringOrNull String? window, List<StatsPeriod> periods,@asIntOrNull int? periodId,@asIntOrNull int? seasonId, List<SeasonOption> seasons,@asIntOrNull int? myPlayerId, List<StatsRow> rows
 });
 
 
@@ -1154,10 +1721,12 @@ class __$TeamStatsCopyWithImpl<$Res>
 
 /// Create a copy of TeamStats
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? window = freezed,Object? seasonId = freezed,Object? seasons = null,Object? myPlayerId = freezed,Object? rows = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? window = freezed,Object? periods = null,Object? periodId = freezed,Object? seasonId = freezed,Object? seasons = null,Object? myPlayerId = freezed,Object? rows = null,}) {
   return _then(_TeamStats(
 window: freezed == window ? _self.window : window // ignore: cast_nullable_to_non_nullable
-as String?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
+as String?,periods: null == periods ? _self._periods : periods // ignore: cast_nullable_to_non_nullable
+as List<StatsPeriod>,periodId: freezed == periodId ? _self.periodId : periodId // ignore: cast_nullable_to_non_nullable
+as int?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
 as int?,seasons: null == seasons ? _self._seasons : seasons // ignore: cast_nullable_to_non_nullable
 as List<SeasonOption>,myPlayerId: freezed == myPlayerId ? _self.myPlayerId : myPlayerId // ignore: cast_nullable_to_non_nullable
 as int?,rows: null == rows ? _self._rows : rows // ignore: cast_nullable_to_non_nullable

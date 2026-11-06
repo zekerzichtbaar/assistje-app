@@ -45,12 +45,46 @@ class LoginCodeScreen extends ConsumerStatefulWidget {
 
 class _LoginCodeScreenState extends ConsumerState<LoginCodeScreen> {
   final _code = TextEditingController();
+  final _codeFocus = FocusNode();
+  Animation<double>? _routeAnimation;
   bool _busy = false;
   bool _resending = false;
   String? _error;
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_routeAnimation != null) return;
+    // Geen `autofocus`: het vorige scherm (inloggen/aanmelden) zit in een
+    // AutofillGroup die bij het opruimen — ná de overgang — de
+    // toetsenbordverbinding sluit. Pas focussen als de overgang klaar is,
+    // anders klapt het toetsenbord direct weer dicht.
+    final animation = ModalRoute.of(context)?.animation;
+    _routeAnimation = animation ?? kAlwaysCompleteAnimation;
+    if (animation == null || animation.isCompleted) {
+      _focusSoon();
+    } else {
+      animation.addStatusListener(_onRouteStatus);
+    }
+  }
+
+  void _onRouteStatus(AnimationStatus status) {
+    if (status != AnimationStatus.completed) return;
+    _routeAnimation?.removeStatusListener(_onRouteStatus);
+    _focusSoon();
+  }
+
+  /// Wacht een frame, zodat het vorige scherm echt is opgeruimd.
+  void _focusSoon() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_codeFocus.hasFocus) _codeFocus.requestFocus();
+    });
+  }
+
+  @override
   void dispose() {
+    _routeAnimation?.removeStatusListener(_onRouteStatus);
+    _codeFocus.dispose();
     _code.dispose();
     super.dispose();
   }
@@ -123,7 +157,7 @@ class _LoginCodeScreenState extends ConsumerState<LoginCodeScreen> {
           TextField(
             key: const Key('login-code'),
             controller: _code,
-            autofocus: true,
+            focusNode: _codeFocus,
             keyboardType: TextInputType.number,
             autofillHints: const [AutofillHints.oneTimeCode],
             inputFormatters: const [LoginCodeFormatter()],

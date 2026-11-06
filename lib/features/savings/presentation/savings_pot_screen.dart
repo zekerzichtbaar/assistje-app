@@ -195,13 +195,15 @@ class _SavingsPotScreenState extends ConsumerState<SavingsPotScreen> {
 
     final Widget body;
     if (state != null && detail != null) {
-      body = RefreshIndicator(
-        onRefresh: _refresh,
-        child: ListView(
-          key: const ValueKey('savings-pot'),
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: _content(state),
+      body = Reveal(
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: ListView(
+            key: const ValueKey('savings-pot'),
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: _content(state),
+          ),
         ),
       );
     } else if (async.hasError) {

@@ -30,7 +30,7 @@ class DutyCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DateTile(date: parseDay(d.date), now: now),
+          DateTile(date: parseDay(d.date)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(

@@ -91,8 +91,10 @@ class AppTabPill<T> {
 /// Segmented control als ronde baan met pills (`TabPills.tsx`).
 ///
 /// Baan `bg-track/60` (of vol met [darkTrack]), actieve knop `bg-control`
-/// met `shadow-sm` en tekst in de teamkleur.
-class AppTabPills<T> extends StatelessWidget {
+/// met `shadow-sm` en tekst in de teamkleur. Bij wisselen glijdt die ene
+/// actieve pil naar de nieuwe tab (positie én breedte), in plaats van dat
+/// de knoppen hard van kleur verspringen.
+class AppTabPills<T> extends StatefulWidget {
   const AppTabPills({
     super.key,
     required this.tabs,
@@ -111,80 +113,196 @@ class AppTabPills<T> extends StatelessWidget {
   final bool darkTrack;
 
   @override
-  Widget build(BuildContext context) {
-    final t = AssistjeTokens.of(context);
-    Widget item(AppTabPill<T> tab) {
-      final active = tab.value == selected;
-      final fg = active ? t.primary : t.inkSoft;
-      final label = Text(
-        tab.label,
-        maxLines: 1,
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: fg),
+  State<AppTabPills<T>> createState() => _AppTabPillsState<T>();
+}
+
+class _AppTabPillsState<T> extends State<AppTabPills<T>> {
+  /// Zacht uitlopend glijden, zonder voorbij te schieten: de pil zit tegen
+  /// de rand van de baan, een overshoot zou er aan de buitenste tabs uit
+  /// steken.
+  static const Curve _glide = Cubic(0.2, 0.9, 0.25, 1);
+  static const Duration _slide = Duration(milliseconds: 340);
+  static const Duration _fade = Duration(milliseconds: 220);
+
+  /// De baan-marge (4 pt) die bij het tikvlak hoort, niet bij de pil.
+  static const double _inset = 4;
+
+  final _rowKey = GlobalKey();
+  List<GlobalKey> _keys = const [];
+
+  /// Waar de actieve pil staat, binnen de rij; `null` tot er gemeten is.
+  Rect? _pill;
+
+  /// Alleen een tabwissel glijdt; een nieuwe maat (draaien, grotere tekst)
+  /// zet de pil direct goed.
+  bool _sliding = false;
+
+  void _syncKeys() {
+    if (_keys.length != widget.tabs.length) {
+      _keys = List.generate(widget.tabs.length, (_) => GlobalKey());
+    }
+  }
+
+  @override
+  void didUpdateWidget(AppTabPills<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selected != widget.selected && _pill != null) {
+      _sliding = true;
+    }
+  }
+
+  void _measure() {
+    if (!mounted) return;
+    final index = widget.tabs.indexWhere((t) => t.value == widget.selected);
+    final row = _rowKey.currentContext?.findRenderObject() as RenderBox?;
+    final item = index < 0 || index >= _keys.length
+        ? null
+        : _keys[index].currentContext?.findRenderObject() as RenderBox?;
+    Rect? next;
+    if (row != null && item != null && row.hasSize && item.hasSize) {
+      final offset = item.localToGlobal(Offset.zero, ancestor: row);
+      next = Rect.fromLTWH(
+        offset.dx,
+        offset.dy + _inset,
+        item.size.width,
+        item.size.height - 2 * _inset,
       );
-      final pill = Semantics(
-        button: true,
-        selected: active,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => onChanged(tab.value),
-          // De baan-marge (4 pt) hoort bij het tikvlak: samen 44 pt hoog.
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              constraints: const BoxConstraints(minHeight: 36),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: active ? t.control : const Color(0x00000000),
-                borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
-                boxShadow: active ? AssistjeTokens.shadowSm : null,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (tab.icon != null) ...[
-                    Icon(tab.icon, size: 16, color: fg),
-                    const SizedBox(width: 6),
-                  ],
-                  if (fullWidth)
-                    // Vaste breedte: bij grote tekst verkleint het label
-                    // binnen zijn segment, zoals een iOS-segmented control.
-                    Flexible(
-                      child: FittedBox(fit: BoxFit.scaleDown, child: label),
-                    )
-                  else
-                    label,
-                ],
+    }
+    if (next != _pill) setState(() => _pill = next);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _syncKeys();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _measure());
+
+    final t = AssistjeTokens.of(context);
+    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    final radius = BorderRadius.circular(AssistjeTokens.radiusFull);
+    final measured = _pill != null;
+
+    Widget item(int index) {
+      final tab = widget.tabs[index];
+      final active = tab.value == widget.selected;
+      return TweenAnimationBuilder<Color?>(
+        tween: ColorTween(end: active ? t.primary : t.inkSoft),
+        duration: reduceMotion ? Duration.zero : _fade,
+        curve: Curves.easeOut,
+        builder: (context, fg, _) {
+          final label = Text(
+            tab.label,
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: fg,
+            ),
+          );
+          final pill = Semantics(
+            button: true,
+            selected: active,
+            child: GestureDetector(
+              key: _keys[index],
+              behavior: HitTestBehavior.opaque,
+              onTap: () => widget.onChanged(tab.value),
+              // De baan-marge (4 pt) hoort bij het tikvlak: samen 44 pt hoog.
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: _inset),
+                child: Container(
+                  constraints: const BoxConstraints(minHeight: 36),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
+                  // Tot de glijdende pil gemeten is (eerste frame) tekent
+                  // de actieve knop zijn eigen achtergrond.
+                  decoration: active && !measured
+                      ? BoxDecoration(
+                          color: t.control,
+                          borderRadius: radius,
+                          boxShadow: AssistjeTokens.shadowSm,
+                        )
+                      : null,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (tab.icon != null) ...[
+                        Icon(tab.icon, size: 16, color: fg),
+                        const SizedBox(width: 6),
+                      ],
+                      if (widget.fullWidth)
+                        // Vaste breedte: bij grote tekst verkleint het label
+                        // binnen zijn segment, zoals een iOS-segmented control.
+                        Flexible(
+                          child: FittedBox(fit: BoxFit.scaleDown, child: label),
+                        )
+                      else
+                        label,
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+          return pill;
+        },
       );
-      return fullWidth ? Expanded(child: pill) : pill;
     }
 
     final children = <Widget>[];
-    for (var i = 0; i < tabs.length; i++) {
+    for (var i = 0; i < widget.tabs.length; i++) {
       if (i > 0) children.add(const SizedBox(width: 4));
-      children.add(item(tabs[i]));
+      final child = item(i);
+      children.add(widget.fullWidth ? Expanded(child: child) : child);
     }
 
     final row = Row(
-      mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
+      key: _rowKey,
+      mainAxisSize: widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
       children: children,
+    );
+
+    final pill = _pill;
+    final track = Stack(
+      children: [
+        if (pill != null)
+          AnimatedPositioned(
+            key: const ValueKey('pills-indicator'),
+            duration: _sliding && !reduceMotion ? _slide : Duration.zero,
+            curve: _glide,
+            onEnd: () => _sliding = false,
+            left: pill.left,
+            top: pill.top,
+            width: pill.width,
+            height: pill.height,
+            child: IgnorePointer(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: t.control,
+                  borderRadius: radius,
+                  boxShadow: AssistjeTokens.shadowSm,
+                ),
+              ),
+            ),
+          ),
+        row,
+      ],
     );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: darkTrack ? t.track : t.track.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(AssistjeTokens.radiusFull),
+        color: widget.darkTrack ? t.track : t.track.withValues(alpha: 0.6),
+        borderRadius: radius,
       ),
-      child: fullWidth
-          ? row
-          : SingleChildScrollView(scrollDirection: Axis.horizontal, child: row),
+      child: widget.fullWidth
+          ? track
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: track,
+            ),
     );
   }
 }

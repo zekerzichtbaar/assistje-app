@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/session/session_providers.dart';
+import '../../../../core/shell/shell_bar.dart';
 import '../../../../core/shell/shell_insets.dart';
 import '../../../../core/theme/assistje_tokens.dart';
 import '../../../../core/widgets/widgets.dart';
@@ -74,11 +75,17 @@ class _RosterViewState extends ConsumerState<RosterView> {
 
     final List<Widget> content;
     if (roster != null) {
-      content = _content(
-        roster,
-        SportInfo.of(membership),
-        showAgreements: membership.hasFeature('agreements'),
-      );
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(
+            slivers: _content(
+              roster,
+              SportInfo.of(membership),
+              showAgreements: membership.hasFeature('agreements'),
+            ),
+          ),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -99,21 +106,24 @@ class _RosterViewState extends ConsumerState<RosterView> {
       content = const [SliverToBoxAdapter(child: RosterSkeleton())];
     }
 
-    return Scaffold(
-      key: ValueKey(widget.screenKey),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de titel via `placeholder-title`.
+    return ShellBar(
+      title: widget.title,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: ValueKey(widget.screenKey),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
         ),
-        slivers: [
-          SliverToBoxAdapter(child: RosterScreenTitle(widget.title)),
-          ...content,
-        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../settings/application/settings_controller.dart';
 import '../data/models/seasons_models.dart';
@@ -52,6 +53,8 @@ class SeasonsController extends AsyncNotifier<SeasonsState> {
   Future<SeasonsState> build() async {
     // Een andere gebruiker (uit- en weer inloggen) krijgt een vers scherm.
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     final data = await ref.watch(seasonsRepositoryProvider).fetch(teamId);
     return SeasonsState(data: data);
   }

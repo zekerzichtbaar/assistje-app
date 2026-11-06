@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../agenda/application/agenda_controller.dart';
 import '../../agenda/data/agenda_repository.dart';
@@ -62,6 +63,8 @@ class EventDetailController extends AsyncNotifier<EventDetail> {
   Future<EventDetail> build() async {
     // Een andere gebruiker (uit- en weer inloggen) krijgt een vers detail.
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     return ref.watch(eventRepositoryProvider).fetch(teamId, eventId);
   }
 

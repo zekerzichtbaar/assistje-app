@@ -49,6 +49,7 @@
   "screenStandingAbsences": "Vaste afwezigheid",
   "screenTeamlink": "Teamlink",
   "shellBack": "Terug",
+  "shellActions": "Acties",
   "shellHome": "Naar de agenda",
   "shellTabBar": "Hoofdmenu",
   "shellNotificationsUnread": "{count, plural, =0{Meldingen} =1{Meldingen, 1 ongelezen} other{Meldingen, {count} ongelezen}}",

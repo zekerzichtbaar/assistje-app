@@ -128,7 +128,9 @@ void main() {
     );
     http.on('GET /teams/3/stats', 200, StatsFixtures.response({'window': '5'}));
 
-    await tester.tap(find.text('Laatste 5'));
+    await tester.tap(find.byKey(const ValueKey('stats-window')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('stats-scope-5')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(_exportButton));
     await tester.pumpAndSettle();

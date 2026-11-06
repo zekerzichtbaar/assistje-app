@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../event/application/event_detail_controller.dart';
 import '../data/models/report_models.dart';
@@ -30,6 +31,8 @@ class ReportController extends AsyncNotifier<MatchReport> {
   @override
   Future<MatchReport> build() async {
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     return ref.watch(reportRepositoryProvider).fetch(key.teamId, key.eventId);
   }
 

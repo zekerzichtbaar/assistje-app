@@ -137,82 +137,86 @@ class PersonFinesView extends ConsumerWidget {
         row.counting &&
         overview.countingRows.any((r) => r.key == row.key);
 
-    return Column(
-      key: const ValueKey('person-fines-sheet'),
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            AppAvatar(
-              name: data.person.name,
-              imageUrl: data.person.avatarUrl,
-              size: 48,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data.period.name,
-                    style: TextStyle(fontSize: 13, color: t.muted),
-                  ),
-                  Text(
-                    formatCents(data.totals.allCents),
-                    key: const ValueKey('person-fines-total'),
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                      color: t.ink,
-                    ),
-                  ),
-                  if (data.totals.openCents > 0)
+    return Reveal(
+      child: Column(
+        key: const ValueKey('person-fines-sheet'),
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              AppAvatar(
+                name: data.person.name,
+                imageUrl: data.person.avatarUrl,
+                size: 48,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      l10n.finesOpenAmount(formatCents(data.totals.openCents)),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: StatusColors.red600,
+                      data.period.name,
+                      style: TextStyle(fontSize: 13, color: t.muted),
+                    ),
+                    Text(
+                      formatCents(data.totals.allCents),
+                      key: const ValueKey('person-fines-total'),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: t.ink,
                       ),
                     ),
-                ],
+                    if (data.totals.openCents > 0)
+                      Text(
+                        l10n.finesOpenAmount(
+                          formatCents(data.totals.openCents),
+                        ),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: StatusColors.red600,
+                        ),
+                      ),
+                  ],
+                ),
               ),
+            ],
+          ),
+          if (canGive) ...[
+            const SizedBox(height: 12),
+            PrimaryButton(
+              key: const ValueKey('person-fines-give'),
+              label: l10n.finesGiveFine,
+              expand: true,
+              onPressed: () => unawaited(_give(context, ref)),
             ),
           ],
-        ),
-        if (canGive) ...[
           const SizedBox(height: 12),
-          PrimaryButton(
-            key: const ValueKey('person-fines-give'),
-            label: l10n.finesGiveFine,
-            expand: true,
-            onPressed: () => unawaited(_give(context, ref)),
-          ),
+          if (data.fines.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Text(
+                l10n.finesPersonEmpty,
+                key: const ValueKey('person-fines-empty'),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: t.muted),
+              ),
+            ),
+          for (final fine in data.fines)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: _FineTile(
+                fine: fine,
+                onTap: canManage
+                    ? () => unawaited(_edit(context, ref, fine))
+                    : null,
+              ),
+            ),
+          const SizedBox(height: 8),
         ],
-        const SizedBox(height: 12),
-        if (data.fines.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text(
-              l10n.finesPersonEmpty,
-              key: const ValueKey('person-fines-empty'),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: t.muted),
-            ),
-          ),
-        for (final fine in data.fines)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: _FineTile(
-              fine: fine,
-              onTap: canManage
-                  ? () => unawaited(_edit(context, ref, fine))
-                  : null,
-            ),
-          ),
-        const SizedBox(height: 8),
-      ],
+      ),
     );
   }
 }

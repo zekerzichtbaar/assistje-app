@@ -107,11 +107,7 @@ class _TeamsCardState extends ConsumerState<TeamsCard> {
                   if (_leaving == membership.team.id)
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
+                      child: AppSpinner(size: 16),
                     )
                   else
                     TextButton(

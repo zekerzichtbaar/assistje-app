@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/api/api_exception.dart';
+import '../../../../core/widgets/app_spinner.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/presentation/widgets/door_scaffold.dart';
 
@@ -160,7 +161,7 @@ class JoinLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.symmetric(vertical: 48),
-      child: Center(child: CircularProgressIndicator(color: DoorColors.ink)),
+      child: Center(child: AppSpinner(size: 32, color: DoorColors.ink)),
     );
   }
 }

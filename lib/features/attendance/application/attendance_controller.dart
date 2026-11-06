@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../agenda/application/agenda_controller.dart';
 import '../../agenda/data/models/agenda_models.dart';
@@ -33,6 +34,8 @@ class AttendanceController extends AsyncNotifier<EventAttendance> {
   Future<EventAttendance> build() {
     // Een andere gebruiker (uit- en weer inloggen) krijgt een verse lijst.
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     return ref.watch(attendanceRepositoryProvider).fetch(teamId, eventId);
   }
 
@@ -123,9 +126,9 @@ class AttendanceController extends AsyncNotifier<EventAttendance> {
   }
 }
 
-/// De aanwezigheidslijst per `(teamId, eventId)`; weg zodra het scherm dicht
-/// is. Geen automatische retry: het scherm toont een fout met "Opnieuw
-/// proberen".
+/// De aanwezigheidslijst per `(teamId, eventId)`; nog even bewaard na het
+/// sluiten (`cacheFor`). Geen automatische retry: het scherm toont een fout
+/// met "Opnieuw proberen".
 final attendanceControllerProvider = AsyncNotifierProvider.autoDispose
     .family<AttendanceController, EventAttendance, EventKey>(
       AttendanceController.new,

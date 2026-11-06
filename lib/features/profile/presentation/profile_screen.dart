@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/session/models/team_membership.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -150,53 +151,40 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('profile-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () async {
-          if (teamId != null) await _refresh(teamId);
-        },
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l10n.navProfile,
-                  // Zelfde key als de placeholder: de shell-tests lezen de
-                  // schermtitel via `placeholder-title`.
-                  key: const Key('placeholder-title'),
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: t.ink,
-                  ),
-                ),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.navProfile,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('profile-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () async {
+            if (teamId != null) await _refresh(teamId);
+          },
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: [
+            // Een handvol kaarten: gewoon een kolom (alles gebouwd, zodat
+            // formulierstaat niet verdwijnt bij wegscrollen).
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final (index, card) in cards.indexed) ...[
+                    if (index > 0) const SizedBox(height: 12),
+                    card,
+                  ],
+                ],
               ),
             ),
-          ),
-          // Een handvol kaarten: gewoon een kolom (alles gebouwd, zodat
-          // formulierstaat niet verdwijnt bij wegscrollen).
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final (index, card) in cards.indexed) ...[
-                  if (index > 0) const SizedBox(height: 12),
-                  card,
-                ],
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

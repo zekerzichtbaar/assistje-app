@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -67,7 +68,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
 
     final Widget list;
     if (items != null) {
-      list = _list(teamId, items);
+      list = Reveal(child: _list(teamId, items));
     } else if (async.hasError) {
       list = EmptyState(
         key: const ValueKey('feedback-error'),
@@ -84,66 +85,53 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       list = const SkeletonList(key: ValueKey('feedback-loading'), count: 3);
     }
 
-    return Scaffold(
-      key: const ValueKey('feedback-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  l10n.navFeedback,
-                  // Zelfde key als de placeholder: de shell-tests lezen de
-                  // schermtitel via `placeholder-title`.
-                  key: const Key('placeholder-title'),
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                    color: t.ink,
-                  ),
+    // Titel in de topbar. Zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`.
+    return ShellBar(
+      title: l10n.navFeedback,
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('feedback-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: [
+            SliverToBoxAdapter(
+              child: AppCard(
+                key: const ValueKey('feedback-intro-card'),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l10n.feedbackIntro,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: t.inkSoft,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    PrimaryButton(
+                      key: const ValueKey('feedback-create'),
+                      label: l10n.feedbackCreate,
+                      icon: const Icon(PhosphorIconsBold.plus, size: 16),
+                      expand: true,
+                      onPressed: () => _compose(teamId),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: AppCard(
-              key: const ValueKey('feedback-intro-card'),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    l10n.feedbackIntro,
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.4,
-                      color: t.inkSoft,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  PrimaryButton(
-                    key: const ValueKey('feedback-create'),
-                    label: l10n.feedbackCreate,
-                    icon: const Icon(PhosphorIconsBold.plus, size: 16),
-                    expand: true,
-                    onPressed: () => _compose(teamId),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-          SliverToBoxAdapter(child: list),
-        ],
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
+            SliverToBoxAdapter(child: list),
+          ],
+        ),
       ),
     );
   }

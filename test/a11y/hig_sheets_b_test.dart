@@ -67,7 +67,7 @@ final _sheets = <AuditScreen>[
     '/fines',
     label: 'beheer',
     setup: _fines,
-    open: _taps(['fines-manage']),
+    open: _taps(['shell-actions']),
   ),
   AuditScreen(
     '/fines',
@@ -75,19 +75,19 @@ final _sheets = <AuditScreen>[
     // Meting pakt de rand van het bedragveld; de tekst (ink op wit) haalt > 9:1.
     contrastFalsePositives: ['2,50', '1,00'],
     setup: _fines,
-    open: _taps(['fines-manage', 'fines-manage-types']),
+    open: _taps(['shell-actions', 'fines-manage-types']),
   ),
   AuditScreen(
     '/fines',
     label: 'periode-hernoemen',
     setup: _fines,
-    open: _taps(['fines-manage', 'fines-manage-rename']),
+    open: _taps(['shell-actions', 'fines-manage-rename']),
   ),
   AuditScreen(
     '/fines',
     label: 'boetetype-nieuw',
     setup: _fines,
-    open: _taps(['fines-manage', 'fines-manage-types', 'fine-types-add']),
+    open: _taps(['shell-actions', 'fines-manage-types', 'fine-types-add']),
   ),
   AuditScreen(
     '/fines',
@@ -162,7 +162,7 @@ final _sheets = <AuditScreen>[
     '/players',
     label: 'toevoegen',
     setup: (h) => h.on('GET /teams/3/players', 200, PmFixtures.overview()),
-    open: _taps(['pm-add']),
+    open: _taps(['shell-actions', 'pm-add']),
   ),
   AuditScreen(
     '/players',
@@ -243,7 +243,7 @@ final _sheets = <AuditScreen>[
         t,
         find.byKey(const ValueKey('settings-tab-option-types')),
       );
-      await _taps(['settings-duty-add'])(t);
+      await _taps(['shell-actions', 'settings-duty-add'])(t);
     },
   ),
   AuditScreen(

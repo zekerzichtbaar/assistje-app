@@ -6,6 +6,36 @@
   "statsWindowSeason": "Seizoen",
   "statsWindowLast10": "Laatste 10",
   "statsWindowLast5": "Laatste 5",
+  "statsScopeButton": "Periode: {label}",
+  "@statsScopeButton": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "statsScopePickerTitle": "Kies periode",
+  "statsScopeSectionSeason": "Seizoen",
+  "statsScopeSectionForm": "Vorm",
+  "statsScopeWholeSeason": "Heel seizoen",
+  "statsScopeLast10": "Laatste 10 wedstrijden",
+  "statsScopeLast5": "Laatste 5 wedstrijden",
+  "statsPeriodClosed": "{name} (afgesloten)",
+  "@statsPeriodClosed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRecentForm": "Vorm: {summary}",
+  "@statsRecentForm": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
   "statsSeasonPickerTitle": "Kies seizoen",
   "statsSeasonClosed": "{label} (afgesloten)",
   "@statsSeasonClosed": {

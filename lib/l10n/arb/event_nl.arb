@@ -33,6 +33,15 @@
     }
   },
   "eventDetailResponsesTitle": "Reacties",
+  "eventDetailRespondedOf": "/{total} gereageerd",
+  "@eventDetailRespondedOf": {
+    "description": "Achter het vetgedrukte aantal reacties: '12/16 gereageerd'.",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "eventDetailResponded": "{responded} van {total} gereageerd",
   "@eventDetailResponded": {
     "placeholders": {

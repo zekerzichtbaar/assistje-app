@@ -72,6 +72,11 @@ _StatsRow _$StatsRowFromJson(Map<String, dynamic> json) => _StatsRow(
   trainingPoints: json['training_points'] == null
       ? 0
       : readInt(json['training_points']),
+  recentForm:
+      (json['recent_form'] as List<dynamic>?)
+          ?.map((e) => StatsFormEntry.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <StatsFormEntry>[],
 );
 
 Map<String, dynamic> _$StatsRowToJson(_StatsRow instance) => <String, dynamic>{
@@ -95,10 +100,44 @@ Map<String, dynamic> _$StatsRowToJson(_StatsRow instance) => <String, dynamic>{
   'flag_shifts': instance.flagShifts,
   'titles': instance.titles.map((e) => e.toJson()).toList(),
   'training_points': instance.trainingPoints,
+  'recent_form': instance.recentForm.map((e) => e.toJson()).toList(),
 };
+
+_StatsFormEntry _$StatsFormEntryFromJson(Map<String, dynamic> json) =>
+    _StatsFormEntry(
+      eventId: readIntOrNull(json['event_id']),
+      type: json['type'] as String? ?? '',
+      status: json['status'] as String? ?? 'pending',
+    );
+
+Map<String, dynamic> _$StatsFormEntryToJson(_StatsFormEntry instance) =>
+    <String, dynamic>{
+      'event_id': instance.eventId,
+      'type': instance.type,
+      'status': instance.status,
+    };
+
+_StatsPeriod _$StatsPeriodFromJson(Map<String, dynamic> json) => _StatsPeriod(
+  id: (json['id'] as num).toInt(),
+  name: json['name'] as String? ?? '',
+  isClosed: json['is_closed'] as bool? ?? false,
+);
+
+Map<String, dynamic> _$StatsPeriodToJson(_StatsPeriod instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'is_closed': instance.isClosed,
+    };
 
 _TeamStats _$TeamStatsFromJson(Map<String, dynamic> json) => _TeamStats(
   window: readStringOrNull(json['window']),
+  periods:
+      (json['periods'] as List<dynamic>?)
+          ?.map((e) => StatsPeriod.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <StatsPeriod>[],
+  periodId: readIntOrNull(json['period_id']),
   seasonId: readIntOrNull(json['season_id']),
   seasons:
       (json['seasons'] as List<dynamic>?)
@@ -116,6 +155,8 @@ _TeamStats _$TeamStatsFromJson(Map<String, dynamic> json) => _TeamStats(
 Map<String, dynamic> _$TeamStatsToJson(_TeamStats instance) =>
     <String, dynamic>{
       'window': instance.window,
+      'periods': instance.periods.map((e) => e.toJson()).toList(),
+      'period_id': instance.periodId,
       'season_id': instance.seasonId,
       'seasons': instance.seasons.map((e) => e.toJson()).toList(),
       'my_player_id': instance.myPlayerId,

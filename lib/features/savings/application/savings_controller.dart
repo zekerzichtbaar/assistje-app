@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/api/cache_for.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../data/models/savings_models.dart';
 import '../data/savings_repository.dart';
@@ -114,6 +115,8 @@ class SavingsPotController extends AsyncNotifier<SavingsPotState> {
   @override
   Future<SavingsPotState> build() async {
     ref.watch(authControllerProvider);
+    // Terugkomen toont meteen de vorige stand en ververst stil.
+    ref.cacheFor(kScreenCacheDuration);
     final detail = await ref
         .watch(savingsRepositoryProvider)
         .fetchPot(arg.teamId, arg.potId);

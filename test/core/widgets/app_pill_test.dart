@@ -58,4 +58,46 @@ void main() {
     expect(tester.widget<Text>(find.text('Geweest')).style!.color, t.primary);
     expect(tester.widget<Text>(find.text('Komend')).style!.color, t.inkSoft);
   });
+
+  testWidgets('tab-pills: de actieve pil glijdt naar de nieuwe tab', (
+    tester,
+  ) async {
+    var selected = 'a';
+    await pumpThemed(
+      tester,
+      StatefulBuilder(
+        builder: (context, setState) => AppTabPills<String>(
+          fullWidth: true,
+          tabs: const [
+            AppTabPill(value: 'a', label: 'Komend'),
+            AppTabPill(value: 'b', label: 'Geweest'),
+            AppTabPill(value: 'c', label: 'Taken'),
+          ],
+          selected: selected,
+          onChanged: (v) => setState(() => selected = v),
+        ),
+      ),
+      dark: false,
+    );
+    await tester.pump();
+    final indicator = find.byKey(const ValueKey('pills-indicator'));
+    double left() => tester.getTopLeft(indicator).dx;
+    final start = left();
+
+    await tester.tap(find.text('Taken'));
+    // Eén frame om de nieuwe tab te meten, dan glijdt de pil.
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    final halfway = left();
+    await tester.pumpAndSettle();
+    final end = left();
+
+    expect(halfway, greaterThan(start));
+    expect(halfway, lessThan(end));
+    expect(
+      tester.getCenter(indicator).dx,
+      moreOrLessEquals(tester.getCenter(find.text('Taken')).dx, epsilon: 1),
+    );
+  });
 }

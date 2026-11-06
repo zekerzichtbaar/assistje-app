@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -84,7 +85,11 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
 
     final List<Widget> content;
     if (overview != null) {
-      content = _content(teamId, overview);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(slivers: _content(teamId, overview)),
+        ),
+      ];
     } else if (async.hasError) {
       content = [
         SliverToBoxAdapter(
@@ -116,52 +121,33 @@ class _SavingsScreenState extends ConsumerState<SavingsScreen> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('savings-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        l10n.navSavings,
-                        // Zelfde key als de placeholder: de shell-tests lezen
-                        // de schermtitel via `placeholder-title`.
-                        key: const Key('placeholder-title'),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: t.ink,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (overview?.canManage ?? false)
-                    PrimaryButton(
-                      key: const ValueKey('savings-new'),
-                      label: l10n.savingsNewPot,
-                      icon: const Icon(PhosphorIconsBold.plus, size: 16),
-                      onPressed: () => _newPot(teamId),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar (zelfde key als de placeholder: de shell-tests
+    // lezen de schermtitel via `placeholder-title`); "Nieuwe pot" onder de ⋯.
+    return ShellBar(
+      title: l10n.navSavings,
+      titleKey: const Key('placeholder-title'),
+      actions: [
+        if (overview?.canManage ?? false)
+          ShellAction(
+            key: const ValueKey('savings-new'),
+            label: l10n.savingsNewPot,
+            icon: PhosphorIconsDuotone.plus,
+            onTap: () => _newPot(teamId),
           ),
-          ...content,
-        ],
+      ],
+      child: Scaffold(
+        key: const ValueKey('savings-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
+          ),
+          slivers: content,
+        ),
       ),
     );
   }

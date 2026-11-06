@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/session/session_providers.dart';
+import '../../../core/shell/shell_bar.dart';
 import '../../../core/shell/shell_insets.dart';
 import '../../../core/theme/assistje_tokens.dart';
 import '../../../core/widgets/widgets.dart';
@@ -118,7 +119,13 @@ class _AttendanceViewState extends ConsumerState<AttendanceView> {
 
     final List<Widget> content;
     if (attendance != null) {
-      content = _content(teamId, attendance, sport);
+      content = [
+        SliverReveal(
+          sliver: SliverMainAxisGroup(
+            slivers: _content(teamId, attendance, sport),
+          ),
+        ),
+      ];
     } else if (async.hasError) {
       content = [SliverToBoxAdapter(child: _errorState(teamId, async.error))];
     } else {
@@ -136,52 +143,41 @@ class _AttendanceViewState extends ConsumerState<AttendanceView> {
       ];
     }
 
-    return Scaffold(
-      key: const ValueKey('attendance-screen'),
-      backgroundColor: t.sunken,
-      body: AppRefresh(
-        onRefresh: () => _refresh(teamId),
-        padding: EdgeInsets.fromLTRB(
-          12,
-          ShellInsets.top(context),
-          12,
-          ShellInsets.bottom(context),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.screenEventAttendance,
-                      // Zelfde key als de placeholder: de shell-tests lezen
-                      // de schermtitel via `placeholder-title`.
-                      key: const Key('placeholder-title'),
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: t.ink,
-                      ),
-                    ),
-                  ),
-                  if (attendance != null && attendance.event.title.isNotEmpty)
-                    Text(
-                      attendance.event.title,
-                      key: const ValueKey('attendance-event-title'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15, color: t.muted),
-                    ),
-                ],
-              ),
-            ),
+    // Titel in de topbar; de naam van het event blijft als ondertitel boven
+    // de inhoud staan.
+    return ShellBar(
+      title: l10n.screenEventAttendance,
+      // Zelfde key als de placeholder: de shell-tests lezen de schermtitel
+      // via `placeholder-title`.
+      titleKey: const Key('placeholder-title'),
+      child: Scaffold(
+        key: const ValueKey('attendance-screen'),
+        backgroundColor: t.sunken,
+        body: AppRefresh(
+          onRefresh: () => _refresh(teamId),
+          padding: EdgeInsets.fromLTRB(
+            12,
+            ShellInsets.top(context),
+            12,
+            ShellInsets.bottom(context),
           ),
-          ...content,
-        ],
+          slivers: [
+            if (attendance != null && attendance.event.title.isNotEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
+                  child: Text(
+                    attendance.event.title,
+                    key: const ValueKey('attendance-event-title'),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 15, color: t.muted),
+                  ),
+                ),
+              ),
+            ...content,
+          ],
+        ),
       ),
     );
   }

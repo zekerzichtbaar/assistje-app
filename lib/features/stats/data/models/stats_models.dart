@@ -60,10 +60,43 @@ abstract class StatsRow with _$StatsRow {
     @asInt @Default(0) int flagShifts,
     @Default(<StatsTitle>[]) List<StatsTitle> titles,
     @asInt @Default(0) int trainingPoints,
+
+    /// Antwoord op de laatste 5 wedstrijden en trainingen, oud → nieuw.
+    @Default(<StatsFormEntry>[]) List<StatsFormEntry> recentForm,
   }) = _StatsRow;
 
   factory StatsRow.fromJson(Map<String, dynamic> json) =>
       _$StatsRowFromJson(json);
+}
+
+/// Eén stipje van de recente vorm (`rows[].recent_form[]`).
+@freezed
+abstract class StatsFormEntry with _$StatsFormEntry {
+  const factory StatsFormEntry({
+    @asIntOrNull int? eventId,
+
+    /// `match` of `training`.
+    @Default('') String type,
+
+    /// `present`, `absent`, `nonplay` of `pending`.
+    @Default('pending') String status,
+  }) = _StatsFormEntry;
+
+  factory StatsFormEntry.fromJson(Map<String, dynamic> json) =>
+      _$StatsFormEntryFromJson(json);
+}
+
+/// Een badge-periode van het seizoen (`periods[]`), als bij de Hall of Fame.
+@freezed
+abstract class StatsPeriod with _$StatsPeriod {
+  const factory StatsPeriod({
+    required int id,
+    @Default('') String name,
+    @Default(false) bool isClosed,
+  }) = _StatsPeriod;
+
+  factory StatsPeriod.fromJson(Map<String, dynamic> json) =>
+      _$StatsPeriodFromJson(json);
 }
 
 /// `GET teams/{team}/stats`.
@@ -72,6 +105,10 @@ abstract class TeamStats with _$TeamStats {
   const factory TeamStats({
     /// `season`, `5` of `10` (wat de server werkelijk gebruikte).
     @asStringOrNull String? window,
+
+    /// De badge-periodes (leeg als het team ze uit heeft) en de gekozen.
+    @Default(<StatsPeriod>[]) List<StatsPeriod> periods,
+    @asIntOrNull int? periodId,
     @asIntOrNull int? seasonId,
     @Default(<SeasonOption>[]) List<SeasonOption> seasons,
     @asIntOrNull int? myPlayerId,
