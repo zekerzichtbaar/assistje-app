@@ -39,7 +39,7 @@ platform :ios do
       run_precheck_before_submit: false,
       force: true, # geen HTML-preview/bevestiging
       submit_for_review: submit,
-      automatic_release: false,
+      automatic_release: true, # na goedkeuring meteen live
       submission_information: {
         add_id_info_uses_idfa: false,
         export_compliance_uses_encryption: false
