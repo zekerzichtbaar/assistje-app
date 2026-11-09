@@ -47,6 +47,38 @@ platform :ios do
     )
   end
 
+  desc "Dien een build die al op TestFlight staat in ter beoordeling, zonder"
+  desc "opnieuw te bouwen. build_number:<n> (anders de laatste TestFlight-build),"
+  desc "notes:\"…\" voor 'Wat is er nieuw' (nl-NL). Na goedkeuring meteen live."
+  lane :submit do |options|
+    version, = pubspec_version
+    build_number = (options[:build_number] ||
+      latest_testflight_build_number(api_key: asc_api_key, version: version)).to_s
+    UI.message("Indienen: #{version} (#{build_number})")
+    notes = options[:notes].to_s
+    FileUtils.mkdir_p(File.join(BUILD_DIR, "metadata-empty"))
+    upload_to_app_store(
+      api_key: asc_api_key,
+      app_version: version,
+      build_number: build_number,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      # Alleen 'Wat is er nieuw' als die is meegegeven; de rest van de
+      # metadata blijft zoals hij in App Store Connect staat.
+      skip_metadata: notes.empty?,
+      metadata_path: File.join(BUILD_DIR, "metadata-empty"),
+      release_notes: notes.empty? ? nil : { "nl-NL" => notes },
+      run_precheck_before_submit: false,
+      force: true,
+      submit_for_review: true,
+      automatic_release: true,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false
+      }
+    )
+  end
+
   desc "Zet de screenshots uit docs/store (iPhone 6.9\", 6.3\", iPad 13\") bij de"
   desc "versie in App Store Connect (nl-NL). Vervangt de huidige screenshots;"
   desc "geen build, geen tekst, niet indienen. Genereren: docs/store/README.md."
