@@ -236,9 +236,8 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
             sheetTitle: l10n.statsScopePickerTitle,
             enabled: !state.switching,
             selected: state.scope,
-            onSelected: (scope) => unawaited(
-              _afterSwitch(_controller(teamId).selectScope(scope)),
-            ),
+            onSelected: (scope) =>
+                unawaited(_afterSwitch(_controller(teamId).selectScope(scope))),
             options: [
               AppPickerOption(
                 value: StatsScope.season,

@@ -28,6 +28,10 @@ ClockTime? _clockOf(DateTime? value) {
 
 int _minutes(ClockTime t) => t.hour * 60 + t.minute;
 
+/// De standaard voor "boete als iemand niet reageert": aan, behalve bij een
+/// activiteit.
+bool rsvpFinesDefault(ScheduleType type) => type != ScheduleType.activity;
+
 /// Wat er in het event-formulier staat (`EventFormSheet.tsx` in de PWA).
 /// Muteerbaar: het formulier past velden aan en bouwt daarna een
 /// [ScheduleDraft].
@@ -45,6 +49,7 @@ class ScheduleFormValues {
     this.competition = 'league',
     this.opponent = '',
     this.spectatorsCanRsvp = false,
+    this.rsvpFines = true,
     this.recurring = false,
     this.recurUntil,
     this.applyToFollowing = false,
@@ -69,6 +74,7 @@ class ScheduleFormValues {
             : null,
         isHome: defaults.isHome,
         competition: defaults.competition,
+        rsvpFines: rsvpFinesDefault(type),
       );
     }
     final starts = event.startsAt.toLocal();
@@ -87,6 +93,7 @@ class ScheduleFormValues {
       competition: event.competition ?? defaults.competition,
       opponent: (isHome ? event.awayTeam : event.homeTeam) ?? '',
       spectatorsCanRsvp: event.spectatorsCanRsvp,
+      rsvpFines: event.rsvpFines,
     );
   }
 
@@ -102,9 +109,18 @@ class ScheduleFormValues {
   String competition;
   String opponent;
   bool spectatorsCanRsvp;
+  bool rsvpFines;
   bool recurring;
   DateTime? recurUntil;
   bool applyToFollowing;
+
+  /// Kies een ander soort. Bij een nieuw event volgt de boete het soort (een
+  /// activiteit is meestal vrijblijvend); bij bewerken blijft staan wat de
+  /// trainer eerder koos — als `chooseType` in `EventFormSheet.tsx`.
+  void chooseType(ScheduleType next, {required bool isEdit}) {
+    type = next;
+    if (!isEdit) rsvpFines = rsvpFinesDefault(next);
+  }
 
   /// Datum en starttijd zijn verplicht.
   bool get hasStart => date != null && start != null;
@@ -155,6 +171,7 @@ class ScheduleFormValues {
       isHome: match ? isHome : null,
       competition: match ? competition : null,
       spectatorsCanRsvp: type == ScheduleType.activity && spectatorsCanRsvp,
+      rsvpFines: rsvpFines,
       recurUntil: !isEdit && training && recurring ? recurUntil : null,
       applyToFollowing:
           canApplyToFollowing(isEdit: isEdit, originalType: originalType) &&

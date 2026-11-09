@@ -97,7 +97,7 @@ abstract class ScheduleOptions with _$ScheduleOptions {
 
 /// De formuliervelden van een bestaand event, uit dezelfde `data` als
 /// `GET events/{event}` (ook het antwoord op aanmaken/wijzigen/afgelasten).
-/// [EventDetail] kent `can_cancel` en `spectators_can_rsvp` niet; daarom
+/// [EventDetail] kent `can_cancel`, `spectators_can_rsvp` en `rsvp_fines` niet; daarom
 /// leest de agenda-beheer-feature ze hier zelf.
 @freezed
 abstract class ScheduleEvent with _$ScheduleEvent {
@@ -117,6 +117,9 @@ abstract class ScheduleEvent with _$ScheduleEvent {
     DateTime? cancelledAt,
     @Default(false) bool canCancel,
     @Default(false) bool spectatorsCanRsvp,
+
+    /// Boete voor wie na de deadline niet heeft gereageerd (per event).
+    @Default(true) bool rsvpFines,
   }) = _ScheduleEvent;
 
   const ScheduleEvent._();
@@ -150,6 +153,10 @@ abstract class ScheduleDraft with _$ScheduleDraft {
     String? competition,
     @Default(false) bool spectatorsCanRsvp,
 
+    /// Boete voor wie na de deadline niet heeft gereageerd. Gaat altijd mee:
+    /// weggelaten zet de server hem bij aanmaken aan, ook bij een activiteit.
+    @Default(true) bool rsvpFines,
+
     /// Alleen bij aanmaken van een training: wekelijks t/m deze datum.
     DateTime? recurUntil,
 
@@ -182,6 +189,7 @@ abstract class ScheduleDraft with _$ScheduleDraft {
       'is_home': match ? isHome : null,
       'competition': match ? competition : null,
       'spectators_can_rsvp': type == ScheduleType.activity && spectatorsCanRsvp,
+      'rsvp_fines': rsvpFines,
       if (!update && training && recurUntil != null)
         'recur_until': scheduleDate(recurUntil!),
       if (update) 'apply_to_following': training && applyToFollowing,

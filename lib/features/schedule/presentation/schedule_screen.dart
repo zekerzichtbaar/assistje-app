@@ -88,6 +88,7 @@ class _ScheduleBody extends ConsumerWidget {
         child: ScheduleEventForm(
           key: ValueKey('schedule-form-${data.event?.id}'),
           data: data,
+          finesEnabled: membership.hasFeature('fines'),
           onSubmit: (draft) => ref
               .read(scheduleFormControllerProvider(key).notifier)
               .save(draft),

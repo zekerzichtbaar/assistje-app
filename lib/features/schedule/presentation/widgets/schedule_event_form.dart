@@ -40,9 +40,13 @@ class ScheduleEventForm extends StatefulWidget {
     required this.data,
     required this.onSubmit,
     required this.onSaved,
+    this.finesEnabled = false,
   });
 
   final ScheduleFormData data;
+
+  /// Staat de boetepot aan? Alleen dan is de boete-schakelaar zinvol.
+  final bool finesEnabled;
   final Future<ScheduleOutcome> Function(ScheduleDraft draft) onSubmit;
   final void Function(ScheduleWriteResult result) onSaved;
 
@@ -258,7 +262,9 @@ class _ScheduleEventFormState extends State<ScheduleEventForm> {
         keyPrefix: 'schedule-type',
         keyOf: (v) => v.apiValue,
         selected: type,
-        onChanged: enabled ? (v) => _update(() => _values.type = v) : null,
+        onChanged: enabled
+            ? (v) => _update(() => _values.chooseType(v, isEdit: _isEdit))
+            : null,
         segments: [
           for (final v in _options.knownTypes)
             ScheduleSegment(
@@ -470,6 +476,19 @@ class _ScheduleEventFormState extends State<ScheduleEventForm> {
           value: _values.spectatorsCanRsvp,
           onChanged: enabled
               ? (v) => _update(() => _values.spectatorsCanRsvp = v)
+              : null,
+        ),
+      ],
+      if (widget.finesEnabled) ...[
+        gap,
+        ScheduleToggleCard(
+          switchKey: const ValueKey('schedule-rsvp-fines'),
+          icon: PhosphorIconsDuotone.coins,
+          title: l10n.scheduleRsvpFinesTitle,
+          body: l10n.scheduleRsvpFinesBody,
+          value: _values.rsvpFines,
+          onChanged: enabled
+              ? (v) => _update(() => _values.rsvpFines = v)
               : null,
         ),
       ],

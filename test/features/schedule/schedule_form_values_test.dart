@@ -121,6 +121,31 @@ void main() {
     expect(v.toDraft(teamName: 'X', isEdit: false)!.applyToFollowing, isFalse);
   });
 
+  test('boete bij niet reageren: volgt het soort, behalve bij bewerken', () {
+    final v = ScheduleFormValues.initial(options);
+    expect(v.rsvpFines, isTrue);
+
+    v.chooseType(ScheduleType.activity, isEdit: false);
+    expect(v.rsvpFines, isFalse);
+    v.chooseType(ScheduleType.match, isEdit: false);
+    expect(v.rsvpFines, isTrue);
+
+    // Bewerken: de keuze van het event blijft staan.
+    final event = ScheduleEvent.fromJson(
+      ScheduleFixtures.trainingData({'rsvp_fines': false}),
+    );
+    final e = ScheduleFormValues.initial(options, event: event);
+    expect(e.rsvpFines, isFalse);
+    e.chooseType(ScheduleType.match, isEdit: true);
+    expect(e.rsvpFines, isFalse);
+
+    e
+      ..date = DateTime(2026, 11, 20)
+      ..start = (hour: 19, minute: 0);
+    final d = e.toDraft(teamName: 'X', isEdit: true)!;
+    expect(d.toPayload(update: true)['rsvp_fines'], isFalse);
+  });
+
   test('kloktijden lezen en schrijven', () {
     expect(parseClockTime('07:05'), (hour: 7, minute: 5));
     expect(parseClockTime('25:00'), isNull);

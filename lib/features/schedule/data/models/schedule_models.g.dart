@@ -86,6 +86,7 @@ _ScheduleEvent _$ScheduleEventFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['cancelled_at'] as String),
       canCancel: json['can_cancel'] as bool? ?? false,
       spectatorsCanRsvp: json['spectators_can_rsvp'] as bool? ?? false,
+      rsvpFines: json['rsvp_fines'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ScheduleEventToJson(_ScheduleEvent instance) =>
@@ -105,4 +106,5 @@ Map<String, dynamic> _$ScheduleEventToJson(_ScheduleEvent instance) =>
       'cancelled_at': instance.cancelledAt?.toIso8601String(),
       'can_cancel': instance.canCancel,
       'spectators_can_rsvp': instance.spectatorsCanRsvp,
+      'rsvp_fines': instance.rsvpFines,
     };

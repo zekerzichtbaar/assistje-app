@@ -869,7 +869,8 @@ $ScheduleDefaultsCopyWith<$Res> get defaults {
 /// @nodoc
 mixin _$ScheduleEvent {
 
- int get id; String get type; String get title; DateTime get startsAt; DateTime? get endsAt; DateTime? get meetAt; String? get venue; String? get notes; bool? get isHome; String? get competition; String? get homeTeam; String? get awayTeam; DateTime? get cancelledAt; bool get canCancel; bool get spectatorsCanRsvp;
+ int get id; String get type; String get title; DateTime get startsAt; DateTime? get endsAt; DateTime? get meetAt; String? get venue; String? get notes; bool? get isHome; String? get competition; String? get homeTeam; String? get awayTeam; DateTime? get cancelledAt; bool get canCancel; bool get spectatorsCanRsvp;/// Boete voor wie na de deadline niet heeft gereageerd (per event).
+ bool get rsvpFines;
 /// Create a copy of ScheduleEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -882,16 +883,16 @@ $ScheduleEventCopyWith<ScheduleEvent> get copyWith => _$ScheduleEventCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.rsvpFines, rsvpFines) || other.rsvpFines == rsvpFines));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,cancelledAt,canCancel,spectatorsCanRsvp);
+int get hashCode => Object.hash(runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,cancelledAt,canCancel,spectatorsCanRsvp,rsvpFines);
 
 @override
 String toString() {
-  return 'ScheduleEvent(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, cancelledAt: $cancelledAt, canCancel: $canCancel, spectatorsCanRsvp: $spectatorsCanRsvp)';
+  return 'ScheduleEvent(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, cancelledAt: $cancelledAt, canCancel: $canCancel, spectatorsCanRsvp: $spectatorsCanRsvp, rsvpFines: $rsvpFines)';
 }
 
 
@@ -902,7 +903,7 @@ abstract mixin class $ScheduleEventCopyWith<$Res>  {
   factory $ScheduleEventCopyWith(ScheduleEvent value, $Res Function(ScheduleEvent) _then) = _$ScheduleEventCopyWithImpl;
 @useResult
 $Res call({
- int id, String type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, DateTime? cancelledAt, bool canCancel, bool spectatorsCanRsvp
+ int id, String type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, DateTime? cancelledAt, bool canCancel, bool spectatorsCanRsvp, bool rsvpFines
 });
 
 
@@ -919,7 +920,7 @@ class _$ScheduleEventCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? cancelledAt = freezed,Object? canCancel = null,Object? spectatorsCanRsvp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? cancelledAt = freezed,Object? canCancel = null,Object? spectatorsCanRsvp = null,Object? rsvpFines = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -936,6 +937,7 @@ as String?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: 
 as String?,cancelledAt: freezed == cancelledAt ? _self.cancelledAt : cancelledAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,canCancel: null == canCancel ? _self.canCancel : canCancel // ignore: cast_nullable_to_non_nullable
 as bool,spectatorsCanRsvp: null == spectatorsCanRsvp ? _self.spectatorsCanRsvp : spectatorsCanRsvp // ignore: cast_nullable_to_non_nullable
+as bool,rsvpFines: null == rsvpFines ? _self.rsvpFines : rsvpFines // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -1021,10 +1023,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp,  bool rsvpFines)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleEvent() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp,_that.rsvpFines);case _:
   return orElse();
 
 }
@@ -1042,10 +1044,10 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp,  bool rsvpFines)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleEvent():
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp,_that.rsvpFines);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1062,10 +1064,10 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String type,  String title,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? venue,  String? notes,  bool? isHome,  String? competition,  String? homeTeam,  String? awayTeam,  DateTime? cancelledAt,  bool canCancel,  bool spectatorsCanRsvp,  bool rsvpFines)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleEvent() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp);case _:
+return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_that.meetAt,_that.venue,_that.notes,_that.isHome,_that.competition,_that.homeTeam,_that.awayTeam,_that.cancelledAt,_that.canCancel,_that.spectatorsCanRsvp,_that.rsvpFines);case _:
   return null;
 
 }
@@ -1077,7 +1079,7 @@ return $default(_that.id,_that.type,_that.title,_that.startsAt,_that.endsAt,_tha
 @JsonSerializable()
 
 class _ScheduleEvent extends ScheduleEvent {
-  const _ScheduleEvent({required this.id, this.type = 'training', this.title = '', required this.startsAt, this.endsAt, this.meetAt, this.venue, this.notes, this.isHome, this.competition, this.homeTeam, this.awayTeam, this.cancelledAt, this.canCancel = false, this.spectatorsCanRsvp = false}): super._();
+  const _ScheduleEvent({required this.id, this.type = 'training', this.title = '', required this.startsAt, this.endsAt, this.meetAt, this.venue, this.notes, this.isHome, this.competition, this.homeTeam, this.awayTeam, this.cancelledAt, this.canCancel = false, this.spectatorsCanRsvp = false, this.rsvpFines = true}): super._();
   factory _ScheduleEvent.fromJson(Map<String, dynamic> json) => _$ScheduleEventFromJson(json);
 
 @override final  int id;
@@ -1095,6 +1097,8 @@ class _ScheduleEvent extends ScheduleEvent {
 @override final  DateTime? cancelledAt;
 @override@JsonKey() final  bool canCancel;
 @override@JsonKey() final  bool spectatorsCanRsvp;
+/// Boete voor wie na de deadline niet heeft gereageerd (per event).
+@override@JsonKey() final  bool rsvpFines;
 
 /// Create a copy of ScheduleEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -1109,16 +1113,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.rsvpFines, rsvpFines) || other.rsvpFines == rsvpFines));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,cancelledAt,canCancel,spectatorsCanRsvp);
+int get hashCode => Object.hash(runtimeType,id,type,title,startsAt,endsAt,meetAt,venue,notes,isHome,competition,homeTeam,awayTeam,cancelledAt,canCancel,spectatorsCanRsvp,rsvpFines);
 
 @override
 String toString() {
-  return 'ScheduleEvent(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, cancelledAt: $cancelledAt, canCancel: $canCancel, spectatorsCanRsvp: $spectatorsCanRsvp)';
+  return 'ScheduleEvent(id: $id, type: $type, title: $title, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, venue: $venue, notes: $notes, isHome: $isHome, competition: $competition, homeTeam: $homeTeam, awayTeam: $awayTeam, cancelledAt: $cancelledAt, canCancel: $canCancel, spectatorsCanRsvp: $spectatorsCanRsvp, rsvpFines: $rsvpFines)';
 }
 
 
@@ -1129,7 +1133,7 @@ abstract mixin class _$ScheduleEventCopyWith<$Res> implements $ScheduleEventCopy
   factory _$ScheduleEventCopyWith(_ScheduleEvent value, $Res Function(_ScheduleEvent) _then) = __$ScheduleEventCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, DateTime? cancelledAt, bool canCancel, bool spectatorsCanRsvp
+ int id, String type, String title, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? venue, String? notes, bool? isHome, String? competition, String? homeTeam, String? awayTeam, DateTime? cancelledAt, bool canCancel, bool spectatorsCanRsvp, bool rsvpFines
 });
 
 
@@ -1146,7 +1150,7 @@ class __$ScheduleEventCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? cancelledAt = freezed,Object? canCancel = null,Object? spectatorsCanRsvp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? venue = freezed,Object? notes = freezed,Object? isHome = freezed,Object? competition = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? cancelledAt = freezed,Object? canCancel = null,Object? spectatorsCanRsvp = null,Object? rsvpFines = null,}) {
   return _then(_ScheduleEvent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -1163,6 +1167,7 @@ as String?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: 
 as String?,cancelledAt: freezed == cancelledAt ? _self.cancelledAt : cancelledAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,canCancel: null == canCancel ? _self.canCancel : canCancel // ignore: cast_nullable_to_non_nullable
 as bool,spectatorsCanRsvp: null == spectatorsCanRsvp ? _self.spectatorsCanRsvp : spectatorsCanRsvp // ignore: cast_nullable_to_non_nullable
+as bool,rsvpFines: null == rsvpFines ? _self.rsvpFines : rsvpFines // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -1173,7 +1178,9 @@ as bool,
 /// @nodoc
 mixin _$ScheduleDraft {
 
- ScheduleType get type; DateTime get startsAt; DateTime? get endsAt; DateTime? get meetAt; String? get title; String? get venue; String? get notes; String? get homeTeam; String? get awayTeam; bool? get isHome; String? get competition; bool get spectatorsCanRsvp;/// Alleen bij aanmaken van een training: wekelijks t/m deze datum.
+ ScheduleType get type; DateTime get startsAt; DateTime? get endsAt; DateTime? get meetAt; String? get title; String? get venue; String? get notes; String? get homeTeam; String? get awayTeam; bool? get isHome; String? get competition; bool get spectatorsCanRsvp;/// Boete voor wie na de deadline niet heeft gereageerd. Gaat altijd mee:
+/// weggelaten zet de server hem bij aanmaken aan, ook bij een activiteit.
+ bool get rsvpFines;/// Alleen bij aanmaken van een training: wekelijks t/m deze datum.
  DateTime? get recurUntil;/// Alleen bij wijzigen van een training: ook de volgende trainingen.
  bool get applyToFollowing;
 /// Create a copy of ScheduleDraft
@@ -1186,16 +1193,16 @@ $ScheduleDraftCopyWith<ScheduleDraft> get copyWith => _$ScheduleDraftCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDraft&&(identical(other.type, type) || other.type == type)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.recurUntil, recurUntil) || other.recurUntil == recurUntil)&&(identical(other.applyToFollowing, applyToFollowing) || other.applyToFollowing == applyToFollowing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleDraft&&(identical(other.type, type) || other.type == type)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.rsvpFines, rsvpFines) || other.rsvpFines == rsvpFines)&&(identical(other.recurUntil, recurUntil) || other.recurUntil == recurUntil)&&(identical(other.applyToFollowing, applyToFollowing) || other.applyToFollowing == applyToFollowing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,startsAt,endsAt,meetAt,title,venue,notes,homeTeam,awayTeam,isHome,competition,spectatorsCanRsvp,recurUntil,applyToFollowing);
+int get hashCode => Object.hash(runtimeType,type,startsAt,endsAt,meetAt,title,venue,notes,homeTeam,awayTeam,isHome,competition,spectatorsCanRsvp,rsvpFines,recurUntil,applyToFollowing);
 
 @override
 String toString() {
-  return 'ScheduleDraft(type: $type, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, title: $title, venue: $venue, notes: $notes, homeTeam: $homeTeam, awayTeam: $awayTeam, isHome: $isHome, competition: $competition, spectatorsCanRsvp: $spectatorsCanRsvp, recurUntil: $recurUntil, applyToFollowing: $applyToFollowing)';
+  return 'ScheduleDraft(type: $type, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, title: $title, venue: $venue, notes: $notes, homeTeam: $homeTeam, awayTeam: $awayTeam, isHome: $isHome, competition: $competition, spectatorsCanRsvp: $spectatorsCanRsvp, rsvpFines: $rsvpFines, recurUntil: $recurUntil, applyToFollowing: $applyToFollowing)';
 }
 
 
@@ -1206,7 +1213,7 @@ abstract mixin class $ScheduleDraftCopyWith<$Res>  {
   factory $ScheduleDraftCopyWith(ScheduleDraft value, $Res Function(ScheduleDraft) _then) = _$ScheduleDraftCopyWithImpl;
 @useResult
 $Res call({
- ScheduleType type, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? title, String? venue, String? notes, String? homeTeam, String? awayTeam, bool? isHome, String? competition, bool spectatorsCanRsvp, DateTime? recurUntil, bool applyToFollowing
+ ScheduleType type, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? title, String? venue, String? notes, String? homeTeam, String? awayTeam, bool? isHome, String? competition, bool spectatorsCanRsvp, bool rsvpFines, DateTime? recurUntil, bool applyToFollowing
 });
 
 
@@ -1223,7 +1230,7 @@ class _$ScheduleDraftCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? title = freezed,Object? venue = freezed,Object? notes = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? isHome = freezed,Object? competition = freezed,Object? spectatorsCanRsvp = null,Object? recurUntil = freezed,Object? applyToFollowing = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? title = freezed,Object? venue = freezed,Object? notes = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? isHome = freezed,Object? competition = freezed,Object? spectatorsCanRsvp = null,Object? rsvpFines = null,Object? recurUntil = freezed,Object? applyToFollowing = null,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ScheduleType,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
@@ -1237,6 +1244,7 @@ as String?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: 
 as String?,isHome: freezed == isHome ? _self.isHome : isHome // ignore: cast_nullable_to_non_nullable
 as bool?,competition: freezed == competition ? _self.competition : competition // ignore: cast_nullable_to_non_nullable
 as String?,spectatorsCanRsvp: null == spectatorsCanRsvp ? _self.spectatorsCanRsvp : spectatorsCanRsvp // ignore: cast_nullable_to_non_nullable
+as bool,rsvpFines: null == rsvpFines ? _self.rsvpFines : rsvpFines // ignore: cast_nullable_to_non_nullable
 as bool,recurUntil: freezed == recurUntil ? _self.recurUntil : recurUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,applyToFollowing: null == applyToFollowing ? _self.applyToFollowing : applyToFollowing // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -1324,10 +1332,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  DateTime? recurUntil,  bool applyToFollowing)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  bool rsvpFines,  DateTime? recurUntil,  bool applyToFollowing)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScheduleDraft() when $default != null:
-return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.recurUntil,_that.applyToFollowing);case _:
+return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.rsvpFines,_that.recurUntil,_that.applyToFollowing);case _:
   return orElse();
 
 }
@@ -1345,10 +1353,10 @@ return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  DateTime? recurUntil,  bool applyToFollowing)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  bool rsvpFines,  DateTime? recurUntil,  bool applyToFollowing)  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDraft():
-return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.recurUntil,_that.applyToFollowing);case _:
+return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.rsvpFines,_that.recurUntil,_that.applyToFollowing);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1365,10 +1373,10 @@ return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  DateTime? recurUntil,  bool applyToFollowing)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ScheduleType type,  DateTime startsAt,  DateTime? endsAt,  DateTime? meetAt,  String? title,  String? venue,  String? notes,  String? homeTeam,  String? awayTeam,  bool? isHome,  String? competition,  bool spectatorsCanRsvp,  bool rsvpFines,  DateTime? recurUntil,  bool applyToFollowing)?  $default,) {final _that = this;
 switch (_that) {
 case _ScheduleDraft() when $default != null:
-return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.recurUntil,_that.applyToFollowing);case _:
+return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,_that.venue,_that.notes,_that.homeTeam,_that.awayTeam,_that.isHome,_that.competition,_that.spectatorsCanRsvp,_that.rsvpFines,_that.recurUntil,_that.applyToFollowing);case _:
   return null;
 
 }
@@ -1380,7 +1388,7 @@ return $default(_that.type,_that.startsAt,_that.endsAt,_that.meetAt,_that.title,
 
 
 class _ScheduleDraft extends ScheduleDraft {
-  const _ScheduleDraft({required this.type, required this.startsAt, this.endsAt, this.meetAt, this.title, this.venue, this.notes, this.homeTeam, this.awayTeam, this.isHome, this.competition, this.spectatorsCanRsvp = false, this.recurUntil, this.applyToFollowing = false}): super._();
+  const _ScheduleDraft({required this.type, required this.startsAt, this.endsAt, this.meetAt, this.title, this.venue, this.notes, this.homeTeam, this.awayTeam, this.isHome, this.competition, this.spectatorsCanRsvp = false, this.rsvpFines = true, this.recurUntil, this.applyToFollowing = false}): super._();
   
 
 @override final  ScheduleType type;
@@ -1395,6 +1403,9 @@ class _ScheduleDraft extends ScheduleDraft {
 @override final  bool? isHome;
 @override final  String? competition;
 @override@JsonKey() final  bool spectatorsCanRsvp;
+/// Boete voor wie na de deadline niet heeft gereageerd. Gaat altijd mee:
+/// weggelaten zet de server hem bij aanmaken aan, ook bij een activiteit.
+@override@JsonKey() final  bool rsvpFines;
 /// Alleen bij aanmaken van een training: wekelijks t/m deze datum.
 @override final  DateTime? recurUntil;
 /// Alleen bij wijzigen van een training: ook de volgende trainingen.
@@ -1410,16 +1421,16 @@ _$ScheduleDraftCopyWith<_ScheduleDraft> get copyWith => __$ScheduleDraftCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDraft&&(identical(other.type, type) || other.type == type)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.recurUntil, recurUntil) || other.recurUntil == recurUntil)&&(identical(other.applyToFollowing, applyToFollowing) || other.applyToFollowing == applyToFollowing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleDraft&&(identical(other.type, type) || other.type == type)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.meetAt, meetAt) || other.meetAt == meetAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.homeTeam, homeTeam) || other.homeTeam == homeTeam)&&(identical(other.awayTeam, awayTeam) || other.awayTeam == awayTeam)&&(identical(other.isHome, isHome) || other.isHome == isHome)&&(identical(other.competition, competition) || other.competition == competition)&&(identical(other.spectatorsCanRsvp, spectatorsCanRsvp) || other.spectatorsCanRsvp == spectatorsCanRsvp)&&(identical(other.rsvpFines, rsvpFines) || other.rsvpFines == rsvpFines)&&(identical(other.recurUntil, recurUntil) || other.recurUntil == recurUntil)&&(identical(other.applyToFollowing, applyToFollowing) || other.applyToFollowing == applyToFollowing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,startsAt,endsAt,meetAt,title,venue,notes,homeTeam,awayTeam,isHome,competition,spectatorsCanRsvp,recurUntil,applyToFollowing);
+int get hashCode => Object.hash(runtimeType,type,startsAt,endsAt,meetAt,title,venue,notes,homeTeam,awayTeam,isHome,competition,spectatorsCanRsvp,rsvpFines,recurUntil,applyToFollowing);
 
 @override
 String toString() {
-  return 'ScheduleDraft(type: $type, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, title: $title, venue: $venue, notes: $notes, homeTeam: $homeTeam, awayTeam: $awayTeam, isHome: $isHome, competition: $competition, spectatorsCanRsvp: $spectatorsCanRsvp, recurUntil: $recurUntil, applyToFollowing: $applyToFollowing)';
+  return 'ScheduleDraft(type: $type, startsAt: $startsAt, endsAt: $endsAt, meetAt: $meetAt, title: $title, venue: $venue, notes: $notes, homeTeam: $homeTeam, awayTeam: $awayTeam, isHome: $isHome, competition: $competition, spectatorsCanRsvp: $spectatorsCanRsvp, rsvpFines: $rsvpFines, recurUntil: $recurUntil, applyToFollowing: $applyToFollowing)';
 }
 
 
@@ -1430,7 +1441,7 @@ abstract mixin class _$ScheduleDraftCopyWith<$Res> implements $ScheduleDraftCopy
   factory _$ScheduleDraftCopyWith(_ScheduleDraft value, $Res Function(_ScheduleDraft) _then) = __$ScheduleDraftCopyWithImpl;
 @override @useResult
 $Res call({
- ScheduleType type, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? title, String? venue, String? notes, String? homeTeam, String? awayTeam, bool? isHome, String? competition, bool spectatorsCanRsvp, DateTime? recurUntil, bool applyToFollowing
+ ScheduleType type, DateTime startsAt, DateTime? endsAt, DateTime? meetAt, String? title, String? venue, String? notes, String? homeTeam, String? awayTeam, bool? isHome, String? competition, bool spectatorsCanRsvp, bool rsvpFines, DateTime? recurUntil, bool applyToFollowing
 });
 
 
@@ -1447,7 +1458,7 @@ class __$ScheduleDraftCopyWithImpl<$Res>
 
 /// Create a copy of ScheduleDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? title = freezed,Object? venue = freezed,Object? notes = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? isHome = freezed,Object? competition = freezed,Object? spectatorsCanRsvp = null,Object? recurUntil = freezed,Object? applyToFollowing = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? startsAt = null,Object? endsAt = freezed,Object? meetAt = freezed,Object? title = freezed,Object? venue = freezed,Object? notes = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? isHome = freezed,Object? competition = freezed,Object? spectatorsCanRsvp = null,Object? rsvpFines = null,Object? recurUntil = freezed,Object? applyToFollowing = null,}) {
   return _then(_ScheduleDraft(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ScheduleType,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
@@ -1461,6 +1472,7 @@ as String?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: 
 as String?,isHome: freezed == isHome ? _self.isHome : isHome // ignore: cast_nullable_to_non_nullable
 as bool?,competition: freezed == competition ? _self.competition : competition // ignore: cast_nullable_to_non_nullable
 as String?,spectatorsCanRsvp: null == spectatorsCanRsvp ? _self.spectatorsCanRsvp : spectatorsCanRsvp // ignore: cast_nullable_to_non_nullable
+as bool,rsvpFines: null == rsvpFines ? _self.rsvpFines : rsvpFines // ignore: cast_nullable_to_non_nullable
 as bool,recurUntil: freezed == recurUntil ? _self.recurUntil : recurUntil // ignore: cast_nullable_to_non_nullable
 as DateTime?,applyToFollowing: null == applyToFollowing ? _self.applyToFollowing : applyToFollowing // ignore: cast_nullable_to_non_nullable
 as bool,

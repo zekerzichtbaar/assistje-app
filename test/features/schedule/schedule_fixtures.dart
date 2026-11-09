@@ -46,6 +46,7 @@ abstract final class ScheduleFixtures {
     'cancelled_at': null,
     'can_cancel': true,
     'spectators_can_rsvp': false,
+    'rsvp_fines': true,
     'sportlink': null,
     ...overrides,
   });

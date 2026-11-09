@@ -96,6 +96,7 @@ void main() {
     expect(body.containsKey('recur_until'), isFalse);
     expect(body.containsKey('apply_to_following'), isFalse);
     expect(body['spectators_can_rsvp'], isFalse);
+    expect(body['rsvp_fines'], isTrue);
 
     expect(r.event.id, 512);
     expect(r.event.type, EventType.match);
@@ -225,7 +226,10 @@ void main() {
       'GET /teams/3/events/498',
       200,
       ScheduleFixtures.write(
-        ScheduleFixtures.trainingData({'spectators_can_rsvp': true}),
+        ScheduleFixtures.trainingData({
+          'spectators_can_rsvp': true,
+          'rsvp_fines': false,
+        }),
       ),
     );
 
@@ -238,6 +242,7 @@ void main() {
     expect(e.notes, 'Bidon mee');
     expect(e.canCancel, isTrue);
     expect(e.spectatorsCanRsvp, isTrue);
+    expect(e.rsvpFines, isFalse);
   });
 
   test('fouten: 403 (demo/bond), 404 en 422 met veldfouten', () async {
