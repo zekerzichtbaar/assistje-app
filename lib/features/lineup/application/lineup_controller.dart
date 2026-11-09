@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/store/review_prompt.dart';
 import '../../event/application/event_detail_controller.dart';
 import '../data/lineup_repository.dart';
 import '../data/models/lineup_models.dart';
@@ -121,6 +124,7 @@ class LineupController extends AsyncNotifier<Lineup> {
     if (error == null) {
       // Het event-detail toont of er een gedeelde opstelling is.
       ref.invalidate(eventDetailControllerProvider(key));
+      unawaited(ref.read(reviewPromptProvider).positiveMoment());
     }
     return error;
   }

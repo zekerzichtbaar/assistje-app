@@ -141,5 +141,18 @@
   "profileAppIconDefault": "Assistje",
   "profileAppIconClub": "Clublogo",
   "profilePrivacyTitle": "Privacybeleid",
-  "profilePrivacyBody": "Welke gegevens Assistje bewaart en wat je rechten zijn."
+  "profilePrivacyBody": "Welke gegevens Assistje bewaart en wat je rechten zijn.",
+  "profileRateTitle": "Beoordeel Assistje",
+  "profileRateBody": "Blij met de app? Een paar sterren in de App Store helpen andere teams Assistje te vinden.",
+  "profileTellTitle": "Tip een ander team",
+  "profileTellBody": "Ken je een team dat nog met losse appjes werkt? Stuur ze de link.",
+  "profileTellMessage": "Wij regelen ons team met Assistje: wie er komt, de opstelling en de wedstrijd live. Handig voor jullie team ook?\n\n{url}",
+  "@profileTellMessage": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "profileTellSubject": "Assistje, de teamapp"
 }

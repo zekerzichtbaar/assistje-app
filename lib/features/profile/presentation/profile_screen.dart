@@ -148,6 +148,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         const AppIconCard(),
         const NotificationsLinkCard(),
         const PrivacyLinkCard(),
+        const TellAFriendCard(),
+        const RateAppCard(),
       ];
     }
 
@@ -215,6 +217,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       const AppIconCard(),
       const NotificationsLinkCard(),
       const PrivacyLinkCard(),
+      const TellAFriendCard(),
+      const RateAppCard(),
       if (!membership.isSpectator || player != null)
         PlayerProfileCard(
           player: player,

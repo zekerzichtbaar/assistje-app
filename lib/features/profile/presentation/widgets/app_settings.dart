@@ -11,10 +11,13 @@ import '../../../../core/auth/auth_controller.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/session/session_providers.dart';
 import '../../../../core/shell/team_switcher.dart';
+import '../../../../core/store/review_prompt.dart';
+import '../../../../core/store/store_links.dart';
 import '../../../../core/theme/assistje_tokens.dart';
 import '../../../../core/theme/theme_providers.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../player_management/application/share_service.dart';
 import 'profile_ui.dart';
 
 /// Het actieve team en je rol; met meer teams opent een tik de
@@ -264,6 +267,88 @@ class PrivacyLinkCard extends StatelessWidget {
           ),
           Icon(PhosphorIconsRegular.arrowSquareOut, size: 18, color: t.muted),
         ],
+      ),
+    );
+  }
+}
+
+/// Naar de store-pagina om Assistje te beoordelen. Beoordelingen tellen zwaar
+/// mee voor waar Assistje in de zoekresultaten staat.
+class RateAppCard extends ConsumerWidget {
+  const RateAppCard({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    return AppCard(
+      key: const ValueKey('profile-rate'),
+      onTap: () {
+        unawaited(Haptics.light());
+        unawaited(
+          ref
+              .read(reviewRequesterProvider)
+              .openStoreListing()
+              .catchError((Object _) {}),
+        );
+      },
+      child: Row(
+        children: [
+          Expanded(
+            child: ProfileCardHeader(
+              icon: PhosphorIconsDuotone.star,
+              title: l10n.profileRateTitle,
+              body: l10n.profileRateBody,
+            ),
+          ),
+          Icon(PhosphorIconsRegular.arrowSquareOut, size: 18, color: t.muted),
+        ],
+      ),
+    );
+  }
+}
+
+/// Assistje aanraden aan een ander team, met een directe store-link (zoeken
+/// op "assistje" verbetert de App Store nog naar "assistent").
+class TellAFriendCard extends ConsumerWidget {
+  const TellAFriendCard({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final t = AssistjeTokens.of(context);
+    return Builder(
+      builder: (cardContext) => AppCard(
+        key: const ValueKey('profile-tell'),
+        onTap: () {
+          unawaited(Haptics.light());
+          final box = cardContext.findRenderObject() as RenderBox?;
+          final origin = box == null || !box.hasSize
+              ? null
+              : box.localToGlobal(Offset.zero) & box.size;
+          unawaited(
+            ref
+                .read(shareServiceProvider)
+                .share(
+                  l10n.profileTellMessage(StoreLinks.shareLink().toString()),
+                  subject: l10n.profileTellSubject,
+                  origin: origin,
+                )
+                .catchError((Object _) {}),
+          );
+        },
+        child: Row(
+          children: [
+            Expanded(
+              child: ProfileCardHeader(
+                icon: PhosphorIconsDuotone.shareNetwork,
+                title: l10n.profileTellTitle,
+                body: l10n.profileTellBody,
+              ),
+            ),
+            Icon(PhosphorIconsRegular.export, size: 18, color: t.muted),
+          ],
+        ),
       ),
     );
   }

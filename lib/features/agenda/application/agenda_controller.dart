@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_exception.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/store/review_prompt.dart';
 import '../data/agenda_repository.dart';
 import '../data/models/agenda_models.dart';
 
@@ -209,6 +212,9 @@ class AgendaController extends AsyncNotifier<AgendaState> {
         status,
         reason: status.needsReason ? reason : null,
       );
+      if (status == AttendanceStatus.present) {
+        unawaited(ref.read(reviewPromptProvider).positiveMoment());
+      }
       return RsvpSaved(status);
     } on ValidationException catch (error) {
       _replace(before);

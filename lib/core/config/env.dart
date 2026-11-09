@@ -14,6 +14,13 @@ abstract final class Env {
     defaultValue: '1.0.0+1',
   );
 
+  /// Het numerieke Apple ID van Assistje in de App Store (App Store Connect →
+  /// App-informatie). Voor "Beoordeel Assistje" en de deellink.
+  static const String iosAppStoreId = String.fromEnvironment(
+    'IOS_APP_STORE_ID',
+    defaultValue: '6830074966',
+  );
+
   // Firebase (push). Leeg = push staat uit: geen Firebase-aanroep, geen
   // aanmelding. Waarden uit de Firebase-console (projectinstellingen → je
   // iOS- en Android-app); zie README "Push".

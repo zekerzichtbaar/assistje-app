@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/store/review_prompt.dart';
 import '../../event/application/event_detail_controller.dart';
 import '../data/live_repository.dart';
 import '../data/models/live_feed.dart';
@@ -195,7 +196,15 @@ class LiveController extends AsyncNotifier<LiveMatch> {
     () => _repository.next(_teamId, _eventId, minute: minute, trim: trim),
   );
 
-  Future<Object?> stop() => _write(() => _repository.stop(_teamId, _eventId));
+  /// Eindsignaal. Een afgesloten wedstrijd is een blij moment voor de
+  /// beoordelingsvraag ([ReviewPrompt]).
+  Future<Object?> stop() async {
+    final error = await _write(() => _repository.stop(_teamId, _eventId));
+    if (error == null && ref.mounted) {
+      unawaited(ref.read(reviewPromptProvider).positiveMoment());
+    }
+    return error;
+  }
 
   Future<Object?> reopen() =>
       _write(() => _repository.reopen(_teamId, _eventId));
